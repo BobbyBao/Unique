@@ -1,9 +1,9 @@
 #pragma once
+#include "Object.h"
 
-class Shader
+class Shader : public Object
 {
 public:
 	Shader();
 	~Shader();
 };
-
