@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LLGL_Direct3D11", "..\..\Bu
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LLGL_OpenGL", "..\..\Build\LLGL\LLGL_OpenGL.vcxproj", "{5BB5EFF1-F30B-3EF5-97B9-1D10E402EE89}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial05_RenderTarget", "..\..\Build\LLGL\Tutorial05_RenderTarget.vcxproj", "{89E81370-4775-3384-AAA8-0BD3CAA83551}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -51,6 +53,14 @@ Global
 		{5BB5EFF1-F30B-3EF5-97B9-1D10E402EE89}.Release|x64.Build.0 = Release|x64
 		{5BB5EFF1-F30B-3EF5-97B9-1D10E402EE89}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|x64
 		{5BB5EFF1-F30B-3EF5-97B9-1D10E402EE89}.RelWithDebInfo|x64.Build.0 = RelWithDebInfo|x64
+		{89E81370-4775-3384-AAA8-0BD3CAA83551}.Debug|x64.ActiveCfg = Debug|x64
+		{89E81370-4775-3384-AAA8-0BD3CAA83551}.Debug|x64.Build.0 = Debug|x64
+		{89E81370-4775-3384-AAA8-0BD3CAA83551}.MinSizeRel|x64.ActiveCfg = MinSizeRel|x64
+		{89E81370-4775-3384-AAA8-0BD3CAA83551}.MinSizeRel|x64.Build.0 = MinSizeRel|x64
+		{89E81370-4775-3384-AAA8-0BD3CAA83551}.Release|x64.ActiveCfg = Release|x64
+		{89E81370-4775-3384-AAA8-0BD3CAA83551}.Release|x64.Build.0 = Release|x64
+		{89E81370-4775-3384-AAA8-0BD3CAA83551}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|x64
+		{89E81370-4775-3384-AAA8-0BD3CAA83551}.RelWithDebInfo|x64.Build.0 = RelWithDebInfo|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

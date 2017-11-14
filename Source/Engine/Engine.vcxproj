@@ -266,62 +266,6 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="E:\Code\Banana\LLGL\CMakeLists.txt">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule E:/Code/Banana/LLGL/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-"D:\Program Files\CMake\bin\cmake.exe" -HE:/Code/Banana/LLGL -BE:/Code/Banana/Build/LLGL --check-stamp-file E:/Code/Banana/Build/LLGL/CMakeFiles/generate.stamp
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">E:/Code/Banana/LLGL/CMakeLists.txt;E:\Code\Banana\LLGL\CMakeLists.txt;E:\Code\Banana\Build\LLGL\CMakeFiles\3.9.3\CMakeSystem.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeSystemSpecificInitialize.cmake;E:\Code\Banana\Build\LLGL\CMakeFiles\3.9.3\CMakeCCompiler.cmake;E:\Code\Banana\Build\LLGL\CMakeFiles\3.9.3\CMakeCXXCompiler.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeSystemSpecificInformation.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeGenericSystem.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Platform\WindowsPaths.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCInformation.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeLanguageInformation.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC-C.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC.cmake;E:\Code\Banana\Build\LLGL\CMakeFiles\3.9.3\CMakeRCCompiler.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeRCInformation.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCommonLanguageInclude.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCXXInformation.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeLanguageInformation.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Compiler\MSVC-CXX.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Compiler\CMakeCommonCompilerMacros.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC-CXX.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCommonLanguageInclude.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\FindOpenGL.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageHandleStandardArgs.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageMessage.cmake;E:\Code\Banana\LLGL\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">E:\Code\Banana\Build\LLGL\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule E:/Code/Banana/LLGL/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-"D:\Program Files\CMake\bin\cmake.exe" -HE:/Code/Banana/LLGL -BE:/Code/Banana/Build/LLGL --check-stamp-file E:/Code/Banana/Build/LLGL/CMakeFiles/generate.stamp
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">E:/Code/Banana/LLGL/CMakeLists.txt;E:\Code\Banana\LLGL\CMakeLists.txt;E:\Code\Banana\Build\LLGL\CMakeFiles\3.9.3\CMakeSystem.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeSystemSpecificInitialize.cmake;E:\Code\Banana\Build\LLGL\CMakeFiles\3.9.3\CMakeCCompiler.cmake;E:\Code\Banana\Build\LLGL\CMakeFiles\3.9.3\CMakeCXXCompiler.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeSystemSpecificInformation.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeGenericSystem.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Platform\WindowsPaths.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCInformation.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeLanguageInformation.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC-C.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC.cmake;E:\Code\Banana\Build\LLGL\CMakeFiles\3.9.3\CMakeRCCompiler.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeRCInformation.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCommonLanguageInclude.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCXXInformation.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeLanguageInformation.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Compiler\MSVC-CXX.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Compiler\CMakeCommonCompilerMacros.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC-CXX.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCommonLanguageInclude.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\FindOpenGL.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageHandleStandardArgs.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageMessage.cmake;E:\Code\Banana\LLGL\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">E:\Code\Banana\Build\LLGL\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule E:/Code/Banana/LLGL/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
-"D:\Program Files\CMake\bin\cmake.exe" -HE:/Code/Banana/LLGL -BE:/Code/Banana/Build/LLGL --check-stamp-file E:/Code/Banana/Build/LLGL/CMakeFiles/generate.stamp
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">E:/Code/Banana/LLGL/CMakeLists.txt;E:\Code\Banana\LLGL\CMakeLists.txt;E:\Code\Banana\Build\LLGL\CMakeFiles\3.9.3\CMakeSystem.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeSystemSpecificInitialize.cmake;E:\Code\Banana\Build\LLGL\CMakeFiles\3.9.3\CMakeCCompiler.cmake;E:\Code\Banana\Build\LLGL\CMakeFiles\3.9.3\CMakeCXXCompiler.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeSystemSpecificInformation.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeGenericSystem.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Platform\WindowsPaths.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCInformation.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeLanguageInformation.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC-C.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC.cmake;E:\Code\Banana\Build\LLGL\CMakeFiles\3.9.3\CMakeRCCompiler.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeRCInformation.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCommonLanguageInclude.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCXXInformation.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeLanguageInformation.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Compiler\MSVC-CXX.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Compiler\CMakeCommonCompilerMacros.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC-CXX.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCommonLanguageInclude.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\FindOpenGL.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageHandleStandardArgs.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageMessage.cmake;E:\Code\Banana\LLGL\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">E:\Code\Banana\Build\LLGL\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule E:/Code/Banana/LLGL/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
-"D:\Program Files\CMake\bin\cmake.exe" -HE:/Code/Banana/LLGL -BE:/Code/Banana/Build/LLGL --check-stamp-file E:/Code/Banana/Build/LLGL/CMakeFiles/generate.stamp
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">E:/Code/Banana/LLGL/CMakeLists.txt;E:\Code\Banana\LLGL\CMakeLists.txt;E:\Code\Banana\Build\LLGL\CMakeFiles\3.9.3\CMakeSystem.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeSystemSpecificInitialize.cmake;E:\Code\Banana\Build\LLGL\CMakeFiles\3.9.3\CMakeCCompiler.cmake;E:\Code\Banana\Build\LLGL\CMakeFiles\3.9.3\CMakeCXXCompiler.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeSystemSpecificInformation.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeGenericSystem.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Platform\WindowsPaths.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCInformation.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeLanguageInformation.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC-C.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC.cmake;E:\Code\Banana\Build\LLGL\CMakeFiles\3.9.3\CMakeRCCompiler.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeRCInformation.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCommonLanguageInclude.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCXXInformation.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeLanguageInformation.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Compiler\MSVC-CXX.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Compiler\CMakeCommonCompilerMacros.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC-CXX.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCommonLanguageInclude.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\FindOpenGL.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageHandleStandardArgs.cmake;D:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageMessage.cmake;E:\Code\Banana\LLGL\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">E:\Code\Banana\Build\LLGL\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
-    </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\..\Build\LLGL\LLGL_Direct3D11.vcxproj">
       <Project>{cf3e0458-b6f2-3db9-ac35-5a7716b44eea}</Project>
     </ProjectReference>
@@ -339,9 +283,15 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="Model.cpp" />
+    <ClCompile Include="Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="Model.h" />
+    <ClInclude Include="Shader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
