@@ -1,14 +1,8 @@
-/*
- * main.cpp (Tutorial03_Texturing)
- *
- * This file is part of the "LLGL" project (Copyright (c) 2015 by Lukas Hermanns)
- * See "LICENSE.txt" for license information.
- */
 
-#include "tutorial.h"
+#include "Application.h"
 
 
-class Tutorial03 : public Tutorial
+class Tutorial03 : public Application
 {
 
     LLGL::ShaderProgram*    shaderProgram   = nullptr;
@@ -22,7 +16,7 @@ class Tutorial03 : public Tutorial
 public:
 
     Tutorial03() :
-        Tutorial { L"LLGL Tutorial 03: Texturing" }
+        Application { L"LLGL Tutorial 03: Texturing" }
     {
         // Check if samplers are supported
         const auto& renderCaps = renderer->GetRenderingCaps();

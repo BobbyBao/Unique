@@ -100,7 +100,7 @@ static std::string ReadFileContent(const std::string& filename)
 
 /* ----- Tutorial class ----- */
 
-class Tutorial
+class Application
 {
 
 public:
@@ -110,7 +110,7 @@ public:
         rendererModule_ = GetSelectedRendererModule(argc, argv);
     }
 
-    virtual ~Tutorial()
+    virtual ~Application()
     {
     }
 
@@ -177,7 +177,7 @@ private:
         public:
 
             ResizeEventHandler(
-                Tutorial& tutorial,
+                Application& tutorial,
                 LLGL::RenderContext* context,
                 LLGL::CommandBuffer* commands,
                 Gs::Matrix4f& projection) :
@@ -225,7 +225,7 @@ private:
 
         private:
 
-            Tutorial&               tutorial_;
+            Application&               tutorial_;
             LLGL::RenderContext*    context_;
             LLGL::CommandBuffer*    commands_;
             Gs::Matrix4f&           projection_;
@@ -288,7 +288,7 @@ protected:
 
     virtual void OnDrawFrame() = 0;
 
-    Tutorial(
+    Application(
         const std::wstring& title,
         const LLGL::Size&   resolution      = { 800, 600 },
         unsigned int        multiSampling   = 8,
@@ -823,7 +823,7 @@ protected:
 
 };
 
-std::string Tutorial::rendererModule_;
+std::string Application::rendererModule_;
 
 
 template <typename T>
@@ -832,7 +832,7 @@ int RunTutorial(int argc, char* argv[])
     try
     {
         /* Run tutorial */
-        Tutorial::SelectRendererModule(argc, argv);
+        Application::SelectRendererModule(argc, argv);
         auto tutorial = std::unique_ptr<T>(new T());
         tutorial->Run();
     }
