@@ -282,21 +282,29 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Graphics.cpp" />
+    <ClCompile Include="Core\Attribute.cpp" />
+    <ClCompile Include="Core\RefCounted.cpp" />
+    <ClCompile Include="Graphics\Graphics.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Material.cpp" />
-    <ClCompile Include="Model.cpp" />
-    <ClCompile Include="Object.cpp" />
-    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Graphics\Material.cpp" />
+    <ClCompile Include="Graphics\Model.cpp" />
+    <ClCompile Include="Core\Object.cpp" />
+    <ClCompile Include="Graphics\Shader.cpp" />
+    <ClCompile Include="Precompiled.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
-    <ClInclude Include="CoreDefs.h" />
-    <ClInclude Include="Graphics.h" />
-    <ClInclude Include="Material.h" />
-    <ClInclude Include="Model.h" />
-    <ClInclude Include="Object.h" />
-    <ClInclude Include="Shader.h" />
+    <ClInclude Include="Core\ArrayPtr.h" />
+    <ClInclude Include="Core\Attribute.h" />
+    <ClInclude Include="Core\CoreDefs.h" />
+    <ClInclude Include="Core\Ptr.h" />
+    <ClInclude Include="Core\RefCounted.h" />
+    <ClInclude Include="Graphics\Graphics.h" />
+    <ClInclude Include="Graphics\Material.h" />
+    <ClInclude Include="Graphics\Model.h" />
+    <ClInclude Include="Core\Object.h" />
+    <ClInclude Include="Graphics\Shader.h" />
+    <ClInclude Include="Precompiled.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

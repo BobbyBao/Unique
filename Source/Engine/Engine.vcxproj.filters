@@ -15,43 +15,51 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Model.cpp">
+    <ClCompile Include="Graphics\Shader.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Material.cpp">
+    <ClCompile Include="Graphics\Model.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Shader.cpp">
+    <ClCompile Include="Graphics\Material.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Object.cpp">
+    <ClCompile Include="Graphics\Graphics.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Object.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
+    <ClCompile Include="Core\Attribute.cpp" />
+    <ClCompile Include="Core\RefCounted.cpp" />
+    <ClCompile Include="Precompiled.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Model.h">
+    <ClInclude Include="Graphics\Shader.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Material.h">
+    <ClInclude Include="Graphics\Model.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Shader.h">
+    <ClInclude Include="Graphics\Material.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Object.h">
+    <ClInclude Include="Graphics\Graphics.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Object.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="CoreDefs.h">
+    <ClInclude Include="Core\CoreDefs.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Core\ArrayPtr.h" />
+    <ClInclude Include="Core\Attribute.h" />
+    <ClInclude Include="Core\Ptr.h" />
+    <ClInclude Include="Core\RefCounted.h" />
+    <ClInclude Include="Precompiled.h" />
   </ItemGroup>
 </Project>
