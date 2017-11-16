@@ -4,18 +4,22 @@
 
 namespace Unique
 {
+	class Serializer;
+	class Deserializer;
 
 	class Attribute : public RefCounted
 	{
 	public:
-		Attribute(const String& name, unsigned mode)
+		Attribute(const String& name, uint mode)
 			: name_(name), mode_(mode)
 		{
 		}
 
+		virtual void Visit(Serializer& serializer, void* obj)
+		{
+		}
 
-		template<class Visitor>
-		void Visit(void* obj)
+		virtual void Visit(Deserializer& serializer, void* obj)
 		{
 		}
 
@@ -32,9 +36,19 @@ namespace Unique
 	class TAttribute : Attribute
 	{
 	public:
-		TAttribute(const String& name, unsigned offset, unsigned mode)
+		TAttribute(const String& name, uint offset, unsigned mode)
 			: Attribute(name, mode), offset_(offset)
 		{
+		}
+
+		virtual void Visit(Serializer& serializer, void* obj)
+		{
+			VisitImpl(serializer, obj);
+		}
+
+		virtual void Visit(Deserializer& deserializer, void* obj)
+		{
+			VisitImpl(deserializer, obj);
 		}
 
 		virtual void Get(const void* ptr, void* dest) const
@@ -45,11 +59,19 @@ namespace Unique
 
 		virtual void Set(void* ptr, const void* value)
 		{
-			void* dest = reinterpret_cast<unsigned char*>(ptr) + attr.offset_;
+			void* dest = reinterpret_cast<unsigned char*>(ptr) + offset_;
 			*((T*)dest) = *((T*)value);
 		}
+
 	protected:
-		unsigned offset_;
+		template<class Visitor>
+		void VisitImpl(Visitor& visitor, void* ptr)
+		{
+			T* dest = reinterpret_cast<unsigned char*>(ptr) + offset_;
+			visitor.Transfer(name_.c_str(), *dest);
+		}
+
+		uint offset_;
 	};
 
 
@@ -107,6 +129,16 @@ namespace Unique
 			assert(setFunction_);
 		}
 
+		virtual void Visit(Serializer& serializer, void* obj)
+		{
+			VisitImpl(serializer, obj);
+		}
+
+		virtual void Visit(Deserializer& deserializer, void* obj)
+		{
+			VisitImpl(deserializer, obj);
+		}
+
 		/// Invoke getter function.
 		virtual void Get(const void* ptr, void* dest) const
 		{
@@ -122,7 +154,29 @@ namespace Unique
 			T* classPtr = static_cast<T*>(ptr);
 			(classPtr->*setFunction_)(*(U*)value);
 		}
+	protected:
+		template<class Visitor>
+		void VisitImpl(Visitor& visitor, void* ptr)
+		{
+			assert(ptr);
+			T* classPtr = static_cast<T*>(ptr);
 
+			if (visitor.IsReading())
+			{
+				U value;
+				visitor.Transfer(name_.c_str(), value);
+				(classPtr->*setFunction_)(value);
+			}
+
+			if (visitor.IsWriting())
+			{
+				Trait::ReturnType value = (classPtr->*getFunction_)();
+				visitor.Transfer(name_.c_str(), value);
+			}
+		}
+
+		GetFunctionPtr getFunction_;
+		SetFunctionPtr setFunction_;
 	};
 
 

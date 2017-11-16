@@ -4,7 +4,7 @@
 
 namespace Unique
 {
-	class Serializer : public Writer
+	class Serializer
 	{
 	public:
 

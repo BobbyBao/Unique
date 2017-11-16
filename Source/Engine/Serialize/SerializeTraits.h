@@ -68,41 +68,4 @@ namespace Unique
 
 	};
 
-	template<class T>
-	class SerializeTraits<Vector<T> > : public SerializeTraitsBase<Vector<T> >
-	{
-	public:
-
-		typedef Vector<T>	value_type;
-		DEFINE_GET_TYPESTRING_CONTAINER(Vector)
-
-		template<class TransferFunction> inline
-		static void Transfer(value_type& data, TransferFunction& transfer)
-		{
-			transfer.TransferSTLStyleArray(data);
-		}
-
-		static bool IsContinousMemoryArray() { return true; }
-		static void ResizeSTLStyleArray(value_type& data, int rs) { data.resize(rs); }
-	};
-
-	template<>
-	class SerializeTraits<Vector<unsigned char> > : public SerializeTraitsBase<Vector<unsigned char> >
-	{
-	public:
-
-		typedef Vector<unsigned char>	value_type;
-
-		inline static const char* GetTypeString(void*) { return "Vector"; }
-		inline static bool AllowTransferOptimization() { return false; }
-
-		template<class TransferFunction> inline
-			static void Transfer(value_type& data, TransferFunction& transfer)
-		{
-			transfer.TransferSTLStyleArray(data);
-		}
-
-		static bool IsContinousMemoryArray() { return true; }
-		static void ResizeSTLStyleArray(value_type& data, int rs) { data.resize(rs); }
-	};
 }

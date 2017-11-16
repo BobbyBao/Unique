@@ -87,8 +87,8 @@ namespace Unique
 		typedef unsigned short value_type;
 		DEFINE_GET_TYPESTRING_BASICTYPE(unsigned short)
 
-			template<class TransferFunction> inline
-			static void Transfer(value_type& data, TransferFunction& transfer)
+		template<class TransferFunction> inline
+		static void Transfer(value_type& data, TransferFunction& transfer)
 		{
 			transfer.TransferBasicData(data);
 		}
