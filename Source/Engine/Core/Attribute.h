@@ -13,12 +13,19 @@ namespace Unique
 		{
 		}
 
+
+		template<class Visitor>
+		void Visit(void* obj)
+		{
+		}
+
 		virtual void Get(const void* ptr, void* dest) const = 0;
 		virtual void Set(void* ptr, const void* value) = 0;
 
 		/// Name.
 		String name_;
-		unsigned mode_;
+		uint mode_;
+		uint type_;
 	};
 
 	template<class T>
@@ -41,8 +48,7 @@ namespace Unique
 			void* dest = reinterpret_cast<unsigned char*>(ptr) + attr.offset_;
 			*((T*)dest) = *((T*)value);
 		}
-	private:
-		/// Byte offset from start of object.
+	protected:
 		unsigned offset_;
 	};
 
@@ -84,13 +90,6 @@ namespace Unique
 		typedef float ParameterType;
 	};
 
-	/// Mixed attribute trait (use const reference for set function only).
-	template <typename T> struct MixedAttributeTrait
-	{
-		typedef T ReturnType;
-		typedef const T& ParameterType;
-	};
-
 	/// Template implementation of the attribute accessor invoke helper class.
 	template <typename T, typename U, typename Trait> class AttributeAccessorImpl : public Attribute
 	{
@@ -124,50 +123,8 @@ namespace Unique
 			(classPtr->*setFunction_)(*(U*)value);
 		}
 
-		/// Class-specific pointer to getter function.
-		GetFunctionPtr getFunction_;
-		/// Class-specific pointer to setter function.
-		SetFunctionPtr setFunction_;
 	};
 
-	/// Template implementation of the attribute accessor that uses free functions invoke helper class.
-	template <typename T, typename U, typename Trait> class AttributeAccessorFreeImpl : public Attribute
-	{
-	public:
-		typedef typename Trait::ReturnType(*GetFunctionPtr)(const T*);
-		typedef void(*SetFunctionPtr)(T*, typename Trait::ParameterType);
-
-		/// Construct with function pointers.
-		AttributeAccessorFreeImpl(const String& name, GetFunctionPtr getFunction, SetFunctionPtr setFunction, unsigned mode) :
-			getFunction_(getFunction),
-			setFunction_(setFunction),
-			Attribute(name, mode)
-		{
-			assert(getFunction_);
-			assert(setFunction_);
-		}
-
-		/// Invoke getter function.
-		virtual void Get(const void* ptr, void* dest) const
-		{
-			assert(ptr);
-			const T* classPtr = static_cast<const T*>(ptr);
-			*(U*)dest = (*getFunction_)(classPtr);
-		}
-
-		/// Invoke setter function.
-		virtual void Set(void* ptr, const void* value)
-		{
-			assert(ptr);
-			T* classPtr = static_cast<T*>(ptr);
-			(*setFunction_)(classPtr, *(U*)value);
-		}
-
-		/// Class-specific pointer to getter function.
-		GetFunctionPtr getFunction_;
-		/// Class-specific pointer to setter function.
-		SetFunctionPtr setFunction_;
-	};
 
 	/// Define an attribute that points to a memory offset in the object.
 #define UNIQUE_ATTRIBUTE(name, typeName, variable, mode)\
@@ -176,9 +133,5 @@ namespace Unique
 /// Define an attribute that uses get and set functions.
 #define UNIQUE_ACCESSOR_ATTRIBUTE(name, getFunction, setFunction, typeName, mode)\
 	context->RegisterAttribute<ClassName>(new Unique::AttributeAccessorImpl<ClassName, typeName, Unique::AttributeTrait<typeName > >(name, &ClassName::getFunction, &ClassName::setFunction, mode))
-
-/// Define an attribute that uses get and set free functions.
-#define UNIQUE_ACCESSOR_ATTRIBUTE_FREE(name, getFunction, setFunction, typeName, mode)\
-	context->RegisterAttribute<ClassName>(new Unique::AttributeAccessorFreeImpl<ClassName, typeName, Unique::AttributeTrait<typeName > >(name, getFunction, setFunction, mode))
 
 }
