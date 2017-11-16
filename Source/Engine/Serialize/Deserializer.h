@@ -3,11 +3,12 @@
 
 namespace Unique
 {
-	class Deserializer : public Reader
+	class Deserializer
 	{
 	public:
-		Deserializer();
-		~Deserializer();
+
+		bool IsReading() { return true; }
+		bool IsWriting() { return false; }
 
 		template<class T>
 		bool Load(const String& fileName, T& data);

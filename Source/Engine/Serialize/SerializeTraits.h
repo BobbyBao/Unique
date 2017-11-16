@@ -3,24 +3,10 @@
 
 #include "SerializeTraitsBasic.h"
 #include "SerializeTraitsStd.h"
-#include "../container/Vector.h"	
+	
 
 namespace Unique
 {
-	class Writer
-	{
-	public:
-		bool IsReading() { return false; }
-		bool IsWriting() { return true; }
-	};
-
-	class Reader
-	{
-	public:
-		bool IsReading() { return true; }
-		bool IsWriting() { return false; }
-	};
-
 
 	template<class T>
 	class SerializeTraits<Unique::SPtr<T> > : public SerializeTraitsBase<Unique::SPtr<T> >

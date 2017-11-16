@@ -7,9 +7,9 @@ namespace Unique
 	class Serializer : public Writer
 	{
 	public:
-		Serializer();
-		~Serializer();
 
+		bool IsReading() { return false; }
+		bool IsWriting() { return true; }
 
 		template<class T>
 		bool Save(const char* fileName, T& data);

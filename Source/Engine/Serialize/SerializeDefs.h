@@ -40,17 +40,14 @@ enum TransferMetaFlags
 #define TRANSFER_ENUM_FLAG(NAME, FIELD, FLAG) { assert(sizeof(FIELD) == sizeof(int)); transfer.Transfer (FIELD, NAME, FLAG); }
 #define TRANSFER_ENUM_(FIELD) { assert(sizeof(FIELD##_) == sizeof(int)); transfer.Transfer (FIELD##_, #FIELD, TF_DEFAULT); }
 
-
 #define DECLARE_SERIALIZE(x) \
 	inline static const char* GetTypeString ()	{ return #x; }	\
-	inline static bool IsObject ()	{ return false; } \
 	inline static bool AllowTransferOptimization ()	{ return false; } \
 	template<class TransferFunction> \
 	void Transfer (TransferFunction& transfer)
 
 #define DECLARE_SERIALIZE_OPTIMIZE_TRANSFER(x) \
 	inline static const char* GetTypeString ()	{ return #x; }	\
-	inline static bool IsObject ()	{ return false; } \
 	inline static bool AllowTransferOptimization ()	{ return true; } \
 	template<class TransferFunction> \
 	void Transfer (TransferFunction& transfer)
@@ -58,19 +55,15 @@ enum TransferMetaFlags
 #define DEFINE_GET_TYPESTRING_BASICTYPE(x)						\
 inline static const char* GetTypeString (void*)	{ return #x; } \
 inline static bool AllowTransferOptimization ()	{ return true; }\
-inline static bool IsObject ()	{ return false; } \
 inline static bool IsBasicType() { return true; }
 
 #define DEFINE_GET_TYPESTRING_CONTAINER(x)						\
 inline static const char* GetTypeString (void*)	{ return #x; } \
-inline static bool AllowTransferOptimization ()	{ return false; }\
 inline static bool IsObject ()	{ return false; } \
 inline static bool IsBasicType() { return SerializeTraits<T>::IsBasicType(); }
 
-
 #define DEFINE_GET_TYPESTRING_MAP_CONTAINER(x)						\
 inline static const char* GetTypeString (void*)	{ return #x; } \
-inline static bool AllowTransferOptimization ()	{ return false; }\
 inline static bool IsObject ()	{ return false; } \
 inline static bool IsBasicType() { return false; }
 
@@ -99,11 +92,9 @@ namespace Unique
 
 		inline static const char* GetTypeString(void* ptr) { return value_type::GetTypeString(); }
 		inline static bool AllowTransferOptimization() { return T::AllowTransferOptimization(); }
-		inline static bool IsBasicType() { return false; }
-		inline static bool IsObject() { return false; }
 
 		template<class TransferFunction> inline
-			static void Transfer(value_type& data, TransferFunction& transfer)
+		static void Transfer(value_type& data, TransferFunction& transfer)
 		{
 			transfer.Transfer(data);
 		}
