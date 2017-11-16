@@ -102,7 +102,6 @@ static std::string ReadFileContent(const std::string& filename)
 
 class Application
 {
-
 public:
 
     static void SelectRendererModule(int argc, char* argv[])

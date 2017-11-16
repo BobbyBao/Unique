@@ -13,8 +13,8 @@
 
 namespace Unique
 {
-	template<class T>
-	using SPtr = std::shared_ptr<T>;
+	//template<class T>
+	//using SPtr = std::shared_ptr<T>;
 
 	template<class T>
 	using WPtr = std::weak_ptr<T>;
@@ -36,4 +36,6 @@ namespace Unique
 
 	template<class T>
 	using HashSet = std::unordered_set<T>;
+	
+	using String = std::string;
 }
