@@ -3,11 +3,11 @@
 
 namespace Unique
 {
-	class BinaryReader : public Reader
+	class Deserializer : public Reader
 	{
 	public:
-		BinaryReader();
-		~BinaryReader();
+		Deserializer();
+		~Deserializer();
 
 		template<class T>
 		bool Load(const String& fileName, T& data);
@@ -39,5 +39,5 @@ namespace Unique
 		int metaFlag_;
 	};
 
-	#include "BinaryReader.inl"
+	#include "Deserializer.inl"
 }

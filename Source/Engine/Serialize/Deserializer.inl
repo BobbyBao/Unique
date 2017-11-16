@@ -1,6 +1,6 @@
 
 template<class T>
-inline	bool BinaryReader::Load(const String& fileName, T& data)
+inline	bool Deserializer::Load(const String& fileName, T& data)
 {
 	/*
 	std::ifstream jsonFile(fileName.CString());
@@ -18,15 +18,15 @@ inline	bool BinaryReader::Load(const String& fileName, T& data)
 }
 
 template<class T>
-inline bool BinaryReader::Load(Deserializer& source, T& data)
-{
+inline bool Deserializer::Load(Deserializer& source, T& data)
+{	/*
 	unsigned dataSize = source.GetSize();
 	if (!dataSize && !source.GetName().Empty())
 	{
 		UNIQUE_LOGERROR("Zero sized JSON data in " + source.GetName());
 		return false;
 	}
-	/*
+
 	SharedArrayPtr<char> buffer(new char[dataSize + 1]);
 	if (source.Read(buffer.Get(), dataSize) != dataSize)
 		return false;
@@ -46,7 +46,7 @@ inline bool BinaryReader::Load(Deserializer& source, T& data)
 
 
 template<class T>
-inline void BinaryReader::Transfer(T& data, const char* name, int metaFlag)
+inline void Deserializer::Transfer(T& data, const char* name, int metaFlag)
 {
 	metaFlag_ = metaFlag;
 	/*
@@ -66,13 +66,13 @@ inline void BinaryReader::Transfer(T& data, const char* name, int metaFlag)
 }
 
 template<class T>
-inline void BinaryReader::Transfer(T& data)
+inline void Deserializer::Transfer(T& data)
 {
 	data.Transfer(*this);
 }
 
 template<class T>
-inline void BinaryReader::TransferObject(SPtr<T>& data)
+inline void Deserializer::TransferObject(SPtr<T>& data)
 {/*
 	if (data == nullptr)
 	{
@@ -84,13 +84,13 @@ inline void BinaryReader::TransferObject(SPtr<T>& data)
 		}
 
 		data = StaticCast<T, Object>(Object::GetContext()->CreateObject(node->value.GetString()));
-	}*/
+	}
 
-	data->VirtualTransfer(*this);
+	data->VirtualTransfer(*this);*/
 }
 
 template<class T>
-inline void BinaryReader::TransferSTLStyleArray(T& data, int metaFlag)
+inline void Deserializer::TransferSTLStyleArray(T& data, int metaFlag)
 {
 	typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
 
@@ -120,7 +120,7 @@ inline void BinaryReader::TransferSTLStyleArray(T& data, int metaFlag)
 }
 
 template<class T>
-inline void BinaryReader::TransferSTLStyleMap(T& data, int metaFlag)
+inline void Deserializer::TransferSTLStyleMap(T& data, int metaFlag)
 {
 	typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
 	typedef typename non_const_value_type::first_type first_type;
@@ -143,7 +143,7 @@ inline void BinaryReader::TransferSTLStyleMap(T& data, int metaFlag)
 }
 
 template<class T>
-inline void BinaryReader::TransferSTLStyleSet(T& data, int metaFlag)
+inline void Deserializer::TransferSTLStyleSet(T& data, int metaFlag)
 {
 	typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
 
@@ -170,76 +170,76 @@ inline void BinaryReader::TransferSTLStyleSet(T& data, int metaFlag)
 }
 
 template<class T>
-inline void BinaryReader::TransferBasicData(T& data)
+inline void Deserializer::TransferBasicData(T& data)
 {
 //	data = FromString<T>(currentNode->GetString());
 }
 
 template<>
-inline void BinaryReader::TransferBasicData<bool>(bool& data)
+inline void Deserializer::TransferBasicData<bool>(bool& data)
 {
 //	assert(currentNode->IsBool());
 //	data = currentNode->GetBool();
 }
 
 template<>
-inline void BinaryReader::TransferBasicData<char>(char& data)
+inline void Deserializer::TransferBasicData<char>(char& data)
 {
 //	assert(currentNode->IsInt());
 //	data = currentNode->GetInt();
 }
 
 template<>
-inline void BinaryReader::TransferBasicData<char*>(char*& data)
+inline void Deserializer::TransferBasicData<char*>(char*& data)
 {
 //	assert(currentNode->IsInt());
 //	strcpy(data, currentNode->GetString());
 }
 
 template<>
-inline void BinaryReader::TransferBasicData<unsigned char>(unsigned char& data)
+inline void Deserializer::TransferBasicData<unsigned char>(unsigned char& data)
 {
 //	assert(currentNode->IsUint());
 //	data = currentNode->GetUint();
 }
 
 template<>
-inline void BinaryReader::TransferBasicData<short>(short& data)
+inline void Deserializer::TransferBasicData<short>(short& data)
 {
 //	assert(currentNode->IsInt());
 //	data = currentNode->GetInt();
 }
 
 template<>
-inline void BinaryReader::TransferBasicData<unsigned short>(unsigned short& data)
+inline void Deserializer::TransferBasicData<unsigned short>(unsigned short& data)
 {
 //	assert(currentNode->IsUint());
 //	data = currentNode->GetUint();
 }
 
 template<>
-inline void BinaryReader::TransferBasicData<int>(int& data)
+inline void Deserializer::TransferBasicData<int>(int& data)
 {
 //	assert(currentNode->IsInt());
 //	data = currentNode->GetInt();
 }
 
 template<>
-inline void BinaryReader::TransferBasicData<unsigned int>(unsigned int& data)
+inline void Deserializer::TransferBasicData<unsigned int>(unsigned int& data)
 {
 //	assert(currentNode->IsUint());
 //	data = currentNode->GetUint();
 }
 
 template<>
-inline void BinaryReader::TransferBasicData<float>(float& data)
+inline void Deserializer::TransferBasicData<float>(float& data)
 {
 //	assert(currentNode->IsDouble());
 //	data = currentNode->GetFloat();
 }
 
 template<>
-inline void BinaryReader::TransferBasicData<double>(double& data)
+inline void Deserializer::TransferBasicData<double>(double& data)
 {
 //	assert(currentNode->IsDouble());
 //	data = currentNode->GetDouble();

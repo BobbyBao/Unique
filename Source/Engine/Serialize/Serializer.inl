@@ -1,6 +1,6 @@
 
 template<class T> inline
-bool BinaryWriter::Save(const char* fileName, T& data)
+bool Serializer::Save(const char* fileName, T& data)
 {
 	/*
 	std::ofstream jsonFile(fileName);
@@ -14,7 +14,7 @@ bool BinaryWriter::Save(const char* fileName, T& data)
 }
 
 template<class T>
-inline void BinaryWriter::Transfer(T& data, const char* name, int metaFlag)
+inline void Serializer::Transfer(T& data, const char* name, int metaFlag)
 {
 	metaFlag_ = metaFlag;
 
@@ -24,7 +24,7 @@ inline void BinaryWriter::Transfer(T& data, const char* name, int metaFlag)
 }
 
 template<class T>
-inline void BinaryWriter::Transfer(T& data)
+inline void Serializer::Transfer(T& data)
 {
 //	writer_->StartObject();
 
@@ -34,7 +34,7 @@ inline void BinaryWriter::Transfer(T& data)
 }
 
 template<class T>
-inline void BinaryWriter::TransferObject(SPtr<T>& data)
+inline void Serializer::TransferObject(SPtr<T>& data)
 {
 //	writer_->StartObject();
 	data->VirtualTransfer(*this);
@@ -42,7 +42,7 @@ inline void BinaryWriter::TransferObject(SPtr<T>& data)
 }
 
 template<class T>
-inline void BinaryWriter::TransferSTLStyleArray(T& data, int metaFlag)
+inline void Serializer::TransferSTLStyleArray(T& data, int metaFlag)
 {
 	typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
 
@@ -57,7 +57,7 @@ inline void BinaryWriter::TransferSTLStyleArray(T& data, int metaFlag)
 }
 
 template<class T>
-inline void BinaryWriter::TransferSTLStyleMap(T& data, int metaFlag)
+inline void Serializer::TransferSTLStyleMap(T& data, int metaFlag)
 {
 	typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
 	typedef typename non_const_value_type::first_type first_type;
@@ -75,7 +75,7 @@ inline void BinaryWriter::TransferSTLStyleMap(T& data, int metaFlag)
 
 
 template<class T>
-inline void BinaryWriter::TransferSTLStyleSet(T& data, int metaFlag)
+inline void Serializer::TransferSTLStyleSet(T& data, int metaFlag)
 {
 	typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
 
@@ -90,81 +90,81 @@ inline void BinaryWriter::TransferSTLStyleSet(T& data, int metaFlag)
 }
 
 template<class T>
-void BinaryWriter::TransferBasicData(T& data)
+void Serializer::TransferBasicData(T& data)
 {
 	String str = ToString(data);
 //	writer_->String(str.CString());
 }
 
 template<>
-inline void BinaryWriter::TransferBasicData<String>(String& data)
+inline void Serializer::TransferBasicData<String>(String& data)
 {
 //	writer_->String(data.CString());
 }
 
 template<>
-inline void BinaryWriter::TransferBasicData<bool>(bool& data)
+inline void Serializer::TransferBasicData<bool>(bool& data)
 {
 //	writer_->Bool(data);
 }
 
 template<>
-inline void BinaryWriter::TransferBasicData<char>(char& data)
+inline void Serializer::TransferBasicData<char>(char& data)
 {
 //	writer_->Int(data);
 }
 
 template<>
-inline void BinaryWriter::TransferBasicData<unsigned char>(unsigned char& data)
+inline void Serializer::TransferBasicData<unsigned char>(unsigned char& data)
 {
 //	writer_->Uint(data);
 }
 
 template<>
-inline void BinaryWriter::TransferBasicData<short>(short& data)
+inline void Serializer::TransferBasicData<short>(short& data)
 {
 //	writer_->Int(data);
 }
 
 template<>
-inline void BinaryWriter::TransferBasicData<unsigned short>(unsigned short& data)
+inline void Serializer::TransferBasicData<unsigned short>(unsigned short& data)
 {
 //	writer_->Uint(data);
 }
 
 
 template<>
-inline void BinaryWriter::TransferBasicData<int>(int& data)
+inline void Serializer::TransferBasicData<int>(int& data)
 {
 //	writer_->Int(data);
 }
 
 template<>
-inline void BinaryWriter::TransferBasicData<unsigned int>(unsigned int& data)
+inline void Serializer::TransferBasicData<unsigned int>(unsigned int& data)
 {
 //	writer_->Uint(data);
 }
 
 template<>
-inline void BinaryWriter::TransferBasicData<long long>(long long& data)
+inline void Serializer::TransferBasicData<long long>(long long& data)
 {
 //	writer_->Int64(data);
 }
 
 template<>
-inline void BinaryWriter::TransferBasicData<unsigned long long>(unsigned long long& data)
+inline void Serializer::TransferBasicData<unsigned long long>(unsigned long long& data)
 {
 //	writer_->Uint64(data);
 }
 
 template<>
-inline void BinaryWriter::TransferBasicData<float>(float& data)
+inline void Serializer::TransferBasicData<float>(float& data)
 {
 //	writer_->Double(data);
 }
 
 template<>
-inline void BinaryWriter::TransferBasicData<double>(double& data)
+inline void Serializer::TransferBasicData<double>(double& data)
 {
 //	writer_->Double(data);
 }

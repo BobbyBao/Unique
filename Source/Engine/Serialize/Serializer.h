@@ -4,11 +4,11 @@
 
 namespace Unique
 {
-	class BinaryWriter : public Writer
+	class Serializer : public Writer
 	{
 	public:
-		BinaryWriter();
-		~BinaryWriter();
+		Serializer();
+		~Serializer();
 
 
 		template<class T>
@@ -39,5 +39,5 @@ namespace Unique
 	};
 
 
-	#include "BinaryWriter.inl"
+	#include "Serializer.inl"
 }
