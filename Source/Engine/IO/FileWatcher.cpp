@@ -230,7 +230,7 @@ void FileWatcher::StopWatching()
 
 void FileWatcher::SetDelay(float interval)
 {
-    delay_ = Max(interval, 0.0f);
+    delay_ = std::max(interval, 0.0f);
 }
 
 void FileWatcher::ThreadFunction()

@@ -241,9 +241,9 @@ unsigned File::Read(void* dest, unsigned size)
             sizeLeft -= copySize;
             readBufferOffset_ += copySize;
             position_ += copySize;
-#endif
-        }
 
+        }
+#endif
         return size;
     }
 
@@ -294,7 +294,7 @@ unsigned File::Seek(unsigned position)
         {
             unsigned char skipBuffer[SKIP_BUFFER_SIZE];
             while (position > position_)
-                Read(skipBuffer, Min(position - position_, SKIP_BUFFER_SIZE));
+                Read(skipBuffer, std::min(position - position_, SKIP_BUFFER_SIZE));
         }
         else
             UNIQUE_LOGERROR("Seeking backward in a compressed file is not supported");
@@ -501,7 +501,7 @@ bool File::OpenInternal(const String& fileName, FileMode mode, bool fromPackage)
         fseek((FILE*)handle_, 0, SEEK_END);
         long size = ftell((FILE*)handle_);
         fseek((FILE*)handle_, 0, SEEK_SET);
-        if (size > M_MAX_UNSIGNED)
+        if (size > UINT_MAX)
         {
             UNIQUE_LOGERRORF("Could not open file %s which is larger than 4GB", fileName.CString());
             Close();

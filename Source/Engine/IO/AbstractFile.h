@@ -39,6 +39,15 @@ public:
     /// Destruct.
 	virtual ~AbstractFile() { }
 
+	/// Return whether the end of stream has been reached.
+	virtual bool IsEof() const { return position_ >= size_; }
+
+	/// Return current position.
+	unsigned GetPosition() const { return position_; }
+
+	/// Return size.
+	unsigned GetSize() const { return size_; }
+
 protected:
 	/// Stream position.
 	unsigned position_;

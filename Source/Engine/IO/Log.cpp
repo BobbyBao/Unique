@@ -264,7 +264,7 @@ void Log::WriteRaw(const String& message, bool error)
 void Log::HandleEndFrame(StringID eventType, const EndFrame& eventData)
 {
     // If the MainThreadID is not valid, processing this loop can potentially be endless
-    if (!Thread::IsMainThread())
+    if (!Context::IsMainThread())
     {
         if (!threadErrorDisplayed)
         {

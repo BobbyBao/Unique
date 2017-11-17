@@ -1060,9 +1060,9 @@ bool IsAbsolutePath(const String& pathName)
 
     if (path[0] == '/')
         return true;
-
+	
 #ifdef _WIN32
-    if (path.Length() > 1 && IsAlpha(path[0]) && path[1] == ':')
+    if (path.Length() > 1 && std::isalpha(path[0]) && path[1] == ':')
         return true;
 #endif
 
