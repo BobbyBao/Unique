@@ -139,14 +139,14 @@ namespace Unique
 	class StringID::StringIDUtil <String>
 	{
 	public:
-		static uint size(String const& input) { return (uint)input.size(); }
+		static uint size(String const& input) { return (uint)input.Length(); }
 		static void copy(String const& input, char* dest)
 		{ 
-			uint len = (uint)input.size();
-			std::strcpy(dest, input.c_str());
+			uint len = (uint)input.Length();
+			std::strcpy(dest, input.CString());
 			dest[len] = '\0';
 		}
-		static bool compare(String const& a, char* b) { return std::strcmp(a.c_str(), b) == 0; }
+		static bool compare(String const& a, char* b) { return std::strcmp(a.CString(), b) == 0; }
 	};
 
 	template class StringID::StringIDUtil <const char*>;

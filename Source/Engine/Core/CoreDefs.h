@@ -1,14 +1,13 @@
 #pragma once
 
 #include <vector>
-#include <string>
 #include <functional>
 #include <algorithm>
 #include <list>
 #include <map>
 #include <unordered_map>
 #include <unordered_set>
-
+#include <assert.h>
 
 namespace Unique
 {
@@ -16,8 +15,8 @@ namespace Unique
 	typedef unsigned short ushort;
 	typedef unsigned char byte;
 
-	template<class T>
-	using Vector = std::vector<T>;
+	//template<class T>
+	//using Vector = std::vector<T>;
 
 	template<class T>
 	using List = std::list<T>;
@@ -34,5 +33,4 @@ namespace Unique
 	template<class T>
 	using HashSet = std::unordered_set<T>;
 	
-	using String = std::string;
 }

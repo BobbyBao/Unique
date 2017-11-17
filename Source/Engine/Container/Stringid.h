@@ -96,7 +96,7 @@ namespace Unique
 		}
 
 		String ToString() const {
-			return internalData_ ? internalData_->chars : StringUtil::EMPTY;
+			return internalData_ ? internalData_->chars : String::EMPTY;
 		}
 
 		size_t ToHash() const { return internalData_ ? (size_t)internalData_->chars : 0; }

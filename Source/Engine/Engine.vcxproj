@@ -282,11 +282,22 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Container\Str.cpp" />
+    <ClCompile Include="Container\Swap.cpp" />
+    <ClCompile Include="Container\VectorBase.cpp" />
+    <ClCompile Include="Core\Context.cpp" />
     <ClCompile Include="Core\Attribute.cpp" />
-    <ClCompile Include="Core\RefCounted.cpp" />
-    <ClCompile Include="Core\Stringid.cpp" />
+    <ClCompile Include="Core\Event.cpp" />
+    <ClCompile Include="Container\Stringid.cpp" />
+    <ClCompile Include="Core\Profiler.cpp" />
     <ClCompile Include="Core\StringUtil.cpp" />
+    <ClCompile Include="Core\Timer.cpp" />
     <ClCompile Include="Graphics\Graphics.cpp" />
+    <ClCompile Include="IO\File.cpp" />
+    <ClCompile Include="IO\FileSystem.cpp" />
+    <ClCompile Include="IO\FileWatcher.cpp" />
+    <ClCompile Include="IO\Log.cpp" />
+    <ClCompile Include="IO\PackageFile.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Graphics\Material.cpp" />
     <ClCompile Include="Graphics\Model.cpp" />
@@ -298,18 +309,34 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
-    <ClInclude Include="Core\ArrayPtr.h" />
+    <ClInclude Include="Container\Arrayptr.h" />
+    <ClInclude Include="Container\Linkedlist.h" />
+    <ClInclude Include="Container\Ptr.h" />
+    <ClInclude Include="Container\Sort.h" />
+    <ClInclude Include="Container\Str.h" />
+    <ClInclude Include="Container\Swap.h" />
+    <ClInclude Include="Container\Vector.h" />
+    <ClInclude Include="Container\VectorBase.h" />
+    <ClInclude Include="Core\Context.h" />
     <ClInclude Include="Core\Attribute.h" />
     <ClInclude Include="Core\CoreDefs.h" />
-    <ClInclude Include="Core\Ptr.h" />
-    <ClInclude Include="Core\RefCounted.h" />
+    <ClInclude Include="Core\Event.h" />
+    <ClInclude Include="Core\Profiler.h" />
     <ClInclude Include="Core\SpinLock.h" />
-    <ClInclude Include="Core\Stringid.h" />
+    <ClInclude Include="Container\Stringid.h" />
+    <ClInclude Include="Core\Timer.h" />
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Graphics\Material.h" />
     <ClInclude Include="Graphics\Model.h" />
     <ClInclude Include="Core\Object.h" />
     <ClInclude Include="Graphics\Shader.h" />
+    <ClInclude Include="IO\AbstractFile.h" />
+    <ClInclude Include="IO\File.h" />
+    <ClInclude Include="IO\FileSystem.h" />
+    <ClInclude Include="IO\FileWatcher.h" />
+    <ClInclude Include="IO\IOEvents.h" />
+    <ClInclude Include="IO\Log.h" />
+    <ClInclude Include="IO\PackageFile.h" />
     <ClInclude Include="Precompiled.h" />
     <ClInclude Include="Core\TypeInfo.h" />
     <ClInclude Include="Serialize\Deserializer.h" />

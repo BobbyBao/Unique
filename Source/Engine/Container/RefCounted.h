@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../UniqueDefs.h"
+#include "../Unique.h"
 
 
 namespace Unique

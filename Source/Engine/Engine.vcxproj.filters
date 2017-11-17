@@ -31,12 +31,23 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Core\Attribute.cpp" />
-    <ClCompile Include="Core\RefCounted.cpp" />
     <ClCompile Include="Precompiled.cpp" />
     <ClCompile Include="Core\TypeInfo.cpp" />
     <ClCompile Include="Serialize\ObjectInspector.cpp" />
     <ClCompile Include="Core\StringUtil.cpp" />
-    <ClCompile Include="Core\Stringid.cpp" />
+    <ClCompile Include="Core\Context.cpp" />
+    <ClCompile Include="Core\Event.cpp" />
+    <ClCompile Include="IO\Log.cpp" />
+    <ClCompile Include="Container\Str.cpp" />
+    <ClCompile Include="Container\Swap.cpp" />
+    <ClCompile Include="Container\VectorBase.cpp" />
+    <ClCompile Include="Container\Stringid.cpp" />
+    <ClCompile Include="IO\File.cpp" />
+    <ClCompile Include="IO\FileSystem.cpp" />
+    <ClCompile Include="IO\FileWatcher.cpp" />
+    <ClCompile Include="IO\PackageFile.cpp" />
+    <ClCompile Include="Core\Profiler.cpp" />
+    <ClCompile Include="Core\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -60,10 +71,7 @@
     <ClInclude Include="Core\CoreDefs.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Core\ArrayPtr.h" />
     <ClInclude Include="Core\Attribute.h" />
-    <ClInclude Include="Core\Ptr.h" />
-    <ClInclude Include="Core\RefCounted.h" />
     <ClInclude Include="Precompiled.h" />
     <ClInclude Include="Core\TypeInfo.h" />
     <ClInclude Include="Core\SpinLock.h" />
@@ -73,9 +81,28 @@
     <ClInclude Include="Serialize\SerializeTraitsBasic.h" />
     <ClInclude Include="Serialize\SerializeTraitsStd.h" />
     <ClInclude Include="Core\StringUtil.h" />
-    <ClInclude Include="Core\Stringid.h" />
     <ClInclude Include="Serialize\Serializer.h" />
     <ClInclude Include="Serialize\Deserializer.h" />
+    <ClInclude Include="Core\Context.h" />
+    <ClInclude Include="Core\Event.h" />
+    <ClInclude Include="IO\Log.h" />
+    <ClInclude Include="Container\Arrayptr.h" />
+    <ClInclude Include="Container\Linkedlist.h" />
+    <ClInclude Include="Container\Ptr.h" />
+    <ClInclude Include="Container\Sort.h" />
+    <ClInclude Include="Container\Str.h" />
+    <ClInclude Include="Container\Swap.h" />
+    <ClInclude Include="Container\Vector.h" />
+    <ClInclude Include="Container\VectorBase.h" />
+    <ClInclude Include="Container\Stringid.h" />
+    <ClInclude Include="IO\File.h" />
+    <ClInclude Include="IO\FileSystem.h" />
+    <ClInclude Include="IO\FileWatcher.h" />
+    <ClInclude Include="IO\IOEvents.h" />
+    <ClInclude Include="IO\PackageFile.h" />
+    <ClInclude Include="Core\Profiler.h" />
+    <ClInclude Include="Core\Timer.h" />
+    <ClInclude Include="IO\AbstractFile.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Serialize\Deserializer.inl" />
