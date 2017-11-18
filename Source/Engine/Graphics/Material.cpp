@@ -1,13 +1,16 @@
 #include "../Precompiled.h"
 #include "Material.h"
 
-
-
-Material::Material()
+namespace Unique
 {
-}
+
+	Material::Material()
+	{
+	}
 
 
-Material::~Material()
-{
+	Material::~Material()
+	{
+	}
+
 }

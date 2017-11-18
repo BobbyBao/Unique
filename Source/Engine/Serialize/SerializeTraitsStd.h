@@ -6,6 +6,7 @@
 #include <deque>
 #include <set>
 #include <list>
+#include <unordered_map>
 
 namespace Unique
 {
@@ -148,8 +149,8 @@ namespace Unique
 		template<class TransferFunction> inline
 			static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			transfer.Transfer(data.first, "key", TF_ATTRIBUTE);
-			transfer.Transfer(data.second, "value", TF_ATTRIBUTE);
+			transfer.Transfer(data.first, "key", TF_DEFAULT);
+			transfer.Transfer(data.second, "value", TF_DEFAULT);
 		}
 	};
 

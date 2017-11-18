@@ -2,6 +2,7 @@
 #include "../serialize/SerializeDefs.h"
 #include "../core/SpinLock.h"
 #include "../Core/StringUtil.h"
+#include "../Container/Str.h"
 
 namespace Unique
 {

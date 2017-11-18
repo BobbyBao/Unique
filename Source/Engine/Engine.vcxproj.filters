@@ -52,6 +52,12 @@
     <ClCompile Include="Math\MathDefs.cpp" />
     <ClCompile Include="Container\RefCounted.cpp" />
     <ClCompile Include="IO\AbstractFile.cpp" />
+    <ClCompile Include="Serialize\mpack\mpack-common.c" />
+    <ClCompile Include="Serialize\mpack\mpack-expect.c" />
+    <ClCompile Include="Serialize\mpack\mpack-node.c" />
+    <ClCompile Include="Serialize\mpack\mpack-platform.c" />
+    <ClCompile Include="Serialize\mpack\mpack-reader.c" />
+    <ClCompile Include="Serialize\mpack\mpack-writer.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -111,8 +117,16 @@
     <ClInclude Include="Math\MathDefs.h" />
     <ClInclude Include="Container\RefCounted.h" />
     <ClInclude Include="Core\CoreEvents.h" />
+    <ClInclude Include="Serialize\mpack\mpack.h" />
+    <ClInclude Include="Serialize\mpack\mpack-common.h" />
+    <ClInclude Include="Serialize\mpack\mpack-expect.h" />
+    <ClInclude Include="Serialize\mpack\mpack-node.h" />
+    <ClInclude Include="Serialize\mpack\mpack-platform.h" />
+    <ClInclude Include="Serialize\mpack\mpack-reader.h" />
+    <ClInclude Include="Serialize\mpack\mpack-writer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Serialize\Deserializer.inl" />
+    <None Include="Serialize\Serializer.inl" />
   </ItemGroup>
 </Project>

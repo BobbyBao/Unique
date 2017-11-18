@@ -23,7 +23,10 @@
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
+#include "Graphics/Shader.h"
+#include "Core/Context.h"
 
+using namespace Unique;
 
 /* ----- Global helper functions ----- */
 
@@ -285,6 +288,8 @@ protected:
 
     Gs::Matrix4f                                projection;
 
+	UPtr<Context> context_;
+
     virtual void OnDrawFrame() = 0;
 
     Application(
@@ -296,7 +301,9 @@ protected:
             profilerObj_ { new LLGL::RenderingProfiler() },
             debuggerObj_ { new Debugger()                },
             timer        { LLGL::Timer::Create()         },
-            profiler     { *profilerObj_                 }
+            profiler     { *profilerObj_                 },
+
+		context_(new Context())
     {
         // Create render system
         renderer = LLGL::RenderSystem::Load(
@@ -381,6 +388,14 @@ protected:
 
         // Store information that loading is done
         loadingDone_ = true;
+		
+
+		SPtr<Shader> shader(new Shader());
+
+		Serializer ser;
+		ser.Save("test.bin", shader);
+
+
     }
 
     LLGL::ShaderProgram* LoadShaderProgram(

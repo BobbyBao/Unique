@@ -31,3 +31,7 @@
 #   define UNIQUE_C_API UNIQUE_API
 #endif // defined(__cplusplus)
 
+
+typedef unsigned uint;
+typedef unsigned short ushort;
+typedef unsigned char byte;

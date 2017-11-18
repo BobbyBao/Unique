@@ -22,7 +22,7 @@
     <ProjectGuid>{8BDD6AF5-CB1D-4AD6-A5CE-7AC304B28E77}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <Platform>x64</Platform>
-    <ProjectName>Engine</ProjectName>
+    <ProjectName>Unique</ProjectName>
     <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -309,6 +309,12 @@
     <ClCompile Include="Math\MathDefs.cpp" />
     <ClCompile Include="Precompiled.cpp" />
     <ClCompile Include="Core\TypeInfo.cpp" />
+    <ClCompile Include="Serialize\mpack\mpack-common.c" />
+    <ClCompile Include="Serialize\mpack\mpack-expect.c" />
+    <ClCompile Include="Serialize\mpack\mpack-node.c" />
+    <ClCompile Include="Serialize\mpack\mpack-platform.c" />
+    <ClCompile Include="Serialize\mpack\mpack-reader.c" />
+    <ClCompile Include="Serialize\mpack\mpack-writer.c" />
     <ClCompile Include="Serialize\ObjectInspector.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -348,6 +354,13 @@
     <ClInclude Include="Precompiled.h" />
     <ClInclude Include="Core\TypeInfo.h" />
     <ClInclude Include="Serialize\Deserializer.h" />
+    <ClInclude Include="Serialize\mpack\mpack-common.h" />
+    <ClInclude Include="Serialize\mpack\mpack-expect.h" />
+    <ClInclude Include="Serialize\mpack\mpack-node.h" />
+    <ClInclude Include="Serialize\mpack\mpack-platform.h" />
+    <ClInclude Include="Serialize\mpack\mpack-reader.h" />
+    <ClInclude Include="Serialize\mpack\mpack-writer.h" />
+    <ClInclude Include="Serialize\mpack\mpack.h" />
     <ClInclude Include="Serialize\Serializer.h" />
     <ClInclude Include="Serialize\ObjectInspector.h" />
     <ClInclude Include="Serialize\SerializeDefs.h" />
@@ -358,6 +371,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Serialize\Deserializer.inl" />
+    <None Include="Serialize\Serializer.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -22,7 +22,7 @@ Object::~Object()
 }
 
 template<class TransferFunction>
-void TransferTypeInfo(TransferFunction& transfer, const TypeInfo* typeInfo, void* obj)
+inline void TransferTypeInfo(TransferFunction& transfer, const TypeInfo* typeInfo, void* obj)
 {
 	const TypeInfo* baseTypeInfo = typeInfo->GetBaseTypeInfo();
 	if (baseTypeInfo)
@@ -31,7 +31,7 @@ void TransferTypeInfo(TransferFunction& transfer, const TypeInfo* typeInfo, void
 	}
 
 	auto& attributes = typeInfo->GetAttributes();
-	for (UPtr<Attribute>& attri : attributes)
+	for (const UPtr<Attribute>& attri : attributes)
 	{
 		attri->Visit(transfer, obj);
 	}
@@ -48,8 +48,11 @@ void Object::Transfer(TransferFunction& transfer)
 
 	const TypeInfo* typeInfo = GetTypeInfo();
 
-	TransferTypeInfo(typeInfo);
+	TransferTypeInfo(transfer, typeInfo, this);
 }
+
+template UNIQUE_API void Object::Transfer(Serializer&);
+//template UNIQUE_API void TransferTypeInfo(Serializer& transfer, const TypeInfo* typeInfo, void* obj);
 
 void Object::OnEvent(Object* sender, StringID eventType, const Event& eventData)
 {

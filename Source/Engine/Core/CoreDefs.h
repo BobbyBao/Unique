@@ -12,10 +12,6 @@
 
 namespace Unique
 {
-	typedef unsigned uint;
-	typedef unsigned short ushort;
-	typedef unsigned char byte;
-
 	//template<class T>
 	//using Vector = std::vector<T>;
 
