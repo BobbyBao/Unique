@@ -22,6 +22,22 @@ Object::~Object()
 }
 
 template<class TransferFunction>
+void TransferTypeInfo(TransferFunction& transfer, const TypeInfo* typeInfo, void* obj)
+{
+	const TypeInfo* baseTypeInfo = typeInfo->GetBaseTypeInfo();
+	if (baseTypeInfo)
+	{
+		TransferTypeInfo(transfer, baseTypeInfo, obj);
+	}
+
+	auto& attributes = typeInfo->GetAttributes();
+	for (UPtr<Attribute>& attri : attributes)
+	{
+		attri->Visit(transfer, obj);
+	}
+}
+
+template<class TransferFunction>
 void Object::Transfer(TransferFunction& transfer)
 {
 	if (transfer.IsWriting())
@@ -29,6 +45,10 @@ void Object::Transfer(TransferFunction& transfer)
 		StringID tmp = GetType();
 		transfer.Transfer(tmp, "Type", TF_READONLY);
 	}
+
+	const TypeInfo* typeInfo = GetTypeInfo();
+
+	TransferTypeInfo(typeInfo);
 }
 
 void Object::OnEvent(Object* sender, StringID eventType, const Event& eventData)

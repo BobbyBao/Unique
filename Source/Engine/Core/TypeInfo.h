@@ -31,9 +31,9 @@ namespace Unique
 		const TypeInfo* GetBaseTypeInfo() const { return baseTypeInfo_; }
 
 		void RegisterAttribute(Attribute* attr);
+
+		const std::vector<UPtr<Attribute>>& GetAttributes() const { return attributes_;}
 		
-		static int GetTypeInfo(TypeInfo** typeInfoList);
-		static void Init();
 	private:
 		/// Type.
 		StringID type_;
@@ -42,7 +42,7 @@ namespace Unique
 		/// Base class type info.
 		const TypeInfo* baseTypeInfo_;
 
-		std::vector<UPtr<Attribute>> attributies_;
+		std::vector<UPtr<Attribute>> attributes_;
 	};
 
 }

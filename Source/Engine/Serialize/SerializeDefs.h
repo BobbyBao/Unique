@@ -3,9 +3,8 @@
 enum TransferMetaFlags
 {
 	TF_DEFAULT = 0,
-	TF_ATTRIBUTE = 1,
-	TF_HIDE_IN_EDITOR = 2,
-	TF_READONLY = 4
+	TF_NOEDIT = 1,
+	TF_READONLY = 2
 };
 
 #define TRANSFER(NAME, FIELD) transfer.Transfer (FIELD, NAME, TF_DEFAULT);

@@ -71,12 +71,27 @@ public:
     Context();
     /// Destruct.
     ~Context();
-	
+
+	/// Create an object by type. Return pointer to it or null if no factory found.
+	template <class T> inline SPtr<T> CreateObject()
+	{
+		return StaticCast<T>(CreateObject(T::GetTypeStatic()));
+	}
+	/// Create an object by type hash. Return pointer to it or null if no factory found.
+	SPtr<Object> CreateObject(StringID objectType);
+	/// Register a factory for an object type.
+	void RegisterFactory(ObjectFactory* factory);
+	/// Register a factory for an object type and specify the object category.
+	void RegisterFactory(ObjectFactory* factory, const char* category);
     /// Register a subsystem.
     void RegisterSubsystem(Object* subsystem);
     /// Remove a subsystem.
     void RemoveSubsystem(StringID objectType);
-	
+
+	/// Template version of registering an object factory.
+	template <class T> void RegisterFactory();
+	/// Template version of registering an object factory with category.
+	template <class T> void RegisterFactory(const char* category);
     /// Template version of removing a subsystem.
     template <class T> void RemoveSubsystem();
 
@@ -85,6 +100,12 @@ public:
 
     /// Return all subsystems.
 	const Vector<Object*>& GetSubsystems() const { return subsystemVec_; }
+
+	/// Return all object factories.
+	const HashMap<StringID, UPtr<ObjectFactory> >& GetObjectFactories() const { return factories_; }
+
+	/// Return all object categories.
+	const HashMap<String, Vector<StringID> >& GetObjectCategories() const { return objectCategories_; }
 
     /// Return active event sender. Null outside event handling.
     Object* GetEventSender() const;
@@ -158,6 +179,9 @@ private:
     /// Set current event handler. Called by Object.
     void SetEventHandler(EventHandler* handler) { eventHandler_ = handler; }
 
+	/// Object factories.
+	HashMap<StringID, UPtr<ObjectFactory> > factories_;
+
 	Vector<Object*> subsystemVec_;
     /// Subsystems.
     HashMap<StringID, SPtr<Object>> subsystems_;
@@ -169,8 +193,16 @@ private:
     Vector<Object*> eventSenders_;
     /// Active event handler. Not stored in a stack for performance reasons; is needed only in esoteric cases.
     EventHandler* eventHandler_;
-
+	/// Object categories.
+	HashMap<String, Vector<StringID> > objectCategories_;
 };
+
+template <class T> void Context::RegisterFactory() { RegisterFactory(new ObjectFactoryImpl<T>()); }
+
+template <class T> void Context::RegisterFactory(const char* category)
+{
+	RegisterFactory(new ObjectFactoryImpl<T>(), category);
+}
 
 class RegisterRuntime
 {

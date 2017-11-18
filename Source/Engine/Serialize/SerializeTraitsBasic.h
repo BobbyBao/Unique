@@ -2,6 +2,8 @@
 #define SERIALIZETRAITS_H
 
 #include "SerializeDefs.h"
+#include "../Math/MathDefs.h"
+#include "../Container/Str.h"
 
 namespace Unique
 {
@@ -179,7 +181,7 @@ namespace Unique
 #endif
 		}
 	};
-
+	
 	template<>
 	class SerializeTraits<Unique::String> : public SerializeTraitsBase<Unique::String>
 	{
@@ -191,7 +193,7 @@ namespace Unique
 		template<class TransferFunction> inline
 		static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			transfer.TransferBasicData(data/*, kHideInEditorMask*/);
+			transfer.TransferBasicData(data);
 		}
 
 		static bool IsContinousMemoryArray() { return true; }

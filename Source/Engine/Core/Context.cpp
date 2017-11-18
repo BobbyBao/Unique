@@ -157,6 +157,34 @@ Context::~Context()
 	Object::context_ = nullptr;
 }
 
+SPtr<Object> Context::CreateObject(StringID objectType)
+{
+	HashMap<StringID, UPtr<ObjectFactory> >::const_iterator i = factories_.find(objectType);
+	if (i != factories_.end())
+		return i->second->CreateObject();
+	else
+		return SPtr<Object>();
+}
+
+void Context::RegisterFactory(ObjectFactory* factory)
+{
+	if (!factory)
+		return;
+
+	factories_[factory->GetType()] = std::move(UPtr<ObjectFactory>(factory));
+}
+
+void Context::RegisterFactory(ObjectFactory* factory, const char* category)
+{
+	if (!factory)
+		return;
+
+	RegisterFactory(factory);
+
+	if (String::CStringLength(category))
+		objectCategories_[category].push_back(factory->GetType());
+}
+
 void Context::RegisterSubsystem(Object* object)
 {
     if (!object)

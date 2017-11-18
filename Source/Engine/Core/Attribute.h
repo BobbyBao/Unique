@@ -1,6 +1,8 @@
 #pragma once
 #include "../Core/CoreDefs.h"
 #include "../Container/refcounted.h"
+#include "../Serialize/Deserializer.h"
+#include "../Serialize/Serializer.h"
 
 namespace Unique
 {
@@ -27,7 +29,7 @@ namespace Unique
 	};
 
 	template<class T>
-	class TAttribute : Attribute
+	class TAttribute : public Attribute
 	{
 	public:
 		TAttribute(const String& name, uint offset, unsigned mode)
@@ -61,8 +63,8 @@ namespace Unique
 		template<class Visitor>
 		void VisitImpl(Visitor& visitor, void* ptr)
 		{
-			T* dest = reinterpret_cast<unsigned char*>(ptr) + offset_;
-			visitor.Transfer(name_.c_str(), *dest);
+			T* dest = (T*)(reinterpret_cast<unsigned char*>(ptr) + offset_);
+			visitor.Transfer(*dest, name_.CString(), mode_);
 		}
 
 		uint offset_;
@@ -158,14 +160,14 @@ namespace Unique
 			if (visitor.IsReading())
 			{
 				U value;
-				visitor.Transfer(name_.c_str(), value);
+				visitor.Transfer(value, name_.CString(), mode_);
 				(classPtr->*setFunction_)(value);
 			}
 
 			if (visitor.IsWriting())
 			{
-				Trait::ReturnType value = (classPtr->*getFunction_)();
-				visitor.Transfer(name_.c_str(), value);
+				U value = (classPtr->*getFunction_)();
+				visitor.Transfer(value, name_.CString(), mode_);
 			}
 		}
 
@@ -175,11 +177,11 @@ namespace Unique
 
 
 	/// Define an attribute that points to a memory offset in the object.
-#define UNIQUE_ATTRIBUTE(name, typeName, variable, mode)\
-	ClassName::GetTypeInfoStatic()->RegisterAttribute(new Unique::TAttribute<typeName>(name, offsetof(ClassName, variable), mode))
+#define uAttribute(name, variable, typeName, mode)\
+	ClassName::GetTypeInfoStatic()->RegisterAttribute(new Unique::TAttribute<typeName>(name, offsetof(ClassName, variable), mode));
 
 /// Define an attribute that uses get and set functions.
-#define UNIQUE_ACCESSOR_ATTRIBUTE(name, getFunction, setFunction, typeName, mode)\
-	ClassName::GetTypeInfoStatic()->RegisterAttribute(new Unique::AttributeAccessorImpl<ClassName, typeName, Unique::AttributeTrait<typeName > >(name, &ClassName::getFunction, &ClassName::setFunction, mode))
+#define uAccessor(name, getFunction, setFunction, typeName, mode)\
+	ClassName::GetTypeInfoStatic()->RegisterAttribute(new Unique::AttributeAccessorImpl<ClassName, typeName, Unique::AttributeTrait<typeName > >(name, &ClassName::getFunction, &ClassName::setFunction, mode));
 
 }

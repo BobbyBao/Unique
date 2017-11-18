@@ -3,7 +3,7 @@
 #include "../Container/Vector.h"
 #include "../Container/LinkedList.h"
 #include "../Container/StringID.h"
-#include "../serialize/SerializeDefs.h"
+#include "../serialize/SerializeTraits.h"
 #include "../Core/TypeInfo.h"
 #include "../Core/Event.h"
 
@@ -14,33 +14,6 @@ namespace Unique
 
 class Context;
 class EventHandler;
-
-typedef SPtr<Object> (*CreateObjectFn)(); 
-
-#define UNIQUE_OBJECT(typeName, baseTypeName) \
-    public: \
-        typedef typeName ClassName; \
-        typedef baseTypeName BaseClassName; \
-        virtual const Unique::StringID& GetType() const { return GetTypeInfoStatic()->GetType(); } \
-		virtual const Unique::TypeInfo* GetTypeInfo() const { return GetTypeInfoStatic(); } \
-        static const Unique::StringID& GetTypeStatic() { return GetTypeInfoStatic()->GetType(); } \
-		static const Unique::TypeInfo* GetTypeInfoStatic() { static const Unique::TypeInfo typeInfoStatic(#typeName, BaseClassName::GetTypeInfoStatic()); return &typeInfoStatic; } \
-
-#define DECLARE_OBJECT(typeName)\
-    public: \
-        typedef typeName ClassName; \
-        virtual Unique::StringHash GetType() const { return GetTypeInfoStatic()->GetType(); } \
-        virtual const Unique::String& GetTypeName() const { return GetTypeInfoStatic()->GetTypeName(); } \
-        virtual const Unique::TypeInfo* GetTypeInfo() const { return GetTypeInfoStatic(); } \
-        static Unique::StringHash GetTypeStatic() { return GetTypeInfoStatic()->GetType(); } \
-        static const Unique::String& GetTypeNameStatic() { return GetTypeInfoStatic()->GetTypeName(); } \
-		static const Unique::TypeInfo* GetTypeInfoStatic();\
-		static void RegisterObject(Context* context);
-
-#define IMPLEMENT_OBJECT(typeName, baseTypeName)\
-        const Unique::TypeInfo* typeName::GetTypeInfoStatic() { static const Unique::TypeInfo typeInfoStatic(#typeName, baseTypeName::GetTypeInfoStatic()); return &typeInfoStatic; } \
-		static RegisterRuntime s_##typeName##Callbacks(typeName::RegisterObject, nullptr);\
-		void typeName::RegisterObject(Context* context)
 	
 /// Base class for objects with type identification, subsystem access and event sending/receiving capability.
 class UNIQUE_API Object : public RefCounted
@@ -62,7 +35,7 @@ public:
 	void Transfer(TransferFunction& transfer);
 
     /// Return type info static.
-    static const TypeInfo* GetTypeInfoStatic() { static const Unique::TypeInfo typeInfoStatic("Object", nullptr); return &typeInfoStatic; }
+    static TypeInfo* GetTypeInfoStatic() { static Unique::TypeInfo typeInfoStatic("Object", nullptr); return &typeInfoStatic; }
     /// Check current instance is type of specified type.
     bool IsInstanceOf(const StringID& type) const;
     /// Check current instance is type of specified type.
@@ -137,23 +110,15 @@ private:
 template <class T> T& Subsystem() { return *Object::GetContext()->Subsystem<T>(); }
 template <class T> bool HasSubsystem() { return Object::GetContext()->Subsystem<T>() != nullptr; }
 
-UNIQUE_API SPtr<Object> CreateObject(const StringID& type);
-template <class T> SPtr<T> CreateObject() { return DynamicCast<T>(CreateObject(T::GetTypeStatic())); }
-
-
 /// Base class for object factories.
 class UNIQUE_API ObjectFactory
 {
 public:
 	/// Create an object. Implemented in templated subclasses.
 	virtual SPtr<Object> CreateObject() = 0;
-	
-	/// Return type info of objects created by this factory.
-	const TypeInfo* GetTypeInfo() const { return typeInfo_; }
 
 	/// Return type hash of objects created by this factory.
 	StringID GetType() const { return typeInfo_->GetType(); }
-	
 protected:
 	/// Type info.
 	const TypeInfo* typeInfo_;
@@ -172,5 +137,22 @@ public:
 	/// Create an object of the specific type.
 	virtual SPtr<Object> CreateObject() { return SPtr<Object>(new T()); }
 };
+
+#define UNIQUE_OBJECT(typeName, baseTypeName) \
+    public: \
+        typedef typeName ClassName; \
+        typedef baseTypeName BaseClassName; \
+        virtual const Unique::StringID& GetType() const { return GetTypeInfoStatic()->GetType(); } \
+		virtual const Unique::TypeInfo* GetTypeInfo() const { return GetTypeInfoStatic(); } \
+        static const Unique::StringID& GetTypeStatic() { return GetTypeInfoStatic()->GetType(); } \
+		static Unique::TypeInfo* GetTypeInfoStatic() { static Unique::TypeInfo typeInfoStatic(#typeName, BaseClassName::GetTypeInfoStatic()); return &typeInfoStatic; } \
+		static void RegisterObject(Context* context);
+
+#define uObject(typeName)\
+		static RegisterRuntime s_##typeName##Callbacks(typeName::RegisterObject, nullptr);\
+		void typeName::RegisterObject(Context* context)
+
+#define uFactory(category)\
+		context->RegisterFactory<ClassName>(category);
 
 }
