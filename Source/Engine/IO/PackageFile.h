@@ -41,7 +41,7 @@ struct PackageEntry
 /// Stores files of a directory tree sequentially for convenient access.
 class UNIQUE_API PackageFile : public Object
 {
-    UNIQUE_OBJECT(PackageFile, Object);
+    UNIQUE_OBJECT(PackageFile, Object)
 
 public:
     /// Construct.

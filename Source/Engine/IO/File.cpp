@@ -370,6 +370,7 @@ unsigned File::GetChecksum()
     {
         unsigned char block[1024];
         unsigned readBytes = Read(block, 1024);
+
         for (unsigned i = 0; i < readBytes; ++i)
             checksum_ = SDBMHash(checksum_, block[i]);
     }

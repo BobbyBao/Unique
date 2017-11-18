@@ -22,8 +22,7 @@
 
 #pragma once
 #include "../Unique.h"
-//#include "../IO/Serializer.h"
-//#include "../IO/Deserializer.h"
+
 
 namespace Unique
 {
@@ -33,11 +32,18 @@ class UNIQUE_API AbstractFile
 {
 public:
     /// Construct.
-    AbstractFile() { }
+	AbstractFile();
     /// Construct.
-    AbstractFile(unsigned int size) : size_(size) { }
-    /// Destruct.
-	virtual ~AbstractFile() { }
+	AbstractFile(unsigned int size);
+	/// Destruct.
+	virtual ~AbstractFile();
+
+	/// Read bytes from the stream. Return number of bytes actually read.
+	virtual unsigned Read(void* dest, unsigned size) = 0;
+	/// Set position from the beginning of the stream.
+	virtual unsigned Seek(unsigned position) = 0;
+	/// Write bytes to the stream. Return number of bytes actually written.
+	virtual unsigned Write(const void* data, unsigned size) = 0;
 
 	/// Return whether the end of stream has been reached.
 	virtual bool IsEof() const { return position_ >= size_; }
@@ -48,11 +54,36 @@ public:
 	/// Return size.
 	unsigned GetSize() const { return size_; }
 
+	template<class T>
+	bool Read(T& value)
+	{
+		return Read(&value, sizeof value) == sizeof value;
+	}
+
+	bool Read(String& str);
+
+	String ReadFileID();
+
+	String ReadLine();
+	
+	template<class T>
+	bool Write(const T& value)
+	{
+		return Write(&value, sizeof value) == sizeof value;
+	}
+
+	bool Write(const String& value);
+
+	bool WriteFileID(const String& value);
+
+	bool WriteLine(const String& value);
+
 protected:
 	/// Stream position.
 	unsigned position_;
 	/// Stream size.
 	unsigned size_;
 };
+
 
 };

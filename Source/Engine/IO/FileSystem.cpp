@@ -25,7 +25,7 @@
 #include "../Container/ArrayPtr.h"
 #include "../Core/Context.h"
 #include "../Core/CoreEvents.h"
-//#include "../Core/Thread.h"
+#include "../Core/Thread.h"
 //#include "../Engine/EngineEvents.h"
 #include "../IO/File.h"
 #include "../IO/FileSystem.h"
@@ -198,7 +198,7 @@ int DoSystemRun(const String& fileName, const Vector<String>& arguments)
 #endif
 #endif
 }
-/*
+
 /// Base class for async execution requests.
 class AsyncExecRequest : public Thread
 {
@@ -281,7 +281,7 @@ private:
     String fileName_;
     /// Command line split in arguments.
     const Vector<String>& arguments_;
-};*/
+};
 
 FileSystem::FileSystem() :
     nextAsyncExecID_(1),
@@ -904,7 +904,7 @@ void FileSystem::ScanDirInternal(Vector<String>& result, String path, const Stri
 }
 
 void FileSystem::HandleBeginFrame(StringID eventType, const BeginFrame& eventData)
-{/*
+{
     /// Go through the execution queue and post + remove completed requests
     for (List<AsyncExecRequest*>::iterator i = asyncExecQueue_.begin(); i != asyncExecQueue_.end();)
     {
@@ -926,7 +926,7 @@ void FileSystem::HandleBeginFrame(StringID eventType, const BeginFrame& eventDat
         }
         else
             ++i;
-    }*/
+    }
 }
 
 void FileSystem::HandleConsoleCommand(StringID eventType, const Event& eventData)

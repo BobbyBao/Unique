@@ -112,7 +112,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>LLGLD.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;LLGLD.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\Depends\Lib\$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -282,6 +282,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Container\RefCounted.cpp" />
     <ClCompile Include="Container\Str.cpp" />
     <ClCompile Include="Container\Swap.cpp" />
     <ClCompile Include="Container\VectorBase.cpp" />
@@ -291,8 +292,10 @@
     <ClCompile Include="Container\Stringid.cpp" />
     <ClCompile Include="Core\Profiler.cpp" />
     <ClCompile Include="Core\StringUtil.cpp" />
+    <ClCompile Include="Core\Thread.cpp" />
     <ClCompile Include="Core\Timer.cpp" />
     <ClCompile Include="Graphics\Graphics.cpp" />
+    <ClCompile Include="IO\AbstractFile.cpp" />
     <ClCompile Include="IO\File.cpp" />
     <ClCompile Include="IO\FileSystem.cpp" />
     <ClCompile Include="IO\FileWatcher.cpp" />
@@ -303,6 +306,7 @@
     <ClCompile Include="Graphics\Model.cpp" />
     <ClCompile Include="Core\Object.cpp" />
     <ClCompile Include="Graphics\Shader.cpp" />
+    <ClCompile Include="Math\MathDefs.cpp" />
     <ClCompile Include="Precompiled.cpp" />
     <ClCompile Include="Core\TypeInfo.cpp" />
     <ClCompile Include="Serialize\ObjectInspector.cpp" />
@@ -312,6 +316,7 @@
     <ClInclude Include="Container\Arrayptr.h" />
     <ClInclude Include="Container\Linkedlist.h" />
     <ClInclude Include="Container\Ptr.h" />
+    <ClInclude Include="Container\RefCounted.h" />
     <ClInclude Include="Container\Sort.h" />
     <ClInclude Include="Container\Str.h" />
     <ClInclude Include="Container\Swap.h" />
@@ -324,6 +329,7 @@
     <ClInclude Include="Core\Profiler.h" />
     <ClInclude Include="Core\SpinLock.h" />
     <ClInclude Include="Container\Stringid.h" />
+    <ClInclude Include="Core\Thread.h" />
     <ClInclude Include="Core\Timer.h" />
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Graphics\Material.h" />
@@ -337,6 +343,7 @@
     <ClInclude Include="IO\IOEvents.h" />
     <ClInclude Include="IO\Log.h" />
     <ClInclude Include="IO\PackageFile.h" />
+    <ClInclude Include="Math\MathDefs.h" />
     <ClInclude Include="Precompiled.h" />
     <ClInclude Include="Core\TypeInfo.h" />
     <ClInclude Include="Serialize\Deserializer.h" />

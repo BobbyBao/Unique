@@ -22,9 +22,11 @@
 
 #pragma once
 #include <mutex>
+#include "../Core/Thread.h"
+
 #include "../Core/Object.h"
-//#include "../Core/Thread.h"
 #include "../Core/Timer.h"
+
 
 namespace Unique
 {
@@ -32,7 +34,7 @@ namespace Unique
 class FileSystem;
 
 /// Watches a directory and its subdirectories for files being modified.
-class UNIQUE_API FileWatcher : public Object//, public Thread
+class UNIQUE_API FileWatcher : public Object, public Thread
 {
     UNIQUE_OBJECT(FileWatcher, Object)
 
@@ -75,7 +77,7 @@ private:
     float delay_;
     /// Watch subdirectories flag.
     bool watchSubDirs_;
-
+	
 #ifdef _WIN32
 
     /// Directory handle for the path being watched.

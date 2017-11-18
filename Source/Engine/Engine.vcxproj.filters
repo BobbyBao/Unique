@@ -48,6 +48,10 @@
     <ClCompile Include="IO\PackageFile.cpp" />
     <ClCompile Include="Core\Profiler.cpp" />
     <ClCompile Include="Core\Timer.cpp" />
+    <ClCompile Include="Core\Thread.cpp" />
+    <ClCompile Include="Math\MathDefs.cpp" />
+    <ClCompile Include="Container\RefCounted.cpp" />
+    <ClCompile Include="IO\AbstractFile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -103,6 +107,9 @@
     <ClInclude Include="Core\Profiler.h" />
     <ClInclude Include="Core\Timer.h" />
     <ClInclude Include="IO\AbstractFile.h" />
+    <ClInclude Include="Core\Thread.h" />
+    <ClInclude Include="Math\MathDefs.h" />
+    <ClInclude Include="Container\RefCounted.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Serialize\Deserializer.inl" />
