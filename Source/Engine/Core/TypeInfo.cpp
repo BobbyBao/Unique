@@ -9,7 +9,6 @@ namespace Unique
 	static TypeInfo* sTypeInfo_[256];
 	static int sTypeInfoCount_ = 0;
 	static bool sInited_ = false;
-//	static RegisterRuntime sTypeInfoRuntime_(TypeInfo::Init);
 
 	TypeInfo::TypeInfo(const char* typeName, const TypeInfo* baseTypeInfo) :
 		type_(typeName),
@@ -72,6 +71,10 @@ namespace Unique
 		}
 	}
 
+	void TypeInfo::RegisterAttribute(Attribute* attr)
+	{
+		attributies_.push_back(std::move(UPtr<Attribute>(attr)));
+	}
 
 }
 

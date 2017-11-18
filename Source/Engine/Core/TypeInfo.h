@@ -1,9 +1,12 @@
 #pragma once
 #include "../Container/StringID.h"
+#include "../Core/Attribute.h"
 
 namespace Unique
 {
 	class Object;
+	class Attribute;
+
 	typedef SPtr<Object>(*CreateObjectFn)();
 
 	/// Type info.
@@ -26,6 +29,8 @@ namespace Unique
 		const StringID& GetType() const { return type_; }
 		/// Return base type info.
 		const TypeInfo* GetBaseTypeInfo() const { return baseTypeInfo_; }
+
+		void RegisterAttribute(Attribute* attr);
 		
 		static int GetTypeInfo(TypeInfo** typeInfoList);
 		static void Init();
@@ -36,6 +41,8 @@ namespace Unique
 		StringID category_;
 		/// Base class type info.
 		const TypeInfo* baseTypeInfo_;
+
+		std::vector<UPtr<Attribute>> attributies_;
 	};
 
 }

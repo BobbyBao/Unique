@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 #include <functional>
 #include <algorithm>
@@ -17,6 +18,9 @@ namespace Unique
 
 	//template<class T>
 	//using Vector = std::vector<T>;
+
+	template<class T>
+	using UPtr = std::unique_ptr<T>;
 
 	template<class T>
 	using List = std::list<T>;

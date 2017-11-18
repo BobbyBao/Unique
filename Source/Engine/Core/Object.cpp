@@ -1,6 +1,8 @@
 #include "../Precompiled.h"
 #include "Object.h"
 #include "Context.h"
+#include "Thread.h"
+#include "../IO/Log.h"
 
 namespace Unique
 {
@@ -233,15 +235,15 @@ void Object::SendEvent(const StringID& eventType)
 }
 
 void Object::SendEvent(const StringID& eventType, const Event& eventData)
-{/*
+{
     if (!Thread::IsMainThread())
     {
         UNIQUE_LOGERROR("Sending events is only supported from the main thread");
         return;
-    }*/
+    }
 
     // Make a weak pointer to self to check for destruction during event handling
-    WeakPtr<Object> self(this);
+    WPtr<Object> self(this);
     Context* context = context_;
     HashSet<Object*> processed;
 

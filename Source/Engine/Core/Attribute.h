@@ -7,7 +7,7 @@ namespace Unique
 	class Serializer;
 	class Deserializer;
 
-	class Attribute : public RefCounted
+	class Attribute
 	{
 	public:
 		Attribute(const String& name, uint mode)
@@ -15,14 +15,8 @@ namespace Unique
 		{
 		}
 
-		virtual void Visit(Serializer& serializer, void* obj)
-		{
-		}
-
-		virtual void Visit(Deserializer& serializer, void* obj)
-		{
-		}
-
+		virtual void Visit(Serializer& serializer, void* obj) {}
+		virtual void Visit(Deserializer& serializer, void* obj) {}
 		virtual void Get(const void* ptr, void* dest) const = 0;
 		virtual void Set(void* ptr, const void* value) = 0;
 
@@ -182,10 +176,10 @@ namespace Unique
 
 	/// Define an attribute that points to a memory offset in the object.
 #define UNIQUE_ATTRIBUTE(name, typeName, variable, mode)\
-	context->RegisterAttribute<ClassName>(Unique::TAttribute(name, offsetof(ClassName, variable), mode))
+	ClassName::GetTypeInfoStatic()->RegisterAttribute(new Unique::TAttribute<typeName>(name, offsetof(ClassName, variable), mode))
 
 /// Define an attribute that uses get and set functions.
 #define UNIQUE_ACCESSOR_ATTRIBUTE(name, getFunction, setFunction, typeName, mode)\
-	context->RegisterAttribute<ClassName>(new Unique::AttributeAccessorImpl<ClassName, typeName, Unique::AttributeTrait<typeName > >(name, &ClassName::getFunction, &ClassName::setFunction, mode))
+	ClassName::GetTypeInfoStatic()->RegisterAttribute(new Unique::AttributeAccessorImpl<ClassName, typeName, Unique::AttributeTrait<typeName > >(name, &ClassName::getFunction, &ClassName::setFunction, mode))
 
 }
