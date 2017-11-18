@@ -325,6 +325,7 @@
     <ClInclude Include="Core\Context.h" />
     <ClInclude Include="Core\Attribute.h" />
     <ClInclude Include="Core\CoreDefs.h" />
+    <ClInclude Include="Core\CoreEvents.h" />
     <ClInclude Include="Core\Event.h" />
     <ClInclude Include="Core\Profiler.h" />
     <ClInclude Include="Core\SpinLock.h" />

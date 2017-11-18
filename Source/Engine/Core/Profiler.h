@@ -23,7 +23,7 @@
 #pragma once
 
 #include "../Container/Str.h"
-//#include "../Core/Thread.h"
+#include "../Core/Thread.h"
 #include "../Core/Timer.h"
 
 namespace Unique
@@ -183,7 +183,7 @@ public:
     void BeginBlock(const char* name)
     {
         // Profiler supports only the main thread currently
-        if (!Context::IsMainThread())
+        if (!Thread::IsMainThread())
             return;
 
         current_ = current_->GetChild(name);
@@ -193,7 +193,7 @@ public:
     /// End timing the current profiling block.
     void EndBlock()
     {
-        if (!Context::IsMainThread())
+        if (!Thread::IsMainThread())
             return;
 
         current_->End();

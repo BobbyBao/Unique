@@ -23,28 +23,23 @@ typedef SPtr<Object> (*CreateObjectFn)();
         virtual const Unique::StringID& GetType() const { return GetTypeInfoStatic()->GetType(); } \
 		virtual const Unique::TypeInfo* GetTypeInfo() const { return GetTypeInfoStatic(); } \
         static const Unique::StringID& GetTypeStatic() { return GetTypeInfoStatic()->GetType(); } \
-		static const Unique::TypeInfo* GetTypeInfoStatic() { static const Unique::TypeInfo typeInfoStatic(#typeName, BaseClassName::GetTypeInfoStatic(), Create##typeName); return &typeInfoStatic; } \
-		static SPtr<Object> Create##typeName() { return SPtr<Object>(new typeName()); }
+		static const Unique::TypeInfo* GetTypeInfoStatic() { static const Unique::TypeInfo typeInfoStatic(#typeName, BaseClassName::GetTypeInfoStatic()); return &typeInfoStatic; } \
 
-#define SERIALIZE_OBJECT(typeName)\
+#define DECLARE_OBJECT(typeName)\
     public: \
         typedef typeName ClassName; \
-        virtual const Unique::StringID& GetType() const { return GetTypeInfoStatic()->GetType(); } \
-		virtual const Unique::TypeInfo* GetTypeInfo() const { return GetTypeInfoStatic(); } \
-        static const Unique::StringID& GetTypeStatic() { return GetTypeInfoStatic()->GetType(); } \
-		static const Unique::TypeInfo* GetTypeInfoStatic();\
+        virtual Urho3D::StringHash GetType() const { return GetTypeInfoStatic()->GetType(); } \
+        virtual const Urho3D::String& GetTypeName() const { return GetTypeInfoStatic()->GetTypeName(); } \
+        virtual const Urho3D::TypeInfo* GetTypeInfo() const { return GetTypeInfoStatic(); } \
+        static Urho3D::StringHash GetTypeStatic() { return GetTypeInfoStatic()->GetType(); } \
+        static const Urho3D::String& GetTypeNameStatic() { return GetTypeInfoStatic()->GetTypeName(); } \
+		static const Urho3D::TypeInfo* GetTypeInfoStatic();\
+		static void RegisterObject(Context* context);
 
-#define BEGIN_ABSTRACT_OBJECT(typeName, baseTypeName)\
- static const Unique::TypeInfo typeName##TypeInfoStatic(#typeName, baseTypeName::GetTypeInfoStatic());\
-        const Unique::TypeInfo* typeName::GetTypeInfoStatic() { return &typeName##TypeInfoStatic; } \
-
-
-#define BEGIN_OBJECT(typeName, baseTypeName)\
-static SPtr<Object> Create##typeName() { return SPtr<Object>(new typeName()); }\
- static const Unique::TypeInfo typeName##TypeInfoStatic(#typeName, baseTypeName::GetTypeInfoStatic(), Create##typeName);\
-        const Unique::TypeInfo* typeName::GetTypeInfoStatic() { return &typeName##TypeInfoStatic; } \
-
-#define END_OBJECT() }
+#define IMPLEMENT_OBJECT(typeName, baseTypeName)\
+        const Urho3D::TypeInfo* typeName::GetTypeInfoStatic() { static const Urho3D::TypeInfo typeInfoStatic(#typeName, baseTypeName::GetTypeInfoStatic()); return &typeInfoStatic; } \
+		static RegisterRuntime s_##typeName##Callbacks(typeName::RegisterObject, nullptr);\
+		void typeName::RegisterObject(Context* context)
 	
 /// Base class for objects with type identification, subsystem access and event sending/receiving capability.
 class UNIQUE_API Object : public RefCounted

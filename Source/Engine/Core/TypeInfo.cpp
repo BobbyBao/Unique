@@ -11,10 +11,9 @@ namespace Unique
 	static bool sInited_ = false;
 //	static RegisterRuntime sTypeInfoRuntime_(TypeInfo::Init);
 
-	TypeInfo::TypeInfo(const char* typeName, const TypeInfo* baseTypeInfo, CreateObjectFn createObjectFn) :
+	TypeInfo::TypeInfo(const char* typeName, const TypeInfo* baseTypeInfo) :
 		type_(typeName),
-		baseTypeInfo_(baseTypeInfo),
-		createObjectFn_(createObjectFn)
+		baseTypeInfo_(baseTypeInfo)
 	{
 		if (sInited_)
 		{
@@ -56,17 +55,6 @@ namespace Unique
 		return false;
 	}
 
-
-	SPtr<Object> TypeInfo::CreateObject() const
-	{
-		if (createObjectFn_)
-		{
-			return createObjectFn_();
-		}
-
-		return nullptr;
-	}
-
 	int TypeInfo::GetTypeInfo(TypeInfo** typeInfoList)
 	{
 		typeInfoList = sTypeInfo_;
@@ -84,16 +72,6 @@ namespace Unique
 		}
 	}
 
-	SPtr<Object> CreateObject(const StringID& type)
-	{
-		auto it = typeInfoTbl_.find(type);
-		if (it != typeInfoTbl_.end())
-		{
-			return it->second->CreateObject();
-		}
-
-		return SPtr<Object>();
-	}
 
 }
 

@@ -25,6 +25,7 @@
 #include "../Core/Context.h"
 //#include "../Core/EventProfiler.h"
 #include "../IO/Log.h"
+#include "Thread.h"
 
 #ifndef MINI_URHO
 //#include <SDL.h>
@@ -112,25 +113,23 @@ RegisterRuntime::RegisterRuntime(RegisterRuntime::CallbackFunction* Initialize, 
 	assert(s_NumRegisteredCallbacks <= kMaxCount);
 }
 
-void ExecuteInitializations()
+void ExecuteInitializations(Context* context)
 {
 	for (int i = 0; i < s_NumRegisteredCallbacks; i++)
 	{
 		if (s_InitializationCallbacks[i])
-			s_InitializationCallbacks[i]();
+			s_InitializationCallbacks[i](context);
 	}
 }
 
-void ExecuteCleanup()
+void ExecuteCleanup(Context* context)
 {
 	for (int i = s_NumRegisteredCallbacks - 1; i >= 0; i--)
 	{
 		if (s_CleanupCallbacks[i])
-			s_CleanupCallbacks[i]();
+			s_CleanupCallbacks[i](context);
 	}
 }
-
-std::thread::id Context::currentThreadID_;
 
 Context::Context() :
     eventHandler_(0)
@@ -142,11 +141,9 @@ Context::Context() :
 	Object::context_ = this;
 
     // Set the main thread ID (assuming the Context is created in it)
-	currentThreadID_ = std::this_thread::get_id();
+	Thread::SetMainThread();
 
-	Object::GetTypeInfoStatic();
-
-	ExecuteInitializations();
+	ExecuteInitializations(this);
 }
 
 Context::~Context()
@@ -156,14 +153,8 @@ Context::~Context()
 		RemoveSubsystem(subsystemVec_[i]->GetType());
 	}
 		
-	ExecuteCleanup();
+	ExecuteCleanup(this);
 	Object::context_ = nullptr;
-}
-
-
-bool Context::IsMainThread()
-{
-	return currentThreadID_ == std::this_thread::get_id();
 }
 
 void Context::RegisterSubsystem(Object* object)

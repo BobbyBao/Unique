@@ -25,7 +25,7 @@
 #include "../Core/Context.h"
 #include "../Core/CoreEvents.h"
 //#include "../Core/ProcessUtils.h"
-//#include "../Core/Thread.h"
+#include "../Core/Thread.h"
 #include "../Core/Timer.h"
 #include "../IO/File.h"
 #include "../IO/IOEvents.h"
@@ -148,7 +148,7 @@ void Log::Write(int level, const String& message)
         return;
 
     // If not in the main thread, store message for later processing
-    if (!Context::IsMainThread())
+    if (!Thread::IsMainThread())
     {
         if (logInstance)
         {
@@ -206,7 +206,7 @@ void Log::Write(int level, const String& message)
 void Log::WriteRaw(const String& message, bool error)
 {
     // If not in the main thread, store message for later processing
-    if (!Context::IsMainThread())
+    if (!Thread::IsMainThread())
     {
         if (logInstance)
         {
@@ -264,7 +264,7 @@ void Log::WriteRaw(const String& message, bool error)
 void Log::HandleEndFrame(StringID eventType, const EndFrame& eventData)
 {
     // If the MainThreadID is not valid, processing this loop can potentially be endless
-    if (!Context::IsMainThread())
+    if (!Thread::IsMainThread())
     {
         if (!threadErrorDisplayed)
         {

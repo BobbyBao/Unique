@@ -4,15 +4,14 @@
 
 namespace Unique
 { 
-	/// Construct.
-	AbstractFile::AbstractFile() { }
+	AbstractFile::AbstractFile()
+	{
+	}
 
-	/// Construct.
 	AbstractFile::AbstractFile(unsigned int size) : size_(size)
 	{
 	}
 
-	/// Destruct.
 	AbstractFile::~AbstractFile()
 	{
 	}

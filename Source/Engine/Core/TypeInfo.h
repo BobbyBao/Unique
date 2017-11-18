@@ -11,7 +11,7 @@ namespace Unique
 	{
 	public:
 		/// Construct.
-		TypeInfo(const char* typeName, const TypeInfo* baseTypeInfo, CreateObjectFn = nullptr);
+		TypeInfo(const char* typeName, const TypeInfo* baseTypeInfo);
 		/// Destruct.
 		~TypeInfo();
 
@@ -26,9 +26,7 @@ namespace Unique
 		const StringID& GetType() const { return type_; }
 		/// Return base type info.
 		const TypeInfo* GetBaseTypeInfo() const { return baseTypeInfo_; }
-
-		SPtr<Object> CreateObject() const;
-
+		
 		static int GetTypeInfo(TypeInfo** typeInfoList);
 		static void Init();
 	private:
@@ -38,8 +36,6 @@ namespace Unique
 		StringID category_;
 		/// Base class type info.
 		const TypeInfo* baseTypeInfo_;
-		// Create object
-		CreateObjectFn createObjectFn_;
 	};
 
 }

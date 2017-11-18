@@ -23,7 +23,7 @@
 #pragma once
 
 #include "../Core/Object.h"
-#include <thread>
+
 
 namespace Unique
 {
@@ -71,9 +71,7 @@ public:
     Context();
     /// Destruct.
     ~Context();
-
-	static bool IsMainThread();
-
+	
     /// Register a subsystem.
     void RegisterSubsystem(Object* subsystem);
     /// Remove a subsystem.
@@ -172,13 +170,12 @@ private:
     /// Active event handler. Not stored in a stack for performance reasons; is needed only in esoteric cases.
     EventHandler* eventHandler_;
 
-	static std::thread::id currentThreadID_;
 };
 
 class RegisterRuntime
 {
 public:
-	typedef void CallbackFunction();
+	typedef void CallbackFunction(Context* context);
 	RegisterRuntime(CallbackFunction* Initialize, CallbackFunction* Cleanup = nullptr);
 };
 

@@ -110,6 +110,7 @@
     <ClInclude Include="Core\Thread.h" />
     <ClInclude Include="Math\MathDefs.h" />
     <ClInclude Include="Container\RefCounted.h" />
+    <ClInclude Include="Core\CoreEvents.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Serialize\Deserializer.inl" />
