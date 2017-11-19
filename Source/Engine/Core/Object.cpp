@@ -1,4 +1,4 @@
-#include "../Precompiled.h"
+#include "Precompiled.h"
 #include "Object.h"
 #include "Context.h"
 #include "Thread.h"
@@ -40,15 +40,35 @@ inline void TransferTypeInfo(TransferFunction& transfer, const TypeInfo* typeInf
 template<class TransferFunction>
 void Object::Transfer(TransferFunction& transfer)
 {
+	const TypeInfo* typeInfo = GetTypeInfo();
+
+	int attributeCount = 0;
+
+	if (transfer.IsWriting())
+	{
+		attributeCount += (int)typeInfo->GetAttributes().size();
+
+		const TypeInfo* baseTypeInfo = typeInfo->GetBaseTypeInfo();
+		while (baseTypeInfo)
+		{
+			attributeCount += (int)baseTypeInfo->GetAttributes().size();
+			baseTypeInfo = baseTypeInfo->GetBaseTypeInfo();
+		}
+
+	}
+
+	transfer.BeginMap(attributeCount + 1);
+
 	if (transfer.IsWriting())
 	{
 		StringID tmp = GetType();
+
 		transfer.Transfer(tmp, "Type", TF_READONLY);
 	}
 
-	const TypeInfo* typeInfo = GetTypeInfo();
-
 	TransferTypeInfo(transfer, typeInfo, this);
+
+	transfer.EndMap();
 }
 
 template UNIQUE_API void Object::Transfer(Serializer&);

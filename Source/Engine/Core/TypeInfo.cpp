@@ -1,4 +1,4 @@
-#include "../Precompiled.h"
+#include "Precompiled.h"
 #include "TypeInfo.h"
 #include "Object.h"
 

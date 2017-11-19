@@ -12,9 +12,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\Shader.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
@@ -52,17 +49,21 @@
     <ClCompile Include="Math\MathDefs.cpp" />
     <ClCompile Include="Container\RefCounted.cpp" />
     <ClCompile Include="IO\AbstractFile.cpp" />
-    <ClCompile Include="Serialize\mpack\mpack-common.c" />
-    <ClCompile Include="Serialize\mpack\mpack-expect.c" />
-    <ClCompile Include="Serialize\mpack\mpack-node.c" />
+    <ClCompile Include="Engine\Application.cpp" />
+    <ClCompile Include="Engine\Sample.cpp" />
+    <ClCompile Include="Engine\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Serialize\mpack\mpack-writer.c" />
     <ClCompile Include="Serialize\mpack\mpack-platform.c" />
     <ClCompile Include="Serialize\mpack\mpack-reader.c" />
-    <ClCompile Include="Serialize\mpack\mpack-writer.c" />
+    <ClCompile Include="Serialize\mpack\mpack-expect.c" />
+    <ClCompile Include="Serialize\mpack\mpack-common.c" />
+    <ClCompile Include="Serialize\mpack\mpack-node.c" />
+    <ClCompile Include="Serialize\json2msgpack.cpp" />
+    <ClCompile Include="Serialize\msgpack2json.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Application.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\Shader.h">
       <Filter>Graphics</Filter>
     </ClInclude>
@@ -124,6 +125,10 @@
     <ClInclude Include="Serialize\mpack\mpack-platform.h" />
     <ClInclude Include="Serialize\mpack\mpack-reader.h" />
     <ClInclude Include="Serialize\mpack\mpack-writer.h" />
+    <ClInclude Include="Engine\Application.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Sample.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Serialize\Deserializer.inl" />

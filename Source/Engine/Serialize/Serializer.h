@@ -2,6 +2,7 @@
 
 #include "../serialize/SerializeTraits.h"
 #include "../Serialize/mpack/mpack.h"
+#include <fstream>
 
 namespace Unique
 {
@@ -17,6 +18,30 @@ namespace Unique
 
 		template<class T>
 		void Transfer(T& data, const char* name, int metaFlag = 0);
+
+		int size_ = 0;
+		bool inMap_ = false;
+		void BeginMap(int sz)
+		{
+			inMap_ = true;
+			size_ = sz;
+			mpack_start_map(&writer_, size_);
+		}
+
+		void EndMap()
+		{
+			mpack_finish_map(&writer_);
+			inMap_ = false;
+		}
+		
+		template <typename First, typename... Rest>
+		void TransferNVP(First& first, Rest&... rest)
+		{
+			int sz = sizeof ...(Rest)+1;
+			BeginMap(sz / 2);
+			TransferImpl1(first, rest...); // recursive call using pack expansion syntax  
+			EndMap();
+		}
 
 		template<class T>
 		void Transfer(T& data);
@@ -36,23 +61,46 @@ namespace Unique
 		template<class T>
 		void TransferSTLStyleSet(T& data, int metaFlag = 0);
 	protected:
+
+		template <typename First, typename... Rest>
+		void TransferImpl1(First& first, Rest&... rest)
+		{
+			TransferImpl2(first, rest...); // recursive call using pack expansion syntax  
+		}
+
+		template <typename First, typename Second, typename... Rest>
+		void TransferImpl2(First& val, Second name, const Rest&... rest)
+		{
+			Transfer(val, name);
+			TransferImpl1(rest...); // recursive call using pack expansion syntax  
+		}
+
+		template <typename First, typename Second, typename... Rest>
+		void TransferImpl2(First& val, Second name) {
+			Transfer(val, name);
+		}
+
 		int metaFlag_;
 		mpack_writer_t writer_;
 	};
 
-	template<class T> inline
-		bool Serializer::Save(const char* fileName, T& data)
+	template<class T>
+	inline bool Serializer::Save(const char* fileName, T& data)
 	{
-
 		char* buff;
 		size_t size;
 		mpack_writer_init_growable(&writer_, &buff, &size);
 
 		SerializeTraits<T>::Transfer(data, *this);
+		// finish writing
+		if (mpack_writer_destroy(&writer_) != mpack_ok)
+		{
+		//	UNIQUE_LOGERROR("An error occurred encoding the data!");
+			return false;
+		}
 
 		std::ofstream packFile(fileName);
 		packFile.write(buff, size);
-		packFile.flush();
 		return true;
 	}
 
@@ -63,7 +111,7 @@ namespace Unique
 
 		//	writer_->Key(name);
 
-		mpack_write_str(&writer_, name, std::strlen(name));
+		mpack_write_str(&writer_, name, (uint)std::strlen(name));
 
 		SerializeTraits<T>::Transfer(data, *this);
 	}
@@ -72,9 +120,9 @@ namespace Unique
 	inline void Serializer::Transfer(T& data)
 	{
 		//	writer_->StartObject();
-		mpack_start_map(&writer_, 3);
+		//mpack_start_map(&writer_, 0);
 		data.Transfer(*this);
-		mpack_finish_map(&writer_);
+		//mpack_finish_map(&writer_);
 		//	writer_->EndObject();
 	}
 
@@ -83,11 +131,11 @@ namespace Unique
 	{
 		//	writer_->StartObject();
 
-		mpack_start_map(&writer_, 3);
+		//mpack_start_map(&writer_, 3);
 
 		data->Transfer(*this);
 
-		mpack_finish_map(&writer_);
+		//mpack_finish_map(&writer_);
 
 		//	writer_->EndObject();
 	}

@@ -83,7 +83,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\Depends\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Depends\include;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>Debug/</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <CompileAs>CompileAsCpp</CompileAs>
@@ -98,6 +98,7 @@
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;_WINDOWS;LLGL_DEBUG;LLGL_ENABLE_CHECKED_CAST;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;UNICODE;NOMINMAX;LLGL_ENABLE_DEBUG_LAYER;LLGL_ENABLE_UTILITY;LLGL_GL_ENABLE_VENDOR_EXT;LLGL_GL_ENABLE_EXT_PLACEHOLDERS;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
+      <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;LLGL_DEBUG;LLGL_ENABLE_CHECKED_CAST;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;UNICODE;NOMINMAX;LLGL_ENABLE_DEBUG_LAYER;LLGL_ENABLE_UTILITY;LLGL_GL_ENABLE_VENDOR_EXT;LLGL_GL_ENABLE_EXT_PLACEHOLDERS;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -282,6 +283,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Application.cpp" />
     <ClCompile Include="Container\RefCounted.cpp" />
     <ClCompile Include="Container\Str.cpp" />
     <ClCompile Include="Container\Swap.cpp" />
@@ -301,7 +303,7 @@
     <ClCompile Include="IO\FileWatcher.cpp" />
     <ClCompile Include="IO\Log.cpp" />
     <ClCompile Include="IO\PackageFile.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Engine\main.cpp" />
     <ClCompile Include="Graphics\Material.cpp" />
     <ClCompile Include="Graphics\Model.cpp" />
     <ClCompile Include="Core\Object.cpp" />
@@ -309,16 +311,19 @@
     <ClCompile Include="Math\MathDefs.cpp" />
     <ClCompile Include="Precompiled.cpp" />
     <ClCompile Include="Core\TypeInfo.cpp" />
+    <ClCompile Include="Engine\Sample.cpp" />
+    <ClCompile Include="Serialize\json2msgpack.cpp" />
     <ClCompile Include="Serialize\mpack\mpack-common.c" />
     <ClCompile Include="Serialize\mpack\mpack-expect.c" />
     <ClCompile Include="Serialize\mpack\mpack-node.c" />
     <ClCompile Include="Serialize\mpack\mpack-platform.c" />
     <ClCompile Include="Serialize\mpack\mpack-reader.c" />
     <ClCompile Include="Serialize\mpack\mpack-writer.c" />
+    <ClCompile Include="Serialize\msgpack2json.cpp" />
     <ClCompile Include="Serialize\ObjectInspector.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Application.h" />
+    <ClInclude Include="Engine\Application.h" />
     <ClInclude Include="Container\Arrayptr.h" />
     <ClInclude Include="Container\Linkedlist.h" />
     <ClInclude Include="Container\Ptr.h" />
@@ -353,6 +358,7 @@
     <ClInclude Include="Math\MathDefs.h" />
     <ClInclude Include="Precompiled.h" />
     <ClInclude Include="Core\TypeInfo.h" />
+    <ClInclude Include="Engine\Sample.h" />
     <ClInclude Include="Serialize\Deserializer.h" />
     <ClInclude Include="Serialize\mpack\mpack-common.h" />
     <ClInclude Include="Serialize\mpack\mpack-expect.h" />
