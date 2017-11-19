@@ -1,6 +1,7 @@
 #include "Precompiled.h"
 #include "TypeInfo.h"
 #include "Object.h"
+#include "../Core/Attribute.h"
 
 namespace Unique
 {

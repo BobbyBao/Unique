@@ -27,7 +27,7 @@ Sample::Sample() :
 
 	SPtr<Shader> shader(new Shader());
 	shader->SetName("test_shader");
-	Serializer ser;
+	BinaryWriter ser;
 	ser.Save("test.bin", shader);
 
 	//int v1 = 100, v2 = 200, v3 = 300;

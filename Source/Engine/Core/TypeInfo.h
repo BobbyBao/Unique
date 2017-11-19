@@ -1,6 +1,5 @@
 #pragma once
 #include "../Container/StringID.h"
-#include "../Core/Attribute.h"
 
 namespace Unique
 {

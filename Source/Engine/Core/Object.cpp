@@ -3,6 +3,7 @@
 #include "Context.h"
 #include "Thread.h"
 #include "../IO/Log.h"
+#include "Attribute.h"
 
 namespace Unique
 {
@@ -71,7 +72,8 @@ void Object::Transfer(TransferFunction& transfer)
 	transfer.EndMap();
 }
 
-template UNIQUE_API void Object::Transfer(Serializer&);
+template UNIQUE_API void Object::Transfer(BinaryWriter&);
+template UNIQUE_API void Object::Transfer(BinaryReader&);
 //template UNIQUE_API void TransferTypeInfo(Serializer& transfer, const TypeInfo* typeInfo, void* obj);
 
 void Object::OnEvent(Object* sender, StringID eventType, const Event& eventData)

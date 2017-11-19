@@ -1,13 +1,13 @@
 #pragma once
 #include "../Core/CoreDefs.h"
 #include "../Container/refcounted.h"
-#include "../Serialize/Deserializer.h"
-#include "../Serialize/Serializer.h"
+#include "../Serialize/BinaryReader.h"
+#include "../Serialize/BinaryWriter.h"
+#include "../Serialize/JsonReader.h"
+#include "../Serialize/JsonWriter.h"
 
 namespace Unique
 {
-	class Serializer;
-	class Deserializer;
 
 	class Attribute
 	{
@@ -17,8 +17,11 @@ namespace Unique
 		{
 		}
 
-		virtual void Visit(Serializer& serializer, void* obj) {}
-		virtual void Visit(Deserializer& serializer, void* obj) {}
+		virtual void Visit(BinaryWriter& serializer, void* obj) {}
+		virtual void Visit(BinaryReader& serializer, void* obj) {}
+		virtual void Visit(JsonWriter& serializer, void* obj) {}
+		virtual void Visit(JsonReader& serializer, void* obj) {}
+
 		virtual void Get(const void* ptr, void* dest) const = 0;
 		virtual void Set(void* ptr, const void* value) = 0;
 
@@ -37,12 +40,22 @@ namespace Unique
 		{
 		}
 
-		virtual void Visit(Serializer& serializer, void* obj)
+		virtual void Visit(BinaryWriter& serializer, void* obj)
 		{
 			VisitImpl(serializer, obj);
 		}
 
-		virtual void Visit(Deserializer& deserializer, void* obj)
+		virtual void Visit(BinaryReader& deserializer, void* obj)
+		{
+			VisitImpl(deserializer, obj);
+		}
+
+		virtual void Visit(JsonWriter& serializer, void* obj)
+		{
+			VisitImpl(serializer, obj);
+		}
+
+		virtual void Visit(JsonReader& deserializer, void* obj)
 		{
 			VisitImpl(deserializer, obj);
 		}
@@ -125,12 +138,22 @@ namespace Unique
 			assert(setFunction_);
 		}
 
-		virtual void Visit(Serializer& serializer, void* obj)
+		virtual void Visit(BinaryWriter& serializer, void* obj)
 		{
 			VisitImpl(serializer, obj);
 		}
 
-		virtual void Visit(Deserializer& deserializer, void* obj)
+		virtual void Visit(BinaryReader& deserializer, void* obj)
+		{
+			VisitImpl(deserializer, obj);
+		}
+
+		virtual void Visit(JsonWriter& serializer, void* obj)
+		{
+			VisitImpl(serializer, obj);
+		}
+
+		virtual void Visit(JsonReader& deserializer, void* obj)
 		{
 			VisitImpl(deserializer, obj);
 		}

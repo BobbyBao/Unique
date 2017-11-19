@@ -359,7 +359,9 @@
     <ClInclude Include="Precompiled.h" />
     <ClInclude Include="Core\TypeInfo.h" />
     <ClInclude Include="Engine\Sample.h" />
-    <ClInclude Include="Serialize\Deserializer.h" />
+    <ClInclude Include="Serialize\BinaryReader.h" />
+    <ClInclude Include="Serialize\JsonReader.h" />
+    <ClInclude Include="Serialize\JsonWriter.h" />
     <ClInclude Include="Serialize\mpack\mpack-common.h" />
     <ClInclude Include="Serialize\mpack\mpack-expect.h" />
     <ClInclude Include="Serialize\mpack\mpack-node.h" />
@@ -367,17 +369,14 @@
     <ClInclude Include="Serialize\mpack\mpack-reader.h" />
     <ClInclude Include="Serialize\mpack\mpack-writer.h" />
     <ClInclude Include="Serialize\mpack\mpack.h" />
-    <ClInclude Include="Serialize\Serializer.h" />
+    <ClInclude Include="Serialize\BinaryWriter.h" />
     <ClInclude Include="Serialize\ObjectInspector.h" />
     <ClInclude Include="Serialize\SerializeDefs.h" />
     <ClInclude Include="Serialize\SerializeTraits.h" />
     <ClInclude Include="Serialize\SerializeTraitsBasic.h" />
     <ClInclude Include="Serialize\SerializeTraitsStd.h" />
     <ClInclude Include="Core\StringUtil.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Serialize\Deserializer.inl" />
-    <None Include="Serialize\Serializer.inl" />
+    <ClInclude Include="Serialize\TransferBase.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
