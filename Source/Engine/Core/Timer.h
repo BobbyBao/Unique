@@ -77,8 +77,7 @@ private:
 /// %Time and frame counter subsystem.
 class UNIQUE_API Time : public Object
 {
-    UNIQUE_OBJECT(Time, Object);
-
+    uRTTI(Time, Object)
 public:
     /// Construct.
     Time();

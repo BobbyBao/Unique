@@ -138,7 +138,7 @@ public:
 	virtual SPtr<Object> CreateObject() { return SPtr<Object>(new T()); }
 };
 
-#define UNIQUE_OBJECT(typeName, baseTypeName) \
+#define uRTTI(typeName, baseTypeName) \
     public: \
         typedef typeName ClassName; \
         typedef baseTypeName BaseClassName; \

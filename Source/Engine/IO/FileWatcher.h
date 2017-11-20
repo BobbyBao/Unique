@@ -36,7 +36,7 @@ class FileSystem;
 /// Watches a directory and its subdirectories for files being modified.
 class UNIQUE_API FileWatcher : public Object, public Thread
 {
-    UNIQUE_OBJECT(FileWatcher, Object)
+    uRTTI(FileWatcher, Object)
 
 public:
     /// Construct.

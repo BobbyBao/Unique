@@ -171,7 +171,7 @@ public:
 /// Hierarchical performance profiler subsystem.
 class UNIQUE_API Profiler : public Object
 {
-    UNIQUE_OBJECT(Profiler, Object)
+    uRTTI(Profiler, Object)
 
 public:
     /// Construct.

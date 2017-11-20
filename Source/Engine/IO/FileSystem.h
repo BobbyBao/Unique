@@ -39,7 +39,7 @@ static const unsigned SCAN_HIDDEN = 0x4;
 /// Subsystem for file and directory operations and access control.
 class UNIQUE_API FileSystem : public Object
 {
-    UNIQUE_OBJECT(FileSystem, Object)
+    uRTTI(FileSystem, Object)
 
 public:
     /// Construct.

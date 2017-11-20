@@ -5,7 +5,7 @@ namespace Unique
 {
 	class Material : public Object
 	{
-		UNIQUE_OBJECT(Material, Object)
+		uRTTI(Material, Object)
 	public:
 		Material();
 		~Material();

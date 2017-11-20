@@ -13,12 +13,11 @@ using namespace rapidjson;
 namespace Unique
 {
 
-	class JsonReader : public TransferBase
+	class JsonReader //: public TransferBase
 	{
+		uSerializer(JsonReader, TransferState::Reading)
 	public:
-		JsonReader() : TransferBase(TransferState::Reading)
-		{
-		}
+
 		~JsonReader() {}
 
 		template<class T>
@@ -48,8 +47,13 @@ namespace Unique
 		template<class T>
 		void TransferSTLStyleSet(T& data, int metaFlag = 0);
 	private:
+		bool BeginMap(int size) { return true; }
+		void EndMap() {}
+		bool BeginProperty(const String& key) { return true; }
+		void EndProperty() {}
+		bool BeginArray(int size) { return true; }
+		void EndArray() {}
 		Value* currentNode;
-		int metaFlag_;
 	};
 
 	template<class T>

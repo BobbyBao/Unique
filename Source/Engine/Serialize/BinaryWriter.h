@@ -1,47 +1,18 @@
 #pragma once
 
 #include "../serialize/SerializeTraits.h"
+#include "../Serialize/TransferBase.h"
 #include "../Serialize/mpack/mpack.h"
 #include <fstream>
 
 namespace Unique
 {
-	class BinaryWriter : public TransferBase
+	class BinaryWriter
 	{
+		uSerializer(BinaryWriter, TransferState::Writing)
 	public:
-
-		bool IsReading() { return false; }
-		bool IsWriting() { return true; }
-
 		template<class T>
 		bool Save(const char* fileName, T& data);
-
-		template<class T>
-		void Transfer(T& data, const char* name, int metaFlag = 0);
-
-		int size_ = 0;
-		bool inMap_ = false;
-		void BeginMap(int sz)
-		{
-			inMap_ = true;
-			size_ = sz;
-			mpack_start_map(&writer_, size_);
-		}
-
-		void EndMap()
-		{
-			mpack_finish_map(&writer_);
-			inMap_ = false;
-		}
-		
-		template <typename First, typename... Rest>
-		void TransferNVP(First& first, Rest&... rest)
-		{
-			int sz = sizeof ...(Rest)+1;
-			BeginMap(sz / 2);
-			TransferImpl1(first, rest...); // recursive call using pack expansion syntax  
-			EndMap();
-		}
 
 		template<class T>
 		void Transfer(T& data);
@@ -61,26 +32,41 @@ namespace Unique
 		template<class T>
 		void TransferSTLStyleSet(T& data, int metaFlag = 0);
 	protected:
-
-		template <typename First, typename... Rest>
-		void TransferImpl1(First& first, Rest&... rest)
+		bool BeginMap(int sz)
 		{
-			TransferImpl2(first, rest...); // recursive call using pack expansion syntax  
+			inMap_ = true;
+			size_ = sz;
+			mpack_start_map(&writer_, size_);
+			return true;
 		}
 
-		template <typename First, typename Second, typename... Rest>
-		void TransferImpl2(First& val, Second name, const Rest&... rest)
+		bool BeginProperty(const String& key)
 		{
-			Transfer(val, name);
-			TransferImpl1(rest...); // recursive call using pack expansion syntax  
+			mpack_write_str(&writer_, key.CString(), (uint)key.Length());
+			return true; 
 		}
 
-		template <typename First, typename Second, typename... Rest>
-		void TransferImpl2(First& val, Second name) {
-			Transfer(val, name);
+		void EndProperty()
+		{
 		}
 
-		int metaFlag_;
+		void EndMap()
+		{
+			mpack_finish_map(&writer_);
+			inMap_ = false;
+		}
+
+		bool BeginArray(int sz)
+		{
+			return true;
+		}
+
+		void EndArray()
+		{
+		}
+
+		int size_ = 0;
+		bool inMap_ = false;
 		mpack_writer_t writer_;
 	};
 
@@ -102,18 +88,6 @@ namespace Unique
 		std::ofstream packFile(fileName);
 		packFile.write(buff, size);
 		return true;
-	}
-
-	template<class T>
-	inline void BinaryWriter::Transfer(T& data, const char* name, int metaFlag)
-	{
-		metaFlag_ = metaFlag;
-
-		//	writer_->Key(name);
-
-		mpack_write_str(&writer_, name, (uint)std::strlen(name));
-
-		SerializeTraits<T>::Transfer(data, *this);
 	}
 
 	template<class T>
@@ -217,7 +191,6 @@ namespace Unique
 	{
 		mpack_write(&writer_, data);
 	}
-
 
 	template<>
 	inline void BinaryWriter::TransferBasicData<int>(int& data)

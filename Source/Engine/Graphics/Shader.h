@@ -5,7 +5,7 @@ namespace Unique
 {
 	class Shader : public Object
 	{
-		UNIQUE_OBJECT(Shader, Object)
+		uRTTI(Shader, Object)
 	public:
 		Shader();
 		~Shader();

@@ -71,7 +71,7 @@ struct StoredLogMessage
 /// Logging subsystem.
 class UNIQUE_API Log : public Object
 {
-    UNIQUE_OBJECT(Log, Object)
+    uRTTI(Log, Object)
 
 public:
     /// Construct.

@@ -1,15 +1,13 @@
 #pragma once
 #include "../serialize/SerializeTraits.h"
+#include "../Serialize/TransferBase.h"
 
 namespace Unique
 {
 	class BinaryReader
 	{
+		uSerializer(BinaryReader, TransferState::Reading)
 	public:
-
-		bool IsReading() { return true; }
-		bool IsWriting() { return false; }
-
 		template<class T>
 		bool Load(const String& fileName, T& data);
 
@@ -18,24 +16,6 @@ namespace Unique
 
 		template<class T>
 		void Transfer(T& data, const char* name, int metaFlag = 0);
-
-
-		void BeginMap(int sz)
-		{
-		}
-
-		void EndMap()
-		{
-		}
-
-		template <typename First, typename... Rest>
-		void TransferNVP(First& first, Rest&... rest)
-		{
-			int sz = sizeof ...(Rest)+1;
-			BeginMap(sz / 2);
-			TransferImpl1(first, rest...); // recursive call using pack expansion syntax  
-			EndMap();
-		}
 
 		template<class T>
 		void Transfer(T& data);
@@ -54,26 +34,14 @@ namespace Unique
 
 		template<class T>
 		void TransferSTLStyleSet(T& data, int metaFlag = 0);
-	protected:
 
-		template <typename First, typename... Rest>
-		void TransferImpl1(First& first, Rest&... rest)
-		{
-			TransferImpl2(first, rest...); // recursive call using pack expansion syntax  
-		}
-
-		template <typename First, typename Second, typename... Rest>
-		void TransferImpl2(First& val, Second name, const Rest&... rest)
-		{
-			Transfer(val, name);
-			TransferImpl1(rest...); // recursive call using pack expansion syntax  
-		}
-
-		template <typename First, typename Second, typename... Rest>
-		void TransferImpl2(First& val, Second name) {
-			Transfer(val, name);
-		}
-		int metaFlag_;
+	protected:	
+		bool BeginMap(int size) { return true; }
+		void EndMap() {}
+		bool BeginProperty(const String& key) { return true; }
+		void EndProperty() {}
+		bool BeginArray(int size) { return true; }
+		void EndArray() {}
 	};
 	
 	template<class T>

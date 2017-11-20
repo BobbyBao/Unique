@@ -58,18 +58,18 @@ void Object::Transfer(TransferFunction& transfer)
 
 	}
 
-	transfer.BeginMap(attributeCount + 1);
+	transfer.BeginObject(attributeCount + 1);
 
 	if (transfer.IsWriting())
 	{
 		StringID tmp = GetType();
 
-		transfer.Transfer(tmp, "Type", TF_READONLY);
+		transfer.TransferProperty(tmp, "Type", TF_READONLY);
 	}
 
 	TransferTypeInfo(transfer, typeInfo, this);
 
-	transfer.EndMap();
+	transfer.EndObject();
 }
 
 template UNIQUE_API void Object::Transfer(BinaryWriter&);

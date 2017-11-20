@@ -14,13 +14,10 @@ using namespace rapidjson;
 namespace Unique
 {
 
-	class JsonWriter : public TransferBase
+	class JsonWriter// : public TransferBase
 	{
+		uSerializer(JsonWriter, TransferState::Writing)
 	public:
-		JsonWriter() : TransferBase(TransferState::Writing)
-		{
-		}
-
 		~JsonWriter()
 		{
 		}
@@ -49,7 +46,12 @@ namespace Unique
 		template<class T>
 		void TransferSTLStyleSet(T& data, int metaFlag = 0);
 	protected:
-		int metaFlag_;
+		bool BeginMap(int size) { return true; }
+		void EndMap() {}
+		bool BeginProperty(const String& key) { return true; }
+		void EndProperty() {}
+		bool BeginArray(int size) { return true; }
+		void EndArray() {}
 		PrettyWriter<OStreamWrapper>* writer_;
 	};
 
@@ -91,7 +93,7 @@ namespace Unique
 	inline void JsonWriter::TransferObject(SPtr<T>& data)
 	{
 		writer_->StartObject();
-		data->VirtualTransfer(*this);
+		data->Transfer(*this);
 		writer_->EndObject();
 	}
 

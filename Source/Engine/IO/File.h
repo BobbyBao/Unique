@@ -59,7 +59,7 @@ class PackageFile;
 /// %File opened either through the filesystem or from within a package file.
 class UNIQUE_API File : public Object, public AbstractFile
 {
-    UNIQUE_OBJECT(File, Object)
+    uRTTI(File, Object)
 
 public:
     /// Construct.
