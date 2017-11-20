@@ -120,7 +120,7 @@
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ImportLibrary>
       </ImportLibrary>
-      <ProgramDataBaseFile>E:/Code/Banana/Build/LLGL/build/Debug/Tutorial03_TexturingD.pdb</ProgramDataBaseFile>
+      <ProgramDataBaseFile>$(OutDir)$(TargetName)D.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
       <Version>
       </Version>
@@ -296,6 +296,7 @@
     <ClCompile Include="Core\StringUtil.cpp" />
     <ClCompile Include="Core\Thread.cpp" />
     <ClCompile Include="Core\Timer.cpp" />
+    <ClCompile Include="Graphics\GPUObject.cpp" />
     <ClCompile Include="Graphics\GraphicsDefs.cpp" />
     <ClCompile Include="Graphics\Graphics.cpp" />
     <ClCompile Include="Resource\Image.cpp" />
@@ -324,6 +325,7 @@
     <ClCompile Include="Serialize\mpack\mpack-writer.c" />
     <ClCompile Include="Serialize\msgpack2json.cpp" />
     <ClCompile Include="Serialize\ObjectInspector.cpp" />
+    <ClCompile Include="Graphics\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Application.h" />
@@ -346,6 +348,7 @@
     <ClInclude Include="Container\Stringid.h" />
     <ClInclude Include="Core\Thread.h" />
     <ClInclude Include="Core\Timer.h" />
+    <ClInclude Include="Graphics\GPUObject.h" />
     <ClInclude Include="Graphics\GraphicsDefs.h" />
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Graphics\Material.h" />
@@ -383,6 +386,7 @@
     <ClInclude Include="Serialize\SerializeTraitsStd.h" />
     <ClInclude Include="Core\StringUtil.h" />
     <ClInclude Include="Serialize\TransferBase.h" />
+    <ClInclude Include="Graphics\Texture.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

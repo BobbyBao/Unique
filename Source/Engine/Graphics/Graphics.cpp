@@ -1,13 +1,21 @@
 #include "Precompiled.h"
 #include "Graphics.h"
 
-
-
-Graphics::Graphics()
+namespace Unique
 {
+	uObject(Graphics)
+	{
+		uFactory("Graphics")
+	}
+
+	Graphics::Graphics()
+	{
+	}
+
+
+	Graphics::~Graphics()
+	{
+	}
+
 }
 
-
-Graphics::~Graphics()
-{
-}

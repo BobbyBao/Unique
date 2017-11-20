@@ -1,8 +1,16 @@
 #pragma once
-class Graphics
+#include "GraphicsDefs.h"
+#include "Core/Object.h"
+
+namespace Unique
 {
-public:
-	Graphics();
-	~Graphics();
-};
+	class Graphics : public Object
+	{
+		uRTTI(Graphics, Object)
+	public:
+		Graphics();
+		~Graphics();
+	};
+
+}
 

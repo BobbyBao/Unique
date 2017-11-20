@@ -65,6 +65,8 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Sample.cpp" />
+    <ClCompile Include="Graphics\Texture.cpp" />
+    <ClCompile Include="Graphics\GPUObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics\Shader.h">
@@ -138,5 +140,7 @@
     <ClInclude Include="Resource\Resource.h" />
     <ClInclude Include="Resource\Image.h" />
     <ClInclude Include="Sample.h" />
+    <ClInclude Include="Graphics\Texture.h" />
+    <ClInclude Include="Graphics\GPUObject.h" />
   </ItemGroup>
 </Project>
