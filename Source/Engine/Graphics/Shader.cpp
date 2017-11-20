@@ -6,9 +6,9 @@ namespace Unique
 	uObject(Shader)
 	{
 		uFactory("Graphics")
-		uAccessor("Name", GetName, SetName, String, 0)
-		uAttribute("ShaderDefines", shaderDefines_, String, 0)
-		uAttribute("ShaderStages", shaderStages_, Vector<ShaderStage>, 0)
+		uAccessor("Name", GetName, SetName, String, TF_DEFAULT)
+		uAttribute("ShaderDefines", shaderDefines_, String, TF_DEFAULT)
+		uAttribute("ShaderStages", shaderStages_, Vector<ShaderStage>, TF_DEFAULT)
 	}
 
 	Shader::Shader()
