@@ -77,7 +77,7 @@ namespace Unique
 		void VisitImpl(Visitor& visitor, void* ptr)
 		{
 			T* dest = (T*)(reinterpret_cast<unsigned char*>(ptr) + offset_);
-			visitor.TransferProperty(*dest, name_.CString(), mode_);
+			visitor.TransferAttribute(*dest, name_.CString(), mode_);
 		}
 
 		uint offset_;
@@ -183,14 +183,14 @@ namespace Unique
 			if (visitor.IsReading())
 			{
 				U value;
-				visitor.TransferProperty(value, name_.CString(), mode_);
+				visitor.TransferAttribute(value, name_.CString(), mode_);
 				(classPtr->*setFunction_)(value);
 			}
 
 			if (visitor.IsWriting())
 			{
 				U value = (classPtr->*getFunction_)();
-				visitor.TransferProperty(value, name_.CString(), mode_);
+				visitor.TransferAttribute(value, name_.CString(), mode_);
 			}
 		}
 

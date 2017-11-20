@@ -13,13 +13,7 @@ namespace Unique
 
 		template<class T>
 		bool Load(BinaryReader& source, T& data);
-
-		template<class T>
-		void Transfer(T& data, const char* name, int metaFlag = 0);
-
-		template<class T>
-		void Transfer(T& data);
-
+		
 		template<class T>
 		void TransferBasicData(T& data);
 
@@ -35,12 +29,12 @@ namespace Unique
 		template<class T>
 		void TransferSTLStyleSet(T& data, int metaFlag = 0);
 
+		bool StartObject(uint size) { return true; }
+		void EndObject() {}
 	protected:	
-		bool BeginMap(int size) { return true; }
-		void EndMap() {}
-		bool BeginProperty(const String& key) { return true; }
+		bool StartProperty(const String& key) { return true; }
 		void EndProperty() {}
-		bool BeginArray(int size) { return true; }
+		bool StartArray(uint size) { return true; }
 		void EndArray() {}
 	};
 	
@@ -88,34 +82,7 @@ namespace Unique
 		SerializeTraits<T>::Transfer(data, *this);
 		return true;
 	}
-
-
-	template<class T>
-	inline void BinaryReader::Transfer(T& data, const char* name, int metaFlag)
-	{
-		metaFlag_ = metaFlag;
-		/*
-		Value::MemberIterator node = currentNode->FindMember(name);
-		if (node == currentNode->MemberEnd())
-		{
-			return;
-		}
-
-		Value* parentNode = currentNode;
-		currentNode = &node->value;*/
-
-		SerializeTraits<T>::Transfer(data, *this);
-
-		//currentNode = parentNode;
-
-	}
-
-	template<class T>
-	inline void BinaryReader::Transfer(T& data)
-	{
-		data.Transfer(*this);
-	}
-
+	
 	template<class T>
 	inline void BinaryReader::TransferObject(SPtr<T>& data)
 	{/*

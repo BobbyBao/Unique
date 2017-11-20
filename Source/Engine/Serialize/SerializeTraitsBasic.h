@@ -131,8 +131,8 @@ namespace Unique
 		typedef char* value_type;
 		DEFINE_GET_TYPESTRING_BASICTYPE(char*)
 
-			template<class TransferFunction> inline
-			static void Transfer(value_type& data, TransferFunction& transfer)
+		template<class TransferFunction> inline
+		static void Transfer(value_type& data, TransferFunction& transfer)
 		{
 			transfer.TransferBasicData(data);
 		}

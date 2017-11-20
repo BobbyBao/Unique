@@ -15,7 +15,6 @@ namespace Unique
 	class SerializeTraits<std::string> : public SerializeTraitsBase<std::string>
 	{
 	public:
-
 		typedef std::string	value_type;
 		inline static const char* GetTypeString(value_type*) { return "string"; }
 		inline static bool IsBasicType() { return true; }

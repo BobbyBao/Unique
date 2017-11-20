@@ -13,10 +13,7 @@ namespace Unique
 	public:
 		template<class T>
 		bool Save(const char* fileName, T& data);
-
-		template<class T>
-		void Transfer(T& data);
-
+		
 		template<class T>
 		void TransferBasicData(T& data);
 
@@ -31,8 +28,8 @@ namespace Unique
 
 		template<class T>
 		void TransferSTLStyleSet(T& data, int metaFlag = 0);
-	protected:
-		bool BeginMap(int sz)
+		
+		bool StartObject(uint sz)
 		{
 			inMap_ = true;
 			size_ = sz;
@@ -40,7 +37,15 @@ namespace Unique
 			return true;
 		}
 
-		bool BeginProperty(const String& key)
+		void EndObject()
+		{
+			mpack_finish_map(&writer_);
+			inMap_ = false;
+		}
+	protected:
+
+
+		bool StartProperty(const String& key)
 		{
 			mpack_write_str(&writer_, key.CString(), (uint)key.Length());
 			return true; 
@@ -50,19 +55,15 @@ namespace Unique
 		{
 		}
 
-		void EndMap()
+		bool StartArray(uint sz)
 		{
-			mpack_finish_map(&writer_);
-			inMap_ = false;
-		}
-
-		bool BeginArray(int sz)
-		{
+			mpack_start_array(&writer_, sz);
 			return true;
 		}
 
 		void EndArray()
 		{
+			mpack_finish_array(&writer_);
 		}
 
 		int size_ = 0;
@@ -89,13 +90,7 @@ namespace Unique
 		packFile.write(buff, size);
 		return true;
 	}
-
-	template<class T>
-	inline void BinaryWriter::Transfer(T& data)
-	{
-		data.Transfer(*this);
-	}
-
+	
 	template<class T>
 	inline void BinaryWriter::TransferObject(SPtr<T>& data)
 	{
@@ -107,14 +102,14 @@ namespace Unique
 	{
 		typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
 
-		mpack_start_array(&writer_, (uint)data.size());
+		StartArray((uint)data.size());
+
 		for (non_const_value_type& val : data)
 		{
 			SerializeTraits<non_const_value_type>::Transfer(val, *this);
 		}
 
-		mpack_finish_array(&writer_);
-
+		EndArray();
 	}
 
 	template<class T>
@@ -124,14 +119,14 @@ namespace Unique
 		typedef typename non_const_value_type::first_type first_type;
 		typedef typename non_const_value_type::second_type second_type;
 
-		mpack_start_array(&writer_, (uint)data.size());
+		StartArray((uint)data.size());
 
 		for (non_const_value_type& val : data)
 		{
 			SerializeTraits<non_const_value_type>::Transfer(val, *this);
 		}
 
-		mpack_finish_array(&writer_);
+		EndArray();
 	}
 
 
@@ -140,14 +135,14 @@ namespace Unique
 	{
 		typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
 
-		mpack_start_array(&writer_, (uint)data.size());
+		StartArray((uint)data.size());
 
 		for (non_const_value_type& val : data)
 		{
 			SerializeTraits<non_const_value_type>::Transfer(val, *this);
 		}
 
-		mpack_finish_array(&writer_);
+		EndArray();
 	}
 
 	template<class T>

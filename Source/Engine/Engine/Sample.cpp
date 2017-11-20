@@ -29,7 +29,8 @@ Sample::Sample() :
 	shader->SetName("test_shader");
 	BinaryWriter ser;
 	ser.Save("test.bin", shader);
-
+	JsonWriter jsonWriter;
+	jsonWriter.Save("test.json", shader);
 	//int v1 = 100, v2 = 200, v3 = 300;
 
 	//Transfer2(v1, "1", v2, "2", v3, "3");

@@ -13,8 +13,7 @@ using namespace rapidjson;
 
 namespace Unique
 {
-
-	class JsonWriter// : public TransferBase
+	class JsonWriter
 	{
 		uSerializer(JsonWriter, TransferState::Writing)
 	public:
@@ -25,12 +24,6 @@ namespace Unique
 		template<class T>
 		bool Save(const char* fileName, T& data);
 		
-		template<class T>
-		void Transfer(T& data, const char* name, int metaFlag = 0);
-
-		template<class T>
-		void Transfer(T& data);
-
 		template<class T>
 		void TransferBasicData(T& data);
 
@@ -45,19 +38,20 @@ namespace Unique
 
 		template<class T>
 		void TransferSTLStyleSet(T& data, int metaFlag = 0);
+
+		bool StartObject(uint size);
+		void EndObject();
 	protected:
-		bool BeginMap(int size) { return true; }
-		void EndMap() {}
-		bool BeginProperty(const String& key) { return true; }
-		void EndProperty() {}
-		bool BeginArray(int size) { return true; }
-		void EndArray() {}
+		bool StartProperty(const String& key);
+		void EndProperty();
+		bool StartArray(uint size);
+		void EndArray();
+
 		PrettyWriter<OStreamWrapper>* writer_;
 	};
 
-
-	template<class T> inline
-		bool JsonWriter::Save(const char* fileName, T& data)
+	template<class T> 
+	inline bool JsonWriter::Save(const char* fileName, T& data)
 	{
 		std::ofstream jsonFile(fileName);
 		OStreamWrapper osw(jsonFile);
@@ -69,32 +63,42 @@ namespace Unique
 		return true;
 	}
 
-	template<class T>
-	inline void JsonWriter::Transfer(T& data, const char* name, int metaFlag)
-	{
-		metaFlag_ = metaFlag;
-
-		writer_->Key(name);
-
-		SerializeTraits<T>::Transfer(data, *this);	
-	}
-
-	template<class T>
-	inline void JsonWriter::Transfer(T& data)
+	inline bool JsonWriter::StartObject(uint size)
 	{
 		writer_->StartObject();
+		return true; 
+	}
 
-		data.Transfer(*this);
-
+	inline void JsonWriter::EndObject()
+	{
 		writer_->EndObject();
+	}
+
+	inline bool JsonWriter::StartProperty(const String& key)
+	{
+		writer_->Key(key.CString());
+		return true;
+	}
+
+	inline void JsonWriter::EndProperty()
+	{
+	}
+
+	inline bool JsonWriter::StartArray(uint size)
+	{
+		writer_->StartArray();
+		return true;
+	}
+
+	inline void JsonWriter::EndArray() 
+	{
+		writer_->EndArray();
 	}
 
 	template<class T>
 	inline void JsonWriter::TransferObject(SPtr<T>& data)
 	{
-		writer_->StartObject();
 		data->Transfer(*this);
-		writer_->EndObject();
 	}
 
 	template<class T>
@@ -102,14 +106,14 @@ namespace Unique
 	{
 		typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
 
-		writer_->StartArray();
+		StartArray();
 
 		for (non_const_value_type& val : data)
 		{
 			SerializeTraits<non_const_value_type>::Transfer(val, *this);
 		}
 
-		writer_->EndArray();
+		EndArray();
 	}
 
 	template<class T>
@@ -119,14 +123,14 @@ namespace Unique
 		typedef typename non_const_value_type::first_type first_type;
 		typedef typename non_const_value_type::second_type second_type;
 
-		writer_->StartArray();
+		StartArray();
 
 		for (non_const_value_type& val : data)
 		{
 			SerializeTraits<non_const_value_type>::Transfer(val, *this);
 		}
 
-		writer_->EndArray();
+		EndArray();
 	}
 
 
@@ -135,14 +139,14 @@ namespace Unique
 	{
 		typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
 
-		writer_->StartArray();
+		StartArray();
 
 		for (non_const_value_type& val : data)
 		{
 			SerializeTraits<non_const_value_type>::Transfer(val, *this);
 		}
 
-		writer_->EndArray();
+		EndArray();
 	}
 
 	template<class T>
@@ -187,7 +191,6 @@ namespace Unique
 	{
 		writer_->Uint(data);
 	}
-
 
 	template<>
 	inline void JsonWriter::TransferBasicData<int>(int& data)

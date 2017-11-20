@@ -13,11 +13,10 @@ using namespace rapidjson;
 namespace Unique
 {
 
-	class JsonReader //: public TransferBase
+	class JsonReader
 	{
 		uSerializer(JsonReader, TransferState::Reading)
 	public:
-
 		~JsonReader() {}
 
 		template<class T>
@@ -26,12 +25,6 @@ namespace Unique
 		template<class T>
 		bool Load(File& source, T& data);
 
-		template<class T>
-		void Transfer(T& data, const char* name, int metaFlag = 0);
-
-		template<class T>
-		void Transfer(T& data);
-				
 		template<class T>
 		void TransferBasicData(T& data);
 		
@@ -46,14 +39,17 @@ namespace Unique
 
 		template<class T>
 		void TransferSTLStyleSet(T& data, int metaFlag = 0);
+		
+		bool StartObject(uint size) { return true; }
+
+		void EndObject() {}
 	private:
-		bool BeginMap(int size) { return true; }
-		void EndMap() {}
-		bool BeginProperty(const String& key) { return true; }
-		void EndProperty() {}
-		bool BeginArray(int size) { return true; }
+		bool StartProperty(const String& key);
+		void EndProperty();
+		bool StartArray(uint size) { return true; }
 		void EndArray() {}
-		Value* currentNode;
+		Value* currentNode = nullptr;
+		Value* parentNode = nullptr;
 	};
 
 	template<class T>
@@ -100,31 +96,23 @@ namespace Unique
 		return true;
 	}
 
-
-	template<class T>
-	inline void JsonReader::Transfer(T& data, const char* name, int metaFlag)
+	inline bool JsonReader::StartProperty(const String& key)
 	{
-		metaFlag_ = metaFlag;
-
-		Value::MemberIterator node = currentNode->FindMember(name);
+		Value::MemberIterator node = currentNode->FindMember(key.CString());
 		if (node == currentNode->MemberEnd())
 		{
-			return;
+			return false;
 		}
 
-		Value* parentNode = currentNode;
+		parentNode = currentNode;
 		currentNode = &node->value;
-
-		SerializeTraits<T>::Transfer(data, *this);
-
-		currentNode = parentNode;
-
+		return true;
 	}
 
-	template<class T>
-	inline void JsonReader::Transfer(T& data)
+	inline void JsonReader::EndProperty()
 	{
-		data.Transfer(*this);
+		currentNode = parentNode;
+		parentNode = nullptr;
 	}
 
 	template<class T>

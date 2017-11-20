@@ -24,8 +24,8 @@ namespace Unique
 			return true;
 		}
 
-		template<class TransferFunction> inline
-			static void Transfer(value_type& data, TransferFunction& transfer)
+		template<class TransferFunction>
+		inline static void Transfer(value_type& data, TransferFunction& transfer)
 		{
 			transfer.TransferObject(data);
 		}

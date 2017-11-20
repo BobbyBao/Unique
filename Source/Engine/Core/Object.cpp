@@ -58,13 +58,13 @@ void Object::Transfer(TransferFunction& transfer)
 
 	}
 
-	transfer.BeginObject(attributeCount + 1);
+	transfer.StartObject(attributeCount + 1);
 
 	if (transfer.IsWriting())
 	{
 		StringID tmp = GetType();
 
-		transfer.TransferProperty(tmp, "Type", TF_READONLY);
+		transfer.TransferAttribute(tmp, "Type", TF_READONLY);
 	}
 
 	TransferTypeInfo(transfer, typeInfo, this);
@@ -74,7 +74,8 @@ void Object::Transfer(TransferFunction& transfer)
 
 template UNIQUE_API void Object::Transfer(BinaryWriter&);
 template UNIQUE_API void Object::Transfer(BinaryReader&);
-//template UNIQUE_API void TransferTypeInfo(Serializer& transfer, const TypeInfo* typeInfo, void* obj);
+template UNIQUE_API void Object::Transfer(JsonWriter&);
+template UNIQUE_API void Object::Transfer(JsonReader&);
 
 void Object::OnEvent(Object* sender, StringID eventType, const Event& eventData)
 {
