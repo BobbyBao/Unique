@@ -10,6 +10,8 @@
 #pragma warning(disable:6293)
 #endif
 
+#if USE_STL
+#else
 namespace Unique
 {
 
@@ -1279,3 +1281,5 @@ void WString::Resize(unsigned newLength)
 }
 
 }
+
+#endif

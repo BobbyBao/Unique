@@ -27,8 +27,12 @@ Sample::Sample() :
 
 	SPtr<Shader> shader(new Shader());
 	shader->SetName("test_shader");
+	shader->GetShaderStages().push_back({ LLGL::ShaderType::Vertex, "Assets/shader.hlsl", "VS", "vs_5_0" });
+	shader->GetShaderStages().push_back({ LLGL::ShaderType::Fragment, "Assets/shader.hlsl", "PS", "ps_5_0" });
+
 	BinaryWriter ser;
 	ser.Save("test.bin", shader);
+
 	JsonWriter jsonWriter;
 	jsonWriter.Save("test.json", shader);
 	//int v1 = 100, v2 = 200, v3 = 300;
@@ -80,7 +84,7 @@ void Sample::CreateTextures()
 	// Load image data from file (using STBI library, see http://nothings.org/stb_image.h)
 	int texWidth = 0, texHeight = 0, texComponents = 0;
 
-	unsigned char* imageBuffer = LoadImage(texFilename.c_str(), &texWidth, &texHeight, &texComponents, 0);
+	unsigned char* imageBuffer = Image::LoadImage(texFilename.c_str(), &texWidth, &texHeight, &texComponents, 0);
 	if (!imageBuffer)
 		throw std::runtime_error("failed to open file: \"" + texFilename + "\"");
 
@@ -124,7 +128,7 @@ void Sample::CreateTextures()
 	renderer->GenerateMips(*colorMap);
 
 	// Release image data
-	FreeImage(imageBuffer);
+	Image::FreeImage(imageBuffer);
 
 	// Query texture descriptor to see what is really stored on the GPU
 	//auto textureDesc = renderer->QueryTextureDescriptor(*colorMap);

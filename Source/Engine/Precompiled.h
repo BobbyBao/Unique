@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/CoreDefs.h"
+#include "IO/Log.h"
 #include "Container/ptr.h"
 #include "Container/Str.h"
 #include "Math/MathDefs.h"

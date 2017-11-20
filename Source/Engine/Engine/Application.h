@@ -18,6 +18,8 @@
 #include <type_traits>
 
 #include "../Core/Context.h"
+#include "../Graphics/Shader.h"
+#include "../Resource/Image.h"
 
 namespace Unique
 {
@@ -32,31 +34,6 @@ namespace Unique
 		Gs::Vector3f position;
 		Gs::Vector2f texCoord;
 	};
-
-	struct ShaderStage
-	{
-		ShaderStage(
-			LLGL::ShaderType type, const std::string& filename) :
-			type{ type },
-			filename{ filename }
-		{
-		}
-
-		ShaderStage(
-			LLGL::ShaderType type, const std::string& filename, const std::string& entryPoint, const std::string& target) :
-			type{ type },
-			filename{ filename },
-			entryPoint{ entryPoint },
-			target{ target }
-		{
-		}
-
-		LLGL::ShaderType    type;
-		std::string         filename;
-		std::string         entryPoint;
-		std::string         target;
-	};
-
 
 	class Application
 	{
@@ -77,8 +54,7 @@ namespace Unique
 		}
 
 		static void SelectRendererModule(int argc, char* argv[]);
-		static byte* LoadImage(const char* filename, int *x, int *y, int *comp, int req_comp);
-		static void FreeImage(void *retval_from_stbi_load);
+
 	protected:
 
 		struct ShaderProgramRecall

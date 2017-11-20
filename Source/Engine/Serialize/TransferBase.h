@@ -16,7 +16,7 @@ public:\
 		bool IsReading() const { return state_ == Unique::TransferState::Reading;}\
 		bool IsWriting() const { return state_ == Unique::TransferState::Writing; }\
 		template<class T>\
-		void TransferAttribute(T& data, const char* name, int metaFlag = 0)\
+		void TransferAttribute(const char* name, T& data, int metaFlag = 0)\
 		{\
 			metaFlag_ = metaFlag;\
 			if (StartProperty(name))\
@@ -25,13 +25,13 @@ public:\
 				EndProperty();\
 			}\
 		}\
-		template <typename First, typename... Rest>\
-		void TransferAttributes(First& first, Rest&... rest)\
+		template <typename... Rest>\
+		void TransferAttributes(Rest&... rest)\
 		{\
-			int sz = sizeof ...(Rest)+1;\
+			int sz = sizeof ...(Rest);\
 			StartObject(sz / 2);\
-			TransferImpl1(first, rest...);\
-			EndMap();\
+			TransferImpl1(rest...);\
+			EndObject();\
 		}\
 		template<class T>\
 		void Transfer(T& data)\
@@ -45,15 +45,15 @@ public:\
 			TransferImpl2(first, rest...);\
 		}\
 		template <typename First, typename Second, typename... Rest>\
-		void TransferImpl2(First& val, Second name, const Rest&... rest)\
+		void TransferImpl2(First& name, Second val, const Rest&... rest)\
 		{\
-			TransferAttribute(val, name);\
+			TransferAttribute(name, val);\
 			TransferImpl1(rest...);\
 		}\
 		template <typename First, typename Second, typename... Rest>\
-		void TransferImpl2(First& val, Second name)\
+		void TransferImpl2(First& name, Second val)\
 		{\
-			TransferAttribute(val, name);\
+			TransferAttribute(name, val);\
 		}\
 		int metaFlag_;\
 		Unique::TransferState state_;\

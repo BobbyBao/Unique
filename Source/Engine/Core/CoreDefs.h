@@ -10,6 +10,8 @@
 #include <unordered_set>
 #include <assert.h>
 
+#include "Container/Ptr.h"
+
 namespace Unique
 {
 	//template<class T>

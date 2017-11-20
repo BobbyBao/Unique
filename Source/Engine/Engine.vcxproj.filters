@@ -50,10 +50,6 @@
     <ClCompile Include="Container\RefCounted.cpp" />
     <ClCompile Include="IO\AbstractFile.cpp" />
     <ClCompile Include="Engine\Application.cpp" />
-    <ClCompile Include="Engine\Sample.cpp" />
-    <ClCompile Include="Engine\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Serialize\mpack\mpack-writer.c" />
     <ClCompile Include="Serialize\mpack\mpack-platform.c" />
     <ClCompile Include="Serialize\mpack\mpack-reader.c" />
@@ -62,6 +58,13 @@
     <ClCompile Include="Serialize\mpack\mpack-node.c" />
     <ClCompile Include="Serialize\json2msgpack.cpp" />
     <ClCompile Include="Serialize\msgpack2json.cpp" />
+    <ClCompile Include="Graphics\GraphicsDefs.cpp" />
+    <ClCompile Include="Resource\Resource.cpp" />
+    <ClCompile Include="Resource\Image.cpp" />
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sample.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics\Shader.h">
@@ -126,11 +129,14 @@
     <ClInclude Include="Engine\Application.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Sample.h" />
     <ClInclude Include="Serialize\JsonReader.h" />
     <ClInclude Include="Serialize\JsonWriter.h" />
     <ClInclude Include="Serialize\BinaryWriter.h" />
     <ClInclude Include="Serialize\BinaryReader.h" />
     <ClInclude Include="Serialize\TransferBase.h" />
+    <ClInclude Include="Graphics\GraphicsDefs.h" />
+    <ClInclude Include="Resource\Resource.h" />
+    <ClInclude Include="Resource\Image.h" />
+    <ClInclude Include="Sample.h" />
   </ItemGroup>
 </Project>

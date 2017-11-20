@@ -106,7 +106,7 @@ namespace Unique
 	{
 		typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
 
-		StartArray();
+		StartArray(data.size());
 
 		for (non_const_value_type& val : data)
 		{
@@ -123,7 +123,7 @@ namespace Unique
 		typedef typename non_const_value_type::first_type first_type;
 		typedef typename non_const_value_type::second_type second_type;
 
-		StartArray();
+		StartArray(data.size());
 
 		for (non_const_value_type& val : data)
 		{
@@ -139,7 +139,7 @@ namespace Unique
 	{
 		typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
 
-		StartArray();
+		StartArray(data.size());
 
 		for (non_const_value_type& val : data)
 		{
@@ -152,8 +152,15 @@ namespace Unique
 	template<class T>
 	void JsonWriter::TransferBasicData(T& data)
 	{
-		String str = ToString(data);
-		writer_->String(str.CString());
+		data.Transfer(*this);
+	//	String str = ToString(data);
+	//	writer_->String(str.CString());
+	}
+
+	template<>
+	inline void JsonWriter::TransferBasicData<std::string>(std::string& data)
+	{
+		writer_->String(data.c_str());
 	}
 
 	template<>

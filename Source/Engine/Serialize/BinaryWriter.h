@@ -148,7 +148,7 @@ namespace Unique
 	template<class T>
 	void BinaryWriter::TransferBasicData(T& data)
 	{
-		mpack_write_bin(&writer_, &data, (uint)sizeof(T));
+		mpack_write_bin(&writer_, (const char*)&data, (uint)sizeof(T));
 	}
 
 	template<>

@@ -8,6 +8,7 @@ namespace Unique
 		uFactory("Graphics")
 		uAccessor("Name", GetName, SetName, String, 0)
 		uAttribute("ShaderDefines", shaderDefines_, String, 0)
+		uAttribute("ShaderStages", shaderStages_, Vector<ShaderStage>, 0)
 	}
 
 	Shader::Shader()

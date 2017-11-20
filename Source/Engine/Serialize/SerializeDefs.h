@@ -7,10 +7,8 @@ enum TransferMetaFlags
 	TF_READONLY = 2
 };
 
-#define TRANSFER(NAME, FIELD) transfer.Transfer (FIELD, NAME, TF_DEFAULT);
-#define TRANSFER_FLAG(NAME, FIELD, FLAG) transfer.Transfer (FIELD, NAME, FLAG);
-
-#define TRANSFER_(FIELD) transfer.Transfer (FIELD##_, #FIELD, TF_DEFAULT);
+#define uField(NAME, FIELD) transfer.TransferAttribute (NAME, FIELD, TF_DEFAULT);
+#define TRANSFER_FLAG(NAME, FIELD, FLAG) transfer.TransferAttribute (NAME, FIELD, FLAG);
 
 #define TRANSFER_PROPERTY(NAME, PROP, TYPE) TRANSFER_PROPERTY_FLAG(NAME, PROP, TYPE, TF_DEFAULT);
 #define TRANSFER_PROPERTY_FLAG(NAME, PROP, TYPE, FLAG)\
@@ -18,7 +16,7 @@ enum TransferMetaFlags
 	TYPE tmp;\
 	if (transfer.IsWriting ())\
 		tmp = Get##PROP(); \
-	transfer.Transfer(tmp, NAME, FLAG); \
+	transfer.Transfer(NAME, tmp, FLAG); \
 	if (transfer.IsReading ())\
 		Set##PROP(tmp);\
 }
@@ -30,7 +28,7 @@ enum TransferMetaFlags
 	TYPE tmp;\
 	if (transfer.IsWriting ())\
 		tmp = GET(); \
-	transfer.Transfer(tmp, NAME, FLAG); \
+	transfer.Transfer(NAME, tmp, FLAG); \
 	if (transfer.IsReading ())\
 		SET (tmp);\
 }
@@ -39,11 +37,14 @@ enum TransferMetaFlags
 #define TRANSFER_ENUM_FLAG(NAME, FIELD, FLAG) { assert(sizeof(FIELD) == sizeof(int)); transfer.Transfer (FIELD, NAME, FLAG); }
 #define TRANSFER_ENUM_(FIELD) { assert(sizeof(FIELD##_) == sizeof(int)); transfer.Transfer (FIELD##_, #FIELD, TF_DEFAULT); }
 
-#define DECLARE_SERIALIZE(x) \
+#define uClass(x, ...) \
 	inline static const char* GetTypeString ()	{ return #x; }	\
 	inline static bool AllowTransferOptimization ()	{ return false; } \
 	template<class TransferFunction> \
-	void Transfer (TransferFunction& transfer)
+	void Transfer(TransferFunction& transfer)\
+{\
+transfer.TransferAttributes(##__VA_ARGS__);\
+}
 
 #define DECLARE_SERIALIZE_OPTIMIZE_TRANSFER(x) \
 	inline static const char* GetTypeString ()	{ return #x; }	\

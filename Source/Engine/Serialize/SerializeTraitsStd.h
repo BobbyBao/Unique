@@ -26,12 +26,7 @@ namespace Unique
 		}
 
 		static bool IsContinousMemoryArray() { return true; }
-
-		static void ResizeSTLStyleArray(value_type& data, int rs)
-		{
-			data.resize(rs, 1);
-		}
-
+		
 	};
 
 
@@ -68,8 +63,8 @@ namespace Unique
 		typedef std::vector<T, Allocator>	value_type;
 		DEFINE_GET_TYPESTRING_CONTAINER(vector)
 
-			template<class TransferFunction> inline
-			static void Transfer(value_type& data, TransferFunction& transfer)
+		template<class TransferFunction> 
+		inline static void Transfer(value_type& data, TransferFunction& transfer)
 		{
 			transfer.TransferSTLStyleArray(data);
 		}

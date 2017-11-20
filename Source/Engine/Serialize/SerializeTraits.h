@@ -1,5 +1,5 @@
 #pragma once
-
+#include "../Core/CoreDefs.h"
 
 #include "SerializeTraitsBasic.h"
 #include "SerializeTraitsStd.h"
@@ -15,7 +15,7 @@ namespace Unique
 		typedef Unique::SPtr<T> value_type;
 
 		inline static const char* GetTypeString(void* ptr) { return value_type::GetTypeString(); }
-		static bool AllowTransferOptimization() { return T::AllowTransferOptimization(); }
+		inline static bool AllowTransferOptimization() { return T::AllowTransferOptimization(); }
 		inline static bool IsObject() { return true; }
 
 		inline static bool CreateObject(Unique::SPtr<T>& obj, const char* type)
@@ -62,10 +62,27 @@ namespace Unique
 			}
 			else
 			{
-				transfer.TransferBasicData(Unique::String(enumNames[data]));
+				transfer.TransferBasicData(Unique::String(enumNames[(int)data]));
 			}
 		}
 
 	};
 
+	template<class T>
+	class SerializeTraits<Vector<T> > : public SerializeTraitsBase<Vector<T> >
+	{
+	public:
+
+		typedef Vector<T>	value_type;
+		DEFINE_GET_TYPESTRING_CONTAINER(vector)
+
+		template<class TransferFunction>
+		inline static void Transfer(value_type& data, TransferFunction& transfer)
+		{
+			transfer.TransferSTLStyleArray(data);
+		}
+
+		static bool IsContinousMemoryArray() { return true; }
+		static void ResizeSTLStyleArray(value_type& data, int rs) { resize_trimmed(data, rs); }
+	};
 }

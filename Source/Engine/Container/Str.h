@@ -6,6 +6,16 @@
 #include <vector>
 #include <assert.h>
 
+//#define USE_STL 1
+
+#if USE_STL
+#include <string>
+namespace Unique
+{
+	using String = std::string;
+}
+#else
+
 namespace Unique
 {
 
@@ -579,6 +589,7 @@ private:
 
 }
 
+
 namespace std
 {
 	template<>
@@ -606,3 +617,5 @@ namespace std
 		}
 	};
 }
+
+#endif

@@ -4,12 +4,6 @@
 #include <iostream>
 #include <fstream>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image_write.h"
-
 namespace Unique
 {
 	class Debugger : public LLGL::RenderingDebugger
@@ -169,15 +163,6 @@ namespace Unique
 		rendererModule_ = GetSelectedRendererModule(argc, argv);
 	}
 	
-	byte* Application::LoadImage(const char* filename, int *x, int *y, int *comp, int req_comp)
-	{
-		return stbi_load(filename, x, y, comp, req_comp);
-	}
-	
-	void Application::FreeImage(void *retval_from_stbi_load)
-	{
-		stbi_image_free(retval_from_stbi_load);
-	}
 	// Loads the vertices with position and normal from the specified Wavefront OBJ model file.
 	std::vector<VertexPositionNormal> Application::LoadObjModel(const std::string& filename)
 	{
@@ -241,7 +226,7 @@ namespace Unique
 		// Load image data from file (using STBI library, see https://github.com/nothings/stb)
 		int width = 0, height = 0, components = 0;
 
-		unsigned char* imageBuffer = stbi_load(filename.c_str(), &width, &height, &components, 4);
+		unsigned char* imageBuffer = Image::LoadImage(filename.c_str(), &width, &height, &components, 4);
 		if (!imageBuffer)
 			throw std::runtime_error("failed to load texture from file: \"" + filename + "\"");
 
@@ -269,7 +254,7 @@ namespace Unique
 		renderSys.GenerateMips(*tex);
 
 		// Release image data
-		stbi_image_free(imageBuffer);
+		Image::FreeImage(imageBuffer);
 
 		// Show info
 		std::cout << "loaded texture: " << filename << std::endl;
@@ -278,7 +263,7 @@ namespace Unique
 	}
 	
 	bool Application::SaveTextureWithRenderer(LLGL::RenderSystem& renderSys, LLGL::Texture& texture, const std::string& filename, unsigned int mipLevel)
-	{
+	{/*
 		// Get texture dimension
 		auto texSize = texture.QueryMipLevelSize(0).Cast<int>();
 
@@ -295,7 +280,7 @@ namespace Unique
 
 		// Show info
 		std::cout << "saved texture: " << filename << std::endl;
-
+		*/
 		return true;
 	}
 

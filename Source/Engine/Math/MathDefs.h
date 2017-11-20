@@ -1,6 +1,6 @@
 #pragma once
-
-#include "Gauss/Vector2.h"
+#include "../Unique.h"
+#include "Gauss/Gauss.h"
 #include "Gauss/Vector3.h"
 #include "Gauss/Vector4.h"
 #include "Gauss/Quaternion.h"
