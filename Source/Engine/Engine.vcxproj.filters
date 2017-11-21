@@ -67,6 +67,8 @@
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="Graphics\Texture.cpp" />
     <ClCompile Include="Graphics\GPUObject.cpp" />
+    <ClCompile Include="Core\Semaphore.cpp" />
+    <ClCompile Include="Graphics\Renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics\Shader.h">
@@ -142,5 +144,8 @@
     <ClInclude Include="Sample.h" />
     <ClInclude Include="Graphics\Texture.h" />
     <ClInclude Include="Graphics\GPUObject.h" />
+    <ClInclude Include="Core\Semaphore.h" />
+    <ClInclude Include="Core\Platform.h" />
+    <ClInclude Include="Graphics\Renderer.h" />
   </ItemGroup>
 </Project>

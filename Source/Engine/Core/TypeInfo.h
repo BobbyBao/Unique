@@ -3,11 +3,8 @@
 
 namespace Unique
 {
-	class Object;
 	class Attribute;
-
-	typedef SPtr<Object>(*CreateObjectFn)();
-
+	
 	/// Type info.
 	class UNIQUE_API TypeInfo
 	{

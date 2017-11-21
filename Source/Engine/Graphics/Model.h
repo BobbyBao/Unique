@@ -1,8 +1,15 @@
 #pragma once
-class Model
-{
-public:
-	Model();
-	~Model();
-};
+#include "../Resource/Resource.h"
 
+namespace Unique
+{
+	class Model : public Resource
+	{
+		uRTTI(Model, Resource)
+	public:
+		Model();
+		~Model();
+	};
+
+
+}

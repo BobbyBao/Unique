@@ -20,7 +20,6 @@ namespace Unique
 			None,
 			Create,
 			Living,
-			Die,
 			Dead
 		};
 

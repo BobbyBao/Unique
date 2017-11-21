@@ -1,11 +1,11 @@
 #pragma once
-#include "../Core/Object.h"
+#include "../Resource/Resource.h"
 
 namespace Unique
 {
-	class Material : public Object
+	class Material : public Resource
 	{
-		uRTTI(Material, Object)
+		uRTTI(Material, Resource)
 	public:
 		Material();
 		~Material();

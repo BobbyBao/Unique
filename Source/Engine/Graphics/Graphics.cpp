@@ -12,10 +12,9 @@ namespace Unique
 	{
 	}
 
-
 	Graphics::~Graphics()
 	{
 	}
-
+	
 }
 

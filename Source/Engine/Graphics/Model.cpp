@@ -3,11 +3,15 @@
 
 
 
-Model::Model()
+namespace Unique
 {
-}
+	Model::Model()
+	{
+	}
 
 
-Model::~Model()
-{
+	Model::~Model()
+	{
+	}
+
 }

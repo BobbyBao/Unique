@@ -283,6 +283,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Core\Semaphore.cpp" />
     <ClCompile Include="Engine\Application.cpp" />
     <ClCompile Include="Container\RefCounted.cpp" />
     <ClCompile Include="Container\Str.cpp" />
@@ -299,6 +300,7 @@
     <ClCompile Include="Graphics\GPUObject.cpp" />
     <ClCompile Include="Graphics\GraphicsDefs.cpp" />
     <ClCompile Include="Graphics\Graphics.cpp" />
+    <ClCompile Include="Graphics\Renderer.cpp" />
     <ClCompile Include="Resource\Image.cpp" />
     <ClCompile Include="IO\AbstractFile.cpp" />
     <ClCompile Include="IO\File.cpp" />
@@ -328,6 +330,7 @@
     <ClCompile Include="Graphics\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Core\Platform.h" />
     <ClInclude Include="Engine\Application.h" />
     <ClInclude Include="Container\Arrayptr.h" />
     <ClInclude Include="Container\Linkedlist.h" />
@@ -355,6 +358,7 @@
     <ClInclude Include="Graphics\Model.h" />
     <ClInclude Include="Core\Object.h" />
     <ClInclude Include="Graphics\Shader.h" />
+    <ClInclude Include="Graphics\Renderer.h" />
     <ClInclude Include="Resource\Image.h" />
     <ClInclude Include="IO\AbstractFile.h" />
     <ClInclude Include="IO\File.h" />
@@ -368,6 +372,7 @@
     <ClInclude Include="Core\TypeInfo.h" />
     <ClInclude Include="Sample.h" />
     <ClInclude Include="Resource\Resource.h" />
+    <ClInclude Include="Core\Semaphore.h" />
     <ClInclude Include="Serialize\BinaryReader.h" />
     <ClInclude Include="Serialize\JsonReader.h" />
     <ClInclude Include="Serialize\JsonWriter.h" />
