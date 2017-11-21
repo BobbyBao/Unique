@@ -146,7 +146,7 @@ public:
 
 	/// Register a subsystem.
 	template<class T>
-	T& RegisterSystem()
+	T& RegisterSubsystem()
 	{
 		T* obj = new T();
 		SubsystemHolder<T>::Instance() = obj;

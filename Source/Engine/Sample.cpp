@@ -169,6 +169,7 @@ void Sample::OnDrawFrame()
 	if (input->KeyDown(LLGL::Key::Tab))
 		samplerIndex = (samplerIndex + 1) % 5;
 
+	LLGL::CommandBuffer* commands = Subsystem<Graphics>().commands;
 	// Clear color buffer
 	commands->Clear(LLGL::ClearFlags::Color);
 

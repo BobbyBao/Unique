@@ -20,14 +20,11 @@
 #include "../Core/Context.h"
 #include "../Graphics/Shader.h"
 #include "../Resource/Image.h"
+#include "../Graphics/Graphics.h"
 
 namespace Unique
 {
-	struct VertexPositionNormal
-	{
-		Gs::Vector3f position;
-		Gs::Vector3f normal;
-	};
+
 
 	struct VertexPositionTexCoord
 	{
@@ -38,23 +35,18 @@ namespace Unique
 	class Application
 	{
 	public:
+		Application(
+			const std::wstring& title,
+			const LLGL::Size&   resolution = { 800, 600 },
+			unsigned int        multiSampling = 8,
+			bool                vsync = true,
+			bool                debugger = true);
 
-		virtual ~Application()
-		{
-		}
+		virtual ~Application();
 
-		void Run()
-		{
-			auto& window = static_cast<LLGL::Window&>(context->GetSurface());
-			while (window.ProcessEvents() && !input->KeyDown(LLGL::Key::Escape))
-			{
-				profilerObj_->ResetCounters();
-				OnDrawFrame();
-			}
-		}
+		void Run();
 
 		static void SelectRendererModule(int argc, char* argv[]);
-
 	protected:
 
 		struct ShaderProgramRecall
@@ -65,12 +57,6 @@ namespace Unique
 			LLGL::StreamOutputFormat                streamOutputFormat;
 		};
 
-		Application(
-			const std::wstring& title,
-			const LLGL::Size&   resolution = { 800, 600 },
-			unsigned int        multiSampling = 8,
-			bool                vsync = true,
-			bool                debugger = true);
 
 		virtual void OnDrawFrame() = 0;
 
@@ -88,35 +74,19 @@ namespace Unique
 		// Load image from file, create texture, upload image into texture, and generate MIP-maps.
 		LLGL::Texture* LoadTexture(const std::string& filename)
 		{
-			return LoadTextureWithRenderer(*renderer, filename);
+			return LoadTextureWithRenderer(Subsystem<Graphics>().GetRenderSystem(), filename);
 		}
-
-
-		UPtr<LLGL::RenderingProfiler>    profilerObj_;
-		UPtr<LLGL::RenderingDebugger>    debuggerObj_;
-
-		std::map< LLGL::ShaderProgram*,
-			ShaderProgramRecall >             shaderPrograms_;
-
-		bool                                        loadingDone_ = false;
 
 		static std::string                          rendererModule_;
 
-		const LLGL::ColorRGBAf                      defaultClearColor{ 0.1f, 0.1f, 0.4f };
 
-		// Render system
-		UPtr<LLGL::RenderSystem>         renderer;
+		std::map< LLGL::ShaderProgram*,	ShaderProgramRecall > shaderPrograms_;
 
-		// Main render context
-		LLGL::RenderContext*                        context = nullptr;
-
-		// Main command buffer
-		LLGL::CommandBuffer*                        commands = nullptr;
+		bool                                        loadingDone_ = false;
 
 		std::shared_ptr<LLGL::Input>                input;
 
 		UPtr<LLGL::Timer>                timer;
-		const LLGL::RenderingProfiler&              profiler;
 
 		Gs::Matrix4f                                projection;
 
@@ -136,16 +106,13 @@ namespace Unique
 		// Save texture image to a PNG file.
 		bool SaveTexture(LLGL::Texture& texture, const std::string& filename, unsigned int mipLevel = 0)
 		{
-			return SaveTextureWithRenderer(*renderer, texture, filename, mipLevel);
+			return SaveTextureWithRenderer(Subsystem<Graphics>().GetRenderSystem(), texture, filename, mipLevel);
 		}
 
 	public:
 
-		// Loads the vertices with position and normal from the specified Wavefront OBJ model file.
-		static std::vector<VertexPositionNormal> LoadObjModel(const std::string& filename);
-		
 		// Generates eight vertices for a unit cube.
-		static std::vector<Gs::Vector3f> GenerateCubeVertices()
+		static Vector<Gs::Vector3f> GenerateCubeVertices()
 		{
 			return
 			{
@@ -156,7 +123,7 @@ namespace Unique
 
 		// Generates 36 indices for a unit cube of 8 vertices
 		// (36 = 3 indices per triangle * 2 triangles per cube face * 6 faces).
-		static std::vector<std::uint32_t> GenerateCubeTriangleIndices()
+		static Vector<std::uint32_t> GenerateCubeTriangleIndices()
 		{
 			return
 			{
@@ -171,7 +138,7 @@ namespace Unique
 
 		// Generates 24 indices for a unit cube of 8 vertices.
 		// (24 = 4 indices per quad * 1 quad per cube face * 6 faces)
-		static std::vector<std::uint32_t> GenerateCubeQuadlIndices()
+		static Vector<std::uint32_t> GenerateCubeQuadlIndices()
 		{
 			return
 			{
@@ -185,7 +152,7 @@ namespace Unique
 		}
 
 		// Generates 24 vertices for a unit cube with texture coordinates.
-		static std::vector<VertexPositionTexCoord> GenerateTexturedCubeVertices()
+		static Vector<VertexPositionTexCoord> GenerateTexturedCubeVertices()
 		{
 			return
 			{
@@ -199,7 +166,7 @@ namespace Unique
 		}
 
 		// Generates 36 indices for a unit cube of 24 vertices
-		static std::vector<std::uint32_t> GenerateTexturedCubeTriangleIndices()
+		static Vector<std::uint32_t> GenerateTexturedCubeTriangleIndices()
 		{
 			return
 			{
@@ -252,14 +219,14 @@ namespace Unique
 		// Returns the aspect ratio of the render context resolution (X:Y).
 		float GetAspectRatio() const
 		{
-			auto resolution = context->GetVideoMode().resolution.Cast<float>();
+			auto resolution = Subsystem<Graphics>().GetRenderContext().GetVideoMode().resolution.Cast<float>();
 			return (resolution.x / resolution.y);
 		}
 
 		// Returns ture if OpenGL is used as rendering API.
 		bool IsOpenGL() const
 		{
-			return (renderer->GetRendererID() == LLGL::RendererID::OpenGL);
+			return (Subsystem<Graphics>().GetRenderSystem().GetRendererID() == LLGL::RendererID::OpenGL);
 		}
 
 		// Used by the window resize handler
@@ -283,8 +250,8 @@ namespace Unique
 		{
 			/* Run tutorial */
 			Application::SelectRendererModule(argc, argv);
-			auto tutorial = UPtr<T>(new T());
-			tutorial->Run();
+			auto app = UPtr<T>(new T());
+			app->Run();
 		}
 		catch (const std::exception& e)
 		{

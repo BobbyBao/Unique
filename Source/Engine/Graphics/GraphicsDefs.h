@@ -4,6 +4,10 @@
 
 namespace Unique
 {
+
+
+
+
 	template<>
 	class SerializeTraits<LLGL::ShaderType> : public SerializeTraitsEnum<LLGL::ShaderType>
 	{
