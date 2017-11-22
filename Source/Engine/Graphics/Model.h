@@ -16,9 +16,6 @@ namespace Unique
 		Model();
 		~Model();
 
-		// Loads the vertices with position and normal from the specified Wavefront OBJ model file.
-		static Vector<VertexPositionNormal> LoadObjModel(const String& filename);
-
 	};
 
 

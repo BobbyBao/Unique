@@ -49,47 +49,17 @@ namespace Unique
 		static void SelectRendererModule(int argc, char* argv[]);
 	protected:
 
-		struct ShaderProgramRecall
-		{
-			std::vector<ShaderStage>   shaderDescs;
-			std::vector<LLGL::Shader*>              shaders;
-			LLGL::VertexFormat                      vertexFormat;
-			LLGL::StreamOutputFormat                streamOutputFormat;
-		};
-
 
 		virtual void OnDrawFrame() = 0;
-
-		LLGL::ShaderProgram* LoadShaderProgram(
-			const std::vector<ShaderStage>& shaderDescs,
-			const LLGL::VertexFormat& vertexFormat = {},
-			const LLGL::StreamOutputFormat& streamOutputFormat = {});
-
-		// Reloads the specified shader program from the previously specified shader source files.
-		bool ReloadShaderProgram(LLGL::ShaderProgram* shaderProgram);
-
-		// Load standard shader program (with vertex- and fragment shaders)
-		LLGL::ShaderProgram* LoadStandardShaderProgram(const LLGL::VertexFormat& vertexFormat);
 
 		// Load image from file, create texture, upload image into texture, and generate MIP-maps.
 		LLGL::Texture* LoadTexture(const std::string& filename)
 		{
-			return LoadTextureWithRenderer(Subsystem<Graphics>().GetRenderSystem(), filename);
+			return LoadTextureWithRenderer(*renderer, filename);
 		}
 
 		static std::string                          rendererModule_;
-
-		// Render system
-		LLGL::RenderSystem*         renderer;
-
-		// Main render context
-		LLGL::RenderContext*                        context = nullptr;
-
-		// Main command buffer
-		LLGL::CommandBuffer*                        commands = nullptr;
-
-		std::map< LLGL::ShaderProgram*,	ShaderProgramRecall > shaderPrograms_;
-
+		
 		bool                                        loadingDone_ = false;
 
 		std::shared_ptr<LLGL::Input>                input;
@@ -114,7 +84,7 @@ namespace Unique
 		// Save texture image to a PNG file.
 		bool SaveTexture(LLGL::Texture& texture, const std::string& filename, unsigned int mipLevel = 0)
 		{
-			return SaveTextureWithRenderer(Subsystem<Graphics>().GetRenderSystem(), texture, filename, mipLevel);
+			return SaveTextureWithRenderer(*renderer, texture, filename, mipLevel);
 		}
 
 	public:
@@ -188,54 +158,6 @@ namespace Unique
 		}
 
 	protected:
-
-		template <typename VertexType>
-		LLGL::Buffer* CreateVertexBuffer(const std::vector<VertexType>& vertices, const LLGL::VertexFormat& vertexFormat)
-		{
-			return renderer->CreateBuffer(
-				LLGL::VertexBufferDesc(static_cast<unsigned int>(vertices.size() * sizeof(VertexType)), vertexFormat),
-				vertices.data()
-			);
-		}
-
-		template <typename IndexType>
-		LLGL::Buffer* CreateIndexBuffer(const std::vector<IndexType>& indices, const LLGL::IndexFormat& indexFormat)
-		{
-			return renderer->CreateBuffer(
-				LLGL::IndexBufferDesc(static_cast<unsigned int>(indices.size() * sizeof(IndexType)), indexFormat),
-				indices.data()
-			);
-		}
-
-		template <typename Buffer>
-		LLGL::Buffer* CreateConstantBuffer(const Buffer& buffer)
-		{
-			static_assert(!std::is_pointer<Buffer>::value, "buffer type must not be a pointer");
-			return renderer->CreateBuffer(
-				LLGL::ConstantBufferDesc(sizeof(buffer)),
-				&buffer
-			);
-		}
-
-		template <typename T>
-		void UpdateBuffer(LLGL::Buffer* buffer, const T& data)
-		{
-			GS_ASSERT(buffer != nullptr);
-			renderer->WriteBuffer(*buffer, &data, sizeof(data), 0);
-		}
-
-		// Returns the aspect ratio of the render context resolution (X:Y).
-		float GetAspectRatio() const
-		{
-			auto resolution = Subsystem<Graphics>().GetRenderContext().GetVideoMode().resolution.Cast<float>();
-			return (resolution.x / resolution.y);
-		}
-
-		// Returns ture if OpenGL is used as rendering API.
-		bool IsOpenGL() const
-		{
-			return (Subsystem<Graphics>().GetRenderSystem().GetRendererID() == LLGL::RendererID::OpenGL);
-		}
 
 		// Used by the window resize handler
 		bool IsLoadingDone() const

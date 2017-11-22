@@ -1,6 +1,6 @@
 #include "Precompiled.h"
 #include "Sample.h"
-
+#include "Graphics/Shader.h"
 
 using namespace Unique;
 
@@ -17,7 +17,7 @@ Sample::Sample() :
 
 	// Create all graphics objects
 	auto vertexFormat = CreateBuffers();
-	shaderProgram = LoadStandardShaderProgram(vertexFormat);
+	shaderProgram = Shader::LoadStandardShaderProgram(vertexFormat);
 	CreatePipelines();
 	CreateTextures();
 	CreateSamplers();
@@ -169,7 +169,6 @@ void Sample::OnDrawFrame()
 	if (input->KeyDown(LLGL::Key::Tab))
 		samplerIndex = (samplerIndex + 1) % 5;
 
-	LLGL::CommandBuffer* commands = Subsystem<Graphics>().commands;
 	// Clear color buffer
 	commands->Clear(LLGL::ClearFlags::Color);
 
@@ -185,6 +184,6 @@ void Sample::OnDrawFrame()
 	commands->Draw(3, 0);
 
 	// Present result on the screen
-	context->Present();
+	graphicsContext->Present();
 }
 

@@ -38,6 +38,14 @@ namespace Unique
 		std::string         target;
 	};
 
+	struct ShaderProgramRecall
+	{
+		std::vector<ShaderStage>   shaderDescs;
+		std::vector<LLGL::Shader*>              shaders;
+		LLGL::VertexFormat                      vertexFormat;
+		LLGL::StreamOutputFormat                streamOutputFormat;
+	};
+
 
 	class Shader : public Object
 	{
@@ -50,6 +58,20 @@ namespace Unique
 		void SetName(const String& name) { name_ = name;}
 
 		Vector<ShaderStage>& GetShaderStages() { return  shaderStages_; }
+
+
+		static LLGL::ShaderProgram* LoadShaderProgram(
+			const std::vector<ShaderStage>& shaderDescs,
+			const LLGL::VertexFormat& vertexFormat = {},
+			const LLGL::StreamOutputFormat& streamOutputFormat = {});
+
+		// Reloads the specified shader program from the previously specified shader source files.
+		static bool ReloadShaderProgram(LLGL::ShaderProgram* shaderProgram);
+
+		// Load standard shader program (with vertex- and fragment shaders)
+		static LLGL::ShaderProgram* LoadStandardShaderProgram(const LLGL::VertexFormat& vertexFormat);
+
+		static std::map< LLGL::ShaderProgram*, ShaderProgramRecall > shaderPrograms_;
 	private:
 		String name_;
 		String shaderDefines_;

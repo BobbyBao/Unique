@@ -24,6 +24,17 @@ namespace Unique
 
 	};
 
+
+
+	// Render system
+	UPtr<LLGL::RenderSystem>        renderer;
+
+	// Main render context
+	LLGL::RenderContext*			graphicsContext = nullptr;
+
+	// Main command buffer
+	LLGL::CommandBuffer*            commands = nullptr;
+
 	Graphics::Graphics():
 		profilerObj_ {	new LLGL::RenderingProfiler() },
 		debuggerObj_{ new Debugger() }
@@ -32,6 +43,10 @@ namespace Unique
 
 	Graphics::~Graphics()
 	{
+		if (renderer)
+		{
+			LLGL::RenderSystem::Unload(std::move(renderer));
+		}
 	}
 
 	void Graphics::SetDebug(bool val)
@@ -73,7 +88,7 @@ namespace Unique
 #endif
 		}
 
-		context = renderer->CreateRenderContext(contextDesc);
+		graphicsContext = renderer->CreateRenderContext(contextDesc);
 
 		// Create command buffer
 		commands = renderer->CreateCommandBuffer();
@@ -82,7 +97,7 @@ namespace Unique
 
 		// Initialize command buffer
 		commands->SetClearColor(defaultClearColor);
-		commands->SetRenderTarget(*context);
+		commands->SetRenderTarget(*graphicsContext);
 		commands->SetViewport({ 0.0f, 0.0f, static_cast<float>(size.x), static_cast<float>(size.y) });
 		commands->SetScissor({ 0, 0, size.x, size.y });
 
