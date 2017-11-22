@@ -21,7 +21,7 @@ namespace Unique
 		int multiSampling_ = 4;
 		UPtr<LLGL::RenderingProfiler>    profilerObj_;
 		UPtr<LLGL::RenderingDebugger>    debuggerObj_;
-
+		Map<LLGL::SamplerDescriptor, LLGL::Sampler*> samplers_;
 	};
 
 }
