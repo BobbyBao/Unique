@@ -79,6 +79,14 @@ namespace Unique
 
 		static std::string                          rendererModule_;
 
+		// Render system
+		LLGL::RenderSystem*         renderer;
+
+		// Main render context
+		LLGL::RenderContext*                        context = nullptr;
+
+		// Main command buffer
+		LLGL::CommandBuffer*                        commands = nullptr;
 
 		std::map< LLGL::ShaderProgram*,	ShaderProgramRecall > shaderPrograms_;
 

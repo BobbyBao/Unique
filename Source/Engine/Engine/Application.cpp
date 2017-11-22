@@ -156,6 +156,9 @@ namespace Unique
 		Graphics& graphics =  context_->RegisterSubsystem<Graphics>();
 		graphics.Initialize(rendererModule_, resolution);
 
+		renderer = &(graphics.GetRenderSystem());
+		context = &graphics.GetRenderContext();
+		commands = graphics.commands;
 
 		// Set window title
 		auto& window = static_cast<LLGL::Window&>(graphics.GetSurface());
@@ -179,7 +182,7 @@ namespace Unique
 		window.SetBehavior(behavior);
 
 		// Add window resize listener
-		window.AddEventListener(std::make_shared<ResizeEventHandler>(*this, graphics.GetRenderContext(),
+		window.AddEventListener(std::make_shared<ResizeEventHandler>(*this, &graphics.GetRenderContext(),
 			graphics.commands, projection));
 
 		// Initialize default projection matrix
