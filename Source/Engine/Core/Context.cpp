@@ -148,7 +148,7 @@ Context::Context() :
 
 Context::~Context()
 {
-	for (size_t i = subsystemVec_.size() - 1; i >=0; i--)
+	for (int i = (int)subsystemVec_.size() - 1; i >=0; i--)
 	{
 		RemoveSubsystem(subsystemVec_[i]->GetType());
 	}

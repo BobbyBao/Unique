@@ -46,8 +46,8 @@ namespace Unique
 	template<class T>
 	inline	bool BinaryReader::Load(const String& fileName, T& data)
 	{
-		SerializeTraits<T>::Transfer(data, *this);
-		return true;
+		File file(fileName);
+		return Load(file, data);
 	}
 
 	template<class T>
@@ -65,9 +65,9 @@ namespace Unique
 			return false;
 
 		mpack_tree_init(&tree_, buffer, dataSize);
-		mpack_tree_parse(&tree);
+		mpack_tree_parse(&tree_);
 
-		if (mpack_tree_error(&tree) != mpack_ok)
+		if (mpack_tree_error(&tree_) != mpack_ok)
 		{
 			UNIQUE_LOGERROR("Could not parse MsgPack data from " + source.GetName());
 			return false;
@@ -117,7 +117,7 @@ namespace Unique
 				return;
 			}
 
-			data = StaticCast<T, Object>(CreateObject(type));
+			data = StaticCast<T, Object>(Object::GetContext()->CreateObject(type));
 		}
 
 		data->Transfer(*this);
@@ -224,13 +224,31 @@ namespace Unique
 	template<>
 	inline void BinaryReader::TransferBasicData<String>(String& data)
 	{
-		data = mpack_node_str(currentNode_);
+		const char* str = mpack_node_str(currentNode_);
+		if (str)
+		{
+			size_t sz = mpack_node_strlen(currentNode_);
+			data = String(str, (uint)sz);
+		}
+		else
+		{
+			data.clear();
+		}
 	}
 
 	template<>
 	inline void BinaryReader::TransferBasicData<std::string>(std::string& data)
 	{
-		data = mpack_node_str(currentNode_);
+		const char* str = mpack_node_str(currentNode_);
+		if (str)
+		{
+			size_t sz = mpack_node_strlen(currentNode_);
+			data = std::string(str, sz);
+		}
+		else
+		{
+			data.clear();
+		}
 	}
 
 	template<>

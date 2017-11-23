@@ -7,7 +7,7 @@ using namespace Unique;
 
 
 Sample::Sample() :
-	Application { L"LLGL Tutorial 03: Texturing" }
+	Application { L"Unique Engine" }
 {
 	// Check if samplers are supported
 	const auto& renderCaps = renderer->GetRenderingCaps();
@@ -36,8 +36,14 @@ Sample::Sample() :
 	BinaryWriter ser;
 	ser.Save("test.bin", shader);
 
+	SPtr<Shader> s(new Shader());
+	BinaryReader reader;
+	reader.Load("test.bin", s);
+
 	JsonWriter jsonWriter;
-	jsonWriter.Save("test.json", shader);
+	jsonWriter.Save("test.json", s);
+
+
 	//int v1 = 100, v2 = 200, v3 = 300;
 
 	//Transfer2(v1, "1", v2, "2", v3, "3");

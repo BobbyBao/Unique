@@ -24,9 +24,8 @@
 
 #include "../Unique.h"
 
-#if UNIQUE_CXX11
 #include <initializer_list>
-#endif
+
 
 namespace Unique
 {
@@ -53,7 +52,7 @@ public:
         head_(0)
     {
     }
-#if UNIQUE_CXX11
+
     /// Aggregate initialization constructor.
     LinkedList(const std::initializer_list<T>& list) : LinkedList()
     {
@@ -62,7 +61,7 @@ public:
             insert(*it);
         }
     }
-#endif
+
     /// Destruct.
     ~LinkedList()
     {

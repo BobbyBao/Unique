@@ -156,6 +156,12 @@ namespace Unique
 	}
 
 	template<>
+	inline void BinaryWriter::TransferBasicData<std::string>(std::string& data)
+	{
+		mpack_write_str(&writer_, data.c_str(), (uint)data.size());
+	}
+
+	template<>
 	inline void BinaryWriter::TransferBasicData<bool>(bool& data)
 	{
 		mpack_write_bool(&writer_, data);

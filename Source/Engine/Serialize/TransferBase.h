@@ -40,18 +40,18 @@ public:\
 		}\
 	protected:\
 		template <typename First, typename... Rest>\
-		void TransferImpl1(First& first, Rest&... rest)\
+		void TransferImpl1(First first, Rest&... rest)\
 		{\
 			TransferImpl2(first, rest...);\
 		}\
 		template <typename First, typename Second, typename... Rest>\
-		void TransferImpl2(First& name, Second val, const Rest&... rest)\
+		void TransferImpl2(First name, Second& val, Rest&... rest)\
 		{\
 			TransferAttribute(name, val);\
 			TransferImpl1(rest...);\
 		}\
 		template <typename First, typename Second, typename... Rest>\
-		void TransferImpl2(First& name, Second val)\
+		void TransferImpl2(First name, Second& val)\
 		{\
 			TransferAttribute(name, val);\
 		}\

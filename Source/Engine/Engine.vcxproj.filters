@@ -142,5 +142,7 @@
     <ClInclude Include="Container\Algorithm.h" />
     <ClInclude Include="Container\Container.h" />
     <ClInclude Include="Container\RandomAccessIterator.h" />
+    <ClInclude Include="Unique.h" />
+    <ClInclude Include="DebugNew.h" />
   </ItemGroup>
 </Project>

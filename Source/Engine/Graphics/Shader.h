@@ -11,14 +11,14 @@ namespace Unique
 		}
 
 		ShaderStage(
-			LLGL::ShaderType type, const std::string& filename) :
+			LLGL::ShaderType type, const String& filename) :
 			type{ type },
 			filename{ filename }
 		{
 		}
 
 		ShaderStage(
-			LLGL::ShaderType type, const std::string& filename, const std::string& entryPoint, const std::string& target) :
+			LLGL::ShaderType type, const String& filename, const String& entryPoint, const String& target) :
 			type{ type },
 			filename{ filename },
 			entryPoint{ entryPoint },
@@ -33,9 +33,9 @@ namespace Unique
 			"Target", target);
 
 		LLGL::ShaderType    type;
-		std::string         filename;
-		std::string         entryPoint;
-		std::string         target;
+		String         filename;
+		String         entryPoint;
+		String         target;
 	};
 
 	struct ShaderProgramRecall

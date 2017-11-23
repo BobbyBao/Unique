@@ -22,13 +22,13 @@ namespace Unique
 	{
 	}
 
-	static std::string ReadFileContent(const std::string& filename)
+	static std::string ReadFileContent(const String& filename)
 	{
 		// Read shader file
-		std::ifstream file(filename);
+		std::ifstream file(filename.CString());
 
 		if (!file.good())
-			throw std::runtime_error("failed to open file: \"" + filename + "\"");
+			UNIQUE_LOGERROR("failed to open file: \"" + filename + "\"");
 
 		return std::string(
 			(std::istreambuf_iterator<char>(file)),
@@ -58,7 +58,7 @@ namespace Unique
 			auto shader = renderer->CreateShader(desc.type);
 
 			// Compile shader
-			LLGL::ShaderDescriptor shaderDesc{ desc.entryPoint, desc.target, LLGL::ShaderCompileFlags::Debug };
+			LLGL::ShaderDescriptor shaderDesc{ desc.entryPoint.CString(), desc.target.CString(), LLGL::ShaderCompileFlags::Debug };
 			shaderDesc.streamOutput.format = streamOutputFormat;
 
 			shader->Compile(shaderCode, shaderDesc);
@@ -119,7 +119,7 @@ namespace Unique
 				auto shader = renderer->CreateShader(desc.type);
 
 				// Compile shader
-				LLGL::ShaderDescriptor shaderDesc(desc.entryPoint, desc.target, LLGL::ShaderCompileFlags::Debug);
+				LLGL::ShaderDescriptor shaderDesc(desc.entryPoint.CString(), desc.target.CString(), LLGL::ShaderCompileFlags::Debug);
 				shaderDesc.streamOutput.format = recall.streamOutputFormat;
 
 				shader->Compile(shaderCode, shaderDesc);

@@ -1,6 +1,6 @@
 #include "Precompiled.h"
 #include "Application.h"
-
+#include "../IO/FileSystem.h"
 #include <iostream>
 #include <fstream>
 #include "../Graphics/Graphics.h"
@@ -138,6 +138,7 @@ namespace Unique
 		timer{ LLGL::Timer::Create() },
 		context_(new Context())
 	{
+		context_->RegisterSubsystem<FileSystem>();
 		Graphics& graphics =  context_->RegisterSubsystem<Graphics>();
 		graphics.Initialize(rendererModule_, resolution);
 

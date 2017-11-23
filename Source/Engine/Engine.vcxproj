@@ -329,6 +329,7 @@
   <ItemGroup>
     <ClInclude Include="Container\Container.h" />
     <ClInclude Include="Core\Platform.h" />
+    <ClInclude Include="DebugNew.h" />
     <ClInclude Include="Engine\Application.h" />
     <ClInclude Include="Container\Arrayptr.h" />
     <ClInclude Include="Container\Linkedlist.h" />
@@ -387,6 +388,7 @@
     <ClInclude Include="Core\StringUtil.h" />
     <ClInclude Include="Serialize\TransferBase.h" />
     <ClInclude Include="Graphics\Texture.h" />
+    <ClInclude Include="Unique.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
