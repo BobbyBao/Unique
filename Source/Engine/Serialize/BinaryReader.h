@@ -1,6 +1,7 @@
 #pragma once
 #include "../serialize/SerializeTraits.h"
 #include "../Serialize/TransferBase.h"
+#include "../Serialize/mpack/mpack.h"
 
 namespace Unique
 {
@@ -12,7 +13,7 @@ namespace Unique
 		bool Load(const String& fileName, T& data);
 
 		template<class T>
-		bool Load(BinaryReader& source, T& data);
+		bool Load(File& source, T& data);
 		
 		template<class T>
 		void TransferBasicData(T& data);
@@ -31,95 +32,114 @@ namespace Unique
 
 		bool StartObject(uint size) { return true; }
 		void EndObject() {}
-	protected:	
-		bool StartProperty(const String& key) { return true; }
-		void EndProperty() {}
+	protected:
+		bool StartProperty(const String& key);
+		void EndProperty();
 		bool StartArray(uint size) { return true; }
 		void EndArray() {}
+
+		mpack_tree_t tree_;
+		mpack_node_t currentNode_;
+		mpack_node_t parentNode_;
 	};
 	
 	template<class T>
 	inline	bool BinaryReader::Load(const String& fileName, T& data)
 	{
-		/*
-		std::ifstream jsonFile(fileName.CString());
-		IStreamWrapper isw(jsonFile);
-
-		Document doc;
-		if (doc.ParseStream(isw).HasParseError())
-		{
-			return false;
-		}
-
-		currentNode = &doc;*/
 		SerializeTraits<T>::Transfer(data, *this);
 		return true;
 	}
 
 	template<class T>
-	inline bool BinaryReader::Load(BinaryReader& source, T& data)
-	{	/*
-		unsigned dataSize = source.GetSize();
+	inline bool BinaryReader::Load(File& source, T& data)
+	{
+		uint dataSize = source.GetSize();
 		if (!dataSize && !source.GetName().Empty())
 		{
 			UNIQUE_LOGERROR("Zero sized JSON data in " + source.GetName());
 			return false;
 		}
 
-		SharedArrayPtr<char> buffer(new char[dataSize + 1]);
+		SharedArrayPtr<char> buffer(new char[dataSize]);
 		if (source.Read(buffer.Get(), dataSize) != dataSize)
 			return false;
-		buffer[dataSize] = '\0';
 
-		rapidjson::Document document;
-		if (document.Parse<kParseCommentsFlag | kParseTrailingCommasFlag>(buffer).HasParseError())
+		mpack_tree_init(&tree_, buffer, dataSize);
+		mpack_tree_parse(&tree);
+
+		if (mpack_tree_error(&tree) != mpack_ok)
 		{
-			UNIQUE_LOGERROR("Could not parse JSON data from " + source.GetName());
+			UNIQUE_LOGERROR("Could not parse MsgPack data from " + source.GetName());
 			return false;
 		}
 
-		currentNode = &document;*/
+		currentNode_ = mpack_tree_root(&tree_);
+
 		SerializeTraits<T>::Transfer(data, *this);
 		return true;
 	}
-	
+
+
+
+	inline bool BinaryReader::StartProperty(const String& key)
+	{
+		mpack_node_t node = mpack_node_map_str(currentNode_, key.CString(), key.Length());
+		if (mpack_node_type(node) == mpack_type_nil)
+		{
+			return false;
+		}
+
+		parentNode_ = currentNode_;
+		currentNode_ = node;
+		return true; 
+	}
+
+	inline void BinaryReader::EndProperty()
+	{
+		currentNode_ = parentNode_;
+		parentNode_ = { nullptr, nullptr };
+	}
+
 	template<class T>
 	inline void BinaryReader::TransferObject(SPtr<T>& data)
-	{/*
-		if (data == nullptr)
+	{
+		if(data == nullptr)
 		{
-			Value::MemberIterator node = currentNode->FindMember("type");
-			if (node == currentNode->MemberEnd())
+			mpack_node_t node = mpack_node_map_cstr(currentNode_, "Type");
+			if (mpack_node_type(node) == mpack_type_nil)
 			{
-				UNIQUE_LOGWARNING("Unkown object type.");
 				return;
 			}
 
-			data = StaticCast<T, Object>(Object::GetContext()->CreateObject(node->value.GetString()));
+			const char* type = mpack_node_str(node);
+			if (!type)
+			{
+				return;
+			}
+
+			data = StaticCast<T, Object>(CreateObject(type));
 		}
 
-		data->VirtualTransfer(*this);*/
+		data->Transfer(*this);
 	}
 
 	template<class T>
 	inline void BinaryReader::TransferSTLStyleArray(T& data, int metaFlag)
 	{
-		typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
-
-		data.clear();
-		/*
-		if (!currentNode->IsArray())
+		if (mpack_node_type(currentNode_) != mpack_type_array)
 		{
-			assert(false);
 			return;
 		}
 
-		Value* parentNode = currentNode;
+		typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
 
-		for (SizeType i = 0; i < parentNode->Size(); ++i)
+		data.clear();
+		
+		mpack_node_t parentNode = currentNode_;
+
+		for (size_t i = 0; i < mpack_node_array_length(parentNode); ++i)
 		{
-			auto& child = (*parentNode)[i];
-			currentNode = &child;
+			currentNode_ = mpack_node_array_at(parentNode, i);
 			non_const_value_type val;
 
 			SerializeTraits<non_const_value_type>::Transfer(val, *this);
@@ -127,133 +147,137 @@ namespace Unique
 			data.push_back(val);
 		}
 
-		currentNode = parentNode;*/
+		currentNode_ = parentNode;
 
 	}
 
 	template<class T>
 	inline void BinaryReader::TransferSTLStyleMap(T& data, int metaFlag)
 	{
+		if (mpack_node_type(currentNode_) != mpack_type_array)
+		{
+			return;
+		}
+
 		typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
 		typedef typename non_const_value_type::first_type first_type;
 		typedef typename non_const_value_type::second_type second_type;
 
 		data.clear();
-		/*
-		Value* parentNode = currentNode;
+
+		mpack_node_t parentNode = currentNode_;
 
 		for (SizeType i = 0; i < parentNode->Size(); ++i)
 		{
-			auto& child = (*parentNode)[i];
-			currentNode = &child;
+			currentNode_ = mpack_node_array_at(parentNode, i);
 			non_const_value_type val;
 			SerializeTraits<non_const_value_type>::Transfer(val, *this);
 			data.insert(val);
 		}
 
-		currentNode = parentNode;*/
+		currentNode_ = parentNode;
 	}
 
 	template<class T>
 	inline void BinaryReader::TransferSTLStyleSet(T& data, int metaFlag)
 	{
-		typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
-
-		data.clear();
-		/*
-		if (!currentNode->IsArray())
+		if (mpack_node_type(currentNode_) != mpack_type_array)
 		{
-			ASSERT(FALSE);
 			return;
 		}
 
-		Value* parentNode = currentNode;
+		typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
 
+		data.clear();
+
+		mpack_node_t parentNode = currentNode_;
+		
 		for (SizeType i = 0; i < parentNode->Size(); ++i)
 		{
-			auto& child = parentNode->operator[][i];
-			currentNode = child;
+			currentNode_ = mpack_node_array_at(parentNode, i);
 			non_const_value_type val;
 			SerializeTraits<non_const_value_type>::Transfer(val, *this);
 			data.insert(val);
 		}
 
-		currentNode = parentNode;*/
+		currentNode_ = parentNode;
 	}
 
 	template<class T>
 	inline void BinaryReader::TransferBasicData(T& data)
 	{
-	//	data = FromString<T>(currentNode->GetString());
+		data.Transfer(*this);
 	}
 
 	template<>
 	inline void BinaryReader::TransferBasicData<bool>(bool& data)
 	{
-	//	assert(currentNode->IsBool());
-	//	data = currentNode->GetBool();
+		data = mpack_node_bool(currentNode_);
 	}
 
 	template<>
 	inline void BinaryReader::TransferBasicData<char>(char& data)
 	{
-	//	assert(currentNode->IsInt());
-	//	data = currentNode->GetInt();
+		data = mpack_node_i8(currentNode_);
+	}
+
+	template<>
+	inline void BinaryReader::TransferBasicData<String>(String& data)
+	{
+		data = mpack_node_str(currentNode_);
+	}
+
+	template<>
+	inline void BinaryReader::TransferBasicData<std::string>(std::string& data)
+	{
+		data = mpack_node_str(currentNode_);
 	}
 
 	template<>
 	inline void BinaryReader::TransferBasicData<char*>(char*& data)
 	{
-	//	assert(currentNode->IsInt());
-	//	strcpy(data, currentNode->GetString());
+		std::strcpy(data, mpack_node_str(currentNode_));
 	}
 
 	template<>
 	inline void BinaryReader::TransferBasicData<unsigned char>(unsigned char& data)
 	{
-	//	assert(currentNode->IsUint());
-	//	data = currentNode->GetUint();
+		data = mpack_node_u8(currentNode_);
 	}
 
 	template<>
 	inline void BinaryReader::TransferBasicData<short>(short& data)
 	{
-	//	assert(currentNode->IsInt());
-	//	data = currentNode->GetInt();
+		data = mpack_node_i16(currentNode_);
 	}
 
 	template<>
 	inline void BinaryReader::TransferBasicData<unsigned short>(unsigned short& data)
 	{
-	//	assert(currentNode->IsUint());
-	//	data = currentNode->GetUint();
+		data = mpack_node_u16(currentNode_);
 	}
 
 	template<>
 	inline void BinaryReader::TransferBasicData<int>(int& data)
 	{
-	//	assert(currentNode->IsInt());
-	//	data = currentNode->GetInt();
+		data = mpack_node_i32(currentNode_);
 	}
 
 	template<>
 	inline void BinaryReader::TransferBasicData<unsigned int>(unsigned int& data)
 	{
-	//	assert(currentNode->IsUint());
-	//	data = currentNode->GetUint();
+		data = mpack_node_u32(currentNode_);
 	}
 
 	template<>
 	inline void BinaryReader::TransferBasicData<float>(float& data)
 	{
-	//	assert(currentNode->IsDouble());
-	//	data = currentNode->GetFloat();
+		data = mpack_node_float(currentNode_);
 	}
 
 	template<>
 	inline void BinaryReader::TransferBasicData<double>(double& data)
 	{
-	//	assert(currentNode->IsDouble());
-	//	data = currentNode->GetDouble();
+		data = mpack_node_double(currentNode_);
 	}
 }

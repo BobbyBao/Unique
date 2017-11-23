@@ -42,9 +42,8 @@ namespace Unique
 			mpack_finish_map(&writer_);
 			inMap_ = false;
 		}
+
 	protected:
-
-
 		bool StartProperty(const String& key)
 		{
 			mpack_write_str(&writer_, key.CString(), (uint)key.Length());
@@ -128,7 +127,6 @@ namespace Unique
 
 		EndArray();
 	}
-
 
 	template<class T>
 	inline void BinaryWriter::TransferSTLStyleSet(T& data, int metaFlag)

@@ -68,7 +68,7 @@ void EventReceiverGroup::EndSendEvent()
     if (inSend_ == 0 && dirty_)
     {
         /// \todo Could be optimized by erase-swap, but this keeps the receiver order
-        for (unsigned i = receivers_.size() - 1; i < receivers_.size(); --i)
+        for (size_t i = receivers_.size() - 1; i < receivers_.size(); --i)
         {
             if (!receivers_[i])
                 receivers_.erase(receivers_.begin() + i);
@@ -148,7 +148,7 @@ Context::Context() :
 
 Context::~Context()
 {
-	for (int i = subsystemVec_.size() - 1; i >=0; i--)
+	for (size_t i = subsystemVec_.size() - 1; i >=0; i--)
 	{
 		RemoveSubsystem(subsystemVec_[i]->GetType());
 	}

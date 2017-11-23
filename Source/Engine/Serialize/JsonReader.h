@@ -236,8 +236,8 @@ namespace Unique
 	template<>
 	inline void JsonReader::TransferBasicData<char*>(char*& data)
 	{
-		assert(currentNode->IsInt());
-		strcpy(data, currentNode->GetString());
+		assert(currentNode->IsString());
+		std::strcpy(data, currentNode->GetString());
 	}
 
 	template<>
