@@ -27,9 +27,8 @@
 #include <cassert>
 #include <cstddef>
 
-#if UNIQUE_CXX11
 #include <utility>
-#endif
+
 
 namespace Unique
 {

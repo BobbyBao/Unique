@@ -18,7 +18,7 @@ Sample::Sample() :
 	// Create all graphics objects
 	auto vertexFormat = CreateBuffers();
 
-	shaderProgram = Shader::LoadStandardShaderProgram(vertexFormat);
+	shaderProgram = LoadStandardShaderProgram(vertexFormat);
 	auto& constBuffers = shaderProgram->QueryConstantBuffers();
 
 	CreatePipelines();

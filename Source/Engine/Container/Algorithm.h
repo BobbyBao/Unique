@@ -20,18 +20,52 @@
 // THE SOFTWARE.
 //
 
-#include "Precompiled.h"
-
-#include "../Container/VectorBase.h"
-
-#include "../DebugNew.h"
+#pragma once
+#include "../Unique.h"
+#include <algorithm>
 
 namespace Unique
 {
+class String;
+class VectorBase;
 
-unsigned char* VectorBase::allocate_buffer(unsigned size)
+/// Swap two values.
+template <class T> inline void Swap(T& first, T& second)
 {
-    return new unsigned char[size];
+    T temp = first;
+    first = second;
+    second = temp;
+}
+
+template <> UNIQUE_API void Swap<String>(String& first, String& second);
+
+template<class C, class V>
+typename C::iterator Find(C& c, const V& value)
+{
+	return std::find(c.begin(), c.end(), value);
+}
+
+template<class C, class V>
+bool Contains(C& c, const V& value)
+{
+	return std::find(c.begin(), c.end(), value) != c.end();
+}
+
+template<class C, class V>
+void Remove(C& c, const V& value)
+{
+	std::remove(c.begin(), c.end(), value);
+}
+
+template<class T>
+void RemoveSwap(std::vector<T>& c, const T& value)
+{
+	auto it = std::find(c.begin(), c.end(), value);
+	if (it != c.end())
+	{
+		*it = c.back();
+		c.pop_back();
+	}
 }
 
 }

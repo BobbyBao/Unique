@@ -27,17 +27,13 @@
     <ClCompile Include="Core\Object.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Attribute.cpp" />
     <ClCompile Include="Precompiled.cpp" />
     <ClCompile Include="Core\TypeInfo.cpp" />
-    <ClCompile Include="Serialize\ObjectInspector.cpp" />
     <ClCompile Include="Core\StringUtil.cpp" />
     <ClCompile Include="Core\Context.cpp" />
     <ClCompile Include="Core\Event.cpp" />
     <ClCompile Include="IO\Log.cpp" />
     <ClCompile Include="Container\Str.cpp" />
-    <ClCompile Include="Container\Swap.cpp" />
-    <ClCompile Include="Container\VectorBase.cpp" />
     <ClCompile Include="Container\Stringid.cpp" />
     <ClCompile Include="IO\File.cpp" />
     <ClCompile Include="IO\FileSystem.cpp" />
@@ -69,6 +65,7 @@
     <ClCompile Include="Graphics\GPUObject.cpp" />
     <ClCompile Include="Core\Semaphore.cpp" />
     <ClCompile Include="Graphics\Renderer.cpp" />
+    <ClCompile Include="Container\Algorithm.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics\Shader.h">
@@ -93,7 +90,6 @@
     <ClInclude Include="Precompiled.h" />
     <ClInclude Include="Core\TypeInfo.h" />
     <ClInclude Include="Core\SpinLock.h" />
-    <ClInclude Include="Serialize\ObjectInspector.h" />
     <ClInclude Include="Serialize\SerializeDefs.h" />
     <ClInclude Include="Serialize\SerializeTraits.h" />
     <ClInclude Include="Serialize\SerializeTraitsBasic.h" />
@@ -105,11 +101,7 @@
     <ClInclude Include="Container\Arrayptr.h" />
     <ClInclude Include="Container\Linkedlist.h" />
     <ClInclude Include="Container\Ptr.h" />
-    <ClInclude Include="Container\Sort.h" />
     <ClInclude Include="Container\Str.h" />
-    <ClInclude Include="Container\Swap.h" />
-    <ClInclude Include="Container\Vector.h" />
-    <ClInclude Include="Container\VectorBase.h" />
     <ClInclude Include="Container\Stringid.h" />
     <ClInclude Include="IO\File.h" />
     <ClInclude Include="IO\FileSystem.h" />
@@ -147,5 +139,8 @@
     <ClInclude Include="Core\Semaphore.h" />
     <ClInclude Include="Core\Platform.h" />
     <ClInclude Include="Graphics\Renderer.h" />
+    <ClInclude Include="Container\Algorithm.h" />
+    <ClInclude Include="Container\Container.h" />
+    <ClInclude Include="Container\RandomAccessIterator.h" />
   </ItemGroup>
 </Project>

@@ -64,15 +64,9 @@ namespace Unique
 		}
 
 		// Load image from file, create texture, upload image into texture, and generate MIP-maps.
-		LLGL::Texture* LoadTexture(const String& filename)
+		SPtr<Texture> LoadTexture(const String& filename)
 		{
 			return Texture::Load(filename);
-		}
-
-		// Save texture image to a PNG file.
-		bool SaveTexture(LLGL::Texture& texture, const String& filename, unsigned int mipLevel = 0)
-		{
-			return Texture::Save(texture, filename, mipLevel);
 		}
 
 		virtual void OnDrawFrame() = 0;

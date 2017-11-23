@@ -14,7 +14,7 @@ namespace Unique
 	}
 	
 	// Load image from file, create texture, upload image into texture, and generate MIP-maps.
-	LLGL::Texture* Texture::Load(const String& filename)
+	SPtr<Texture> Texture::Load(const String& filename)
 	{
 		int width = 0, height = 0, components = 0;
 		unsigned char* imageBuffer = Image::LoadImage(filename.CString(), &width, &height, &components, 4);
@@ -42,11 +42,12 @@ namespace Unique
 
 		// Release image data
 		Image::FreeImage(imageBuffer);
-		
-		return tex;
+		SPtr<Texture> spTex = MakeShared<Texture>();
+		spTex->handle_ = tex;
+		return spTex;
 	}
 	
-	bool Texture::Save(LLGL::Texture& texture, const String& filename, unsigned int mipLevel)
+	bool Texture::Save(Texture& texture, const String& filename, unsigned int mipLevel)
 	{/*
 		// Get texture dimension
 		auto texSize = texture.QueryMipLevelSize(0).Cast<int>();

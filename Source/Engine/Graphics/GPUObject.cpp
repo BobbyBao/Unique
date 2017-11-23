@@ -9,7 +9,6 @@ namespace Unique
 	{
 	}
 
-
 	GPUObject::~GPUObject()
 	{
 	}
@@ -17,11 +16,13 @@ namespace Unique
 	void GPUObject::OnCreate()
 	{
 		gpuObjects_.push_back(this);
+		state_ = State::Created;
 	}
 		
 	void GPUObject::OnDestroy()
 	{
-		gpuObjects_.remove_swap(this);
+		state_ = State::Dead;
+		RemoveSwap(gpuObjects_, this);
 	}	
 	
 	void GPUObject::Sync()

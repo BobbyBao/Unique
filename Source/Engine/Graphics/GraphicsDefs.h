@@ -1,5 +1,6 @@
 #pragma once
 #include <LLGL/LLGL.h>
+#include "../Container/Container.h"
 #include "../Serialize/SerializeTraits.h"
 
 namespace Unique

@@ -20,22 +20,15 @@
 // THE SOFTWARE.
 //
 
-#pragma once
+#include "Precompiled.h"
+#include "Algorithm.h"
 
 namespace Unique
 {
-class String;
-class VectorBase;
 
-/// Swap two values.
-template <class T> inline void Swap(T& first, T& second)
+template <> void Swap<String>(String& first, String& second)
 {
-    T temp = first;
-    first = second;
-    second = temp;
+    first.Swap(second);
 }
-
-template <> UNIQUE_API void Swap<String>(String& first, String& second);
-template <> UNIQUE_API void Swap<VectorBase>(VectorBase& first, VectorBase& second);
 
 }

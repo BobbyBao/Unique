@@ -1,6 +1,6 @@
 #pragma once
 #include "../Core/CoreDefs.h"
-
+#include "../Container/Ptr.h"
 #include "SerializeTraitsBasic.h"
 #include "SerializeTraitsStd.h"
 	

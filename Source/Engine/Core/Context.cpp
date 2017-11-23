@@ -71,7 +71,7 @@ void EventReceiverGroup::EndSendEvent()
         for (unsigned i = receivers_.size() - 1; i < receivers_.size(); --i)
         {
             if (!receivers_[i])
-                receivers_.erase(i);
+                receivers_.erase(receivers_.begin() + i);
         }
 
         dirty_ = false;
@@ -88,7 +88,7 @@ void EventReceiverGroup::Remove(Object* object)
 {
     if (inSend_ > 0)
     {
-        PODVector<Object*>::iterator i = receivers_.find(object);
+        PODVector<Object*>::iterator i = Find(receivers_, object);
         if (i != receivers_.end())
         {
             (*i) = 0;
@@ -96,7 +96,7 @@ void EventReceiverGroup::Remove(Object* object)
         }
     }
     else
-        receivers_.remove(object);
+        Unique::Remove(receivers_, object);
 }
 
 static const int kMaxCount = 256;
@@ -199,7 +199,7 @@ void Context::RemoveSubsystem(StringID objectType)
     HashMap<StringID, SPtr<Object>>::iterator i = subsystems_.find(objectType);
 	if (i != subsystems_.end())
 	{
-		subsystemVec_.remove(i->second);
+		Remove(subsystemVec_, i->second);
 		subsystems_.erase(i);
 	}
 }

@@ -38,6 +38,8 @@ namespace Unique
 
 		void ExecuteCommands(CommandQueue& cmds);
 
+		void flip();
+
 		Semaphore m_renderSem;
 		Semaphore m_apiSem;
 		bool m_singleThreaded = false;

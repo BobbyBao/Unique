@@ -59,23 +59,21 @@ namespace Unique
 
 		Vector<ShaderStage>& GetShaderStages() { return  shaderStages_; }
 
-
-		static LLGL::ShaderProgram* LoadShaderProgram(
-			const std::vector<ShaderStage>& shaderDescs,
-			const LLGL::VertexFormat& vertexFormat = {},
-			const LLGL::StreamOutputFormat& streamOutputFormat = {});
-
-		// Reloads the specified shader program from the previously specified shader source files.
-		static bool ReloadShaderProgram(LLGL::ShaderProgram* shaderProgram);
-
-		// Load standard shader program (with vertex- and fragment shaders)
-		static LLGL::ShaderProgram* LoadStandardShaderProgram(const LLGL::VertexFormat& vertexFormat);
-
-		static std::map< LLGL::ShaderProgram*, ShaderProgramRecall > shaderPrograms_;
 	private:
 		String name_;
 		String shaderDefines_;
 		Vector<ShaderStage> shaderStages_;
 	};
+
+		// Load standard shader program (with vertex- and fragment shaders)
+	UNIQUE_C_API LLGL::ShaderProgram* LoadStandardShaderProgram(const LLGL::VertexFormat& vertexFormat);
+
+	UNIQUE_C_API LLGL::ShaderProgram* LoadShaderProgram(
+			const std::vector<ShaderStage>& shaderDescs,
+			const LLGL::VertexFormat& vertexFormat = {},
+			const LLGL::StreamOutputFormat& streamOutputFormat = {});
+
+		// Reloads the specified shader program from the previously specified shader source files.
+	UNIQUE_C_API bool ReloadShaderProgram(LLGL::ShaderProgram* shaderProgram);
 
 }

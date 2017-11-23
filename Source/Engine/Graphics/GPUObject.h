@@ -14,17 +14,42 @@ namespace Unique
 		virtual void OnDestroy();
 		virtual void Sync();
 		
-		
 		enum class State
 		{
 			None,
-			Create,
-			Living,
+			Created,
 			Dead
 		};
 
-		void* handle_;
 		State state_;
+	};
+
+	template<class T = void>
+	class TGPUObject : public GPUObject
+	{
+	public:
+		
+		bool IsValid() const { return handle_ != nullptr; }
+
+		virtual void OnCreate()
+		{
+			GPUObject::OnCreate();
+		}
+
+		virtual void OnDestroy()
+		{
+			GPUObject::OnDestroy();
+
+			if (handle_ != nullptr)
+			{
+				renderer->Release(*handle_);
+			}
+		}
+
+		//T& operator() { return *handle_; }
+	protected:
+		T* handle_ = nullptr;
+
 	};
 
 

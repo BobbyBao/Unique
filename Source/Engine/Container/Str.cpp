@@ -1,5 +1,5 @@
 #include "Precompiled.h"
-
+#include "Str.h"
 #include "../IO/Log.h"
 
 #include <cstdio>

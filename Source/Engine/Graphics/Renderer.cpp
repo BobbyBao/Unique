@@ -1,6 +1,6 @@
 #include "Precompiled.h"
 #include "Renderer.h"
-
+#include "Graphics/Graphics.h"
 
 namespace Unique
 {
@@ -25,7 +25,7 @@ namespace Unique
 		//if (!m_flipAfterRender)
 		{
 		//	BGFX_PROFILER_SCOPE("bgfx/flip", 0xff2040ff);
-		//	flip();
+			flip();
 		}
 
 		if (apiSemWait(_msecs))
@@ -144,5 +144,10 @@ namespace Unique
 			//	m_submit->m_waitRender = bx::getHPCounter() - start;
 			//	m_submit->m_perfStats.waitRender = m_submit->m_waitRender;
 		}
+	}
+
+	void Renderer::flip()
+	{
+		graphicsContext->Present();
 	}
 }

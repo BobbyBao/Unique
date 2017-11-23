@@ -287,10 +287,8 @@
     <ClCompile Include="Engine\Application.cpp" />
     <ClCompile Include="Container\RefCounted.cpp" />
     <ClCompile Include="Container\Str.cpp" />
-    <ClCompile Include="Container\Swap.cpp" />
-    <ClCompile Include="Container\VectorBase.cpp" />
+    <ClCompile Include="Container\Algorithm.cpp" />
     <ClCompile Include="Core\Context.cpp" />
-    <ClCompile Include="Core\Attribute.cpp" />
     <ClCompile Include="Core\Event.cpp" />
     <ClCompile Include="Container\Stringid.cpp" />
     <ClCompile Include="Core\Profiler.cpp" />
@@ -326,21 +324,18 @@
     <ClCompile Include="Serialize\mpack\mpack-reader.c" />
     <ClCompile Include="Serialize\mpack\mpack-writer.c" />
     <ClCompile Include="Serialize\msgpack2json.cpp" />
-    <ClCompile Include="Serialize\ObjectInspector.cpp" />
     <ClCompile Include="Graphics\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Container\Container.h" />
     <ClInclude Include="Core\Platform.h" />
     <ClInclude Include="Engine\Application.h" />
     <ClInclude Include="Container\Arrayptr.h" />
     <ClInclude Include="Container\Linkedlist.h" />
     <ClInclude Include="Container\Ptr.h" />
     <ClInclude Include="Container\RefCounted.h" />
-    <ClInclude Include="Container\Sort.h" />
     <ClInclude Include="Container\Str.h" />
-    <ClInclude Include="Container\Swap.h" />
-    <ClInclude Include="Container\Vector.h" />
-    <ClInclude Include="Container\VectorBase.h" />
+    <ClInclude Include="Container\Algorithm.h" />
     <ClInclude Include="Core\Context.h" />
     <ClInclude Include="Core\Attribute.h" />
     <ClInclude Include="Core\CoreDefs.h" />
@@ -359,6 +354,7 @@
     <ClInclude Include="Core\Object.h" />
     <ClInclude Include="Graphics\Shader.h" />
     <ClInclude Include="Graphics\Renderer.h" />
+    <ClInclude Include="Container\RandomAccessIterator.h" />
     <ClInclude Include="Resource\Image.h" />
     <ClInclude Include="IO\AbstractFile.h" />
     <ClInclude Include="IO\File.h" />
@@ -384,7 +380,6 @@
     <ClInclude Include="Serialize\mpack\mpack-writer.h" />
     <ClInclude Include="Serialize\mpack\mpack.h" />
     <ClInclude Include="Serialize\BinaryWriter.h" />
-    <ClInclude Include="Serialize\ObjectInspector.h" />
     <ClInclude Include="Serialize\SerializeDefs.h" />
     <ClInclude Include="Serialize\SerializeTraits.h" />
     <ClInclude Include="Serialize\SerializeTraitsBasic.h" />

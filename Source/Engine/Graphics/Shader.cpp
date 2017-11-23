@@ -12,7 +12,7 @@ namespace Unique
 		uAttribute("ShaderStages", shaderStages_, Vector<ShaderStage>, TF_DEFAULT)
 	}
 
-	std::map< LLGL::ShaderProgram*, ShaderProgramRecall > Shader::shaderPrograms_;
+	std::map< LLGL::ShaderProgram*, ShaderProgramRecall > shaderPrograms_;
 
 	Shader::Shader()
 	{
@@ -37,7 +37,7 @@ namespace Unique
 	}
 
 
-	LLGL::ShaderProgram* Shader::LoadShaderProgram(
+	LLGL::ShaderProgram* LoadShaderProgram(
 		const std::vector<ShaderStage>& shaderDescs,
 		const LLGL::VertexFormat& vertexFormat,
 		const LLGL::StreamOutputFormat& streamOutputFormat)
@@ -92,7 +92,7 @@ namespace Unique
 	}
 
 	// Reloads the specified shader program from the previously specified shader source files.
-	bool Shader::ReloadShaderProgram(LLGL::ShaderProgram* shaderProgram)
+	bool ReloadShaderProgram(LLGL::ShaderProgram* shaderProgram)
 	{
 		std::cout << "reload shader program" << std::endl;
 
@@ -175,7 +175,7 @@ namespace Unique
 	}
 
 	// Load standard shader program (with vertex- and fragment shaders)
-	LLGL::ShaderProgram* Shader::LoadStandardShaderProgram(const LLGL::VertexFormat& vertexFormat)
+	LLGL::ShaderProgram* LoadStandardShaderProgram(const LLGL::VertexFormat& vertexFormat)
 	{
 		// Load shader program
 		if (renderer->GetRenderingCaps().shadingLanguage >= LLGL::ShadingLanguage::HLSL_2_0)

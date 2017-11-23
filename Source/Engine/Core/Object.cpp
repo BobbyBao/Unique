@@ -257,7 +257,7 @@ void Object::UnsubscribeFromAllEventsExcept(const PODVector<StringID>& exception
     {
         EventHandler* next = eventHandlers_.next(handler);
 
-        if ((!onlyUserData || handler->GetUserData()) && !exceptions.contains(handler->GetEventType()))
+        if ((!onlyUserData || handler->GetUserData()) && !Contains(exceptions, handler->GetEventType()))
         {
             if (handler->GetSender())
                 context_->RemoveEventReceiver(this, handler->GetSender(), handler->GetEventType());

@@ -113,5 +113,13 @@ namespace Unique
 
 	}
 
+	bool Graphics::BeginFrame()
+	{
+		return true;
+	}
+
+	void Graphics::EndFrame()
+	{
+	}
 }
 

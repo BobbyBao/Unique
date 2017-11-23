@@ -14,6 +14,9 @@ namespace Unique
 		void SetDebug(bool val);
 
 		void Initialize(const std::string& rendererModule, const LLGL::Size& size);
+
+		bool BeginFrame();
+		void EndFrame();
 		
 	protected:
 		bool debugger_ = false;

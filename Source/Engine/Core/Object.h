@@ -1,6 +1,5 @@
 #pragma once
 #include "../Container/Ptr.h"
-#include "../Container/Vector.h"
 #include "../Container/LinkedList.h"
 #include "../Container/StringID.h"
 #include "../serialize/SerializeTraits.h"

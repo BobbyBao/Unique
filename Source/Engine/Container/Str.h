@@ -1,20 +1,11 @@
 #pragma once
-#include "../container/Vector.h"
+#include "../Container/Container.h"
 #include <cstdarg>
 #include <cstring>
 #include <cctype>
 #include <vector>
 #include <assert.h>
-
-//#define USE_STL 1
-
-#if USE_STL
-#include <string>
-namespace Unique
-{
-	using String = std::string;
-}
-#else
+#include "RandomAccessIterator.h"
 
 namespace Unique
 {
@@ -28,14 +19,11 @@ class WString;
 class UNIQUE_API String
 {
 public:
-    typedef RandomAccessIterator<char> iterator;
-    typedef RandomAccessConstIterator<char> const_iterator;
+	typedef RandomAccessIterator<char> iterator;
+	typedef RandomAccessConstIterator<char> const_iterator;
 
     /// Construct empty.
-    String() :
-        length_(0),
-        capacity_(0),
-        buffer_(&endZero)
+    String() : length_(0), capacity_(0), buffer_(&endZero)
     {
     }
 
@@ -617,5 +605,3 @@ namespace std
 		}
 	};
 }
-
-#endif
