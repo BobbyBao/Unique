@@ -75,7 +75,7 @@ namespace Unique
 			auto shader = renderer->CreateShader(desc.type);
 
 			// Compile shader
-			LLGL::ShaderDescriptor shaderDesc{ desc.entryPoint.CString(), desc.target.CString(), LLGL::ShaderCompileFlags::Debug };
+			LLGL::ShaderDescriptor shaderDesc(desc.entryPoint.CString(), desc.target.CString(), LLGL::ShaderCompileFlags::Debug);
 			shaderDesc.streamOutput.format = streamOutputFormat;
 
 			shader->Compile(shaderCode, shaderDesc);

@@ -23,6 +23,16 @@ namespace Unique
 	{
 		postComands_.push_back(cmd);
 	}
+
+
+	void Renderer::Update()
+	{
+		for (auto& view : views_)
+		{
+			view->Update();
+		}
+
+	}
 	
 	RenderFrameResult Renderer::RenderFrame(int _msecs)
 	{

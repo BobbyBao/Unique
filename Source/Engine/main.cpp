@@ -1,7 +1,7 @@
 #include "Precompiled.h"
 #include "Sample.h"
 
-UNIQUE_IMPLEMENT_MAIN(Sample);
+UNIQUE_IMPLEMENT_MAIN(Unique::Sample);
 
 
 

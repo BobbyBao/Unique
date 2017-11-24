@@ -12,6 +12,10 @@ namespace Unique
 	{
 	}
 
+	void View::Update()
+	{
+	}
+
 	void View::Render()
 	{
 

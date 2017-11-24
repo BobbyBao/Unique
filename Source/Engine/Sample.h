@@ -3,25 +3,31 @@
 #include "Engine/Application.h"
 #include "Graphics/Technique.h"
 
-
-class Sample : public Unique::Application
+namespace Unique
 {
-public:
+	class Texture;
 
-	Sample();
+	class Sample : public Unique::Application
+	{
+	public:
 
-	LLGL::VertexFormat CreateBuffers();
-	void CreatePipelines();
-	void CreateTextures();
-	void CreateSamplers();
-private:
-	void OnDrawFrame() override;
+		Sample();
 
-	LLGL::ShaderProgram*    shaderProgram = nullptr;
-	LLGL::GraphicsPipeline* pipeline = nullptr;
-	LLGL::Buffer*           vertexBuffer = nullptr;
-	LLGL::Texture*          colorMap = nullptr;
-	LLGL::TextureArray*     textureArray = nullptr;
-	LLGL::Sampler*          sampler[5] = { nullptr };
-	int                     samplerIndex = 0;
-};
+		LLGL::VertexFormat CreateBuffers();
+		void CreatePipelines();
+		void CreateTextures();
+		void CreateSamplers();
+	private:
+		virtual void Initialize();
+		virtual void Terminate();
+		virtual void OnDrawFrame() override;
+
+		LLGL::ShaderProgram*    shaderProgram = nullptr;
+		LLGL::GraphicsPipeline* pipeline = nullptr;
+		LLGL::Buffer*           vertexBuffer = nullptr;
+		SPtr<Unique::Texture>   colorMap = nullptr;
+		LLGL::Sampler*          sampler[5] = { nullptr };
+		int                     samplerIndex = 0;
+	};
+
+}

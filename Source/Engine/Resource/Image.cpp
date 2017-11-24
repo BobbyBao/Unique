@@ -16,15 +16,44 @@ namespace Unique
 
 	Image::~Image()
 	{
+		if (data_)
+		{
+			stbi_image_free(data_);
+			data_ = nullptr;
+		}
 	}
 
-	byte* Image::LoadImage(const char* filename, int *x, int *y, int *comp, int req_comp)
+	bool Image::Load(File& file)
 	{
-		return stbi_load(filename, x, y, comp, req_comp);
+		uint size = file.GetSize();
+		SharedArrayPtr<byte> data(new byte[size]);
+		if(file.Read(data, size) != size)
+		{
+			return false;
+		}
+			
+		data_ = stbi_load_from_memory(data.Get(), size, &width, &height, &components, reqComponents);
+		imageDesc_.buffer = data_;	
+		imageDesc_.format = (components == 4 ? LLGL::ImageFormat::RGBA : LLGL::ImageFormat::RGB);
+		imageDesc_.dataType = LLGL::DataType::UInt8;
+		return data_ != nullptr;
 	}
 
-	void Image::FreeImage(void *retval_from_stbi_load)
+	SPtr<Image> Image::LoadImage(const char* filename)
 	{
-		stbi_image_free(retval_from_stbi_load);
+		File file(filename);
+		if (!file.IsOpen())
+		{
+			return nullptr;
+		}
+
+		SPtr<Image> image(new Image());
+		if(!image->Load(file))
+		{
+			return nullptr;
+		}
+
+		return image;
 	}
+
 }

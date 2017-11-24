@@ -7,35 +7,17 @@ enum TransferMetaFlags
 	TF_READONLY = 2
 };
 
-#define uField(NAME, FIELD) transfer.TransferAttribute (NAME, FIELD, TF_DEFAULT);
-#define TRANSFER_FLAG(NAME, FIELD, FLAG) transfer.TransferAttribute (NAME, FIELD, FLAG);
+#define uTransferField(NAME, FIELD, FLAG) transfer.TransferAttribute (NAME, FIELD, FLAG);
 
-#define TRANSFER_PROPERTY(NAME, PROP, TYPE) TRANSFER_PROPERTY_FLAG(NAME, PROP, TYPE, TF_DEFAULT);
-#define TRANSFER_PROPERTY_FLAG(NAME, PROP, TYPE, FLAG)\
-{\
-	TYPE tmp;\
-	if (transfer.IsWriting ())\
-		tmp = Get##PROP(); \
-	transfer.Transfer(NAME, tmp, FLAG); \
-	if (transfer.IsReading ())\
-		Set##PROP(tmp);\
-}
-
-#define TRANSFER_ACCESSOR(NAME, GET, SET, TYPE) TRANSFER_ACCESSOR_FLAG(NAME, GET, SET, TYPE, TF_DEFAULT)
-
-#define TRANSFER_ACCESSOR_FLAG(NAME, GET, SET, TYPE, FLAG)\
+#define uTransferAccessor(NAME, GET, SET, TYPE, FLAG)\
 {\
 	TYPE tmp;\
 	if (transfer.IsWriting ())\
 		tmp = GET(); \
-	transfer.Transfer(NAME, tmp, FLAG); \
+	transfer.TransferAttribute(NAME, tmp, FLAG); \
 	if (transfer.IsReading ())\
 		SET (tmp);\
 }
-
-#define TRANSFER_ENUM(NAME, FIELD) { assert(sizeof(FIELD) == sizeof(int)); transfer.Transfer (FIELD, NAME, TF_DEFAULT); }
-#define TRANSFER_ENUM_FLAG(NAME, FIELD, FLAG) { assert(sizeof(FIELD) == sizeof(int)); transfer.Transfer (FIELD, NAME, FLAG); }
-#define TRANSFER_ENUM_(FIELD) { assert(sizeof(FIELD##_) == sizeof(int)); transfer.Transfer (FIELD##_, #FIELD, TF_DEFAULT); }
 
 #define uClass(x, ...) \
 	inline static const char* GetTypeString ()	{ return #x; }	\

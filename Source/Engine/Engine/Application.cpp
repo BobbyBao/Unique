@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include "../Graphics/Graphics.h"
+#include "../Graphics/Renderer.h"
 
 namespace Unique
 {
@@ -12,25 +13,20 @@ namespace Unique
 	class ResizeEventHandler : public LLGL::Window::EventListener
 	{
 	public:
-		ResizeEventHandler(Application& application,
-			LLGL::RenderContext* context,
-			LLGL::CommandBuffer* commands,
-			Gs::Matrix4f& projection) :
-			application_{ application },
-			context_{ context },
-			commands_{ commands },
-			projection_{ projection }
+		ResizeEventHandler(Application& application)
+			: application_{ application }
 		{
 		}
 
 		void OnResize(LLGL::Window& sender, const LLGL::Size& clientAreaSize) override
 		{
-			auto videoMode = context_->GetVideoMode();
+			auto videoMode = graphicsContext->GetVideoMode();
 
 			// Update video mode
 			videoMode.resolution = clientAreaSize;
-			context_->SetVideoMode(videoMode);
-			commands_->SetRenderTarget(*context_);
+			graphicsContext->SetVideoMode(videoMode);
+
+			commands->SetRenderTarget(*graphicsContext);
 
 			// Update viewport
 			LLGL::Viewport viewport;
@@ -38,13 +34,10 @@ namespace Unique
 				viewport.width = static_cast<float>(videoMode.resolution.x);
 				viewport.height = static_cast<float>(videoMode.resolution.y);
 			}
-			commands_->SetViewport(viewport);
+			commands->SetViewport(viewport);
 
 			// Update scissor
-			commands_->SetScissor({ 0, 0, videoMode.resolution.x, videoMode.resolution.y });
-
-			// Update projection matrix
-			projection_ = application_.PerspectiveProjection(viewport.width / viewport.height, 0.1f, 100.0f, Gs::Deg2Rad(45.0f));
+			commands->SetScissor({ 0, 0, videoMode.resolution.x, videoMode.resolution.y });
 
 			// Re-draw frame
 			if (application_.IsLoadingDone())
@@ -61,11 +54,102 @@ namespace Unique
 	private:
 
 		Application&			application_;
-		LLGL::RenderContext*    context_;
-		LLGL::CommandBuffer*    commands_;
-		Gs::Matrix4f&           projection_;
-
 	};
+
+
+	Vector<String> Application::argv_;
+	std::string Application::rendererModule_;
+	
+	Application::Application(
+		const std::wstring& title,
+		const LLGL::Size&   resolution,
+		unsigned int        multiSampling,
+		bool                vsync,
+		bool                debugger) :
+		context_(new Context()), title_(title), resolution_(resolution)
+	{
+		context_->RegisterSubsystem<FileSystem>();
+
+		Log& log = context_->RegisterSubsystem<Log>();
+		log.Open("Unique.log");
+
+		context_->RegisterSubsystem<Graphics>();
+		context_->RegisterSubsystem<Renderer>();
+
+	}
+
+	Application::~Application()
+	{
+	}
+
+	void Application::Initialize()
+	{
+		Graphics& graphics = Subsystem<Graphics>();
+		graphics.Initialize(rendererModule_, resolution_);
+
+		// Set window title
+		auto& window = static_cast<LLGL::Window&>(graphicsContext->GetSurface());
+
+		auto rendererName = renderer->GetName();
+		window.SetTitle(title_ + L" ( " + std::wstring(rendererName.begin(), rendererName.end()) + L" )");
+
+		// Add input event listener to window
+		input = std::make_shared<LLGL::Input>();
+		window.AddEventListener(input);
+
+		// Change window descriptor to allow resizing
+		auto wndDesc = window.GetDesc();
+		wndDesc.resizable = true;
+		window.SetDesc(wndDesc);
+
+		// Change window behavior
+		auto behavior = window.GetBehavior();
+		behavior.disableClearOnResize = true;
+		behavior.moveAndResizeTimerID = 1;
+		window.SetBehavior(behavior);
+
+		// Add window resize listener
+		window.AddEventListener(std::make_shared<ResizeEventHandler>(*this));
+		
+		// Show window
+		window.Show();
+
+		// Store information that loading is done
+		loadingDone_ = true;
+	}
+
+	void Application::Terminate()
+	{
+	}
+
+	void Application::Run()
+	{
+		Initialize();
+
+		auto& window = static_cast<LLGL::Window&>(graphicsContext->GetSurface());
+		Renderer& renderer = Subsystem<Renderer>();
+
+		context_->Run();
+
+		while (window.ProcessEvents() && !input->KeyDown(LLGL::Key::Escape))
+		{
+		//	profilerObj_->ResetCounters();
+
+			OnDrawFrame();
+
+		//	Subsystem<Renderer>().RenderFrame();
+
+		}
+
+		Terminate();
+
+		context_->Stop();
+	}
+
+
+	void Application::OnDrawFrame()
+	{
+	}
 
 	/* ----- Global helper functions ----- */
 
@@ -92,7 +176,7 @@ namespace Unique
 			else// if (modules.size() == 1)
 			{
 				/* Use the only available module */
-				rendererModule = modules.back();
+				rendererModule = modules.front();
 			}
 #if false
 			else
@@ -127,76 +211,13 @@ namespace Unique
 		return rendererModule;
 	}
 
-	std::string Application::rendererModule_;
-	
-	Application::Application(
-		const std::wstring& title,
-		const LLGL::Size&   resolution,
-		unsigned int        multiSampling,
-		bool                vsync,
-		bool                debugger) :
-		timer{ LLGL::Timer::Create() },
-		context_(new Context())
+	void Application::Setup(int argc, char* argv[])
 	{
-		context_->RegisterSubsystem<FileSystem>();
-
-		Log& log = context_->RegisterSubsystem<Log>();
-		log.Open("Unique.log");
-
-		Graphics& graphics =  context_->RegisterSubsystem<Graphics>();
-
-		graphics.Initialize(rendererModule_, resolution);
-
-		// Set window title
-		auto& window = static_cast<LLGL::Window&>(graphicsContext->GetSurface());
-
-		auto rendererName = renderer->GetName();
-		window.SetTitle(title + L" ( " + std::wstring(rendererName.begin(), rendererName.end()) + L" )");
-
-		// Add input event listener to window
-		input = std::make_shared<LLGL::Input>();
-		window.AddEventListener(input);
-
-		// Change window descriptor to allow resizing
-		auto wndDesc = window.GetDesc();
-		wndDesc.resizable = true;
-		window.SetDesc(wndDesc);
-
-		// Change window behavior
-		auto behavior = window.GetBehavior();
-		behavior.disableClearOnResize = true;
-		behavior.moveAndResizeTimerID = 1;
-		window.SetBehavior(behavior);
-
-		// Add window resize listener
-		window.AddEventListener(std::make_shared<ResizeEventHandler>(*this, graphicsContext, commands, projection));
-
-		// Initialize default projection matrix
-		projection = PerspectiveProjection(GetAspectRatio(), 0.1f, 100.0f, Gs::Deg2Rad(45.0f));
-
-		// Show window
-		window.Show();
-
-		// Store information that loading is done
-		loadingDone_ = true;
-	}
-
-	Application::~Application()
-	{
-	}
-
-	void Application::Run()
-	{
-		auto& window = static_cast<LLGL::Window&>(graphicsContext->GetSurface());
-		while (window.ProcessEvents() && !input->KeyDown(LLGL::Key::Escape))
+		for (int i = 0; i < argc; i++)
 		{
-		//	profilerObj_->ResetCounters();
-			OnDrawFrame();
+			argv_.push_back(argv[i]);
 		}
-	}
 
-	void Application::SelectRendererModule(int argc, char* argv[])
-	{
 		rendererModule_ = GetSelectedRendererModule(argc, argv);
 	}
 	

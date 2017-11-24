@@ -1,6 +1,7 @@
 #include "Precompiled.h"
 #include "Sample.h"
 #include "Graphics/Technique.h"
+#include "Graphics/Texture.h"
 
 using namespace Unique;
 
@@ -9,6 +10,12 @@ using namespace Unique;
 Sample::Sample() :
 	Application { L"Unique Engine" }
 {
+}
+
+void Sample::Initialize()
+{
+	Application::Initialize();
+
 	// Check if samplers are supported
 	const auto& renderCaps = renderer->GetRenderingCaps();
 
@@ -27,7 +34,7 @@ Sample::Sample() :
 
 	// Print some information on the standard output
 	std::cout << "press TAB KEY to switch between five different texture samplers" << std::endl;
-
+	/*
 	SPtr<Technique> shader(new Technique());
 	shader->SetName("test_shader");
 	Pass* pass = shader->AddPass();
@@ -42,9 +49,12 @@ Sample::Sample() :
 	reader.Load("test.bin", s);
 
 	JsonWriter jsonWriter;
-	jsonWriter.Save("test.json", s);
+	jsonWriter.Save("test.json", s);*/
 
+}
 
+void Sample::Terminate()
+{
 }
 
 LLGL::VertexFormat Sample::CreateBuffers()
@@ -57,8 +67,8 @@ LLGL::VertexFormat Sample::CreateBuffers()
 	// Define vertex buffer data
 	struct Vertex
 	{
-		Gs::Vector2f position;
-		Gs::Vector2f texCoord;
+		Vector2 position;
+		Vector2 texCoord;
 	};
 
 	std::vector<Vertex> vertices =
@@ -86,62 +96,8 @@ void Sample::CreatePipelines()
 
 void Sample::CreateTextures()
 {
-	std::string texFilename = "Assets/colorMap.png";
-
-	// Load image data from file (using STBI library, see http://nothings.org/stb_image.h)
-	int texWidth = 0, texHeight = 0, texComponents = 0;
-
-	unsigned char* imageBuffer = Image::LoadImage(texFilename.c_str(), &texWidth, &texHeight, &texComponents, 0);
-	if (!imageBuffer)
-		throw std::runtime_error("failed to open file: \"" + texFilename + "\"");
-
-	// Initialize image descriptor to upload image data onto hardware texture
-	LLGL::ImageDescriptor imageDesc;
-	{
-		// Set image buffer color format
-		imageDesc.format = (texComponents == 4 ? LLGL::ImageFormat::RGBA : LLGL::ImageFormat::RGB);
-
-		// Set image buffer data type (unsigned char = 8-bit unsigned integer)
-		imageDesc.dataType = LLGL::DataType::UInt8;
-
-		// Set image buffer source for texture initial data
-		imageDesc.buffer = imageBuffer;
-	}
-
-	// Upload image data onto hardware texture and stop the time
-	timer->Start();
-	{
-		// Create texture
-		LLGL::TextureDescriptor texDesc;
-		{
-			// Texture type: 2D
-			texDesc.type = LLGL::TextureType::Texture2D;
-
-			// Texture hardware format: RGBA with normalized 8-bit unsigned char type
-			texDesc.format = LLGL::TextureFormat::RGBA;
-
-			// Texture size
-			texDesc.texture2D.width = texWidth;
-			texDesc.texture2D.height = texHeight;
-		}
-		colorMap = renderer->CreateTexture(texDesc, &imageDesc);
-	}
-	auto texCreationTime = timer->Stop();
-	std::cout << "texture creation time: " << texCreationTime << " microseconds" << std::endl;
-
-	// Generate all MIP-maps (MIP = "Multum in Parvo", or "a multitude in a small space")
-	// see https://developer.valvesoftware.com/wiki/MIP_Mapping
-	// see http://whatis.techtarget.com/definition/MIP-map
-	renderer->GenerateMips(*colorMap);
-
-	// Release image data
-	Image::FreeImage(imageBuffer);
-
-	// Query texture descriptor to see what is really stored on the GPU
-	//auto textureDesc = renderer->QueryTextureDescriptor(*colorMap);
-
-	// Create array of textures (not to be confused with an "array texture" which is a texture of arrays)
-	textureArray = renderer->CreateTextureArray(1, &colorMap);
+	String texFilename = "Assets/colorMap.png";
+	colorMap = Unique::Texture::Load(texFilename);
 }
 
 void Sample::CreateSamplers()
@@ -184,7 +140,7 @@ void Sample::OnDrawFrame()
 	commands->SetVertexBuffer(*vertexBuffer);
 
 	// Set texture and sampler state on slot index 0
-	commands->SetTextureArray(*textureArray, 0);
+	commands->SetTexture(*colorMap->handle_, 0);
 	commands->SetSampler(*sampler[samplerIndex], 0);
 
 	// Draw fullscreen triangle

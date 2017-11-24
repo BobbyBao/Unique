@@ -67,6 +67,9 @@
     </ClCompile>
     <ClCompile Include="Graphics\GfxObject.cpp" />
     <ClCompile Include="Graphics\View.cpp" />
+    <ClCompile Include="Graphics\Buffers\VertexBuffer.cpp" />
+    <ClCompile Include="Graphics\Buffers\IndexBuffer.cpp" />
+    <ClCompile Include="Graphics\Buffers\GraphicsBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics\Model.h">
@@ -146,5 +149,8 @@
     </ClInclude>
     <ClInclude Include="Graphics\GfxObject.h" />
     <ClInclude Include="Graphics\View.h" />
+    <ClInclude Include="Graphics\Buffers\VertexBuffer.h" />
+    <ClInclude Include="Graphics\Buffers\IndexBuffer.h" />
+    <ClInclude Include="Graphics\Buffers\GraphicsBuffer.h" />
   </ItemGroup>
 </Project>

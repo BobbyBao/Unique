@@ -18,6 +18,7 @@
 #include <type_traits>
 
 #include "../Core/Context.h"
+#include "../Core/Thread.h"
 #include "../Graphics/Technique.h"
 #include "../Resource/Image.h"
 #include "../Graphics/Graphics.h"
@@ -25,15 +26,7 @@
 
 namespace Unique
 {
-
-
-	struct VertexPositionTexCoord
-	{
-		Gs::Vector3f position;
-		Gs::Vector2f texCoord;
-	};
-
-	class Application
+	class Application : public Object
 	{
 	public:
 		Application(
@@ -47,9 +40,11 @@ namespace Unique
 
 		void Run();
 
-		static void SelectRendererModule(int argc, char* argv[]);
+		static void Setup(int argc, char* argv[]);
 
 	protected:
+		virtual void Initialize();
+		virtual void Terminate();
 
 		// Used by the window resize handler
 		bool IsLoadingDone() const
@@ -69,13 +64,14 @@ namespace Unique
 			return Texture::Load(filename);
 		}
 
-		virtual void OnDrawFrame() = 0;
+		virtual void OnDrawFrame();
 
+		static Vector<String>			argv_;
 		static std::string				rendererModule_;
+		std::wstring					title_;
+		LLGL::Size						resolution_;
 		bool                            loadingDone_ = false;
 		std::shared_ptr<LLGL::Input>    input;
-		UPtr<LLGL::Timer>				timer;
-		Gs::Matrix4f                    projection;
 		UPtr<Context>					context_;
 
 		friend class ResizeEventHandler;
@@ -87,8 +83,7 @@ namespace Unique
 	{
 		try
 		{
-			/* Run tutorial */
-			Application::SelectRendererModule(argc, argv);
+			Application::Setup(argc, argv);
 			auto app = UPtr<T>(new T());
 			app->Run();
 		}

@@ -23,7 +23,8 @@
 #pragma once
 
 #include "../Core/Object.h"
-
+#include "../Core/Thread.h"
+#include "../Core/Timer.h"
 
 namespace Unique
 {
@@ -62,7 +63,7 @@ private:
 };
 
 /// Unique execution context. Provides access to subsystems, object factories and attributes, and event receivers.
-class UNIQUE_API Context : public RefCounted
+class UNIQUE_API Context : public Object, public Thread
 {
     friend class Object;
 
@@ -160,6 +161,8 @@ public:
 		return SubsystemHolder<T>::Instance();
 	}
 
+	virtual void ThreadFunction();
+
 private:
     /// Add event receiver.
     void AddEventReceiver(Object* receiver, StringID eventType);
@@ -178,6 +181,8 @@ private:
 
     /// Set current event handler. Called by Object.
     void SetEventHandler(EventHandler* handler) { eventHandler_ = handler; }
+	
+	void ApplyFrameLimit();
 
 	/// Object factories.
 	HashMap<StringID, UPtr<ObjectFactory> > factories_;
@@ -195,6 +200,22 @@ private:
     EventHandler* eventHandler_;
 	/// Object categories.
 	HashMap<String, Vector<StringID> > objectCategories_;
+	/// Frame update timer.
+	HiresTimer frameTimer_;
+	/// Previous timesteps for smoothing.
+	PODVector<float> lastTimeSteps_;
+	/// Next frame timestep in seconds.
+	float timeStep_;
+	/// How many frames to average for the smoothed timestep.
+	unsigned timeStepSmoothing_;
+	/// Minimum frames per second.
+	unsigned minFps_;
+	/// Maximum frames per second.
+	unsigned maxFps_;
+	/// Maximum frames per second when the application does not have input focus.
+	unsigned maxInactiveFps_;
+	/// Pause when minimized flag.
+	bool pauseMinimized_;
 };
 
 template <class T> void Context::RegisterFactory() { RegisterFactory(new ObjectFactoryImpl<T>()); }

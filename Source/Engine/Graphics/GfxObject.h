@@ -1,5 +1,5 @@
 #pragma once
-
+#include "GraphicsDefs.h"
 
 namespace Unique
 {
@@ -25,7 +25,7 @@ namespace Unique
 	};
 
 	template<class T = void>
-	class TGPUObject : public GfxObject
+	class TGfxObject : public GfxObject
 	{
 	public:
 		
@@ -46,8 +46,8 @@ namespace Unique
 			}
 		}
 
-		//T& operator T() { return *handle_; }
-	protected:
+		operator T&() { return *handle_; }
+
 		T* handle_ = nullptr;
 
 	};

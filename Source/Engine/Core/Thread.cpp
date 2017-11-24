@@ -98,11 +98,13 @@ void Thread::Stop()
 #ifdef _WIN32
     WaitForSingleObject((HANDLE)handle_, INFINITE);
     CloseHandle((HANDLE)handle_);
+	handle_ = nullptr;
 #else
     pthread_t* thread = (pthread_t*)handle_;
     if (thread)
         pthread_join(*thread, 0);
     delete thread;
+	thread = nullptr;
 #endif
 
 }

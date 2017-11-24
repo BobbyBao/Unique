@@ -17,6 +17,7 @@ namespace Unique
 		View();
 		~View();
 
+		void Update();
 		void Render();
 	};
 

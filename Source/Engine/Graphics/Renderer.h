@@ -27,8 +27,9 @@ namespace Unique
 		void AddCommand(std::function<void()> cmd);
 		void PostCommand(std::function<void()> cmd);
 
+		void Update();
 
-		RenderFrameResult RenderFrame(int _msecs);
+		RenderFrameResult RenderFrame(int _msecs = -1);
 	private:
 		void apiSemPost();
 

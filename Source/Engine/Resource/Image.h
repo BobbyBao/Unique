@@ -1,5 +1,6 @@
 #pragma once
 #include "../Resource/Resource.h"
+#include <LLGL/Image.h>
 
 namespace Unique
 {
@@ -10,8 +11,20 @@ namespace Unique
 		Image();
 		~Image();
 
-		static byte* LoadImage(const char* filename, int *x, int *y, int *comp, int req_comp);
-		static void FreeImage(void *retval_from_stbi_load);
+		bool Load(File& file);
+
+		static SPtr<Image> LoadImage(const char* filename);
+		
+		const LLGL::ImageDescriptor& GetDesc() const { return imageDesc_; }
+		
+		int width = 0;
+		int height = 0;
+	protected:
+		byte* data_ = nullptr;
+
+		int components = 0;
+		int reqComponents = 0;
+		LLGL::ImageDescriptor imageDesc_;
 	};
 
 

@@ -5,49 +5,40 @@
 
 namespace Unique
 {
-	Texture::Texture()
+	Texture::Texture() : sampler_(nullptr)
 	{
 	}
 
 	Texture::~Texture()
 	{
 	}
+
+	bool Texture::Create(Image& img)
+	{
+		textureDesc_ = LLGL::Texture2DDesc(LLGL::TextureFormat::RGBA, img.width, img.height);
+		auto tex = renderer->CreateTexture(textureDesc_, &img.GetDesc());
+
+		renderer->GenerateMips(*tex);
+		sampler_ = renderer->CreateSampler(samplerDesc_);
+		handle_ = tex;
+		return handle_ != nullptr;
+	}
 	
 	// Load image from file, create texture, upload image into texture, and generate MIP-maps.
 	SPtr<Texture> Texture::Load(const String& filename)
 	{
-		int width = 0, height = 0, components = 0;
-		unsigned char* imageBuffer = Image::LoadImage(filename.CString(), &width, &height, &components, 4);
-		if (!imageBuffer)
-			UNIQUE_LOGERROR("failed to load texture from file: \"" + filename + "\"");
-
-		// Initialize image descriptor to upload image data onto hardware texture
-		LLGL::ImageDescriptor imageDesc;
+		SPtr<Image> img = Image::LoadImage(filename.CString());
+		if (!img)
 		{
-			// Set image buffer color format
-			imageDesc.format = LLGL::ImageFormat::RGBA;
-
-			// Set image buffer data type (unsigned char = 8-bit unsigned integer)
-			imageDesc.dataType = LLGL::DataType::UInt8;
-
-			// Set image buffer source for texture initial data
-			imageDesc.buffer = imageBuffer;
+			UNIQUE_LOGERROR("failed to load texture from file: \"" + filename + "\"");
 		}
 
-		auto tex = renderer->CreateTexture(
-			LLGL::Texture2DDesc(LLGL::TextureFormat::RGBA, width, height), &imageDesc
-		);
-
-		renderer->GenerateMips(*tex);
-
-		// Release image data
-		Image::FreeImage(imageBuffer);
 		SPtr<Texture> spTex = MakeShared<Texture>();
-		spTex->handle_ = tex;
+		spTex->Create(*img);
 		return spTex;
 	}
 	
-	bool Texture::Save(Texture& texture, const String& filename, unsigned int mipLevel)
+	bool Texture::Save(const String& filename, unsigned int mipLevel)
 	{/*
 		// Get texture dimension
 		auto texSize = texture.QueryMipLevelSize(0).Cast<int>();

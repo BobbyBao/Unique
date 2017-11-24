@@ -6,6 +6,16 @@
 namespace Unique
 {
 
+/// Core init.
+UNIQUE_EVENT(E_INIT, Init)
+{
+};
+
+/// Core shutdown.
+UNIQUE_EVENT(E_SHUTDOWN, Shutdown)
+{
+};
+
 /// Frame begin event.
 UNIQUE_EVENT(E_BEGINFRAME, BeginFrame)
 {
