@@ -26,26 +26,26 @@ namespace Unique
 		bool Load(File& source, T& data);
 
 		template<class T>
-		void TransferBasicData(T& data);
+		void TransferPrimitive(T& data);
 		
 		template<class T>
 		void TransferObject(SPtr<T>& data);
 
 		template<class T>
-		void TransferSTLStyleArray(T& data, int metaFlag = 0);
+		void TransferArray(T& data, int metaFlag = 0);
 
 		template<class T>
-		void TransferSTLStyleMap(T& data, int metaFlag = 0);
+		void TransferMap(T& data, int metaFlag = 0);
 
 		template<class T>
-		void TransferSTLStyleSet(T& data, int metaFlag = 0);
+		void TransferSet(T& data, int metaFlag = 0);
 		
 		bool StartObject(uint size) { return true; }
 
 		void EndObject() {}
 	private:
-		bool StartProperty(const String& key);
-		void EndProperty();
+		bool StartAttribute(const String& key);
+		void EndAttribute();
 		bool StartArray(uint size) { return true; }
 		void EndArray() {}
 		Value* currentNode = nullptr;
@@ -96,7 +96,7 @@ namespace Unique
 		return true;
 	}
 
-	inline bool JsonReader::StartProperty(const String& key)
+	inline bool JsonReader::StartAttribute(const String& key)
 	{
 		Value::MemberIterator node = currentNode->FindMember(key.CString());
 		if (node == currentNode->MemberEnd())
@@ -109,7 +109,7 @@ namespace Unique
 		return true;
 	}
 
-	inline void JsonReader::EndProperty()
+	inline void JsonReader::EndAttribute()
 	{
 		currentNode = parentNode;
 		parentNode = nullptr;
@@ -134,7 +134,7 @@ namespace Unique
 	}
 
 	template<class T>
-	inline void JsonReader::TransferSTLStyleArray(T& data, int metaFlag)
+	inline void JsonReader::TransferArray(T& data, int metaFlag)
 	{
 		typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
 
@@ -164,7 +164,7 @@ namespace Unique
 	}
 
 	template<class T>
-	inline void JsonReader::TransferSTLStyleMap(T& data, int metaFlag)
+	inline void JsonReader::TransferMap(T& data, int metaFlag)
 	{
 		typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
 		typedef typename non_const_value_type::first_type first_type;
@@ -187,7 +187,7 @@ namespace Unique
 	}
 
 	template<class T>
-	inline void JsonReader::TransferSTLStyleSet(T& data, int metaFlag)
+	inline void JsonReader::TransferSet(T& data, int metaFlag)
 	{
 		typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
 
@@ -214,76 +214,76 @@ namespace Unique
 	}
 
 	template<class T>
-	inline void JsonReader::TransferBasicData(T& data)
+	inline void JsonReader::TransferPrimitive(T& data)
 	{
 	//	data = FromString<T>(currentNode->GetString());
 	}
 
 	template<>
-	inline void JsonReader::TransferBasicData<bool>(bool& data)
+	inline void JsonReader::TransferPrimitive<bool>(bool& data)
 	{
 		assert(currentNode->IsBool());
 		data = currentNode->GetBool();
 	}
 
 	template<>
-	inline void JsonReader::TransferBasicData<char>(char& data)
+	inline void JsonReader::TransferPrimitive<char>(char& data)
 	{
 		assert(currentNode->IsInt());
 		data = currentNode->GetInt();
 	}
 
 	template<>
-	inline void JsonReader::TransferBasicData<char*>(char*& data)
+	inline void JsonReader::TransferPrimitive<char*>(char*& data)
 	{
 		assert(currentNode->IsString());
 		std::strcpy(data, currentNode->GetString());
 	}
 
 	template<>
-	inline void JsonReader::TransferBasicData<unsigned char>(unsigned char& data)
+	inline void JsonReader::TransferPrimitive<unsigned char>(unsigned char& data)
 	{
 		assert(currentNode->IsUint());
 		data = currentNode->GetUint();
 	}
 
 	template<>
-	inline void JsonReader::TransferBasicData<short>(short& data)
+	inline void JsonReader::TransferPrimitive<short>(short& data)
 	{
 		assert(currentNode->IsInt());
 		data = currentNode->GetInt();
 	}
 
 	template<>
-	inline void JsonReader::TransferBasicData<unsigned short>(unsigned short& data)
+	inline void JsonReader::TransferPrimitive<unsigned short>(unsigned short& data)
 	{
 		assert(currentNode->IsUint());
 		data = currentNode->GetUint();
 	}
 
 	template<>
-	inline void JsonReader::TransferBasicData<int>(int& data)
+	inline void JsonReader::TransferPrimitive<int>(int& data)
 	{
 		assert(currentNode->IsInt());
 		data = currentNode->GetInt();
 	}
 
 	template<>
-	inline void JsonReader::TransferBasicData<unsigned int>(unsigned int& data)
+	inline void JsonReader::TransferPrimitive<unsigned int>(unsigned int& data)
 	{
 		assert(currentNode->IsUint());
 		data = currentNode->GetUint();
 	}
 
 	template<>
-	inline void JsonReader::TransferBasicData<float>(float& data)
+	inline void JsonReader::TransferPrimitive<float>(float& data)
 	{
 		assert(currentNode->IsDouble());
 		data = currentNode->GetFloat();
 	}
 
 	template<>
-	inline void JsonReader::TransferBasicData<double>(double& data)
+	inline void JsonReader::TransferPrimitive<double>(double& data)
 	{
 		assert(currentNode->IsDouble());
 		data = currentNode->GetDouble();

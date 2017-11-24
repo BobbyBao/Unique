@@ -81,7 +81,7 @@ namespace Unique
 
 		// Link shader program and check for errors
 		if (!shaderProgram->LinkShaders())
-			throw std::runtime_error(shaderProgram->QueryInfoLog());
+			UNIQUE_LOGERRORF(shaderProgram->QueryInfoLog().c_str());
 
 		// Store information in call
 		recall.vertexFormat = vertexFormat;
@@ -159,7 +159,7 @@ namespace Unique
 
 			// Link shader program and check for errors
 			if (!shaderProgram->LinkShaders())
-				throw std::runtime_error(shaderProgram->QueryInfoLog());
+				UNIQUE_LOGERRORF(shaderProgram->QueryInfoLog().c_str());
 
 			return false;
 		}

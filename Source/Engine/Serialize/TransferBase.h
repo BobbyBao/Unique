@@ -19,10 +19,10 @@ public:\
 		void TransferAttribute(const char* name, T& data, int metaFlag = 0)\
 		{\
 			metaFlag_ = metaFlag;\
-			if (StartProperty(name))\
+			if (StartAttribute(name))\
 			{\
 				Unique::SerializeTraits<T>::Transfer(data, *this);\
-				EndProperty();\
+				EndAttribute();\
 			}\
 		}\
 		template <typename... Rest>\

@@ -15,19 +15,19 @@ namespace Unique
 		bool Save(const char* fileName, T& data);
 		
 		template<class T>
-		void TransferBasicData(T& data);
+		void TransferPrimitive(T& data);
 
 		template<class T>
 		void TransferObject(SPtr<T>& data);
 
 		template<class T>
-		void TransferSTLStyleArray(T& data, int metaFlag = 0);
+		void TransferArray(T& data, int metaFlag = 0);
 
 		template<class T>
-		void TransferSTLStyleMap(T& data, int metaFlag = 0);
+		void TransferMap(T& data, int metaFlag = 0);
 
 		template<class T>
-		void TransferSTLStyleSet(T& data, int metaFlag = 0);
+		void TransferSet(T& data, int metaFlag = 0);
 		
 		bool StartObject(uint sz)
 		{
@@ -44,13 +44,13 @@ namespace Unique
 		}
 
 	protected:
-		bool StartProperty(const String& key)
+		bool StartAttribute(const String& key)
 		{
 			mpack_write_str(&writer_, key.CString(), (uint)key.Length());
 			return true; 
 		}
 
-		void EndProperty()
+		void EndAttribute()
 		{
 		}
 
@@ -97,7 +97,7 @@ namespace Unique
 	}
 
 	template<class T>
-	inline void BinaryWriter::TransferSTLStyleArray(T& data, int metaFlag)
+	inline void BinaryWriter::TransferArray(T& data, int metaFlag)
 	{
 		typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
 
@@ -112,7 +112,7 @@ namespace Unique
 	}
 
 	template<class T>
-	inline void BinaryWriter::TransferSTLStyleMap(T& data, int metaFlag)
+	inline void BinaryWriter::TransferMap(T& data, int metaFlag)
 	{
 		typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
 		typedef typename non_const_value_type::first_type first_type;
@@ -129,7 +129,7 @@ namespace Unique
 	}
 
 	template<class T>
-	inline void BinaryWriter::TransferSTLStyleSet(T& data, int metaFlag)
+	inline void BinaryWriter::TransferSet(T& data, int metaFlag)
 	{
 		typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
 
@@ -144,85 +144,85 @@ namespace Unique
 	}
 
 	template<class T>
-	void BinaryWriter::TransferBasicData(T& data)
+	void BinaryWriter::TransferPrimitive(T& data)
 	{
 		mpack_write_bin(&writer_, (const char*)&data, (uint)sizeof(T));
 	}
 
 	template<>
-	inline void BinaryWriter::TransferBasicData<String>(String& data)
+	inline void BinaryWriter::TransferPrimitive<String>(String& data)
 	{
 		mpack_write_str(&writer_, data.CString(), data.Length());
 	}
 
 	template<>
-	inline void BinaryWriter::TransferBasicData<std::string>(std::string& data)
+	inline void BinaryWriter::TransferPrimitive<std::string>(std::string& data)
 	{
 		mpack_write_str(&writer_, data.c_str(), (uint)data.size());
 	}
 
 	template<>
-	inline void BinaryWriter::TransferBasicData<bool>(bool& data)
+	inline void BinaryWriter::TransferPrimitive<bool>(bool& data)
 	{
 		mpack_write_bool(&writer_, data);
 	}
 
 	template<>
-	inline void BinaryWriter::TransferBasicData<char>(char& data)
+	inline void BinaryWriter::TransferPrimitive<char>(char& data)
 	{
 		mpack_write(&writer_, data);
 	}
 
 	template<>
-	inline void BinaryWriter::TransferBasicData<unsigned char>(unsigned char& data)
+	inline void BinaryWriter::TransferPrimitive<unsigned char>(unsigned char& data)
 	{
 		mpack_write(&writer_, data);
 	}
 
 	template<>
-	inline void BinaryWriter::TransferBasicData<short>(short& data)
+	inline void BinaryWriter::TransferPrimitive<short>(short& data)
 	{
 		mpack_write(&writer_, data);
 	}
 
 	template<>
-	inline void BinaryWriter::TransferBasicData<unsigned short>(unsigned short& data)
+	inline void BinaryWriter::TransferPrimitive<unsigned short>(unsigned short& data)
 	{
 		mpack_write(&writer_, data);
 	}
 
 	template<>
-	inline void BinaryWriter::TransferBasicData<int>(int& data)
+	inline void BinaryWriter::TransferPrimitive<int>(int& data)
 	{
 		mpack_write(&writer_, data);
 	}
 
 	template<>
-	inline void BinaryWriter::TransferBasicData<unsigned int>(unsigned int& data)
+	inline void BinaryWriter::TransferPrimitive<unsigned int>(unsigned int& data)
 	{
 		mpack_write(&writer_, data);
 	}
 
 	template<>
-	inline void BinaryWriter::TransferBasicData<long long>(long long& data)
+	inline void BinaryWriter::TransferPrimitive<long long>(long long& data)
 	{
 		mpack_write(&writer_, data);
 	}
 
 	template<>
-	inline void BinaryWriter::TransferBasicData<unsigned long long>(unsigned long long& data)
+	inline void BinaryWriter::TransferPrimitive<unsigned long long>(unsigned long long& data)
 	{
 		mpack_write(&writer_, data);
 	}
 
 	template<>
-	inline void BinaryWriter::TransferBasicData<float>(float& data)
+	inline void BinaryWriter::TransferPrimitive<float>(float& data)
 	{
 		mpack_write(&writer_, data);
 	}
 
 	template<>
-	inline void BinaryWriter::TransferBasicData<double>(double& data)
+	inline void BinaryWriter::TransferPrimitive<double>(double& data)
 	{
 		mpack_write(&writer_, data);
 	}

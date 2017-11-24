@@ -57,12 +57,12 @@ namespace Unique
 			if (transfer.IsReading())
 			{
 				Unique::String str;
-				transfer.TransferBasicData(str);
+				transfer.TransferPrimitive(str);
 				data = (value_type)GetEnum(enumNames, count, str);
 			}
 			else
 			{
-				transfer.TransferBasicData(Unique::String(enumNames[(int)data]));
+				transfer.TransferPrimitive(Unique::String(enumNames[(int)data]));
 			}
 		}
 
@@ -79,7 +79,7 @@ namespace Unique
 		template<class TransferFunction>
 		inline static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			transfer.TransferSTLStyleArray(data);
+			transfer.TransferArray(data);
 		}
 
 		static bool IsContinousMemoryArray() { return true; }

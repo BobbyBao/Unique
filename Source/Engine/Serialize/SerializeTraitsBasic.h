@@ -18,7 +18,7 @@ namespace Unique
 		template<class TransferFunction> inline
 		static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			transfer.TransferBasicData(data);
+			transfer.TransferPrimitive(data);
 		}
 	};
 
@@ -33,7 +33,7 @@ namespace Unique
 			template<class TransferFunction> inline
 			static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			transfer.TransferBasicData(data);
+			transfer.TransferPrimitive(data);
 		}
 	};
 
@@ -47,7 +47,7 @@ namespace Unique
 			template<class TransferFunction> inline
 			static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			transfer.TransferBasicData(data);
+			transfer.TransferPrimitive(data);
 		}
 	};
 
@@ -62,7 +62,7 @@ namespace Unique
 			template<class TransferFunction> inline
 			static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			transfer.TransferBasicData(data);
+			transfer.TransferPrimitive(data);
 		}
 	};
 
@@ -77,7 +77,7 @@ namespace Unique
 			template<class TransferFunction> inline
 			static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			transfer.TransferBasicData(data);
+			transfer.TransferPrimitive(data);
 		}
 	};
 
@@ -92,7 +92,7 @@ namespace Unique
 		template<class TransferFunction> inline
 		static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			transfer.TransferBasicData(data);
+			transfer.TransferPrimitive(data);
 		}
 	};
 
@@ -106,7 +106,7 @@ namespace Unique
 			template<class TransferFunction> inline
 			static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			transfer.TransferBasicData(data);
+			transfer.TransferPrimitive(data);
 		}
 	};
 
@@ -120,7 +120,7 @@ namespace Unique
 			template<class TransferFunction> inline
 			static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			transfer.TransferBasicData(data);
+			transfer.TransferPrimitive(data);
 		}
 	};
 
@@ -134,7 +134,7 @@ namespace Unique
 		template<class TransferFunction> inline
 		static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			transfer.TransferBasicData(data);
+			transfer.TransferPrimitive(data);
 		}
 	};
 
@@ -154,7 +154,7 @@ namespace Unique
 			AssertIf(sizeof(bool) != 4);
 			unsigned char& temp = *(reinterpret_cast<unsigned char*>(&data) + 3);
 
-			transfer.TransferBasicData(temp);
+			transfer.TransferPrimitive(temp);
 
 			// When running in debug mode in OS X (-O0 in gcc), 
 			// bool values which are not exactly 0x01 are treated as false.
@@ -167,7 +167,7 @@ namespace Unique
 #else
 			assert(sizeof(bool) == 1);
 			//unsigned char& temp = reinterpret_cast<unsigned char&>(data);
-			transfer.TransferBasicData(data);
+			transfer.TransferPrimitive(data);
 
 			// When running in debug mode in OS X (-O0 in gcc), 
 			// bool values which are not exactly 0x01 are treated as false.
@@ -193,7 +193,7 @@ namespace Unique
 		template<class TransferFunction> inline
 		static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			transfer.TransferBasicData(data);
+			transfer.TransferPrimitive(data);
 		}
 
 		static bool IsContinousMemoryArray() { return true; }
@@ -217,7 +217,7 @@ namespace Unique
 			template<class TransferFunction> inline
 			static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			transfer.TransferBasicData(data);
+			transfer.TransferPrimitive(data);
 		}
 	};
 
@@ -232,7 +232,7 @@ namespace Unique
 			template<class TransferFunction> inline
 			static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			transfer.TransferBasicData(data);
+			transfer.TransferPrimitive(data);
 		}
 	};
 
@@ -247,7 +247,7 @@ namespace Unique
 			template<class TransferFunction> inline
 			static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			transfer.TransferBasicData(data);
+			transfer.TransferPrimitive(data);
 		}
 	};
 
@@ -262,7 +262,7 @@ namespace Unique
 			template<class TransferFunction> inline
 			static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			transfer.TransferBasicData(data);
+			transfer.TransferPrimitive(data);
 		}
 	};
 
@@ -277,7 +277,7 @@ namespace Unique
 			template<class TransferFunction> inline
 			static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			transfer.TransferBasicData(data);
+			transfer.TransferPrimitive(data);
 		}
 	};
 

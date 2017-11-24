@@ -16,25 +16,25 @@ namespace Unique
 		bool Load(File& source, T& data);
 		
 		template<class T>
-		void TransferBasicData(T& data);
+		void TransferPrimitive(T& data);
 
 		template<class T>
 		void TransferObject(SPtr<T>& data);
 
 		template<class T>
-		void TransferSTLStyleArray(T& data, int metaFlag = 0);
+		void TransferArray(T& data, int metaFlag = 0);
 
 		template<class T>
-		void TransferSTLStyleMap(T& data, int metaFlag = 0);
+		void TransferMap(T& data, int metaFlag = 0);
 
 		template<class T>
-		void TransferSTLStyleSet(T& data, int metaFlag = 0);
+		void TransferSet(T& data, int metaFlag = 0);
 
 		bool StartObject(uint size) { return true; }
 		void EndObject() {}
 	protected:
-		bool StartProperty(const String& key);
-		void EndProperty();
+		bool StartAttribute(const String& key);
+		void EndAttribute();
 		bool StartArray(uint size) { return true; }
 		void EndArray() {}
 
@@ -81,7 +81,7 @@ namespace Unique
 
 
 
-	inline bool BinaryReader::StartProperty(const String& key)
+	inline bool BinaryReader::StartAttribute(const String& key)
 	{
 		mpack_node_t node = mpack_node_map_str(currentNode_, key.CString(), key.Length());
 		if (mpack_node_type(node) == mpack_type_nil)
@@ -94,7 +94,7 @@ namespace Unique
 		return true; 
 	}
 
-	inline void BinaryReader::EndProperty()
+	inline void BinaryReader::EndAttribute()
 	{
 		currentNode_ = parentNode_;
 		parentNode_ = { nullptr, nullptr };
@@ -124,7 +124,7 @@ namespace Unique
 	}
 
 	template<class T>
-	inline void BinaryReader::TransferSTLStyleArray(T& data, int metaFlag)
+	inline void BinaryReader::TransferArray(T& data, int metaFlag)
 	{
 		if (mpack_node_type(currentNode_) != mpack_type_array)
 		{
@@ -152,7 +152,7 @@ namespace Unique
 	}
 
 	template<class T>
-	inline void BinaryReader::TransferSTLStyleMap(T& data, int metaFlag)
+	inline void BinaryReader::TransferMap(T& data, int metaFlag)
 	{
 		if (mpack_node_type(currentNode_) != mpack_type_array)
 		{
@@ -167,7 +167,7 @@ namespace Unique
 
 		mpack_node_t parentNode = currentNode_;
 
-		for (SizeType i = 0; i < parentNode->Size(); ++i)
+		for (size_t i = 0; i < mpack_node_array_length(parentNode); ++i)
 		{
 			currentNode_ = mpack_node_array_at(parentNode, i);
 			non_const_value_type val;
@@ -179,7 +179,7 @@ namespace Unique
 	}
 
 	template<class T>
-	inline void BinaryReader::TransferSTLStyleSet(T& data, int metaFlag)
+	inline void BinaryReader::TransferSet(T& data, int metaFlag)
 	{
 		if (mpack_node_type(currentNode_) != mpack_type_array)
 		{
@@ -192,7 +192,7 @@ namespace Unique
 
 		mpack_node_t parentNode = currentNode_;
 		
-		for (SizeType i = 0; i < parentNode->Size(); ++i)
+		for (size_t i = 0; i < mpack_node_array_length(parentNode); ++i)
 		{
 			currentNode_ = mpack_node_array_at(parentNode, i);
 			non_const_value_type val;
@@ -204,25 +204,25 @@ namespace Unique
 	}
 
 	template<class T>
-	inline void BinaryReader::TransferBasicData(T& data)
+	inline void BinaryReader::TransferPrimitive(T& data)
 	{
 		data.Transfer(*this);
 	}
 
 	template<>
-	inline void BinaryReader::TransferBasicData<bool>(bool& data)
+	inline void BinaryReader::TransferPrimitive<bool>(bool& data)
 	{
 		data = mpack_node_bool(currentNode_);
 	}
 
 	template<>
-	inline void BinaryReader::TransferBasicData<char>(char& data)
+	inline void BinaryReader::TransferPrimitive<char>(char& data)
 	{
 		data = mpack_node_i8(currentNode_);
 	}
 
 	template<>
-	inline void BinaryReader::TransferBasicData<String>(String& data)
+	inline void BinaryReader::TransferPrimitive<String>(String& data)
 	{
 		const char* str = mpack_node_str(currentNode_);
 		if (str)
@@ -237,7 +237,7 @@ namespace Unique
 	}
 
 	template<>
-	inline void BinaryReader::TransferBasicData<std::string>(std::string& data)
+	inline void BinaryReader::TransferPrimitive<std::string>(std::string& data)
 	{
 		const char* str = mpack_node_str(currentNode_);
 		if (str)
@@ -252,49 +252,49 @@ namespace Unique
 	}
 
 	template<>
-	inline void BinaryReader::TransferBasicData<char*>(char*& data)
+	inline void BinaryReader::TransferPrimitive<char*>(char*& data)
 	{
 		std::strcpy(data, mpack_node_str(currentNode_));
 	}
 
 	template<>
-	inline void BinaryReader::TransferBasicData<unsigned char>(unsigned char& data)
+	inline void BinaryReader::TransferPrimitive<unsigned char>(unsigned char& data)
 	{
 		data = mpack_node_u8(currentNode_);
 	}
 
 	template<>
-	inline void BinaryReader::TransferBasicData<short>(short& data)
+	inline void BinaryReader::TransferPrimitive<short>(short& data)
 	{
 		data = mpack_node_i16(currentNode_);
 	}
 
 	template<>
-	inline void BinaryReader::TransferBasicData<unsigned short>(unsigned short& data)
+	inline void BinaryReader::TransferPrimitive<unsigned short>(unsigned short& data)
 	{
 		data = mpack_node_u16(currentNode_);
 	}
 
 	template<>
-	inline void BinaryReader::TransferBasicData<int>(int& data)
+	inline void BinaryReader::TransferPrimitive<int>(int& data)
 	{
 		data = mpack_node_i32(currentNode_);
 	}
 
 	template<>
-	inline void BinaryReader::TransferBasicData<unsigned int>(unsigned int& data)
+	inline void BinaryReader::TransferPrimitive<unsigned int>(unsigned int& data)
 	{
 		data = mpack_node_u32(currentNode_);
 	}
 
 	template<>
-	inline void BinaryReader::TransferBasicData<float>(float& data)
+	inline void BinaryReader::TransferPrimitive<float>(float& data)
 	{
 		data = mpack_node_float(currentNode_);
 	}
 
 	template<>
-	inline void BinaryReader::TransferBasicData<double>(double& data)
+	inline void BinaryReader::TransferPrimitive<double>(double& data)
 	{
 		data = mpack_node_double(currentNode_);
 	}

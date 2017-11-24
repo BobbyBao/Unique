@@ -147,13 +147,13 @@ namespace Unique
 			if (transfer.IsReading())
 			{
 				String temp;
-				transfer.TransferBasicData(temp);
+				transfer.TransferPrimitive(temp);
 				data = StringID(temp);
 			}
 			else
 			{
 				String temp = data.ToString();
-				transfer.TransferBasicData(temp);
+				transfer.TransferPrimitive(temp);
 			}
 
 		}

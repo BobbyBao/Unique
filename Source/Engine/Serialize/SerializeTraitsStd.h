@@ -22,7 +22,7 @@ namespace Unique
 		template<class TransferFunction> inline
 			static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			transfer.TransferBasicData(data);
+			transfer.TransferPrimitive(data);
 		}
 
 		static bool IsContinousMemoryArray() { return true; }
@@ -66,7 +66,7 @@ namespace Unique
 		template<class TransferFunction> 
 		inline static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			transfer.TransferSTLStyleArray(data);
+			transfer.TransferArray(data);
 		}
 
 		static bool IsContinousMemoryArray() { return true; }
@@ -86,7 +86,7 @@ namespace Unique
 		template<class TransferFunction> inline
 			static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			transfer.TransferSTLStyleArray(data);
+			transfer.TransferArray(data);
 			transfer.Align();
 		}
 
@@ -105,7 +105,7 @@ namespace Unique
 		template<class TransferFunction> inline
 		static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			transfer.TransferSTLStyleArray(data);
+			transfer.TransferArray(data);
 		}
 
 		static bool IsContinousMemoryArray() { return false; }
@@ -123,7 +123,7 @@ namespace Unique
 			template<class TransferFunction> inline
 			static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			transfer.TransferSTLStyleArray(data);
+			transfer.TransferArray(data);
 		}
 
 		static bool IsContinousMemoryArray() { return false; }
@@ -160,7 +160,7 @@ namespace Unique
 			static void Transfer(value_type& data, TransferFunction& transfer)
 		{
 			//		AssertIf(transfer.IsRemapPPtrTransfer() && SerializeTraits<FirstClass>::MightContainPPtr() && transfer.IsReadingPPtr());
-			transfer.TransferSTLStyleMap(data);
+			transfer.TransferMap(data);
 		}
 	};
 
@@ -176,7 +176,7 @@ namespace Unique
 			static void Transfer(value_type& data, TransferFunction& transfer)
 		{
 			//		AssertIf(transfer.IsRemapPPtrTransfer() && SerializeTraits<FirstClass>::MightContainPPtr() && transfer.IsReadingPPtr());
-			transfer.TransferSTLStyleMap(data);
+			transfer.TransferMap(data);
 		}
 	};
 
@@ -192,7 +192,7 @@ namespace Unique
 			static void Transfer(value_type& data, TransferFunction& transfer)
 		{
 			AssertIf(transfer.IsRemapPPtrTransfer() && SerializeTraits<FirstClass>::MightContainPPtr() && transfer.IsReadingPPtr());
-			transfer.TransferSTLStyleMap(data);
+			transfer.TransferMap(data);
 		}
 	};
 
@@ -209,7 +209,7 @@ namespace Unique
 			static void Transfer(value_type& data, TransferFunction& transfer)
 		{
 			AssertIf(transfer.IsRemapPPtrTransfer() && transfer.IsReadingPPtr());
-			transfer.TransferSTLStyleMap(data);
+			transfer.TransferMap(data);
 		}
 	};
 
