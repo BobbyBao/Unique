@@ -12,9 +12,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Graphics\Shader.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\Model.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
@@ -62,15 +59,16 @@
     </ClCompile>
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="Graphics\Texture.cpp" />
-    <ClCompile Include="Graphics\GPUObject.cpp" />
     <ClCompile Include="Core\Semaphore.cpp" />
     <ClCompile Include="Graphics\Renderer.cpp" />
     <ClCompile Include="Container\Algorithm.cpp" />
+    <ClCompile Include="Graphics\Technique.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\GfxObject.cpp" />
+    <ClCompile Include="Graphics\View.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Graphics\Shader.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\Model.h">
       <Filter>Graphics</Filter>
     </ClInclude>
@@ -135,7 +133,6 @@
     <ClInclude Include="Resource\Image.h" />
     <ClInclude Include="Sample.h" />
     <ClInclude Include="Graphics\Texture.h" />
-    <ClInclude Include="Graphics\GPUObject.h" />
     <ClInclude Include="Core\Semaphore.h" />
     <ClInclude Include="Core\Platform.h" />
     <ClInclude Include="Graphics\Renderer.h" />
@@ -144,5 +141,10 @@
     <ClInclude Include="Container\RandomAccessIterator.h" />
     <ClInclude Include="Unique.h" />
     <ClInclude Include="DebugNew.h" />
+    <ClInclude Include="Graphics\Technique.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\GfxObject.h" />
+    <ClInclude Include="Graphics\View.h" />
   </ItemGroup>
 </Project>

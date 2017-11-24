@@ -4,15 +4,15 @@
 namespace Unique
 {
 
-	class GPUObject
+	class GfxObject
 	{
 	public:
-		GPUObject();
-		~GPUObject();
+		GfxObject();
+		~GfxObject();
 
 		virtual void OnCreate();
 		virtual void OnDestroy();
-		virtual void Sync();
+		virtual void OnSync();
 		
 		enum class State
 		{
@@ -25,7 +25,7 @@ namespace Unique
 	};
 
 	template<class T = void>
-	class TGPUObject : public GPUObject
+	class TGPUObject : public GfxObject
 	{
 	public:
 		
@@ -33,12 +33,12 @@ namespace Unique
 
 		virtual void OnCreate()
 		{
-			GPUObject::OnCreate();
+			GfxObject::OnCreate();
 		}
 
 		virtual void OnDestroy()
 		{
-			GPUObject::OnDestroy();
+			GfxObject::OnDestroy();
 
 			if (handle_ != nullptr)
 			{
@@ -46,7 +46,7 @@ namespace Unique
 			}
 		}
 
-		//T& operator() { return *handle_; }
+		//T& operator T() { return *handle_; }
 	protected:
 		T* handle_ = nullptr;
 

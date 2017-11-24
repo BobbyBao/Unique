@@ -2,10 +2,11 @@
 #include "../Core/Object.h"
 #include "../Core/Semaphore.h"
 #include "../Core/Thread.h"
+#include "../Graphics/View.h"
 
 namespace Unique
 {
-	using CommandQueue = Vector < std::function<void()>>;
+	using CommandQueue = Vector<std::function<void()>>;
 	
 	enum class RenderFrameResult
 	{
@@ -14,17 +15,18 @@ namespace Unique
 		Timeout,
 		Exiting,
 		Count
-		
 	};
 
-	class Renderer : public Object, Thread
+	class Renderer : public Object
 	{
 		uRTTI(Renderer, Object)
 	public:
 		Renderer();
 		~Renderer();
 
-		virtual void ThreadFunction();
+		void AddCommand(std::function<void()> cmd);
+		void PostCommand(std::function<void()> cmd);
+
 
 		RenderFrameResult RenderFrame(int _msecs);
 	private:
@@ -46,6 +48,8 @@ namespace Unique
 
 		Vector < std::function<void()>> preComands_;
 		Vector < std::function<void()>> postComands_;
+
+		Vector<SPtr<View>> views_;
 	};
 
 }

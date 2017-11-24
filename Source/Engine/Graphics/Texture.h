@@ -1,7 +1,7 @@
 #pragma once
 #include "../Resource/Resource.h"
 #include "../Graphics/GraphicsDefs.h"
-#include "../Graphics/GPUObject.h"
+#include "../Graphics/GfxObject.h"
 #include <LLGL/Texture.h>
 
 namespace Unique

@@ -117,7 +117,8 @@ namespace Unique
 				return;
 			}
 
-			data = StaticCast<T, Object>(Object::GetContext()->CreateObject(type));
+			size_t sz = mpack_node_strlen(node);
+			data = StaticCast<T, Object>(Object::GetContext()->CreateObject(String(type, (uint)sz)));
 		}
 
 		data->Transfer(*this);

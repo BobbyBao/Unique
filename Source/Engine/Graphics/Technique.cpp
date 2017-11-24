@@ -1,25 +1,42 @@
 #include "Precompiled.h"
-#include "Shader.h"
+#include "Technique.h"
 #include "Graphics/Graphics.h"
 
 namespace Unique
 {
-	uObject(Shader)
+	uObject(Pass)
+	{
+		uFactory("Graphics")
+		uAttribute("ShaderStages", shaderStages_, Vector<ShaderStage>, TF_DEFAULT)
+	}
+
+	uObject(Technique)
 	{
 		uFactory("Graphics")
 		uAccessor("Name", GetName, SetName, String, TF_DEFAULT)
 		uAttribute("ShaderDefines", shaderDefines_, String, TF_DEFAULT)
-		uAttribute("ShaderStages", shaderStages_, Vector<ShaderStage>, TF_DEFAULT)
+		uAttribute("ShaderPasses", passes_, Vector<SPtr<Pass>>, TF_DEFAULT)
 	}
 
-	std::map< LLGL::ShaderProgram*, ShaderProgramRecall > shaderPrograms_;
+	Map< LLGL::ShaderProgram*, ShaderProgramRecall > shaderPrograms_;
 
-	Shader::Shader()
+	Technique::Technique()
 	{
 	}
 
-	Shader::~Shader()
+	Technique::~Technique()
 	{
+	}
+
+	Pass* Technique::AddPass(Pass* pass)
+	{
+		if (!pass)
+		{
+			pass = new Pass();
+		}
+
+		passes_.push_back(SPtr<Pass>(pass));
+		return pass;
 	}
 
 	static std::string ReadFileContent(const String& filename)
@@ -38,7 +55,7 @@ namespace Unique
 
 
 	LLGL::ShaderProgram* LoadShaderProgram(
-		const std::vector<ShaderStage>& shaderDescs,
+		const Vector<ShaderStage>& shaderDescs,
 		const LLGL::VertexFormat& vertexFormat,
 		const LLGL::StreamOutputFormat& streamOutputFormat)
 	{

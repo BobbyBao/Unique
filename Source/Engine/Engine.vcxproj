@@ -295,7 +295,7 @@
     <ClCompile Include="Core\StringUtil.cpp" />
     <ClCompile Include="Core\Thread.cpp" />
     <ClCompile Include="Core\Timer.cpp" />
-    <ClCompile Include="Graphics\GPUObject.cpp" />
+    <ClCompile Include="Graphics\GfxObject.cpp" />
     <ClCompile Include="Graphics\GraphicsDefs.cpp" />
     <ClCompile Include="Graphics\Graphics.cpp" />
     <ClCompile Include="Graphics\Renderer.cpp" />
@@ -310,7 +310,7 @@
     <ClCompile Include="Graphics\Material.cpp" />
     <ClCompile Include="Graphics\Model.cpp" />
     <ClCompile Include="Core\Object.cpp" />
-    <ClCompile Include="Graphics\Shader.cpp" />
+    <ClCompile Include="Graphics\Technique.cpp" />
     <ClCompile Include="Math\MathDefs.cpp" />
     <ClCompile Include="Precompiled.cpp" />
     <ClCompile Include="Core\TypeInfo.cpp" />
@@ -325,6 +325,7 @@
     <ClCompile Include="Serialize\mpack\mpack-writer.c" />
     <ClCompile Include="Serialize\msgpack2json.cpp" />
     <ClCompile Include="Graphics\Texture.cpp" />
+    <ClCompile Include="Graphics\View.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Container\Container.h" />
@@ -347,13 +348,13 @@
     <ClInclude Include="Container\Stringid.h" />
     <ClInclude Include="Core\Thread.h" />
     <ClInclude Include="Core\Timer.h" />
-    <ClInclude Include="Graphics\GPUObject.h" />
+    <ClInclude Include="Graphics\GfxObject.h" />
     <ClInclude Include="Graphics\GraphicsDefs.h" />
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Graphics\Material.h" />
     <ClInclude Include="Graphics\Model.h" />
     <ClInclude Include="Core\Object.h" />
-    <ClInclude Include="Graphics\Shader.h" />
+    <ClInclude Include="Graphics\Technique.h" />
     <ClInclude Include="Graphics\Renderer.h" />
     <ClInclude Include="Container\RandomAccessIterator.h" />
     <ClInclude Include="Resource\Image.h" />
@@ -389,6 +390,7 @@
     <ClInclude Include="Serialize\TransferBase.h" />
     <ClInclude Include="Graphics\Texture.h" />
     <ClInclude Include="Unique.h" />
+    <ClInclude Include="Graphics\View.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

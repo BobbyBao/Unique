@@ -1,6 +1,6 @@
 #include "Precompiled.h"
 #include "Sample.h"
-#include "Graphics/Shader.h"
+#include "Graphics/Technique.h"
 
 using namespace Unique;
 
@@ -13,7 +13,7 @@ Sample::Sample() :
 	const auto& renderCaps = renderer->GetRenderingCaps();
 
 	if (!renderCaps.hasSamplers)
-		throw std::runtime_error("samplers are not supported by this renderer");
+		UNIQUE_LOGERROR("samplers are not supported by this renderer");
 
 	// Create all graphics objects
 	auto vertexFormat = CreateBuffers();
@@ -28,15 +28,16 @@ Sample::Sample() :
 	// Print some information on the standard output
 	std::cout << "press TAB KEY to switch between five different texture samplers" << std::endl;
 
-	SPtr<Shader> shader(new Shader());
+	SPtr<Technique> shader(new Technique());
 	shader->SetName("test_shader");
-	shader->GetShaderStages().push_back({ LLGL::ShaderType::Vertex, "Assets/shader.hlsl", "VS", "vs_5_0" });
-	shader->GetShaderStages().push_back({ LLGL::ShaderType::Fragment, "Assets/shader.hlsl", "PS", "ps_5_0" });
+	Pass* pass = shader->AddPass();
+	pass->GetShaderStages().push_back({ LLGL::ShaderType::Vertex, "Assets/shader.hlsl", "VS", "vs_5_0" });
+	pass->GetShaderStages().push_back({ LLGL::ShaderType::Fragment, "Assets/shader.hlsl", "PS", "ps_5_0" });
 
 	BinaryWriter ser;
 	ser.Save("test.bin", shader);
 
-	SPtr<Shader> s(new Shader());
+	SPtr<Technique> s(new Technique());
 	BinaryReader reader;
 	reader.Load("test.bin", s);
 
@@ -44,9 +45,6 @@ Sample::Sample() :
 	jsonWriter.Save("test.json", s);
 
 
-	//int v1 = 100, v2 = 200, v3 = 300;
-
-	//Transfer2(v1, "1", v2, "2", v3, "3");
 }
 
 LLGL::VertexFormat Sample::CreateBuffers()

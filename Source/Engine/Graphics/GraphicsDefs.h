@@ -3,26 +3,26 @@
 #include "../Container/Container.h"
 #include "../Serialize/SerializeTraits.h"
 
+using namespace LLGL;
+
 namespace Unique
 {
 
-	extern UPtr<LLGL::RenderSystem>        renderer;
-
+	extern UPtr<RenderSystem>     renderer;
 	extern LLGL::RenderContext*			graphicsContext;
-
-	extern LLGL::CommandBuffer*            commands;
+	extern LLGL::CommandBuffer*         commands;
 
 	template <typename VertexType>
-	LLGL::Buffer* CreateVertexBuffer(const std::vector<VertexType>& vertices, const LLGL::VertexFormat& vertexFormat)
+	Buffer* CreateVertexBuffer(const std::vector<VertexType>& vertices, const LLGL::VertexFormat& vertexFormat)
 	{
 		return renderer->CreateBuffer(
-			LLGL::VertexBufferDesc(static_cast<unsigned int>(vertices.size() * sizeof(VertexType)), vertexFormat),
+			VertexBufferDesc(static_cast<unsigned int>(vertices.size() * sizeof(VertexType)), vertexFormat),
 			vertices.data()
 		);
 	}
 
 	template <typename IndexType>
-	LLGL::Buffer* CreateIndexBuffer(const std::vector<IndexType>& indices, const LLGL::IndexFormat& indexFormat)
+	Buffer* CreateIndexBuffer(const std::vector<IndexType>& indices, const LLGL::IndexFormat& indexFormat)
 	{
 		return renderer->CreateBuffer(
 			LLGL::IndexBufferDesc(static_cast<unsigned int>(indices.size() * sizeof(IndexType)), indexFormat),
@@ -31,7 +31,7 @@ namespace Unique
 	}
 
 	template <typename Buffer>
-	LLGL::Buffer* CreateConstantBuffer(const Buffer& buffer)
+	Buffer* CreateConstantBuffer(const Buffer& buffer)
 	{
 		static_assert(!std::is_pointer<Buffer>::value, "buffer type must not be a pointer");
 		return renderer->CreateBuffer(

@@ -1,5 +1,5 @@
 #pragma once
-#include "../Core/Object.h"
+#include "../Resource/Resource.h"
 #include "GraphicsDefs.h"
 
 namespace Unique
@@ -46,30 +46,41 @@ namespace Unique
 		LLGL::StreamOutputFormat                streamOutputFormat;
 	};
 
-
-	class Shader : public Object
+	class Pass : public Object
 	{
-		uRTTI(Shader, Object)
+		uRTTI(Pass, Object)
 	public:
-		Shader();
-		~Shader();
+
+		Vector<ShaderStage>& GetShaderStages() { return  shaderStages_; }
+		
+	private:
+		Vector<ShaderStage> shaderStages_;
+	};
+
+
+	class Technique : public Resource
+	{
+		uRTTI(Technique, Resource)
+	public:
+		Technique();
+		~Technique();
 
 		const String& GetName() const { return name_; }
 		void SetName(const String& name) { name_ = name;}
 
-		Vector<ShaderStage>& GetShaderStages() { return  shaderStages_; }
+		Pass* AddPass(Pass* pass = nullptr);
 
 	private:
 		String name_;
 		String shaderDefines_;
-		Vector<ShaderStage> shaderStages_;
+		Vector<SPtr<Pass>> passes_;
 	};
 
 		// Load standard shader program (with vertex- and fragment shaders)
 	UNIQUE_C_API LLGL::ShaderProgram* LoadStandardShaderProgram(const LLGL::VertexFormat& vertexFormat);
 
 	UNIQUE_C_API LLGL::ShaderProgram* LoadShaderProgram(
-			const std::vector<ShaderStage>& shaderDescs,
+			const Vector<ShaderStage>& shaderDescs,
 			const LLGL::VertexFormat& vertexFormat = {},
 			const LLGL::StreamOutputFormat& streamOutputFormat = {});
 

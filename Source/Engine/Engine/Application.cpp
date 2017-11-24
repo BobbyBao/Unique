@@ -92,7 +92,7 @@ namespace Unique
 			else// if (modules.size() == 1)
 			{
 				/* Use the only available module */
-				rendererModule = modules.front();
+				rendererModule = modules.back();
 			}
 #if false
 			else
@@ -139,7 +139,12 @@ namespace Unique
 		context_(new Context())
 	{
 		context_->RegisterSubsystem<FileSystem>();
+
+		Log& log = context_->RegisterSubsystem<Log>();
+		log.Open("Unique.log");
+
 		Graphics& graphics =  context_->RegisterSubsystem<Graphics>();
+
 		graphics.Initialize(rendererModule_, resolution);
 
 		// Set window title

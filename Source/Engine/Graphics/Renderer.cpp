@@ -13,35 +13,35 @@ namespace Unique
 	{
 	}
 
-	void Renderer::ThreadFunction()
-	{
 
+	void Renderer::AddCommand(std::function<void()> cmd)
+	{
+		preComands_.push_back(cmd);
 	}
 
+	void Renderer::PostCommand(std::function<void()> cmd)
+	{
+		postComands_.push_back(cmd);
+	}
+	
 	RenderFrameResult Renderer::RenderFrame(int _msecs)
 	{
 		RenderFrameResult result = RenderFrameResult::NoContext;
 
-		//if (!m_flipAfterRender)
+		for (auto& view : views_)
 		{
-		//	BGFX_PROFILER_SCOPE("bgfx/flip", 0xff2040ff);
-			flip();
+			view->Render();
 		}
 
+		flip();
+	
 		if (apiSemWait(_msecs))
 		{
 			{
 			//	BGFX_PROFILER_SCOPE("bgfx/Exec commands pre", 0xff2040ff);
 				ExecuteCommands(preComands_);
 			}
-
-			//if (m_rendererInitialized)
-			{
-			//	BGFX_PROFILER_SCOPE("bgfx/Render submit", 0xff2040ff);
-			//	m_renderCtx->submit(m_render, m_clearQuad, m_textVideoMemBlitter);
-			//	m_flipped = false;
-			}
-
+			
 			{
 			//	BGFX_PROFILER_SCOPE("bgfx/Exec commands post", 0xff2040ff);
 				ExecuteCommands(postComands_);
@@ -49,11 +49,6 @@ namespace Unique
 
 			renderSemPost();
 
-// 			if (m_flipAfterRender)
-// 			{
-// 				BGFX_PROFILER_SCOPE("bgfx/flip", 0xff2040ff);
-// 				flip();
-// 			}
 		}
 		else
 		{

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/Application.h"
-#include "Graphics/Shader.h"
+#include "Graphics/Technique.h"
 
 
 class Sample : public Unique::Application

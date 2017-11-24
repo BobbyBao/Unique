@@ -18,7 +18,7 @@
 #include <type_traits>
 
 #include "../Core/Context.h"
-#include "../Graphics/Shader.h"
+#include "../Graphics/Technique.h"
 #include "../Resource/Image.h"
 #include "../Graphics/Graphics.h"
 #include "../Graphics/Texture.h"
