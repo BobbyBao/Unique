@@ -40,18 +40,8 @@ namespace Unique
 			// Update scissor
 			commands->SetScissor({ 0, 0, videoMode.resolution.x, videoMode.resolution.y });
 
-			// Re-draw frame
-			if (application_.IsLoadingDone())
-				application_.OnDrawFrame();
 		}
-
-		void OnTimer(LLGL::Window& sender, unsigned int timerID) override
-		{
-			// Re-draw frame
-			if (application_.IsLoadingDone())
-				application_.OnDrawFrame();
-		}
-
+		
 	private:
 
 		Application&			application_;
@@ -126,10 +116,11 @@ namespace Unique
 	void Application::Run()
 	{
 		Initialize();
+	
+		Renderer& renderer = Subsystem<Renderer>();
 
 		auto& window = static_cast<LLGL::Window&>(graphicsContext->GetSurface());
-		Renderer& renderer = Subsystem<Renderer>();
-		//renderer.FrameNoRenderWait();
+
 		context_->Run();
 
 		while (window.ProcessEvents() && !input->KeyDown(LLGL::Key::Escape))

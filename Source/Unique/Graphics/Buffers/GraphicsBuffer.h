@@ -11,6 +11,8 @@ namespace Unique
 	public:
 		GraphicsBuffer();
 		~GraphicsBuffer();
+
+		BufferDescriptor bufferDesc_;
 	};
 
 

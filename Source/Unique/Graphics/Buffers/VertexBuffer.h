@@ -9,6 +9,8 @@ namespace Unique
 	public:
 		VertexBuffer();
 		~VertexBuffer();
+
+		VertexFormat vertexFormat_;
 	};
 
 

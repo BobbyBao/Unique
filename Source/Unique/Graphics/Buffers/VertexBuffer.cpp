@@ -3,6 +3,10 @@
 
 namespace Unique
 {
+	uObject(VertexBuffer)
+	{
+		uFactory("Graphics")
+	}
 
 	VertexBuffer::VertexBuffer()
 	{

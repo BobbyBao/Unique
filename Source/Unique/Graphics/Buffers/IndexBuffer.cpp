@@ -1,13 +1,19 @@
 #include "Precompiled.h"
 #include "IndexBuffer.h"
 
-
-
-IndexBuffer::IndexBuffer()
+namespace Unique
 {
-}
+	uObject(IndexBuffer)
+	{
+		uFactory("Graphics")
+	}
 
+	IndexBuffer::IndexBuffer()
+	{
+	}
 
-IndexBuffer::~IndexBuffer()
-{
+	IndexBuffer::~IndexBuffer()
+	{
+	}
+
 }

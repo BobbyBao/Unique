@@ -8,9 +8,9 @@ using namespace LLGL;
 namespace Unique
 {
 
-	extern UPtr<RenderSystem>     renderer;
-	extern LLGL::RenderContext*			graphicsContext;
-	extern LLGL::CommandBuffer*         commands;
+	extern UPtr<RenderSystem>		renderer;
+	extern LLGL::RenderContext*		graphicsContext;
+	extern LLGL::CommandBuffer*		commands;
 
 	template <typename VertexType>
 	Buffer* CreateVertexBuffer(const std::vector<VertexType>& vertices, const LLGL::VertexFormat& vertexFormat)
@@ -60,6 +60,12 @@ namespace Unique
 		return (renderer->GetRendererID() == LLGL::RendererID::OpenGL);
 	}
 
+
+	inline Gs::Matrix4f PerspectiveProjection(float aspectRatio, float near, float far, float fov)
+	{
+		int flags = (IsOpenGL() ? Gs::ProjectionFlags::UnitCube : 0);
+		return Gs::ProjectionMatrix4f::Perspective(aspectRatio, near, far, fov, flags).ToMatrix4();
+	}
 
 
 

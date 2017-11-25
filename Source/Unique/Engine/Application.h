@@ -52,20 +52,6 @@ namespace Unique
 			return loadingDone_;
 		}
 
-		Gs::Matrix4f PerspectiveProjection(float aspectRatio, float near, float far, float fov)
-		{
-			int flags = (IsOpenGL() ? Gs::ProjectionFlags::UnitCube : 0);
-			return Gs::ProjectionMatrix4f::Perspective(aspectRatio, near, far, fov, flags).ToMatrix4();
-		}
-
-		// Load image from file, create texture, upload image into texture, and generate MIP-maps.
-		SPtr<Texture> LoadTexture(const String& filename)
-		{
-			return Texture::Load(filename);
-		}
-
-		void HandleEndFrame(StringID type, const struct EndFrame&);
-
 		virtual void OnDrawFrame();
 
 		static Vector<String>			argv_;
