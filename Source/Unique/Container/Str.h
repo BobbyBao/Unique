@@ -5,7 +5,7 @@
 #include <cctype>
 #include <vector>
 #include <assert.h>
-#include "RandomAccessIterator.h"
+#include "Iterator.h"
 
 namespace Unique
 {
@@ -515,6 +515,11 @@ inline String operator +(const wchar_t* lhs, const String& rhs)
     String ret(lhs);
     ret += rhs;
     return ret;
+}
+
+template <> UNIQUE_API inline void Swap<String>(String& first, String& second)
+{
+	first.Swap(second);
 }
 
 /// Wide character string. Only meant for converting from String and passing to the operating system where necessary.

@@ -148,6 +148,6 @@ void Sample::OnDrawFrame()
 	commands->Draw(3, 0);
 
 	// Present result on the screen
-	graphicsContext->Present();
+	//graphicsContext->Present();
 }
 

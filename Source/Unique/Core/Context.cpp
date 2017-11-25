@@ -134,8 +134,6 @@ Context::Context() :
 #endif
 	Object::context_ = this;
 
-    // Set the main thread ID (assuming the Context is created in it)
-	Thread::SetMainThread();
 
 	ExecuteInitializations(this);
 }
@@ -293,6 +291,9 @@ void Context::EndSendEvent()
 
 void Context::ThreadFunction()
 {
+	// Set the main thread ID (assuming the Context is created in it)
+	Thread::SetMainThread();
+
 	Time& timer = RegisterSubsystem<Time>();
 
 	SendEvent(E_INIT, Init());

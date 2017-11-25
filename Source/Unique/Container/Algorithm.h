@@ -37,8 +37,6 @@ template <class T> inline void Swap(T& first, T& second)
     second = temp;
 }
 
-template <> UNIQUE_API void Swap<String>(String& first, String& second);
-
 template<class C, class V>
 typename C::iterator Find(C& c, const V& value)
 {

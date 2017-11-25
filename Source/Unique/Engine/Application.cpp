@@ -5,6 +5,7 @@
 #include <fstream>
 #include "../Graphics/Graphics.h"
 #include "../Graphics/Renderer.h"
+#include "../Core/CoreEvents.h"
 
 namespace Unique
 {
@@ -128,7 +129,7 @@ namespace Unique
 
 		auto& window = static_cast<LLGL::Window&>(graphicsContext->GetSurface());
 		Renderer& renderer = Subsystem<Renderer>();
-
+		//renderer.FrameNoRenderWait();
 		context_->Run();
 
 		while (window.ProcessEvents() && !input->KeyDown(LLGL::Key::Escape))
@@ -137,15 +138,15 @@ namespace Unique
 
 			OnDrawFrame();
 
-		//	Subsystem<Renderer>().RenderFrame();
-
+			renderer.RenderFrame();
 		}
+
+		renderer.RenderFrame();
 
 		Terminate();
 
 		context_->Stop();
 	}
-
 
 	void Application::OnDrawFrame()
 	{

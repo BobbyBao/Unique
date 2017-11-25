@@ -64,6 +64,8 @@ namespace Unique
 			return Texture::Load(filename);
 		}
 
+		void HandleEndFrame(StringID type, const struct EndFrame&);
+
 		virtual void OnDrawFrame();
 
 		static Vector<String>			argv_;

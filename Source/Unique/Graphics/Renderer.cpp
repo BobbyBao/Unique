@@ -1,11 +1,14 @@
 #include "Precompiled.h"
 #include "Renderer.h"
 #include "Graphics/Graphics.h"
+#include "../Core/CoreEvents.h"
 
 namespace Unique
 {
 	Renderer::Renderer()
 	{
+		SubscribeToEvent(E_ENDFRAME, &Renderer::Handle);
+		FrameNoRenderWait();
 	}
 
 
@@ -15,7 +18,7 @@ namespace Unique
 
 
 	void Renderer::AddCommand(std::function<void()> cmd)
-	{
+	{		
 		preComands_.push_back(cmd);
 	}
 
@@ -25,7 +28,7 @@ namespace Unique
 	}
 
 
-	void Renderer::Update()
+	void Renderer::RenderUpdate()
 	{
 		for (auto& view : views_)
 		{
@@ -33,125 +36,131 @@ namespace Unique
 		}
 
 	}
-	
+
+	void Renderer::Handle(StringID type, const EndFrame& args)
+	{
+		UpdateFrame();
+	}
+
+	void Renderer::UpdateFrame()
+	{
+		RenderSemWait();	
+		
+		FrameNoRenderWait();
+	}
+
+	void Renderer::SwapContext()
+	{
+	}
+
+	void Renderer::FrameNoRenderWait()
+	{
+		SwapContext();
+
+		// release render thread
+		MainSemPost();
+	}
+
 	RenderFrameResult Renderer::RenderFrame(int _msecs)
 	{
-		RenderFrameResult result = RenderFrameResult::NoContext;
-
 		for (auto& view : views_)
 		{
 			view->Render();
 		}
 
-		flip();
+		Flip();
 	
-		if (apiSemWait(_msecs))
+		if (MainSemWait(_msecs))
 		{
 			{
-			//	BGFX_PROFILER_SCOPE("bgfx/Exec commands pre", 0xff2040ff);
+				UNIQUE_PROFILE(ExecCommandsPre);
 				ExecuteCommands(preComands_);
 			}
 			
 			{
-			//	BGFX_PROFILER_SCOPE("bgfx/Exec commands post", 0xff2040ff);
+				UNIQUE_PROFILE(ExecCommandsPost);
 				ExecuteCommands(postComands_);
 			}
 
-			renderSemPost();
+			RenderSemPost();
 
 		}
 		else
 		{
 			return RenderFrameResult::Timeout;
 		}
-		/*
-		return m_exit
-			? RenderFrameResult::Exiting
-			: RenderFrameResult::Render
-			;
-
-
-		if (NULL == s_ctx)
+	
+		if (exit_)
 		{
-			s_renderFrameCalled = true;
-			s_threadIndex = ~BGFX_MAIN_THREAD_MAGIC;
-			return RenderFrameResult::NoContext;
+			MainSemWait();
+			RenderSemPost();
+			return RenderFrameResult::Exiting;
 		}
 
-		int32_t msecs = -1 == _msecs
-			? BGFX_CONFIG_API_SEMAPHORE_TIMEOUT
-			: _msecs
-			;
-		RenderFrameResult result = s_ctx->renderFrame(msecs);
-		if (RenderFrameResult::Exiting == result)
-		{
-			Context* ctx = s_ctx;
-			ctx->apiSemWait();
-			s_ctx = NULL;
-			ctx->renderSemPost();
-		}*/
-
-		return result;
+		return RenderFrameResult::Render;
 	}
 
 	void Renderer::ExecuteCommands(CommandQueue& cmds)
 	{
-		for (auto& fn : cmds)
+		if (!cmds.empty())
 		{
-			fn();
+			for (auto& fn : cmds)
+			{
+				fn();
+			}
+
+			cmds.clear();
 		}
 	}
 
-	void Renderer::apiSemPost()
+	void Renderer::MainSemPost()
 	{
-		if (!m_singleThreaded)
+		if (!singleThreaded_)
 		{
-			m_apiSem.post();
+			mainSem_.post();
 		}
 	}
 
-	bool Renderer::apiSemWait(int32_t _msecs)
+	bool Renderer::MainSemWait(int _msecs)
 	{
-		if (m_singleThreaded)
+		if (singleThreaded_)
 		{
 			return true;
 		}
 
-		//BGFX_PROFILER_SCOPE("bgfx/API thread wait", 0xff2040ff);
-		//int64_t start = bx::getHPCounter();
-		bool ok = m_apiSem.wait(_msecs);
+		UNIQUE_PROFILE(MainThreadWait);
+		HiresTimer timer;
+		bool ok = mainSem_.wait(_msecs);
 		if (ok)
 		{
-			//	m_render->m_waitSubmit = bx::getHPCounter() - start;
-			//	m_submit->m_perfStats.waitSubmit = m_submit->m_waitSubmit;
+			waitSubmit_ = timer.GetUSec(false);
 			return true;
 		}
 
 		return false;
 	}
 
-	void Renderer::renderSemPost()
+	void Renderer::RenderSemPost()
 	{
-		if (!m_singleThreaded)
+		if (!singleThreaded_)
 		{
-			m_renderSem.post();
+			renderSem_.post();
 		}
 	}
 
-	void Renderer::renderSemWait()
+	void Renderer::RenderSemWait()
 	{
-		if (!m_singleThreaded)
+		if (!singleThreaded_)
 		{
-			//	BGFX_PROFILER_SCOPE("bgfx/Render thread wait", 0xff2040ff);
-			//	int64_t start = bx::getHPCounter();
-			bool ok = m_renderSem.wait();
-			//	BX_CHECK(ok, "Semaphore wait failed."); BX_UNUSED(ok);
-			//	m_submit->m_waitRender = bx::getHPCounter() - start;
-			//	m_submit->m_perfStats.waitRender = m_submit->m_waitRender;
+			UNIQUE_PROFILE(RenderThreadWait);
+			HiresTimer timer;
+			bool ok = renderSem_.wait();
+			assert(ok);
+			waitRender_ = timer.GetUSec(false);
 		}
 	}
-
-	void Renderer::flip()
+	
+	void Renderer::Flip()
 	{
 		graphicsContext->Present();
 	}
