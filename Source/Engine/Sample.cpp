@@ -6,6 +6,7 @@
 using namespace Unique;
 
 
+UNIQUE_IMPLEMENT_MAIN(Unique::Sample);
 
 Sample::Sample() :
 	Application { L"Unique Engine" }

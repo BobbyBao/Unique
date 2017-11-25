@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "Engine\Engine.vcxproj", "{8BDD6AF5-CB1D-4AD6-A5CE-7AC304B28E77}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Samples", "Engine\Engine.vcxproj", "{8BDD6AF5-CB1D-4AD6-A5CE-7AC304B28E77}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LLGL", "..\..\Build\LLGL\LLGL.vcxproj", "{D66D53BC-C82B-3A2C-9E5D-E24025E90E3F}"
 EndProject
@@ -13,7 +13,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LLGL_OpenGL", "..\..\Build\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial05_RenderTarget", "..\..\Build\LLGL\Tutorial05_RenderTarget.vcxproj", "{89E81370-4775-3384-AAA8-0BD3CAA83551}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Unique", "Unique\Unique.vcxitems", "{D565EC23-5A2B-453C-AA4A-AA6E47320E3E}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Unique\Unique.vcxitems*{8bdd6af5-cb1d-4ad6-a5ce-7ac304b28e77}*SharedItemsImports = 4
+		Unique\Unique.vcxitems*{d565ec23-5a2b-453c-aa4a-aa6e47320e3e}*SharedItemsImports = 9
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		MinSizeRel|x64 = MinSizeRel|x64

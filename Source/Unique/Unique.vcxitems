@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{d565ec23-5a2b-453c-aa4a-aa6e47320e3e}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Container\Algorithm.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Container\RefCounted.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Container\Str.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Container\Stringid.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\Context.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\Event.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\Object.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\Profiler.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\Semaphore.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\StringUtil.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\Thread.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\Timer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\TypeInfo.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Engine\Application.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Buffers\GraphicsBuffer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Buffers\IndexBuffer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Buffers\VertexBuffer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\GfxObject.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Graphics.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\GraphicsDefs.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Material.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Model.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Renderer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Technique.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Texture.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\View.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)IO\AbstractFile.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)IO\File.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)IO\FileSystem.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)IO\FileWatcher.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)IO\Log.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)IO\PackageFile.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Math\MathDefs.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Precompiled.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Resource\Image.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Resource\Resource.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\json2msgpack.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-common.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-expect.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-node.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-platform.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-reader.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-writer.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\msgpack2json.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Container\Algorithm.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Container\Arrayptr.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Container\Container.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Container\Linkedlist.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Container\Ptr.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Container\RandomAccessIterator.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Container\RefCounted.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Container\Str.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Container\Stringid.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Attribute.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Context.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\CoreDefs.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\CoreEvents.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Event.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Object.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Platform.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Profiler.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Semaphore.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\SpinLock.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\StringUtil.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Thread.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Timer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\TypeInfo.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)DebugNew.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Engine\Application.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Buffers\GraphicsBuffer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Buffers\IndexBuffer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Buffers\VertexBuffer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\GfxObject.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Graphics.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\GraphicsDefs.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Material.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Model.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Renderer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Technique.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Texture.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\View.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IO\AbstractFile.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IO\File.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IO\FileSystem.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IO\FileWatcher.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IO\IOEvents.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IO\Log.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IO\PackageFile.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Math\MathDefs.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Precompiled.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Resource\Image.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Resource\Resource.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\BinaryReader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\BinaryWriter.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\JsonReader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\JsonWriter.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-common.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-expect.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-node.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-platform.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-reader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-writer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\SerializeDefs.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\SerializeTraits.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\SerializeTraitsBasic.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\SerializeTraitsStd.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\TransferBase.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Unique.h" />
+  </ItemGroup>
+</Project>

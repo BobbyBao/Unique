@@ -22,7 +22,7 @@
     <ProjectGuid>{8BDD6AF5-CB1D-4AD6-A5CE-7AC304B28E77}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <Platform>x64</Platform>
-    <ProjectName>Unique</ProjectName>
+    <ProjectName>Samples</ProjectName>
     <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -49,6 +49,9 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+    <Import Project="..\Unique\Unique.vcxitems" Label="Shared" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -283,120 +286,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Core\Semaphore.cpp" />
-    <ClCompile Include="Engine\Application.cpp" />
-    <ClCompile Include="Container\RefCounted.cpp" />
-    <ClCompile Include="Container\Str.cpp" />
-    <ClCompile Include="Container\Algorithm.cpp" />
-    <ClCompile Include="Core\Context.cpp" />
-    <ClCompile Include="Core\Event.cpp" />
-    <ClCompile Include="Container\Stringid.cpp" />
-    <ClCompile Include="Core\Profiler.cpp" />
-    <ClCompile Include="Core\StringUtil.cpp" />
-    <ClCompile Include="Core\Thread.cpp" />
-    <ClCompile Include="Core\Timer.cpp" />
-    <ClCompile Include="Graphics\Buffers\GraphicsBuffer.cpp" />
-    <ClCompile Include="Graphics\GfxObject.cpp" />
-    <ClCompile Include="Graphics\GraphicsDefs.cpp" />
-    <ClCompile Include="Graphics\Graphics.cpp" />
-    <ClCompile Include="Graphics\Renderer.cpp" />
-    <ClCompile Include="Graphics\Buffers\IndexBuffer.cpp" />
-    <ClCompile Include="Resource\Image.cpp" />
-    <ClCompile Include="IO\AbstractFile.cpp" />
-    <ClCompile Include="IO\File.cpp" />
-    <ClCompile Include="IO\FileSystem.cpp" />
-    <ClCompile Include="IO\FileWatcher.cpp" />
-    <ClCompile Include="IO\Log.cpp" />
-    <ClCompile Include="IO\PackageFile.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Graphics\Material.cpp" />
-    <ClCompile Include="Graphics\Model.cpp" />
-    <ClCompile Include="Core\Object.cpp" />
-    <ClCompile Include="Graphics\Technique.cpp" />
-    <ClCompile Include="Math\MathDefs.cpp" />
-    <ClCompile Include="Precompiled.cpp" />
-    <ClCompile Include="Core\TypeInfo.cpp" />
     <ClCompile Include="Sample.cpp" />
-    <ClCompile Include="Resource\Resource.cpp" />
-    <ClCompile Include="Serialize\json2msgpack.cpp" />
-    <ClCompile Include="Serialize\mpack\mpack-common.c" />
-    <ClCompile Include="Serialize\mpack\mpack-expect.c" />
-    <ClCompile Include="Serialize\mpack\mpack-node.c" />
-    <ClCompile Include="Serialize\mpack\mpack-platform.c" />
-    <ClCompile Include="Serialize\mpack\mpack-reader.c" />
-    <ClCompile Include="Serialize\mpack\mpack-writer.c" />
-    <ClCompile Include="Serialize\msgpack2json.cpp" />
-    <ClCompile Include="Graphics\Texture.cpp" />
-    <ClCompile Include="Graphics\View.cpp" />
-    <ClCompile Include="Graphics\Buffers\VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Container\Container.h" />
-    <ClInclude Include="Core\Platform.h" />
-    <ClInclude Include="DebugNew.h" />
-    <ClInclude Include="Engine\Application.h" />
-    <ClInclude Include="Container\Arrayptr.h" />
-    <ClInclude Include="Container\Linkedlist.h" />
-    <ClInclude Include="Container\Ptr.h" />
-    <ClInclude Include="Container\RefCounted.h" />
-    <ClInclude Include="Container\Str.h" />
-    <ClInclude Include="Container\Algorithm.h" />
-    <ClInclude Include="Core\Context.h" />
-    <ClInclude Include="Core\Attribute.h" />
-    <ClInclude Include="Core\CoreDefs.h" />
-    <ClInclude Include="Core\CoreEvents.h" />
-    <ClInclude Include="Core\Event.h" />
-    <ClInclude Include="Core\Profiler.h" />
-    <ClInclude Include="Core\SpinLock.h" />
-    <ClInclude Include="Container\Stringid.h" />
-    <ClInclude Include="Core\Thread.h" />
-    <ClInclude Include="Core\Timer.h" />
-    <ClInclude Include="Graphics\Buffers\GraphicsBuffer.h" />
-    <ClInclude Include="Graphics\GfxObject.h" />
-    <ClInclude Include="Graphics\GraphicsDefs.h" />
-    <ClInclude Include="Graphics\Graphics.h" />
-    <ClInclude Include="Graphics\Material.h" />
-    <ClInclude Include="Graphics\Model.h" />
-    <ClInclude Include="Core\Object.h" />
-    <ClInclude Include="Graphics\Technique.h" />
-    <ClInclude Include="Graphics\Renderer.h" />
-    <ClInclude Include="Container\RandomAccessIterator.h" />
-    <ClInclude Include="Graphics\Buffers\IndexBuffer.h" />
-    <ClInclude Include="Resource\Image.h" />
-    <ClInclude Include="IO\AbstractFile.h" />
-    <ClInclude Include="IO\File.h" />
-    <ClInclude Include="IO\FileSystem.h" />
-    <ClInclude Include="IO\FileWatcher.h" />
-    <ClInclude Include="IO\IOEvents.h" />
-    <ClInclude Include="IO\Log.h" />
-    <ClInclude Include="IO\PackageFile.h" />
-    <ClInclude Include="Math\MathDefs.h" />
-    <ClInclude Include="Precompiled.h" />
-    <ClInclude Include="Core\TypeInfo.h" />
     <ClInclude Include="Sample.h" />
-    <ClInclude Include="Resource\Resource.h" />
-    <ClInclude Include="Core\Semaphore.h" />
-    <ClInclude Include="Serialize\BinaryReader.h" />
-    <ClInclude Include="Serialize\JsonReader.h" />
-    <ClInclude Include="Serialize\JsonWriter.h" />
-    <ClInclude Include="Serialize\mpack\mpack-common.h" />
-    <ClInclude Include="Serialize\mpack\mpack-expect.h" />
-    <ClInclude Include="Serialize\mpack\mpack-node.h" />
-    <ClInclude Include="Serialize\mpack\mpack-platform.h" />
-    <ClInclude Include="Serialize\mpack\mpack-reader.h" />
-    <ClInclude Include="Serialize\mpack\mpack-writer.h" />
-    <ClInclude Include="Serialize\mpack\mpack.h" />
-    <ClInclude Include="Serialize\BinaryWriter.h" />
-    <ClInclude Include="Serialize\SerializeDefs.h" />
-    <ClInclude Include="Serialize\SerializeTraits.h" />
-    <ClInclude Include="Serialize\SerializeTraitsBasic.h" />
-    <ClInclude Include="Serialize\SerializeTraitsStd.h" />
-    <ClInclude Include="Core\StringUtil.h" />
-    <ClInclude Include="Serialize\TransferBase.h" />
-    <ClInclude Include="Graphics\Texture.h" />
-    <ClInclude Include="Unique.h" />
-    <ClInclude Include="Graphics\View.h" />
-    <ClInclude Include="Graphics\Buffers\VertexBuffer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
