@@ -120,7 +120,7 @@ void Time::BeginFrame(float timeStep)
 		Unique::BeginFrame eventData;
 		eventData.frameNumber_ = frameNumber_;
 		eventData.timeStep_ = timeStep_;
-        SendEvent(E_BEGINFRAME, eventData);
+        SendEvent(eventData);
     }
 }
 
@@ -130,7 +130,7 @@ void Time::EndFrame()
         UNIQUE_PROFILE(EndFrame);
 
         // Frame end event
-        SendEvent(E_ENDFRAME);
+        SendEvent(Unique::EndFrame());
     }
 
     Profiler* profiler = &Subsystem<Profiler>();

@@ -28,17 +28,17 @@ namespace Unique
 {
 
 /// Log message event.
-UNIQUE_EVENT(E_LOGMESSAGE, LogMessage)
+uEvent(LogMessage)
 {
-    UNIQUE_PARAM(String, message_);              // String
-    UNIQUE_PARAM(int, level_);                  // int
+    String message_;              // String
+    int level_;                  // int
 };
 
 /// Async system command execution finished.
-UNIQUE_EVENT(E_ASYNCEXECFINISHED, AsyncExecFinished)
+uEvent(AsyncExecFinished)
 {
-    UNIQUE_PARAM(unsigned, requestID_);          // unsigned
-    UNIQUE_PARAM(int, exitCode_);            // int
+    unsigned requestID_;          // unsigned
+    int exitCode_;            // int
 };
 
 }

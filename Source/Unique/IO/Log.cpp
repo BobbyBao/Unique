@@ -70,7 +70,7 @@ Log::Log() :
 {
     logInstance = this;
 
-    SubscribeToEvent(E_ENDFRAME, UNIQUE_HANDLER(Log, HandleEndFrame));
+    SubscribeToEvent(&Log::HandleEndFrame);
 }
 
 Log::~Log()
@@ -198,7 +198,7 @@ void Log::Write(int level, const String& message)
 	LogMessage eventData;
 	eventData.message_ = formattedMessage;
 	eventData.level_ = level;
-    logInstance->SendEvent(E_LOGMESSAGE, eventData);
+    logInstance->SendEvent(eventData);
 
     logInstance->inWrite_ = false;
 }
@@ -256,7 +256,7 @@ void Log::WriteRaw(const String& message, bool error)
 	LogMessage eventData;
 	eventData.message_ = message;
 	eventData.level_ = error ? LOG_ERROR : LOG_INFO;
-    logInstance->SendEvent(E_LOGMESSAGE, eventData);
+    logInstance->SendEvent(eventData);
 
     logInstance->inWrite_ = false;
 }

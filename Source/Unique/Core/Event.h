@@ -13,6 +13,22 @@ namespace Unique
 	{
 	};
 
+	template<typename T>
+	struct TEvent : Event
+	{
+		static const char* GetTypeName(const char* name)
+		{
+			const char* p = std::strrchr(name, ':');
+			return p ? ++p : name;
+		}
+
+		static const Unique::StringID& Type()
+		{
+			static const Unique::StringID eventID(GetTypeName(typeid(T).name()));
+			return eventID;
+		}
+	};
+
 	/// Internal helper class for invoking event handler functions.
 	class UNIQUE_API EventHandler : public LinkedListNode
 	{
@@ -131,15 +147,9 @@ namespace Unique
 	};
 
 	/// Describe an event's hash ID and begin a namespace in which to define its parameters.
-#define UNIQUE_EVENT(eventID, eventName)\
- static const Unique::StringID eventID(#eventName);\
- struct eventName : public Event\
+#define uEvent(eventName)\
+ struct eventName : public TEvent<eventName>\
 
-	/// Describe an event's parameter hash ID. Should be used inside an event namespace.
-#define UNIQUE_PARAM(paramType, paramName) paramType paramName
-	
-	/// Convenience macro to construct an EventHandler that points to a receiver object and its member function.
-#define UNIQUE_HANDLER(className, function) &className::function
 
 }
 

@@ -296,7 +296,7 @@ void Context::ThreadFunction()
 
 	Time& timer = RegisterSubsystem<Time>();
 
-	SendEvent(E_INIT, Init());
+	SendEvent(Startup());
 	
 	frameTimer_.Reset();
 
@@ -310,23 +310,23 @@ void Context::ThreadFunction()
 			Unique::Update eventData;
 			eventData.timeStep_ = timeStep_;
 
-			SendEvent(E_UPDATE, eventData);
+			SendEvent(eventData);
 
 			// Logic post-update event
-			SendEvent(E_POSTUPDATE, eventData);
+			SendEvent((const PostUpdate&)eventData);
 
 			// Rendering update event
-			SendEvent(E_RENDERUPDATE, eventData);
+			SendEvent((const RenderUpdate&)eventData);
 
 			// Post-render update event
-			SendEvent(E_POSTRENDERUPDATE, eventData);
+			SendEvent((const PostRenderUpdate&) eventData);
 		}
 
 		ApplyFrameLimit();
 		timer.EndFrame();
 	}
 
-	SendEvent(E_SHUTDOWN, Shutdown());
+	SendEvent(Shutdown());
 }
 
 void Context::ApplyFrameLimit()

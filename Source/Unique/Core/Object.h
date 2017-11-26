@@ -41,11 +41,20 @@ public:
     bool IsInstanceOf(const TypeInfo* typeInfo) const;
     /// Check current instance is type of specified class.
     template<typename T> bool IsInstanceOf() const { return IsInstanceOf(T::GetTypeInfoStatic()); }
-	
+
+
+	/// Send event with parameters to all subscribers.
+	template<class E>
+	void SendEvent(const E& eventData)
+	{
+		SendEvent(E::Type(), eventData);
+	}
+
 	/// Send event to all subscribers.
 	void SendEvent(const StringID& eventType);
 	/// Send event with parameters to all subscribers.
 	void SendEvent(const StringID& eventType, const Event& eventData);
+	
 
     /// Return execution context.
     static Context* GetContext() { return context_; }
@@ -56,6 +65,12 @@ public:
     bool HasSubscribedToEvent(Object* sender, StringID eventType) const;
     /// Return whether has subscribed to any event.
     bool HasEventHandlers() const { return !eventHandlers_.empty(); }
+
+	template<class T, class E>
+	void SubscribeToEvent(void(T::*f)(StringID, const E&))
+	{
+		SubscribeToEvent(E::Type(), new TEventHandler<T, E>((T*)this, f));
+	}
 
 	template<class T, class E>
 	void SubscribeToEvent(const StringID& eventType, void(T::*f)(StringID, const E&))

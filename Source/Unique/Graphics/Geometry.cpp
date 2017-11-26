@@ -1,18 +1,24 @@
 #include "Precompiled.h"
-#include "Model.h"
+#include "Geometry.h"
 #include "Buffers/VertexBuffer.h"
 #include "Buffers/IndexBuffer.h"
 
-
 namespace Unique
 {
-	Model::Model()
+	uObject(Geometry)
+	{
+		uFactory("Graphics")
+
+	}
+	
+	Geometry::Geometry()
 	{
 	}
 
 
-	Model::~Model()
+	Geometry::~Geometry()
 	{
 	}
 
 }
+

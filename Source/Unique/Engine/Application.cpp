@@ -117,7 +117,7 @@ namespace Unique
 	{
 		Initialize();
 	
-		Renderer& renderer = Subsystem<Renderer>();
+		Graphics& graphics = Subsystem<Graphics>();
 
 		auto& window = static_cast<LLGL::Window&>(graphicsContext->GetSurface());
 
@@ -129,10 +129,10 @@ namespace Unique
 
 			OnDrawFrame();
 
-			renderer.RenderFrame();
+			graphics.RenderFrame();
 		}
 
-		renderer.RenderFrame();
+		graphics.RenderFrame();
 
 		Terminate();
 

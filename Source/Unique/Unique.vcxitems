@@ -27,6 +27,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\Timer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\TypeInfo.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Engine\Application.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Geometry.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Buffers\GraphicsBuffer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Buffers\IndexBuffer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Buffers\VertexBuffer.cpp" />
@@ -85,6 +86,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\TypeInfo.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)DebugNew.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Engine\Application.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Geometry.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Buffers\GraphicsBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Buffers\IndexBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Buffers\VertexBuffer.h" />

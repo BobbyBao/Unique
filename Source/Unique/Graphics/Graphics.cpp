@@ -110,16 +110,143 @@ namespace Unique
 		std::cout << "  vendor:           " << info.vendorName << std::endl;
 		std::cout << "  shading language: " << info.shadingLanguageName << std::endl;
 
-
+		FrameNoRenderWait();
 	}
 
-	bool Graphics::BeginFrame()
+
+	void Graphics::AddCommand(std::function<void()> cmd)
 	{
-		return true;
+		preComands_.push_back(cmd);
+	}
+
+	void Graphics::PostCommand(std::function<void()> cmd)
+	{
+		postComands_.push_back(cmd);
+	}
+
+	void Graphics::BeginFrame()
+	{
 	}
 
 	void Graphics::EndFrame()
 	{
+		RenderSemWait();
+
+		FrameNoRenderWait();
+	}
+
+
+	void Graphics::SwapContext()
+	{
+	}
+
+	void Graphics::FrameNoRenderWait()
+	{
+		SwapContext();
+
+		// release render thread
+		MainSemPost();
+	}
+
+
+	void Graphics::ExecuteCommands(CommandQueue& cmds)
+	{
+		if (!cmds.empty())
+		{
+			for (auto& fn : cmds)
+			{
+				fn();
+			}
+
+			cmds.clear();
+		}
+	}
+
+	void Graphics::MainSemPost()
+	{
+		if (!singleThreaded_)
+		{
+			mainSem_.post();
+		}
+	}
+
+	bool Graphics::MainSemWait(int _msecs)
+	{
+		if (singleThreaded_)
+		{
+			return true;
+		}
+
+		UNIQUE_PROFILE(MainThreadWait);
+		HiresTimer timer;
+		bool ok = mainSem_.wait(_msecs);
+		if (ok)
+		{
+			waitSubmit_ = timer.GetUSec(false);
+			return true;
+		}
+
+		return false;
+	}
+
+	void Graphics::RenderSemPost()
+	{
+		if (!singleThreaded_)
+		{
+			renderSem_.post();
+		}
+	}
+
+	void Graphics::RenderSemWait()
+	{
+		if (!singleThreaded_)
+		{
+			UNIQUE_PROFILE(RenderThreadWait);
+			HiresTimer timer;
+			bool ok = renderSem_.wait();
+			assert(ok);
+			waitRender_ = timer.GetUSec(false);
+		}
+	}
+
+	RenderFrameResult Graphics::RenderFrame(int _msecs)
+	{
+
+		Flip();
+
+		if (MainSemWait(_msecs))
+		{
+			{
+				UNIQUE_PROFILE(ExecCommandsPre);
+				ExecuteCommands(preComands_);
+			}
+
+			{
+				UNIQUE_PROFILE(ExecCommandsPost);
+				ExecuteCommands(postComands_);
+			}
+
+			RenderSemPost();
+
+		}
+		else
+		{
+			return RenderFrameResult::Timeout;
+		}
+
+		if (exit_)
+		{
+			MainSemWait();
+			RenderSemPost();
+			return RenderFrameResult::Exiting;
+		}
+
+		return RenderFrameResult::Render;
+	}
+
+	void Graphics::Flip()
+	{
+		graphicsContext->Present();
 	}
 }
 

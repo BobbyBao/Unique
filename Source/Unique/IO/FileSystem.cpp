@@ -287,7 +287,7 @@ FileSystem::FileSystem() :
     nextAsyncExecID_(1),
     executeConsoleCommands_(false)
 {
-    SubscribeToEvent(E_BEGINFRAME, UNIQUE_HANDLER(FileSystem, HandleBeginFrame));
+    SubscribeToEvent(&FileSystem::HandleBeginFrame);
 
     // Subscribe to console commands
     SetExecuteConsoleCommands(true);
@@ -919,7 +919,7 @@ void FileSystem::HandleBeginFrame(StringID eventType, const BeginFrame& eventDat
 			AsyncExecFinished newEventData;
 			newEventData.requestID_ = request->GetRequestID();
 			newEventData.exitCode_ = request->GetExitCode();
-            SendEvent(E_ASYNCEXECFINISHED, newEventData);
+            SendEvent(newEventData);
 
             delete request;
             i = asyncExecQueue_.erase(i);
