@@ -9,8 +9,6 @@
 
 namespace Unique
 {
-
-
 	class ResizeEventHandler : public LLGL::Window::EventListener
 	{
 	public:
@@ -21,32 +19,14 @@ namespace Unique
 
 		void OnResize(LLGL::Window& sender, const LLGL::Size& clientAreaSize) override
 		{
-			auto videoMode = graphicsContext->GetVideoMode();
-
-			// Update video mode
-			videoMode.resolution = clientAreaSize;
-			graphicsContext->SetVideoMode(videoMode);
-
-			commands->SetRenderTarget(*graphicsContext);
-
-			// Update viewport
-			LLGL::Viewport viewport;
-			{
-				viewport.width = static_cast<float>(videoMode.resolution.x);
-				viewport.height = static_cast<float>(videoMode.resolution.y);
-			}
-			commands->SetViewport(viewport);
-
-			// Update scissor
-			commands->SetScissor({ 0, 0, videoMode.resolution.x, videoMode.resolution.y });
-
+			Graphics& graphics = Subsystem<Graphics>();
+			graphics.Resize(clientAreaSize);
 		}
-		
+
 	private:
 
 		Application&			application_;
 	};
-
 
 	Vector<String> Application::argv_;
 	std::string Application::rendererModule_;
@@ -76,34 +56,31 @@ namespace Unique
 	void Application::Initialize()
 	{
 		Graphics& graphics = Subsystem<Graphics>();
-		graphics.Initialize(rendererModule_, resolution_);
-
-		// Set window title
-		auto& window = static_cast<LLGL::Window&>(graphicsContext->GetSurface());
-
+		window_ = graphics.Initialize(rendererModule_, resolution_);
+		
 		auto rendererName = renderer->GetName();
-		window.SetTitle(title_ + L" ( " + std::wstring(rendererName.begin(), rendererName.end()) + L" )");
+		window_->SetTitle(title_ + L" ( " + std::wstring(rendererName.begin(), rendererName.end()) + L" )");
 
 		// Add input event listener to window
 		input = std::make_shared<LLGL::Input>();
-		window.AddEventListener(input);
+		window_->AddEventListener(input);
 
 		// Change window descriptor to allow resizing
-		auto wndDesc = window.GetDesc();
+		auto wndDesc = window_->GetDesc();
 		wndDesc.resizable = true;
-		window.SetDesc(wndDesc);
+		window_->SetDesc(wndDesc);
 
 		// Change window behavior
-		auto behavior = window.GetBehavior();
+		auto behavior = window_->GetBehavior();
 		behavior.disableClearOnResize = true;
 		behavior.moveAndResizeTimerID = 1;
-		window.SetBehavior(behavior);
+		window_->SetBehavior(behavior);
 
 		// Add window resize listener
-		window.AddEventListener(std::make_shared<ResizeEventHandler>(*this));
+		window_->AddEventListener(std::make_shared<ResizeEventHandler>(*this));
 		
 		// Show window
-		window.Show();
+		window_->Show();
 
 		// Store information that loading is done
 		loadingDone_ = true;
@@ -119,11 +96,9 @@ namespace Unique
 	
 		Graphics& graphics = Subsystem<Graphics>();
 
-		auto& window = static_cast<LLGL::Window&>(graphicsContext->GetSurface());
-
 		context_->Run();
 
-		while (window.ProcessEvents() && !input->KeyDown(LLGL::Key::Escape))
+		while (window_->ProcessEvents() && !input->KeyDown(LLGL::Key::Escape))
 		{
 		//	profilerObj_->ResetCounters();
 

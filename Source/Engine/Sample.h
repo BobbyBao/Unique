@@ -6,17 +6,16 @@
 namespace Unique
 {
 	class Texture;
+	class VertexBuffer;
 
 	class Sample : public Unique::Application
 	{
 	public:
-
 		Sample();
 
 		LLGL::VertexFormat CreateBuffers();
 		void CreatePipelines();
 		void CreateTextures();
-		void CreateSamplers();
 	private:
 		virtual void Initialize();
 		virtual void Terminate();
@@ -24,9 +23,8 @@ namespace Unique
 
 		LLGL::ShaderProgram*    shaderProgram = nullptr;
 		LLGL::GraphicsPipeline* pipeline = nullptr;
-		LLGL::Buffer*           vertexBuffer = nullptr;
+		SPtr<VertexBuffer>      vertexBuffer = nullptr;
 		SPtr<Unique::Texture>   colorMap = nullptr;
-		LLGL::Sampler*          sampler[5] = { nullptr };
 		int                     samplerIndex = 0;
 	};
 

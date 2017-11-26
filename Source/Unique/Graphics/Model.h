@@ -4,7 +4,7 @@
 namespace Unique
 {
 	class VertexBuffer;
-	class IndeexBuffer;
+	class IndexBuffer;
 
 	class Model : public Resource
 	{
@@ -14,7 +14,7 @@ namespace Unique
 		~Model();
 
 		Vector<SPtr<VertexBuffer>> vertexBuffers_;
-	//	SPtr<IndexBuffer> indexBuffer_;
+		SPtr<IndexBuffer> indexBuffer_;
 
 	};
 

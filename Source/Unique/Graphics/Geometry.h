@@ -4,7 +4,7 @@
 namespace Unique
 {
 	class VertexBuffer;
-	class IndeexBuffer;
+	class IndexBuffer;
 	class StorageBuffer;
 
 	class Geometry : public Object
@@ -15,7 +15,7 @@ namespace Unique
 		~Geometry();
 
 		Vector<SPtr<VertexBuffer>> vertexBuffers_;
-//		SPtr<IndexBuffer> indexBuffer_;
+		SPtr<IndexBuffer> indexBuffer_;
 	};
 
 

@@ -11,7 +11,7 @@ namespace Unique
 		IndexBuffer();
 		~IndexBuffer();
 
-		IndexFormat indexFormat_;
+		LLGL::IndexFormat indexFormat_;
 	};
 
 }

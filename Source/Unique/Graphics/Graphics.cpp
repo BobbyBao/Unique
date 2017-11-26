@@ -1,5 +1,8 @@
 #include "Precompiled.h"
 #include "Graphics.h"
+#include "Texture.h"
+#include "Buffers/VertexBuffer.h"
+#include "Buffers/IndexBuffer.h"
 
 namespace Unique
 {
@@ -23,8 +26,6 @@ namespace Unique
 		}
 
 	};
-
-
 
 	// Render system
 	UPtr<LLGL::RenderSystem>        renderer;
@@ -54,7 +55,7 @@ namespace Unique
 		debugger_ = val;
 	}
 
-	void Graphics::Initialize(const std::string& rendererModule, const LLGL::Size& size)
+	Window* Graphics::Initialize(const std::string& rendererModule, const LLGL::Size& size)
 	{
 		// Create render system
 		renderer = LLGL::RenderSystem::Load(
@@ -93,7 +94,7 @@ namespace Unique
 		// Create command buffer
 		commands = renderer->CreateCommandBuffer();
 
-		const LLGL::ColorRGBAf                      defaultClearColor{ 0.1f, 0.1f, 0.4f };
+		const LLGL::ColorRGBAf defaultClearColor{ 0.1f, 0.1f, 0.4f };
 
 		// Initialize command buffer
 		commands->SetClearColor(defaultClearColor);
@@ -111,6 +112,30 @@ namespace Unique
 		std::cout << "  shading language: " << info.shadingLanguageName << std::endl;
 
 		FrameNoRenderWait();
+		return &(Window&)graphicsContext->GetSurface();
+	}
+
+	void Graphics::Resize(const LLGL::Size& size)
+	{
+		auto videoMode = graphicsContext->GetVideoMode();
+
+		// Update video mode
+		videoMode.resolution = size;
+		graphicsContext->SetVideoMode(videoMode);
+
+		SetRenderTarget(nullptr);
+
+		SetViewport(Viewport(0, 0, size.x, size.y));
+
+		// Update scissor
+		SetScissor({ 0, 0, videoMode.resolution.x, videoMode.resolution.y });
+	}
+
+	SPtr<VertexBuffer> Graphics::CreateVertexBuffer(uint size, const LLGL::VertexFormat& vertexFormat, void* data)
+	{
+		SPtr<VertexBuffer> vb(new VertexBuffer());
+		vb->handle_ = renderer->CreateBuffer(VertexBufferDesc(size * vertexFormat.stride, vertexFormat), data);
+		return vb;
 	}
 
 
@@ -135,6 +160,103 @@ namespace Unique
 		FrameNoRenderWait();
 	}
 
+	void Graphics::Clear(uint flags)
+	{
+		commands->Clear(flags);
+	}
+
+	void Graphics::SetRenderTarget(RenderTarget* renderTarget)
+	{
+		if (renderTarget)
+		{
+			commands->SetRenderTarget(*renderTarget);
+		}
+		else
+		{
+			commands->SetRenderTarget(*graphicsContext);
+		}
+	}
+
+	void Graphics::SetViewport(const Viewport& viewport)
+	{
+		commands->SetViewport(viewport);
+	}
+
+	void Graphics::SetScissor(const Scissor& scissor)
+	{
+		commands->SetScissor(scissor);
+	}
+
+	void Graphics::SetGraphicsPipeline(GraphicsPipeline* graphicsPipeline)
+	{
+		commands->SetGraphicsPipeline(*graphicsPipeline);
+	}
+
+	void Graphics::SetComputePipeline(ComputePipeline* computePipeline)
+	{
+		commands->SetComputePipeline(*computePipeline);
+	}
+
+	void Graphics::SetVertexBuffer(VertexBuffer* buffer)
+	{
+		commands->SetVertexBuffer(*buffer);
+	}
+
+	void Graphics::SetIndexBuffer(IndexBuffer* buffer)
+	{
+		commands->SetIndexBuffer(*buffer);
+	}
+
+	void Graphics::SetTexture(Texture* texture, uint slot, long shaderStageFlags)
+	{
+		commands->SetTexture(*texture, slot, shaderStageFlags);
+		commands->SetSampler(texture->sampler(), slot);
+	}
+
+	void Graphics::Draw(unsigned int numVertices, unsigned int firstVertex)
+	{
+		commands->Draw(numVertices, firstVertex);
+	}
+
+	void Graphics::DrawIndexed(unsigned int numVertices, unsigned int firstIndex)
+	{
+		commands->DrawIndexed(numVertices, firstIndex);
+	}
+
+	void Graphics::DrawIndexed(unsigned int numVertices, unsigned int firstIndex, int vertexOffset)
+	{
+		commands->DrawIndexed(numVertices, firstIndex, vertexOffset);
+	}
+
+	void Graphics::DrawInstanced(unsigned int numVertices, unsigned int firstVertex, unsigned int numInstances)
+	{
+		commands->DrawInstanced(numVertices, firstVertex, numInstances);
+	}
+
+	void Graphics::DrawInstanced(unsigned int numVertices, unsigned int firstVertex, unsigned int numInstances, unsigned int instanceOffset)
+	{
+		commands->DrawInstanced(numVertices, firstVertex, numInstances, instanceOffset);
+	}
+
+	void Graphics::DrawIndexedInstanced(unsigned int numVertices, unsigned int numInstances, unsigned int firstIndex)
+	{
+		commands->DrawInstanced(numVertices, numInstances, firstIndex);
+	}
+
+	void Graphics::DrawIndexedInstanced(unsigned int numVertices, unsigned int numInstances, unsigned int firstIndex, int vertexOffset)
+	{
+		commands->DrawIndexedInstanced(numVertices, numInstances, firstIndex, vertexOffset);
+	}
+
+	void Graphics::DrawIndexedInstanced(unsigned int numVertices, unsigned int numInstances, unsigned int firstIndex, int vertexOffset, unsigned int instanceOffset)
+	{
+		commands->DrawIndexedInstanced(numVertices, numInstances, firstIndex, vertexOffset, instanceOffset);
+	}
+
+	void Graphics::Dispatch(unsigned int groupSizeX, unsigned int groupSizeY, unsigned int groupSizeZ)
+	{
+		commands->Dispatch(groupSizeX, groupSizeY, groupSizeZ);
+	}
 
 	void Graphics::SwapContext()
 	{
@@ -143,12 +265,10 @@ namespace Unique
 	void Graphics::FrameNoRenderWait()
 	{
 		SwapContext();
-
 		// release render thread
 		MainSemPost();
 	}
-
-
+	
 	void Graphics::ExecuteCommands(CommandQueue& cmds)
 	{
 		if (!cmds.empty())
@@ -211,8 +331,7 @@ namespace Unique
 
 	RenderFrameResult Graphics::RenderFrame(int _msecs)
 	{
-
-		Flip();
+		graphicsContext->Present();
 
 		if (MainSemWait(_msecs))
 		{
@@ -244,9 +363,5 @@ namespace Unique
 		return RenderFrameResult::Render;
 	}
 
-	void Graphics::Flip()
-	{
-		graphicsContext->Present();
-	}
 }
 

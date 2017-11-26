@@ -1,28 +1,18 @@
 #pragma once
 #include <LLGL/LLGL.h>
+#include <LLGL/Utility.h>
 #include "../Container/Container.h"
 #include "../Serialize/SerializeTraits.h"
 
-using namespace LLGL;
-
 namespace Unique
 {
+	using ShaderStageFlags = LLGL::ShaderStageFlags;
+	using ClearFlags = LLGL::ClearFlags;
 
-	extern UPtr<RenderSystem>		renderer;
-	extern LLGL::RenderContext*		graphicsContext;
-	extern LLGL::CommandBuffer*		commands;
-
-	template <typename VertexType>
-	Buffer* CreateVertexBuffer(const std::vector<VertexType>& vertices, const LLGL::VertexFormat& vertexFormat)
-	{
-		return renderer->CreateBuffer(
-			VertexBufferDesc(static_cast<unsigned int>(vertices.size() * sizeof(VertexType)), vertexFormat),
-			vertices.data()
-		);
-	}
+	extern UPtr<LLGL::RenderSystem>		renderer;
 
 	template <typename IndexType>
-	Buffer* CreateIndexBuffer(const std::vector<IndexType>& indices, const LLGL::IndexFormat& indexFormat)
+	LLGL::Buffer* CreateIndexBuffer(const std::vector<IndexType>& indices, const LLGL::IndexFormat& indexFormat)
 	{
 		return renderer->CreateBuffer(
 			LLGL::IndexBufferDesc(static_cast<unsigned int>(indices.size() * sizeof(IndexType)), indexFormat),
@@ -31,7 +21,7 @@ namespace Unique
 	}
 
 	template <typename Buffer>
-	Buffer* CreateConstantBuffer(const Buffer& buffer)
+	LLGL::Buffer* CreateConstantBuffer(const Buffer& buffer)
 	{
 		static_assert(!std::is_pointer<Buffer>::value, "buffer type must not be a pointer");
 		return renderer->CreateBuffer(
@@ -48,11 +38,11 @@ namespace Unique
 	}
 
 	// Returns the aspect ratio of the render context resolution (X:Y).
-	inline float GetAspectRatio()
-	{
-		auto resolution = graphicsContext->GetVideoMode().resolution.Cast<float>();
-		return (resolution.x / resolution.y);
-	}
+// 	inline float GetAspectRatio()
+// 	{
+// 		auto resolution = graphicsContext->GetVideoMode().resolution.Cast<float>();
+// 		return (resolution.x / resolution.y);
+// 	}
 
 	// Returns ture if OpenGL is used as rendering API.
 	inline bool IsOpenGL()

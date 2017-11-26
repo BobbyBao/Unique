@@ -7,3 +7,5 @@
 #include "Core/Attribute.h"
 #include "Core/Context.h"
 #include "Core/Profiler.h"
+
+#include "Graphics/Graphics.h"

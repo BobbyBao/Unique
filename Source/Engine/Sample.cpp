@@ -2,14 +2,14 @@
 #include "Sample.h"
 #include "Graphics/Technique.h"
 #include "Graphics/Texture.h"
+#include "Graphics/Buffers/VertexBuffer.h"
 
 using namespace Unique;
 
 
 UNIQUE_IMPLEMENT_MAIN(Unique::Sample);
 
-Sample::Sample() :
-	Application { L"Unique Engine" }
+Sample::Sample() :	Application { L"Unique Engine" }
 {
 }
 
@@ -31,10 +31,7 @@ void Sample::Initialize()
 
 	CreatePipelines();
 	CreateTextures();
-	CreateSamplers();
 
-	// Print some information on the standard output
-	std::cout << "press TAB KEY to switch between five different texture samplers" << std::endl;
 	/*
 	SPtr<Technique> shader(new Technique());
 	shader->SetName("test_shader");
@@ -80,7 +77,7 @@ LLGL::VertexFormat Sample::CreateBuffers()
 	};
 
 	// Create vertex buffer
-	vertexBuffer = CreateVertexBuffer(vertices, vertexFormat);
+	vertexBuffer = Subsystem<Graphics>().CreateVertexBuffer((uint)vertices.size(), vertexFormat, vertices.data());
 
 	return vertexFormat;
 }
@@ -101,53 +98,27 @@ void Sample::CreateTextures()
 	colorMap = Unique::Texture::Load(texFilename);
 }
 
-void Sample::CreateSamplers()
-{
-	// Create 1st sampler state with default settings
-	LLGL::SamplerDescriptor samplerDesc;
-	sampler[0] = renderer->CreateSampler(samplerDesc);
-
-	// Create 2nd sampler state with MIP-map bias
-	samplerDesc.mipMapLODBias = 3.0f;
-	sampler[1] = renderer->CreateSampler(samplerDesc);
-
-	// Create 3rd sampler state with nearest filtering
-	samplerDesc.minFilter = LLGL::TextureFilter::Nearest;
-	sampler[2] = renderer->CreateSampler(samplerDesc);
-
-	// Create 4th sampler state with clamped texture wrap mode
-	samplerDesc.minFilter = LLGL::TextureFilter::Linear;
-	samplerDesc.mipMapLODBias = 0.0f;
-	samplerDesc.textureWrapU = LLGL::TextureWrap::Clamp;
-	sampler[3] = renderer->CreateSampler(samplerDesc);
-
-	// Create 5th sampler state with mirrored texture wrap mode
-	samplerDesc.textureWrapU = LLGL::TextureWrap::Mirror;
-	samplerDesc.textureWrapV = LLGL::TextureWrap::Mirror;
-	sampler[4] = renderer->CreateSampler(samplerDesc);
-}
-	
 void Sample::OnDrawFrame()
 {
 	// Examine user input
 	if (input->KeyDown(LLGL::Key::Tab))
 		samplerIndex = (samplerIndex + 1) % 5;
 
+	Graphics& graphics = Subsystem<Graphics>();
+
 	// Clear color buffer
-	commands->Clear(LLGL::ClearFlags::Color);
+	graphics.Clear(ClearFlags::Color);
 
 	// Set graphics pipeline and vertex buffer
-	commands->SetGraphicsPipeline(*pipeline);
-	commands->SetVertexBuffer(*vertexBuffer);
+	graphics.SetGraphicsPipeline(pipeline);
+
+	graphics.SetVertexBuffer(vertexBuffer);
 
 	// Set texture and sampler state on slot index 0
-	commands->SetTexture(*colorMap->handle_, 0);
-	commands->SetSampler(*sampler[samplerIndex], 0);
+	graphics.SetTexture(colorMap, 0);
 
 	// Draw fullscreen triangle
-	commands->Draw(3, 0);
+	graphics.Draw(3, 0);
 
-	// Present result on the screen
-	//graphicsContext->Present();
 }
 

@@ -57,6 +57,7 @@ namespace Unique
 		static Vector<String>			argv_;
 		static std::string				rendererModule_;
 		std::wstring					title_;
+		Window*							window_ = nullptr;
 		LLGL::Size						resolution_;
 		bool                            loadingDone_ = false;
 		std::shared_ptr<LLGL::Input>    input;

@@ -12,7 +12,7 @@ namespace Unique
 		GraphicsBuffer();
 		~GraphicsBuffer();
 
-		BufferDescriptor bufferDesc_;
+		LLGL::BufferDescriptor bufferDesc_;
 	};
 
 
