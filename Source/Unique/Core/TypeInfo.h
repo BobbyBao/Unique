@@ -7,10 +7,6 @@ namespace Unique
 {
 	class Attribute;
 
-	template<typename T, typename U> constexpr size_t offsetOf(U T::*member)
-	{
-		return (char*)&((T*)nullptr->*member) - (char*)nullptr;
-	}
 
 	/// Type info.
 	class UNIQUE_API TypeInfo
@@ -37,7 +33,7 @@ namespace Unique
 		void RegisterAttribute(const char* name, T C::* m, AttributeFlag flag = AttributeFlag::Default)
 		{
 			RegisterAttribute(
-				new Unique::TAttribute<T>(name, offsetOf(m), flag));
+				new Unique::TAttribute<T>(name, OffsetOf(m), flag));
 		}
 
 		template<typename GET, typename SET>

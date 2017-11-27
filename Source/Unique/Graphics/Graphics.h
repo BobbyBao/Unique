@@ -18,8 +18,8 @@ namespace Unique
 		Graphics();
 		~Graphics();
 		
-		Window* Initialize(const std::string& rendererModule, const LLGL::Size& size);
-		void Resize(const LLGL::Size& size);
+		Window* Initialize(const std::string& rendererModule, const Size& size);
+		void Resize(const Size& size);
 
 		const std::string GetRenderName() const;
 		void SetDebug(bool val);
@@ -41,8 +41,8 @@ namespace Unique
 			return Gs::ProjectionMatrix4f::Perspective(aspectRatio, near, far, fov, flags).ToMatrix4();
 		}
 
-		SPtr<VertexBuffer> CreateVertexBuffer(uint size, const LLGL::VertexFormat& vertexFormat, void* data = nullptr);
-		SPtr<IndexBuffer> CreateIndexBuffer(uint size, const LLGL::IndexFormat& indexFormat, void* data = nullptr);
+		SPtr<VertexBuffer> CreateVertexBuffer(uint size, const VertexFormat& vertexFormat, void* data = nullptr);
+		SPtr<IndexBuffer> CreateIndexBuffer(uint size, const IndexFormat& indexFormat, void* data = nullptr);
 
 	
 		//***MainThread***

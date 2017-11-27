@@ -55,3 +55,13 @@
 #endif // BX_CHECK
 
 #define UNIQUE_UNUSED(x) (void)(sizeof((x), 0))
+
+template<typename T, typename U> constexpr size_t OffsetOf(U T::*member)
+{
+	return (char*)&((T*)nullptr->*member) - (char*)nullptr;
+}
+
+template <typename T, int count> int LengthOf(const T(&)[count])
+{
+	return count;
+};

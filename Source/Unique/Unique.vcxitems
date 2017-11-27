@@ -14,6 +14,8 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Drawable.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Scene\Component.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Container\RefCounted.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Container\Str.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Container\Stringid.cpp" />
@@ -61,6 +63,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Buffers\StorageBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Drawable.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Scene\Component.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\AttributeTraits.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Container\Algorithm.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Container\Arrayptr.h" />

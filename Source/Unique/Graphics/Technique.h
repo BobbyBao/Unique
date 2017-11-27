@@ -55,6 +55,7 @@ namespace Unique
 		
 	private:
 		Vector<ShaderStage> shaderStages_;
+		HashMap<uint64_t, class ShaderProgram*> shaderPrograms_;
 	};
 
 

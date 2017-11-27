@@ -51,8 +51,8 @@ namespace Unique
 			return 0;
 		}
 
-		template<class TransferFunction> inline
-		static void TransferEnum(value_type& data, const char* enumNames[], int count, TransferFunction& transfer)
+		template<class TransferFunction, int count> inline
+		static void TransferEnum(value_type& data, const char*(&enumNames)[count] , TransferFunction& transfer)
 		{
 			if (transfer.IsReading())
 			{
