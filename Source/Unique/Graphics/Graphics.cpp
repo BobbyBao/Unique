@@ -29,10 +29,8 @@ namespace Unique
 
 	// Render system
 	UPtr<LLGL::RenderSystem>        renderer;
-
 	// Main render context
 	LLGL::RenderContext*			graphicsContext = nullptr;
-
 	// Main command buffer
 	LLGL::CommandBuffer*            commands = nullptr;
 
@@ -48,11 +46,6 @@ namespace Unique
 		{
 			LLGL::RenderSystem::Unload(std::move(renderer));
 		}
-	}
-
-	void Graphics::SetDebug(bool val)
-	{
-		debugger_ = val;
 	}
 
 	Window* Graphics::Initialize(const std::string& rendererModule, const LLGL::Size& size)
@@ -112,6 +105,7 @@ namespace Unique
 		std::cout << "  shading language: " << info.shadingLanguageName << std::endl;
 
 		FrameNoRenderWait();
+
 		return &(Window&)graphicsContext->GetSurface();
 	}
 
@@ -131,11 +125,38 @@ namespace Unique
 		SetScissor({ 0, 0, videoMode.resolution.x, videoMode.resolution.y });
 	}
 
+	const std::string Graphics::GetRenderName() const
+	{
+		return renderer->GetName();
+	}
+
+	void Graphics::SetDebug(bool val)
+	{
+		debugger_ = val;
+	}
+
+	const Size& Graphics::GetResolution() const
+	{
+		return graphicsContext->GetVideoMode().resolution;
+	}
+
+	bool Graphics::IsOpenGL() const
+	{
+		return (renderer->GetRendererID() == LLGL::RendererID::OpenGL);
+	}
+
 	SPtr<VertexBuffer> Graphics::CreateVertexBuffer(uint size, const LLGL::VertexFormat& vertexFormat, void* data)
 	{
 		SPtr<VertexBuffer> vb(new VertexBuffer());
 		vb->handle_ = renderer->CreateBuffer(VertexBufferDesc(size * vertexFormat.stride, vertexFormat), data);
 		return vb;
+	}
+
+	SPtr<IndexBuffer> Graphics::CreateIndexBuffer(uint size, const LLGL::IndexFormat& indexFormat, void* data)
+	{
+		SPtr<IndexBuffer> ib(new IndexBuffer());
+		ib->handle_ = renderer->CreateBuffer(IndexBufferDesc(size * indexFormat.GetFormatSize(), indexFormat), data);
+		return ib;
 	}
 
 
@@ -149,6 +170,19 @@ namespace Unique
 		postComands_.push_back(cmd);
 	}
 
+	void Graphics::ExecuteCommands(CommandQueue& cmds)
+	{
+		if (!cmds.empty())
+		{
+			for (auto& fn : cmds)
+			{
+				fn();
+			}
+
+			cmds.clear();
+		}
+	}
+
 	void Graphics::BeginFrame()
 	{
 	}
@@ -158,6 +192,32 @@ namespace Unique
 		RenderSemWait();
 
 		FrameNoRenderWait();
+	}
+
+	void Graphics::BeginRender()
+	{
+
+	}
+
+	void Graphics::EndRender()
+	{
+		graphicsContext->Present();
+
+		if (MainSemWait())
+		{
+			{
+				UNIQUE_PROFILE(ExecCommandsPre);
+				ExecuteCommands(preComands_);
+			}
+
+			{
+				UNIQUE_PROFILE(ExecCommandsPost);
+				ExecuteCommands(postComands_);
+			}
+
+			RenderSemPost();
+
+		}
 	}
 
 	void Graphics::Clear(uint flags)
@@ -269,19 +329,6 @@ namespace Unique
 		MainSemPost();
 	}
 	
-	void Graphics::ExecuteCommands(CommandQueue& cmds)
-	{
-		if (!cmds.empty())
-		{
-			for (auto& fn : cmds)
-			{
-				fn();
-			}
-
-			cmds.clear();
-		}
-	}
-
 	void Graphics::MainSemPost()
 	{
 		if (!singleThreaded_)
@@ -327,28 +374,6 @@ namespace Unique
 			assert(ok);
 			waitRender_ = timer.GetUSec(false);
 		}
-	}
-
-	void Graphics::RenderFrame()
-	{
-		graphicsContext->Present();
-
-		if (MainSemWait())
-		{
-			{
-				UNIQUE_PROFILE(ExecCommandsPre);
-				ExecuteCommands(preComands_);
-			}
-
-			{
-				UNIQUE_PROFILE(ExecCommandsPost);
-				ExecuteCommands(postComands_);
-			}
-
-			RenderSemPost();
-
-		}
-		
 	}
 
 	void Graphics::Close()

@@ -9,21 +9,7 @@ namespace Unique
 	class IndexBuffer;
 	class Texture;
 
-	using Window = LLGL::Window;
-	using Viewport = LLGL::Viewport;
-	using Scissor = LLGL::Scissor;
-	using RenderTarget = LLGL::RenderTarget;
-	using GraphicsPipeline = LLGL::GraphicsPipeline;
-	using ComputePipeline = LLGL::ComputePipeline;
-	
 	using CommandQueue = Vector<std::function<void()>>;
-
-	enum class RenderFrameResult
-	{
-		Render,
-		Timeout,
-		Exiting
-	};
 
 	class Graphics : public Object
 	{
@@ -32,20 +18,43 @@ namespace Unique
 		Graphics();
 		~Graphics();
 		
-		void SetDebug(bool val);
-
 		Window* Initialize(const std::string& rendererModule, const LLGL::Size& size);
 		void Resize(const LLGL::Size& size);
 
+		const std::string GetRenderName() const;
+		void SetDebug(bool val);
+		const Size& GetResolution() const;
+
+		// Returns the aspect ratio of the render context resolution (X:Y).
+		inline float GetAspectRatio() const
+		{
+			auto resolution = GetResolution().Cast<float>();
+			return (resolution.x / resolution.y);
+		}
+
+		bool IsOpenGL() const;
+
+
+		inline Gs::Matrix4f PerspectiveProjection(float aspectRatio, float near, float far, float fov)
+		{
+			int flags = (IsOpenGL() ? Gs::ProjectionFlags::UnitCube : 0);
+			return Gs::ProjectionMatrix4f::Perspective(aspectRatio, near, far, fov, flags).ToMatrix4();
+		}
+
 		SPtr<VertexBuffer> CreateVertexBuffer(uint size, const LLGL::VertexFormat& vertexFormat, void* data = nullptr);
+		SPtr<IndexBuffer> CreateIndexBuffer(uint size, const LLGL::IndexFormat& indexFormat, void* data = nullptr);
 
-
-		void AddCommand(std::function<void()> cmd);
-		void PostCommand(std::function<void()> cmd);
-
+	
+		//***MainThread***
 		void BeginFrame();
 		void EndFrame();
+		void AddCommand(std::function<void()> cmd);
+		void PostCommand(std::function<void()> cmd);
+		//****************
 
+		//Execute in render thread
+		void BeginRender();
+		void EndRender();
 		void Clear(uint flags);
 		void SetRenderTarget(RenderTarget* renderTarget);
 		void SetViewport(const Viewport& viewport);
@@ -114,17 +123,15 @@ namespace Unique
         */
         void Dispatch(unsigned int groupSizeX, unsigned int groupSizeY, unsigned int groupSizeZ);
 
-		//Execute in render thread
-		void RenderFrame();
 		void Close();
 	protected:
+		void ExecuteCommands(CommandQueue& cmds);
 		void FrameNoRenderWait();
 		void MainSemPost();
 		bool MainSemWait(int _msecs = -1);
 		void SwapContext();
 		void RenderSemPost();
 		void RenderSemWait();
-		void ExecuteCommands(CommandQueue& cmds);
 
 		bool debugger_ = false;
 		bool vsync_ = false;

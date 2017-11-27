@@ -14,6 +14,15 @@ namespace Unique
 	using Quaternion = Gs::Quaternion;
 	using Color = LLGL::ColorRGBA;
 
+	//! 2D point (integer)
+	using Pointf = Gs::Vector2f;
+	//! 2D size (integer)
+	using Sizef = Gs::Vector2f;
+	//! 2D point (integer)
+	using Point = Gs::Vector2i;
+	//! 2D size (integer)
+	using Size = Gs::Vector2i;
+
 	static const uint M_MAX_UNSIGNED = 0xffffffff;
 
 	/// Update a hash with the given 8-bit value using the SDBM algorithm.

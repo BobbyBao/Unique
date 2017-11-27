@@ -3,7 +3,6 @@
 
 namespace Unique
 {
-
 	class GfxObject
 	{
 	public:
@@ -23,6 +22,8 @@ namespace Unique
 
 		State state_;
 	};
+
+	extern UPtr<LLGL::RenderSystem>        renderer;
 
 	template<class T = void>
 	class TGfxObject : public GfxObject

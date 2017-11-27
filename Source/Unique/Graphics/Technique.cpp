@@ -4,6 +4,8 @@
 
 namespace Unique
 {
+	extern UPtr<LLGL::RenderSystem>        renderer;
+
 	uObject(Pass)
 	{
 		uFactory("Graphics")

@@ -29,12 +29,7 @@ namespace Unique
 	class Application : public Object
 	{
 	public:
-		Application(
-			const std::wstring& title,
-			const LLGL::Size&   resolution = { 800, 600 },
-			unsigned int        multiSampling = 8,
-			bool                vsync = true,
-			bool                debugger = true);
+		Application(const std::wstring& title, LLGL::Size resolution = { 800, 600 });
 
 		virtual ~Application();
 
@@ -45,20 +40,17 @@ namespace Unique
 	protected:
 		virtual void Initialize();
 		virtual void Terminate();
-
-		// Used by the window resize handler
-		bool IsLoadingDone() const
-		{
-			return loadingDone_;
-		}
-
+		virtual void OnPreRender();
 		virtual void OnPostRender();
 
 		static Vector<String>			argv_;
 		static std::string				rendererModule_;
-		std::wstring					title_;
-		Window*							window_ = nullptr;
+		std::wstring					title_;	
 		LLGL::Size						resolution_;
+		uint							multiSampling_ = 8;
+		bool							vsync_ = true;
+		bool							debugger = true;
+		Window*							window_ = nullptr;
 		bool                            loadingDone_ = false;
 		std::shared_ptr<LLGL::Input>    input;
 		UPtr<Context>					context_;

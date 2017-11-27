@@ -9,6 +9,12 @@ using namespace Unique;
 
 UNIQUE_IMPLEMENT_MAIN(Unique::Sample);
 
+namespace Unique
+{
+	extern UPtr<LLGL::RenderSystem>        renderer;
+
+}
+
 Sample::Sample() :	Application { L"Unique Engine" }
 {
 }
@@ -16,14 +22,7 @@ Sample::Sample() :	Application { L"Unique Engine" }
 void Sample::Initialize()
 {
 	Application::Initialize();
-
-	// Check if samplers are supported
-	const auto& renderCaps = renderer->GetRenderingCaps();
-
-	if (!renderCaps.hasSamplers)
-		UNIQUE_LOGERROR("samplers are not supported by this renderer");
-
-	// Create all graphics objects
+		// Create all graphics objects
 	auto vertexFormat = CreateBuffers();
 
 	shaderProgram = LoadStandardShaderProgram(vertexFormat);
@@ -88,6 +87,7 @@ void Sample::CreatePipelines()
 	{
 		pipelineDesc.shaderProgram = shaderProgram;
 	}
+
 	pipeline = renderer->CreateGraphicsPipeline(pipelineDesc);
 }
 

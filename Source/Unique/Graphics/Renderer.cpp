@@ -48,7 +48,7 @@ namespace Unique
 
 	void Renderer::End()
 	{
-		graphics.RenderFrame();
+		graphics.EndRender();
 	}
 
 	void Renderer::Stop()

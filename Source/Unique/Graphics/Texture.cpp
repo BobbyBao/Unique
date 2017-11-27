@@ -5,6 +5,8 @@
 
 namespace Unique
 {
+	extern UPtr<LLGL::RenderSystem>        renderer;
+
 	Texture::Texture() : sampler_(nullptr)
 	{
 	}

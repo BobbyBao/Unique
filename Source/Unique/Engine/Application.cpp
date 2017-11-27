@@ -31,13 +31,10 @@ namespace Unique
 	Vector<String> Application::argv_;
 	std::string Application::rendererModule_;
 	
-	Application::Application(
-		const std::wstring& title,
-		const LLGL::Size&   resolution,
-		unsigned int        multiSampling,
-		bool                vsync,
-		bool                debugger) :
-		context_(new Context()), title_(title), resolution_(resolution)
+	Application::Application(const std::wstring& title, LLGL::Size resolution) :
+		title_(title), 
+		resolution_(resolution),
+		context_(new Context())
 	{
 		context_->RegisterSubsystem<FileSystem>();
 
@@ -58,9 +55,6 @@ namespace Unique
 		Graphics& graphics = Subsystem<Graphics>();
 		window_ = graphics.Initialize(rendererModule_, resolution_);
 		
-		auto rendererName = renderer->GetName();
-		window_->SetTitle(title_ + L" ( " + std::wstring(rendererName.begin(), rendererName.end()) + L" )");
-
 		// Add input event listener to window
 		input = std::make_shared<LLGL::Input>();
 		window_->AddEventListener(input);
@@ -75,13 +69,11 @@ namespace Unique
 		behavior.disableClearOnResize = true;
 		behavior.moveAndResizeTimerID = 1;
 		window_->SetBehavior(behavior);
-
-		// Add window resize listener
 		window_->AddEventListener(std::make_shared<ResizeEventHandler>(*this));
-		
-		// Show window
 		window_->Show();
 
+		auto rendererName = graphics.GetRenderName();
+		window_->SetTitle(title_ + L" ( " + std::wstring(rendererName.begin(), rendererName.end()) + L" )");
 		// Store information that loading is done
 		loadingDone_ = true;
 	}
@@ -101,10 +93,12 @@ namespace Unique
 		while (window_->ProcessEvents() && !input->KeyDown(LLGL::Key::Escape))
 		{
 			renderer.Begin();
-
-			OnPostRender();
+			
+			OnPreRender();
 
 			renderer.Render();
+
+			OnPostRender();
 
 			renderer.End();
 		}
@@ -114,6 +108,11 @@ namespace Unique
 		Terminate();
 
 		context_->Stop();
+	}
+
+	
+	void Application::OnPreRender()
+	{
 	}
 
 	void Application::OnPostRender()
