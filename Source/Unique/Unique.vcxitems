@@ -61,6 +61,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Buffers\StorageBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\AttributeTraits.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Container\Algorithm.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Container\Arrayptr.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Container\Container.h" />

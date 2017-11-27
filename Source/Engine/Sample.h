@@ -19,7 +19,7 @@ namespace Unique
 	private:
 		virtual void Initialize();
 		virtual void Terminate();
-		virtual void OnDrawFrame() override;
+		virtual void OnPostRender() override;
 
 		LLGL::ShaderProgram*    shaderProgram = nullptr;
 		LLGL::GraphicsPipeline* pipeline = nullptr;

@@ -32,7 +32,6 @@ void Sample::Initialize()
 	CreatePipelines();
 	CreateTextures();
 
-	/*
 	SPtr<Technique> shader(new Technique());
 	shader->SetName("test_shader");
 	Pass* pass = shader->AddPass();
@@ -47,7 +46,7 @@ void Sample::Initialize()
 	reader.Load("test.bin", s);
 
 	JsonWriter jsonWriter;
-	jsonWriter.Save("test.json", s);*/
+	jsonWriter.Save("test.json", s);
 
 }
 
@@ -98,7 +97,7 @@ void Sample::CreateTextures()
 	colorMap = Unique::Texture::Load(texFilename);
 }
 
-void Sample::OnDrawFrame()
+void Sample::OnPostRender()
 {
 	// Examine user input
 	if (input->KeyDown(LLGL::Key::Tab))

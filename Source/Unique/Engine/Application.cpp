@@ -94,27 +94,29 @@ namespace Unique
 	{
 		Initialize();
 	
-		Graphics& graphics = Subsystem<Graphics>();
+		Renderer& renderer = Subsystem<Renderer>();
 
 		context_->Run();
 
 		while (window_->ProcessEvents() && !input->KeyDown(LLGL::Key::Escape))
 		{
-		//	profilerObj_->ResetCounters();
+			renderer.Begin();
 
-			OnDrawFrame();
+			OnPostRender();
 
-			graphics.RenderFrame();
+			renderer.Render();
+
+			renderer.End();
 		}
 
-		graphics.RenderFrame();
+		renderer.Stop();
 
 		Terminate();
 
 		context_->Stop();
 	}
 
-	void Application::OnDrawFrame()
+	void Application::OnPostRender()
 	{
 	}
 

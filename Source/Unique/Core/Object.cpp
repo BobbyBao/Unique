@@ -64,7 +64,7 @@ void Object::Transfer(TransferFunction& transfer)
 	{
 		StringID tmp = GetType();
 
-		transfer.TransferAttribute("Type", tmp, TF_READONLY);
+		transfer.TransferAttribute("Type", tmp, AttributeFlag::FileWrite);
 	}
 
 	TransferTypeInfo(transfer, typeInfo, this);

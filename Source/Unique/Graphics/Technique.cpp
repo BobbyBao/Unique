@@ -7,15 +7,15 @@ namespace Unique
 	uObject(Pass)
 	{
 		uFactory("Graphics")
-		uAttribute("ShaderStages", shaderStages_, Vector<ShaderStage>, TF_DEFAULT)
+		uAttribute("ShaderStages", shaderStages_)
 	}
 
 	uObject(Technique)
 	{
 		uFactory("Graphics")
-		uAccessor("Name", GetName, SetName, String, TF_DEFAULT)
-		uAttribute("ShaderDefines", shaderDefines_, String, TF_DEFAULT)
-		uAttribute("ShaderPasses", passes_, Vector<SPtr<Pass>>, TF_DEFAULT)
+		uAccessor("Name", GetName, SetName)
+		uAttribute("ShaderDefines", shaderDefines_)
+		uAttribute("ShaderPasses", passes_)
 	}
 
 	Map< LLGL::ShaderProgram*, ShaderProgramRecall > shaderPrograms_;

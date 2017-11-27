@@ -16,7 +16,7 @@ public:\
 		bool IsReading() const { return state_ == Unique::TransferState::Reading;}\
 		bool IsWriting() const { return state_ == Unique::TransferState::Writing; }\
 		template<class T>\
-		void TransferAttribute(const char* name, T& data, int metaFlag = 0)\
+		void TransferAttribute(const char* name, T& data, AttributeFlag metaFlag = AttributeFlag::Default)\
 		{\
 			metaFlag_ = metaFlag;\
 			if (StartAttribute(name))\
@@ -55,7 +55,7 @@ public:\
 		{\
 			TransferAttribute(name, val);\
 		}\
-		int metaFlag_;\
+		AttributeFlag metaFlag_;\
 		Unique::TransferState state_;\
 
 

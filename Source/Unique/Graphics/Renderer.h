@@ -11,12 +11,15 @@ namespace Unique
 		Renderer();
 		~Renderer();
 
-		
+		void Begin();
+		void Render();
+		void End();
+		void Stop();
 	private:
 		void Handle(StringID type, const EndFrame& args);
 
 		void RenderUpdate();
-		void Render();
+	
 
 		class Graphics& graphics;
 		Vector<SPtr<View>> views_;

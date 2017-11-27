@@ -115,7 +115,8 @@ namespace Unique
         void Dispatch(unsigned int groupSizeX, unsigned int groupSizeY, unsigned int groupSizeZ);
 
 		//Execute in render thread
-		RenderFrameResult RenderFrame(int _msecs = -1);
+		void RenderFrame();
+		void Close();
 	protected:
 		void FrameNoRenderWait();
 		void MainSemPost();

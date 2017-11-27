@@ -125,7 +125,7 @@ namespace Unique
 
 		SetRenderTarget(nullptr);
 
-		SetViewport(Viewport(0, 0, size.x, size.y));
+		SetViewport(Viewport(0, 0, (float)size.x, (float)size.y));
 
 		// Update scissor
 		SetScissor({ 0, 0, videoMode.resolution.x, videoMode.resolution.y });
@@ -329,11 +329,11 @@ namespace Unique
 		}
 	}
 
-	RenderFrameResult Graphics::RenderFrame(int _msecs)
+	void Graphics::RenderFrame()
 	{
 		graphicsContext->Present();
 
-		if (MainSemWait(_msecs))
+		if (MainSemWait())
 		{
 			{
 				UNIQUE_PROFILE(ExecCommandsPre);
@@ -348,19 +348,13 @@ namespace Unique
 			RenderSemPost();
 
 		}
-		else
-		{
-			return RenderFrameResult::Timeout;
-		}
+		
+	}
 
-		if (exit_)
-		{
-			MainSemWait();
-			RenderSemPost();
-			return RenderFrameResult::Exiting;
-		}
-
-		return RenderFrameResult::Render;
+	void Graphics::Close()
+	{
+		MainSemWait();
+		RenderSemPost();
 	}
 
 }

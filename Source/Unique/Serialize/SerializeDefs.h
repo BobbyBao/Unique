@@ -1,20 +1,21 @@
 #pragma once
 
-enum TransferMetaFlags
+enum class AttributeFlag
 {
-	TF_DEFAULT = 0,
-	TF_NOEDIT = 1,
-	TF_READONLY = 2
+	Editable = 1,
+	FileRead = 2,
+	FileWrite = 4,
+	Default = 7,
 };
 
-#define uTransferField(NAME, FIELD, FLAG) transfer.TransferAttribute (NAME, FIELD, FLAG);
+#define uTransferField(NAME, FIELD, ...) transfer.TransferAttribute (NAME, FIELD, ##__VA_ARGS__);
 
-#define uTransferAccessor(NAME, GET, SET, TYPE, FLAG)\
+#define uTransferAccessor(NAME, GET, SET, TYPE, ...)\
 {\
 	TYPE tmp;\
 	if (transfer.IsWriting ())\
 		tmp = GET(); \
-	transfer.TransferAttribute(NAME, tmp, FLAG); \
+	transfer.TransferAttribute(NAME, tmp, ##__VA_ARGS__); \
 	if (transfer.IsReading ())\
 		SET (tmp);\
 }

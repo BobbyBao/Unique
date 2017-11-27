@@ -52,7 +52,7 @@ namespace Unique
 			return loadingDone_;
 		}
 
-		virtual void OnDrawFrame();
+		virtual void OnPostRender();
 
 		static Vector<String>			argv_;
 		static std::string				rendererModule_;

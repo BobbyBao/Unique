@@ -5,6 +5,7 @@
 #include "../Serialize/BinaryWriter.h"
 #include "../Serialize/JsonReader.h"
 #include "../Serialize/JsonWriter.h"
+#include "AttributeTraits.h"
 
 namespace Unique
 {
@@ -12,8 +13,8 @@ namespace Unique
 	class Attribute
 	{
 	public:
-		Attribute(const String& name, uint mode)
-			: name_(name), mode_(mode)
+		Attribute(const String& name, AttributeFlag flag)
+			: name_(name), flag_(flag)
 		{
 		}
 
@@ -27,7 +28,7 @@ namespace Unique
 
 		/// Name.
 		String name_;
-		uint mode_;
+		AttributeFlag flag_;
 		uint type_;
 	};
 
@@ -35,8 +36,8 @@ namespace Unique
 	class TAttribute : public Attribute
 	{
 	public:
-		TAttribute(const String& name, uint offset, unsigned mode)
-			: Attribute(name, mode), offset_(offset)
+		TAttribute(const String& name, size_t offset, AttributeFlag flag)
+			: Attribute(name, flag), offset_(offset)
 		{
 		}
 
@@ -77,50 +78,12 @@ namespace Unique
 		void VisitImpl(Visitor& visitor, void* ptr)
 		{
 			T* dest = (T*)(reinterpret_cast<unsigned char*>(ptr) + offset_);
-			visitor.TransferAttribute(name_.CString(), *dest, mode_);
+			visitor.TransferAttribute(name_.CString(), *dest, flag_);
 		}
 
-		uint offset_;
+		size_t offset_;
 	};
-
-
-	/// Attribute trait (default use const reference for object type).
-	template <typename T> struct AttributeTrait
-	{
-		/// Get function return type.
-		typedef const T& ReturnType;
-		/// Set function parameter type.
-		typedef const T& ParameterType;
-	};
-
-	/// Int attribute trait.
-	template <> struct AttributeTrait<int>
-	{
-		typedef int ReturnType;
-		typedef int ParameterType;
-	};
-
-	/// unsigned attribute trait.
-	template <> struct AttributeTrait<unsigned>
-	{
-		typedef unsigned ReturnType;
-		typedef unsigned ParameterType;
-	};
-
-	/// Bool attribute trait.
-	template <> struct AttributeTrait<bool>
-	{
-		typedef bool ReturnType;
-		typedef bool ParameterType;
-	};
-
-	/// Float attribute trait.
-	template <> struct AttributeTrait<float>
-	{
-		typedef float ReturnType;
-		typedef float ParameterType;
-	};
-
+	
 	/// Template implementation of the attribute accessor invoke helper class.
 	template <typename T, typename U, typename Trait> class AttributeAccessorImpl : public Attribute
 	{
@@ -129,7 +92,7 @@ namespace Unique
 		typedef void (T::*SetFunctionPtr)(typename Trait::ParameterType);
 
 		/// Construct with function pointers.
-		AttributeAccessorImpl(const String& name, GetFunctionPtr getFunction, SetFunctionPtr setFunction, unsigned mode) :
+		AttributeAccessorImpl(const String& name, GetFunctionPtr getFunction, SetFunctionPtr setFunction, AttributeFlag mode) :
 			getFunction_(getFunction),
 			setFunction_(setFunction),
 			Attribute(name, mode)
@@ -183,14 +146,14 @@ namespace Unique
 			if (visitor.IsReading())
 			{
 				U value;
-				visitor.TransferAttribute(name_.CString(), value, mode_);
+				visitor.TransferAttribute(name_.CString(), value, flag_);
 				(classPtr->*setFunction_)(value);
 			}
 
 			if (visitor.IsWriting())
 			{
 				U value = (classPtr->*getFunction_)();
-				visitor.TransferAttribute(name_.CString(), value, mode_);
+				visitor.TransferAttribute(name_.CString(), value, flag_);
 			}
 		}
 
@@ -198,13 +161,5 @@ namespace Unique
 		SetFunctionPtr setFunction_;
 	};
 
-
-	/// Define an attribute that points to a memory offset in the object.
-#define uAttribute(name, variable, typeName, mode)\
-	ClassName::GetTypeInfoStatic()->RegisterAttribute(new Unique::TAttribute<typeName>(name, offsetof(ClassName, variable), mode));
-
-/// Define an attribute that uses get and set functions.
-#define uAccessor(name, getFunction, setFunction, typeName, mode)\
-	ClassName::GetTypeInfoStatic()->RegisterAttribute(new Unique::AttributeAccessorImpl<ClassName, typeName, Unique::AttributeTrait<typeName > >(name, &ClassName::getFunction, &ClassName::setFunction, mode));
 
 }

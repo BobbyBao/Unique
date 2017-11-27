@@ -31,13 +31,28 @@ namespace Unique
 		graphics.EndFrame();
 	}
 
+
+	void Renderer::Begin()
+	{
+		//	profilerObj_->ResetCounters();
+	}
+
 	void Renderer::Render()
 	{
 		for (auto& view : views_)
 		{
 			view->Render();
 		}
+
 	}
 
+	void Renderer::End()
+	{
+		graphics.RenderFrame();
+	}
 
+	void Renderer::Stop()
+	{
+		graphics.Close();
+	}
 }

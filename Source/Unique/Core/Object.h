@@ -166,7 +166,7 @@ public:
 		static RegisterRuntime s_##typeName##Callbacks(typeName::RegisterObject, nullptr);\
 		void typeName::RegisterObject(Context* context)
 
-#define uFactory(category)\
-		context->RegisterFactory<ClassName>(category);
+#define uFactory(...)\
+		context->RegisterFactory<ClassName>(##__VA_ARGS__);
 
 }
