@@ -15,6 +15,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Drawable.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Shader\ShaderUtil.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Scene\Component.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Container\RefCounted.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Container\Str.cpp" />
@@ -39,7 +40,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Material.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Model.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Renderer.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Technique.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Shader\Shader.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Texture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\View.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)IO\AbstractFile.cpp" />
@@ -64,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Drawable.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Shader\ShaderUtil.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Scene\Component.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\AttributeTraits.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Container\Algorithm.h" />
@@ -101,7 +103,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Material.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Model.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Renderer.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Technique.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Shader\Shader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Texture.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\View.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)IO\AbstractFile.h" />

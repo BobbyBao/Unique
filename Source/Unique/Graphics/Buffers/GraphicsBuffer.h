@@ -12,6 +12,8 @@ namespace Unique
 		GraphicsBuffer();
 		~GraphicsBuffer();
 
+		uint elementSize_ = 0;
+		Vector<byte> data_;
 		LLGL::BufferDescriptor bufferDesc_;
 	};
 

@@ -5,6 +5,7 @@ namespace Unique
 {
 	uObject(GraphicsBuffer)
 	{
+		uAttribute("Data", data_)
 	}
 
 	GraphicsBuffer::GraphicsBuffer()

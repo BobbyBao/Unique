@@ -12,21 +12,10 @@ namespace Unique
 {
 
 	template<>
-	class SerializeTraits<std::string> : public SerializeTraitsBase<std::string>
+	class SerializeTraits<std::string> : public SerializeTraitsPrimitive<std::string>
 	{
 	public:
-		typedef std::string	value_type;
-		inline static const char* GetTypeString(value_type*) { return "string"; }
-		inline static bool IsBasicType() { return true; }
-
-		template<class TransferFunction> inline
-			static void Transfer(value_type& data, TransferFunction& transfer)
-		{
-			transfer.TransferPrimitive(data);
-		}
-
 		static bool IsContinousMemoryArray() { return true; }
-		
 	};
 
 
@@ -79,15 +68,11 @@ namespace Unique
 	public:
 
 		typedef std::vector<unsigned char, Allocator>	value_type;
-
-		inline static const char* GetTypeString(void*) { return "vector"; }
-		inline static bool AllowTransferOptimization() { return false; }
-
+		
 		template<class TransferFunction> inline
 			static void Transfer(value_type& data, TransferFunction& transfer)
 		{
 			transfer.TransferArray(data);
-			transfer.Align();
 		}
 
 		static bool IsContinousMemoryArray() { return true; }
@@ -108,7 +93,6 @@ namespace Unique
 			transfer.TransferArray(data);
 		}
 
-		static bool IsContinousMemoryArray() { return false; }
 		static void ResizeSTLStyleArray(value_type& data, int rs) { data.resize(rs); }
 	};
 
@@ -116,12 +100,11 @@ namespace Unique
 	class SerializeTraits<std::list<T, Allocator> > : public SerializeTraitsBase<std::list<T, Allocator> >
 	{
 	public:
-
 		typedef std::list<T, Allocator>	value_type;
 		DEFINE_GET_TYPESTRING_CONTAINER(vector)
 
-			template<class TransferFunction> inline
-			static void Transfer(value_type& data, TransferFunction& transfer)
+		template<class TransferFunction> inline
+		static void Transfer(value_type& data, TransferFunction& transfer)
 		{
 			transfer.TransferArray(data);
 		}
@@ -134,17 +117,14 @@ namespace Unique
 	class SerializeTraits<std::pair<FirstClass, SecondClass> > : public SerializeTraitsBase<std::pair<FirstClass, SecondClass> >
 	{
 	public:
-
 		typedef std::pair<FirstClass, SecondClass>	value_type;
-		inline static const char* GetTypeString(void*) { return "pair"; }
-		inline static bool AllowTransferOptimization() { return false; }
 		inline static bool IsBasicType() { return true; }
 
-		template<class TransferFunction> inline
-			static void Transfer(value_type& data, TransferFunction& transfer)
+		template<class TransferFunction>
+		inline static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			transfer.Transfer(data.first, "key", TF_DEFAULT);
-			transfer.Transfer(data.second, "value", TF_DEFAULT);
+			transfer.Transfer(data.first, "key", AttributeFlag::Default);
+			transfer.Transfer(data.second, "value", AttributeFlag::Default);
 		}
 	};
 
@@ -152,14 +132,11 @@ namespace Unique
 	class SerializeTraits<std::map<FirstClass, SecondClass, Compare, Allocator> > : public SerializeTraitsBase<std::map<FirstClass, SecondClass, Compare, Allocator> >
 	{
 	public:
-
 		typedef std::map<FirstClass, SecondClass, Compare, Allocator>	value_type;
-		DEFINE_GET_TYPESTRING_MAP_CONTAINER(map)
 
-			template<class TransferFunction> inline
-			static void Transfer(value_type& data, TransferFunction& transfer)
+		template<class TransferFunction> inline
+		static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			//		AssertIf(transfer.IsRemapPPtrTransfer() && SerializeTraits<FirstClass>::MightContainPPtr() && transfer.IsReadingPPtr());
 			transfer.TransferMap(data);
 		}
 	};
@@ -168,14 +145,11 @@ namespace Unique
 	class SerializeTraits<std::unordered_map<FirstClass, SecondClass, Compare, Allocator> > : public SerializeTraitsBase<std::map<FirstClass, SecondClass, Compare, Allocator> >
 	{
 	public:
-
 		typedef std::unordered_map<FirstClass, SecondClass, Compare, Allocator>	value_type;
-		DEFINE_GET_TYPESTRING_MAP_CONTAINER(map)
-
-			template<class TransferFunction> inline
-			static void Transfer(value_type& data, TransferFunction& transfer)
+		
+		template<class TransferFunction> inline
+		static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			//		AssertIf(transfer.IsRemapPPtrTransfer() && SerializeTraits<FirstClass>::MightContainPPtr() && transfer.IsReadingPPtr());
 			transfer.TransferMap(data);
 		}
 	};
@@ -184,14 +158,11 @@ namespace Unique
 	class SerializeTraits<std::multimap<FirstClass, SecondClass, Compare, Allocator> > : public SerializeTraitsBase<std::multimap<FirstClass, SecondClass, Compare, Allocator> >
 	{
 	public:
-
 		typedef std::multimap<FirstClass, SecondClass, Compare, Allocator>	value_type;
-		DEFINE_GET_TYPESTRING_MAP_CONTAINER(map)
 
-			template<class TransferFunction> inline
-			static void Transfer(value_type& data, TransferFunction& transfer)
+		template<class TransferFunction>
+		inline static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			AssertIf(transfer.IsRemapPPtrTransfer() && SerializeTraits<FirstClass>::MightContainPPtr() && transfer.IsReadingPPtr());
 			transfer.TransferMap(data);
 		}
 	};
@@ -201,14 +172,12 @@ namespace Unique
 	class SerializeTraits<std::set<T, Compare, Allocator> > : public SerializeTraitsBase<std::set<T, Compare, Allocator> >
 	{
 	public:
-
 		typedef std::set<T, Compare, Allocator>	value_type;
 		DEFINE_GET_TYPESTRING_CONTAINER(set)
 
-			template<class TransferFunction> inline
-			static void Transfer(value_type& data, TransferFunction& transfer)
+		template<class TransferFunction> 
+		inline static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			AssertIf(transfer.IsRemapPPtrTransfer() && transfer.IsReadingPPtr());
 			transfer.TransferMap(data);
 		}
 	};

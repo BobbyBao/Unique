@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/Application.h"
-#include "Graphics/Technique.h"
+#include "Graphics/Shader/Shader.h"
 
 namespace Unique
 {
@@ -13,15 +13,13 @@ namespace Unique
 	public:
 		Sample();
 
-		LLGL::VertexFormat CreateBuffers();
-		void CreatePipelines();
-		void CreateTextures();
+		VertexFormat CreateBuffers();
 	private:
 		virtual void Initialize();
 		virtual void Terminate();
 		virtual void OnPostRender() override;
 
-		LLGL::ShaderProgram*    shaderProgram = nullptr;
+		ShaderProgram*    shaderProgram = nullptr;
 		LLGL::GraphicsPipeline* pipeline = nullptr;
 		SPtr<VertexBuffer>      vertexBuffer = nullptr;
 		SPtr<Unique::Texture>   colorMap = nullptr;

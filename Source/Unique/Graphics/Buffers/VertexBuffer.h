@@ -10,7 +10,7 @@ namespace Unique
 		VertexBuffer();
 		~VertexBuffer();
 
-		LLGL::VertexFormat vertexFormat_;
+		VertexFormat vertexFormat_;
 	};
 
 

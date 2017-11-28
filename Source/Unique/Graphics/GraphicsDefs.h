@@ -13,12 +13,15 @@ namespace Unique
 	using Viewport = LLGL::Viewport;
 	using Scissor = LLGL::Scissor;
 	using RenderTarget = LLGL::RenderTarget;
+
 	using GraphicsPipeline = LLGL::GraphicsPipeline;
 	using ComputePipeline = LLGL::ComputePipeline;
+
 	using VertexFormat = LLGL::VertexFormat;
 	using IndexFormat = LLGL::IndexFormat;
-
+	using StreamOutputFormat = LLGL::StreamOutputFormat;
 	using ShaderType = LLGL::ShaderType;
+	using ShaderProgram = LLGL::ShaderProgram;
 	using PrimitiveTopology = LLGL::PrimitiveTopology;
 
 	template<>

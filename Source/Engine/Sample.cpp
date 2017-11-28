@@ -1,6 +1,6 @@
 #include "Precompiled.h"
 #include "Sample.h"
-#include "Graphics/Technique.h"
+#include "Graphics/Shader/Shader.h"
 #include "Graphics/Texture.h"
 #include "Graphics/Buffers/VertexBuffer.h"
 
@@ -22,15 +22,23 @@ Sample::Sample() :	Application { L"Unique Engine" }
 void Sample::Initialize()
 {
 	Application::Initialize();
-		// Create all graphics objects
+		
+	// Create all graphics objects
 	auto vertexFormat = CreateBuffers();
 
 	shaderProgram = LoadStandardShaderProgram(vertexFormat);
 	auto& constBuffers = shaderProgram->QueryConstantBuffers();
 
-	CreatePipelines();
-	CreateTextures();
+	// Create graphics pipeline
+	LLGL::GraphicsPipelineDescriptor pipelineDesc;
+	{
+		pipelineDesc.shaderProgram = shaderProgram;
+	}
 
+	pipeline = renderer->CreateGraphicsPipeline(pipelineDesc);
+	colorMap = Texture::Load("Assets/colorMap.png");
+	
+	/*
 	SPtr<Technique> shader(new Technique());
 	shader->SetName("test_shader");
 	Pass* pass = shader->AddPass();
@@ -45,7 +53,7 @@ void Sample::Initialize()
 	reader.Load("test.bin", s);
 
 	JsonWriter jsonWriter;
-	jsonWriter.Save("test.json", s);
+	jsonWriter.Save("test.json", s);*/
 
 }
 
@@ -53,10 +61,10 @@ void Sample::Terminate()
 {
 }
 
-LLGL::VertexFormat Sample::CreateBuffers()
+VertexFormat Sample::CreateBuffers()
 {
 	// Specify vertex format
-	LLGL::VertexFormat vertexFormat;
+	VertexFormat vertexFormat;
 	vertexFormat.AppendAttribute({ "position", LLGL::VectorType::Float2 });
 	vertexFormat.AppendAttribute({ "texCoord", LLGL::VectorType::Float2 });
 
@@ -67,34 +75,17 @@ LLGL::VertexFormat Sample::CreateBuffers()
 		Vector2 texCoord;
 	};
 
-	std::vector<Vertex> vertices =
+	Vector<Vertex> vertices =
 	{
 		{ { -1, -3 },{ 0, 4 } },
 		{ { -1,  1 },{ 0, 0 } },
-		{ { 3,  1 },{ 4, 0 } },
+		{ { 3,  1},{ 4, 0 } },
 	};
 
 	// Create vertex buffer
 	vertexBuffer = Subsystem<Graphics>().CreateVertexBuffer((uint)vertices.size(), vertexFormat, vertices.data());
 
 	return vertexFormat;
-}
-
-void Sample::CreatePipelines()
-{
-	// Create graphics pipeline
-	LLGL::GraphicsPipelineDescriptor pipelineDesc;
-	{
-		pipelineDesc.shaderProgram = shaderProgram;
-	}
-
-	pipeline = renderer->CreateGraphicsPipeline(pipelineDesc);
-}
-
-void Sample::CreateTextures()
-{
-	String texFilename = "Assets/colorMap.png";
-	colorMap = Unique::Texture::Load(texFilename);
 }
 
 void Sample::OnPostRender()

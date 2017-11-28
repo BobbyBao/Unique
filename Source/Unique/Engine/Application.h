@@ -19,7 +19,7 @@
 
 #include "../Core/Context.h"
 #include "../Core/Thread.h"
-#include "../Graphics/Technique.h"
+#include "../Graphics/Shader/Shader.h"
 #include "../Resource/Image.h"
 #include "../Graphics/Graphics.h"
 #include "../Graphics/Texture.h"

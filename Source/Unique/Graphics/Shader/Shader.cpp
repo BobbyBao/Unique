@@ -1,18 +1,19 @@
 #include "Precompiled.h"
-#include "Technique.h"
+#include "Shader.h"
 #include "Graphics/Graphics.h"
 
 namespace Unique
 {
 	extern UPtr<LLGL::RenderSystem>        renderer;
 
-	uObject(Pass)
+	uObject(ShaderPass)
 	{
 		uFactory("Graphics")
+		uAttribute("Name", name_)
 		uAttribute("ShaderStages", shaderStages_)
 	}
 
-	uObject(Technique)
+	uObject(Shader)
 	{
 		uFactory("Graphics")
 		uAccessor("Name", GetName, SetName)
@@ -22,23 +23,29 @@ namespace Unique
 
 	Map< LLGL::ShaderProgram*, ShaderProgramRecall > shaderPrograms_;
 
-	Technique::Technique()
+	Shader::Shader()
 	{
 	}
 
-	Technique::~Technique()
+	Shader::~Shader()
 	{
 	}
 
-	Pass* Technique::AddPass(Pass* pass)
+	ShaderPass* Shader::AddPass(ShaderPass* pass)
 	{
 		if (!pass)
 		{
-			pass = new Pass();
+			pass = new ShaderPass();
 		}
 
-		passes_.push_back(SPtr<Pass>(pass));
+		passes_.push_back(SPtr<ShaderPass>(pass));
 		return pass;
+	}
+
+
+	ShaderProgram* Shader::GetShaderProgram(const StringID& pass, uint64_t defines)
+	{
+		return nullptr;
 	}
 
 	static std::string ReadFileContent(const String& filename)

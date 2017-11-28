@@ -23,7 +23,6 @@
 #include "Precompiled.h"
 
 #include "../Core/Context.h"
-//#include "../Core/EventProfiler.h"
 #include "../IO/Log.h"
 #include "CoreEvents.h"
 #include "Thread.h"
@@ -367,14 +366,6 @@ void Context::ApplyFrameLimit()
 #endif
 
     elapsed = frameTimer_.GetUSec(true);
-#ifdef UNIQUE_TESTING
-    if (timeOut_ > 0)
-    {
-        timeOut_ -= elapsed;
-        if (timeOut_ <= 0)
-            Exit();
-    }
-#endif
 
     // If FPS lower than minimum, clamp elapsed time
     if (minFps_)

@@ -14,7 +14,6 @@ namespace Unique
 	public:
 		typedef Unique::SPtr<T> value_type;
 
-		inline static const char* GetTypeString(void* ptr) { return value_type::GetTypeString(); }
 		inline static bool AllowTransferOptimization() { return T::AllowTransferOptimization(); }
 		inline static bool IsObject() { return true; }
 
@@ -30,6 +29,39 @@ namespace Unique
 			transfer.TransferObject(data);
 		}
 
+	};
+
+	template<class T>
+	class SerializeTraits<Vector<T> > : public SerializeTraitsBase<Vector<T> >
+	{
+	public:
+		typedef Vector<T>	value_type;
+		DEFINE_GET_TYPESTRING_CONTAINER(vector)
+
+		template<class TransferFunction>
+		inline static void Transfer(value_type& data, TransferFunction& transfer)
+		{
+			transfer.TransferArray(data);
+		}
+
+		static bool IsContinousMemoryArray() { return true; }
+		static void ResizeSTLStyleArray(value_type& data, int rs) { resize_trimmed(data, rs); }
+	};
+
+	template<>
+	class SerializeTraits<Vector<byte>> : public SerializeTraitsBase<Vector<byte>>
+	{
+	public:
+		typedef Vector<byte>	value_type; 
+
+		template<class TransferFunction>
+		inline static void Transfer(value_type& data, TransferFunction& transfer)
+		{
+			transfer.TransferArray(data);
+		}
+
+		static bool IsContinousMemoryArray() { return true; }
+		static void ResizeSTLStyleArray(value_type& data, int rs) { resize_trimmed(data, rs); }
 	};
 
 	template<class T>
@@ -52,7 +84,7 @@ namespace Unique
 		}
 
 		template<class TransferFunction, int count> inline
-		static void TransferEnum(value_type& data, const char*(&enumNames)[count] , TransferFunction& transfer)
+			static void TransferEnum(value_type& data, const char*(&enumNames)[count], TransferFunction& transfer)
 		{
 			if (transfer.IsReading())
 			{
@@ -68,21 +100,23 @@ namespace Unique
 
 	};
 
-	template<class T>
-	class SerializeTraits<Vector<T> > : public SerializeTraitsBase<Vector<T> >
-	{
-	public:
-
-		typedef Vector<T>	value_type;
-		DEFINE_GET_TYPESTRING_CONTAINER(vector)
-
-		template<class TransferFunction>
-		inline static void Transfer(value_type& data, TransferFunction& transfer)
-		{
-			transfer.TransferArray(data);
-		}
-
-		static bool IsContinousMemoryArray() { return true; }
-		static void ResizeSTLStyleArray(value_type& data, int rs) { resize_trimmed(data, rs); }
-	};
 }
+
+
+#define uEnumTraits(CLASS, ...)\
+	template<>\
+	class SerializeTraits<CLASS> : public SerializeTraitsEnum<CLASS>\
+	{\
+	public:\
+		typedef ShaderType value_type;\
+		template<class TransferFunction>\
+		inline static void Transfer(value_type& data, TransferFunction& transfer)\
+		{\
+			static const char* enumNames[] =\
+			{\
+				"VertexShader", "HullShader", "DomainShader", "GeometryShader",\
+				"FragmentShader", "ComputeShader",\
+			};\
+			TransferEnum<TransferFunction>(data, enumNames, transfer);\
+		}\
+	};

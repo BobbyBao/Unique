@@ -20,8 +20,7 @@ enum class AttributeFlag
 		SET (tmp);\
 }
 
-#define uClass(x, ...) \
-	inline static const char* GetTypeString ()	{ return #x; }	\
+#define uClass(...) \
 	inline static bool AllowTransferOptimization ()	{ return false; } \
 	template<class TransferFunction> \
 	void Transfer(TransferFunction& transfer)\
@@ -29,26 +28,10 @@ enum class AttributeFlag
 transfer.TransferAttributes(##__VA_ARGS__);\
 }
 
-#define DECLARE_SERIALIZE_OPTIMIZE_TRANSFER(x) \
-	inline static const char* GetTypeString ()	{ return #x; }	\
-	inline static bool AllowTransferOptimization ()	{ return true; } \
-	template<class TransferFunction> \
-	void Transfer (TransferFunction& transfer)
-
-#define DEFINE_GET_TYPESTRING_BASICTYPE(x)						\
-inline static const char* GetTypeString (void*)	{ return #x; } \
-inline static bool AllowTransferOptimization ()	{ return true; }\
-inline static bool IsBasicType() { return true; }
 
 #define DEFINE_GET_TYPESTRING_CONTAINER(x)						\
-inline static const char* GetTypeString (void*)	{ return #x; } \
-inline static bool IsObject ()	{ return false; } \
 inline static bool IsBasicType() { return SerializeTraits<T>::IsBasicType(); }
 
-#define DEFINE_GET_TYPESTRING_MAP_CONTAINER(x)						\
-inline static const char* GetTypeString (void*)	{ return #x; } \
-inline static bool IsObject ()	{ return false; } \
-inline static bool IsBasicType() { return false; }
 
 namespace Unique
 {
@@ -60,7 +43,6 @@ namespace Unique
 
 		static int GetByteSize() { return sizeof(value_type); }
 
-		inline static bool AllowTransferOptimization() { return false; }
 		inline static bool IsBasicType() { return false; }
 		inline static bool IsObject() { return false; }
 		inline static bool CreateObject(T& obj, const char* type) { return false; }
@@ -73,17 +55,29 @@ namespace Unique
 	public:
 		typedef T value_type;
 
-		inline static const char* GetTypeString(void* ptr) { return value_type::GetTypeString(); }
-		inline static bool AllowTransferOptimization() { return T::AllowTransferOptimization(); }
-
-		template<class TransferFunction> inline
-		static void Transfer(value_type& data, TransferFunction& transfer)
+		template<class TransferFunction>
+		inline static void Transfer(value_type& data, TransferFunction& transfer)
 		{
 			transfer.Transfer(data);
 		}
 
 	};
 
+	template<class T>
+	class SerializeTraitsPrimitive : public SerializeTraitsBase<T>
+	{
+	public:
+		typedef T value_type;
+
+		inline static bool IsBasicType() { return true; }
+
+		template<class TransferFunction>
+		inline static void Transfer(value_type& data, TransferFunction& transfer)
+		{
+			transfer.TransferPrimitive(data);
+		}
+
+	};
 
 	template<class T>
 	struct NonConstContainerValueType

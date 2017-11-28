@@ -134,15 +134,11 @@ namespace Unique
 	};
 
 	template<>
-	class SerializeTraits<Unique::StringID> : public SerializeTraitsBase<Unique::StringID>
+	class SerializeTraits<Unique::StringID> : public SerializeTraitsPrimitive<Unique::StringID>
 	{
 	public:
-
-		typedef Unique::StringID value_type;
-		DEFINE_GET_TYPESTRING_BASICTYPE(StringID)
-
-			template<class TransferFunction> inline
-			static void Transfer(value_type& data, TransferFunction& transfer)
+		template<class TransferFunction>
+		inline static void Transfer(value_type& data, TransferFunction& transfer)
 		{
 			if (transfer.IsReading())
 			{
