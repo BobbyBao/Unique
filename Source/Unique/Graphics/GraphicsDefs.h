@@ -1,6 +1,7 @@
 #pragma once
 #include <LLGL/LLGL.h>
 #include <LLGL/Utility.h>
+#include <LLGL/GraphicsPipelineFlags.h>
 #include "../Container/Container.h"
 #include "../Serialize/SerializeTraits.h"
 
@@ -14,6 +15,14 @@ namespace Unique
 	using Scissor = LLGL::Scissor;
 	using RenderTarget = LLGL::RenderTarget;
 
+	using CompareOp = LLGL::CompareOp;
+	using DepthState = LLGL::DepthDescriptor;
+	using StencilState = LLGL::StencilDescriptor;
+	using RasterizerState = LLGL::RasterizerDescriptor;
+	using BlendState = LLGL::BlendDescriptor;
+
+	using GraphicsPipelineDescriptor = LLGL::GraphicsPipelineDescriptor;
+
 	using GraphicsPipeline = LLGL::GraphicsPipeline;
 	using ComputePipeline = LLGL::ComputePipeline;
 
@@ -24,47 +33,16 @@ namespace Unique
 	using ShaderProgram = LLGL::ShaderProgram;
 	using PrimitiveTopology = LLGL::PrimitiveTopology;
 
-	template<>
-	class SerializeTraits<PrimitiveTopology> : public SerializeTraitsEnum<PrimitiveTopology>
-	{
-	public:
-		typedef PrimitiveTopology value_type;
-
-		template<class TransferFunction>
-		inline static void Transfer(value_type& data, TransferFunction& transfer)
-		{
-			static const char* primitiveTopology[] =
-			{
+	uEnumTraits(PrimitiveTopology,
 				"PointList", "LineList", "LineStrip", "LineLoop", "LineListAdjacency", "LineStripAdjacency",
 				"TriangleList", "TriangleStrip", "TriangleFan", "TriangleListAdjacency", "TriangleStripAdjacency",
 				"Patches1", "Patches2", "Patches3", "Patches4", "Patches5", "Patches6", "Patches7", "Patches8",
 				"Patches9", "Patches10", "Patches11", "Patches12", "Patches13", "Patches14", "Patches16", "Patches16",
 				"Patches17", "Patches18", "Patches19", "Patches20", "Patches21", "Patches22", "Patches23", "Patches24",
-				"Patches25", "Patches26", "Patches27", "Patches28", "Patches29", "Patches30", "Patches31", "Patches32"
-			};
+				"Patches25", "Patches26", "Patches27", "Patches28", "Patches29", "Patches30", "Patches31", "Patches32")
+	
+	uEnumTraits(ShaderType, "VertexShader", "HullShader", "DomainShader", "GeometryShader",	"FragmentShader", "ComputeShader")
+	uEnumTraits(CompareOp, "Never", "Less", "Equal", "LessEqual", "Greater", "NotEqual", "GreaterEqual", "Ever")
+	uClassTraits(DepthState, "TestEnabled", self.testEnabled, "WriteEnabled", self.writeEnabled)//, "CompareOp", self.compareOp)
 
-			TransferEnum<TransferFunction>(data, primitiveTopology, transfer);
-		}
-
-	};
-
-	template<>
-	class SerializeTraits<ShaderType> : public SerializeTraitsEnum<ShaderType>
-	{
-	public:
-		typedef ShaderType value_type;
-
-		template<class TransferFunction> 
-		inline static void Transfer(value_type& data, TransferFunction& transfer)
-		{
-			static const char* shaderType[] =
-			{
-				"VertexShader", "HullShader", "DomainShader", "GeometryShader",
-				"FragmentShader", "ComputeShader",
-			};
-
-			TransferEnum<TransferFunction>(data, shaderType, transfer);
-		}
-
-	};
 }

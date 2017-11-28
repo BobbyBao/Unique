@@ -38,17 +38,28 @@ void Sample::Initialize()
 	pipeline = renderer->CreateGraphicsPipeline(pipelineDesc);
 	colorMap = Texture::Load("Assets/colorMap.png");
 	
-	/*
-	SPtr<Technique> shader(new Technique());
+	SPtr<Shader> shader(new Shader());
 	shader->SetName("test_shader");
-	Pass* pass = shader->AddPass();
+	ShaderPass* pass = shader->AddPass();
 	pass->GetShaderStages().push_back({ LLGL::ShaderType::Vertex, "Assets/shader.hlsl", "VS", "vs_5_0" });
 	pass->GetShaderStages().push_back({ LLGL::ShaderType::Fragment, "Assets/shader.hlsl", "PS", "ps_5_0" });
 
+	{
+		JsonWriter jsonWriter;
+		jsonWriter.Save("test.json", shader);
+
+		SPtr<Shader> s(new Shader());
+		JsonReader jsonReader;
+		jsonReader.Load("test.json", s);
+
+		jsonWriter.Save("test1.json", s);
+	}
+
+	/*
 	BinaryWriter ser;
 	ser.Save("test.bin", shader);
 
-	SPtr<Technique> s(new Technique());
+	SPtr<Shader> s(new Shader());
 	BinaryReader reader;
 	reader.Load("test.bin", s);
 

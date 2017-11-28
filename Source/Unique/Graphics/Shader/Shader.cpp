@@ -10,6 +10,7 @@ namespace Unique
 	{
 		uFactory("Graphics")
 		uAttribute("Name", name_)
+		uAttribute("DepthState", depthState_)
 		uAttribute("ShaderStages", shaderStages_)
 	}
 

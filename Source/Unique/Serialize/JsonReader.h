@@ -49,7 +49,7 @@ namespace Unique
 		bool StartArray(uint size) { return true; }
 		void EndArray() {}
 		Value* currentNode = nullptr;
-		Value* parentNode = nullptr;
+		Vector<Value*> parentNode;
 	};
 
 	template<class T>
@@ -104,15 +104,15 @@ namespace Unique
 			return false;
 		}
 
-		parentNode = currentNode;
+		parentNode.push_back(currentNode);
 		currentNode = &node->value;
 		return true;
 	}
 
 	inline void JsonReader::EndAttribute()
 	{
-		currentNode = parentNode;
-		parentNode = nullptr;
+		currentNode = parentNode.back();
+		parentNode.pop_back();
 	}
 
 	template<class T>
@@ -217,6 +217,12 @@ namespace Unique
 	inline void JsonReader::TransferPrimitive(T& data)
 	{
 	//	data = FromString<T>(currentNode->GetString());
+	}
+
+	template<>
+	inline void JsonReader::TransferPrimitive<String>(String& data)
+	{
+		data = currentNode->GetString();
 	}
 
 	template<>

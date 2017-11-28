@@ -55,9 +55,14 @@ namespace Unique
 		Vector<ShaderStage>& GetShaderStages() { return  shaderStages_; }
 		
 	private:
-		StringID		name_;
-		Vector<ShaderStage> shaderStages_;
-		GraphicsPipeline* pipeline_;
+		StringID					name_;
+		DepthState					depthState_;
+		StencilState				stencilState_;
+		RasterizerState				rasterizerState_;
+		BlendState					blendState_;
+		Vector<ShaderStage>			shaderStages_;
+
+		GraphicsPipeline*			pipeline_;
 		HashMap<uint64_t, ShaderProgram*> shaderPrograms_;
 	};
 

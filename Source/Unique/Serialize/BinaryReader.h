@@ -40,7 +40,7 @@ namespace Unique
 
 		mpack_tree_t tree_;
 		mpack_node_t currentNode_;
-		mpack_node_t parentNode_;
+		Vector<mpack_node_t> parentNode_;
 	};
 	
 	template<class T>
@@ -89,15 +89,15 @@ namespace Unique
 			return false;
 		}
 
-		parentNode_ = currentNode_;
+		parentNode_.push_back(currentNode_);
 		currentNode_ = node;
 		return true; 
 	}
 
 	inline void BinaryReader::EndAttribute()
 	{
-		currentNode_ = parentNode_;
-		parentNode_ = { nullptr, nullptr };
+		currentNode_ = parentNode_.back();
+		parentNode_.pop_back();
 	}
 
 	template<class T>

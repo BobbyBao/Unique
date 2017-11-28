@@ -102,21 +102,32 @@ namespace Unique
 
 }
 
-
 #define uEnumTraits(CLASS, ...)\
-	template<>\
-	class SerializeTraits<CLASS> : public SerializeTraitsEnum<CLASS>\
+template<>\
+class SerializeTraits<CLASS> : public SerializeTraitsEnum<CLASS>\
+{\
+public:\
+	typedef CLASS value_type; \
+	template<class TransferFunction>\
+	inline static void Transfer(value_type& data, TransferFunction& transfer)\
 	{\
-	public:\
-		typedef ShaderType value_type;\
-		template<class TransferFunction>\
-		inline static void Transfer(value_type& data, TransferFunction& transfer)\
+		static const char* enumNames[] = \
 		{\
-			static const char* enumNames[] =\
-			{\
-				"VertexShader", "HullShader", "DomainShader", "GeometryShader",\
-				"FragmentShader", "ComputeShader",\
-			};\
-			TransferEnum<TransferFunction>(data, enumNames, transfer);\
-		}\
-	};
+				__VA_ARGS__\
+		}; \
+		TransferEnum<TransferFunction>(data, enumNames, transfer); \
+	}\
+};
+
+#define uClassTraits(CLASS, ...)\
+template<>\
+class SerializeTraits<CLASS> : public SerializeTraitsBase<CLASS>\
+{\
+public:\
+	typedef CLASS value_type; \
+	template<class TransferFunction>\
+	inline static void Transfer(value_type& self, TransferFunction& transfer)\
+	{\
+transfer.TransferAttributes(##__VA_ARGS__);\
+	}\
+};
