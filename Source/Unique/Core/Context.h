@@ -225,6 +225,11 @@ template <class T> void Context::RegisterFactory(const char* category)
 	RegisterFactory(new ObjectFactoryImpl<T>(), category);
 }
 
+template <class T> void Context::RemoveSubsystem()
+{
+	RemoveSubsystem(T::GetTypeStatic());
+}
+
 class RegisterRuntime
 {
 public:
@@ -232,10 +237,10 @@ public:
 	RegisterRuntime(CallbackFunction* Initialize, CallbackFunction* Cleanup = nullptr);
 };
 
-template <class T> void Context::RemoveSubsystem()
-{
-	RemoveSubsystem(T::GetTypeStatic()); 
-}
+
+extern Context* GetContext();
+template <class T> T& Subsystem() { return *GetContext()->Subsystem<T>(); }
+template <class T> bool HasSubsystem() { return GetContext()->Subsystem<T>() != nullptr; }
 
 
 }

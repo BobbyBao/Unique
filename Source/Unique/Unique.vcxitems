@@ -14,8 +14,16 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\ProcessUtils.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\WorkQueue.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Drawable.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Shader\ShaderUtil.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Shader\ShaderVariation.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Resource\BackgroundLoader.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Resource\ResourceCache.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Resource\ResourceReader.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Resource\ResourceRef.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Resource\Texturereader.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Scene\Component.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Container\RefCounted.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Container\Str.cpp" />
@@ -25,7 +33,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\Object.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\Profiler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\Semaphore.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Core\StringUtil.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\StringUtils.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\Thread.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\Timer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\TypeInfo.cpp" />
@@ -64,8 +72,17 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Buffers\StorageBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\ProcessUtils.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\WorkQueue.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Drawable.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Shader\ShaderUtil.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Shader\ShaderVariation.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Resource\BackgroundLoader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Resource\ResourceCache.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Resource\ResourceEvents.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Resource\ResourceReader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Resource\ResourceRef.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Resource\Texturereader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Scene\Component.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\AttributeTraits.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Container\Algorithm.h" />
@@ -87,7 +104,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Profiler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Semaphore.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\SpinLock.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Core\StringUtil.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\StringUtils.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Thread.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Timer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\TypeInfo.h" />

@@ -127,7 +127,7 @@ namespace Unique
 				return;
 			}
 
-			data = StaticCast<T, Object>(Object::GetContext()->CreateObject(node->value.GetString()));
+			data = StaticCast<T, Object>(GetContext()->CreateObject(node->value.GetString()));
 		}
 
 		data->Transfer(*this);

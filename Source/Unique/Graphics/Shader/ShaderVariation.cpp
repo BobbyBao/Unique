@@ -1,14 +1,14 @@
 #include "Precompiled.h"
 #include "ShaderVariation.h"
 #include "../../io/FileSystem.h"
-#include "../../resource/ResourceCache.h"
+//#include "../../resource/ResourceCache.h"
 #include "ShaderUtil.h"
 #include "Shader.h"
 
 namespace Unique
 {
 
-	ShaderVariation::ShaderVariation(Shader& shader, ShaderType type, ShaderPass& shaderPass, unsigned defs)
+	ShaderVariation::ShaderVariation(Shader& shader, ShaderType type, ShaderPass& shaderPass, uint defs)
 		: owner_(shader), shaderPass_(shaderPass)
 	{
 		type_ = type;
@@ -30,36 +30,25 @@ namespace Unique
 			}
 		}
 
-		ResourceCache& cache = Subsystem<ResourceCache>();
-		cache.StoreResourceDependency(&owner_, sourceFile());
+	//	ResourceCache& cache = Subsystem<ResourceCache>();
+	//	cache.StoreResourceDependency(&owner_, sourceFile());
 
 	}
 
 	String ShaderVariation::sourceFile() const
 	{
 		const String& shaderName = owner_.GetName();
-		switch (type_)
-		{
-		case ShaderType::VS:
-			return ReplaceExtension(shaderName, ".vs");
-		case ShaderType::PS:
-			return ReplaceExtension(shaderName, ".fs");
-		case ShaderType::CS:
-			return ReplaceExtension(shaderName, ".cs");
-		default:
-			return "";
-		}
-
+		return ReplaceExtension(shaderName, ".hlsl");
 	}
 
 	bool ShaderVariation::create() 
 	{
-		Release();
+	//	Release();
 
 		String name = GetFileName(owner_.GetName());
 		String extension;
 
-		extension = (type_ == ShaderType::VS ? "_vs.bin" : "_fs.bin");
+		extension = (type_ == ShaderType::Vertex ? "_vs.bin" : "_fs.bin");
 
 		String defines = defines_.Replaced(';', '_');
 
@@ -103,20 +92,22 @@ namespace Unique
 	}
 	
 	bool ShaderVariation::loadByteCode(const String& binaryShaderName)
-	{
+	{/*
 		ResourceCache& cache = Subsystem<ResourceCache>();
 		if (!cache.Exists(binaryShaderName))
 			return false;
 
 		FileSystem& fileSystem = Subsystem<FileSystem>();
 
-		SPtr<File> file = cache.GetFile(binaryShaderName);
-		if (!file)
+		SPtr<File> file = cache.GetFile(binaryShaderName);*/
+		SPtr<File> file(new File(binaryShaderName));
+		if (!file->IsOpen())
 		{
 			UNIQUE_LOGERROR(binaryShaderName + " is not a valid shader bytecode file");
 			return false;
 		}
 
+		/*
 		const bgfx::Memory* mem = bgfx::alloc(file->GetSize() + 1);
 		file->Read(mem->data, mem->size);
 		mem->data[file->GetSize()] = '\0';
@@ -126,7 +117,7 @@ namespace Unique
 		{
 			UNIQUE_LOGERROR("Failed to create shader.");
 			return false;
-		}
+		}*/
 
 		return true;
 	}
@@ -134,7 +125,7 @@ namespace Unique
 	bool ShaderVariation::compile(const String& binaryShaderName)
 	{
 		String sourceCode = sourceFile();
-
+		/*
 		String args;
 		unsigned renderType = bgfx::getRendererType();
 		bool isOpenGL = ((renderType == bgfx::RendererType::OpenGL) 
@@ -205,48 +196,29 @@ namespace Unique
 			return false;
 		}
 
-		dirty_ = false;
+		dirty_ = false;*/
 		return true;
 	}
 
 	ShaderInstance::ShaderInstance(Shader& shader, ShaderPass& shaderPass, unsigned defs)
 	{
-		cs = new ShaderVariation(shader, ShaderType::CS, shaderPass, defs);
+		for (auto& shd : shaderPass.GetShaderStages())
+		{
+			ShaderVariation* sv = new ShaderVariation(shader, shd.type, shaderPass, defs);
+		}
+		
 	}
-
-	ShaderInstance::ShaderInstance(Shader& shader, ShaderPass& shaderPass, unsigned vsDefs, unsigned psDefs)
-	{
-		vs = new ShaderVariation(shader, ShaderType::VS, shaderPass, vsDefs);
-		ps = new ShaderVariation(shader, ShaderType::PS, shaderPass, psDefs);
-	}
-
-
-	bool ShaderInstance::Create()
+	
+	bool ShaderInstance::create()
 	{
 		Release();
 
-		if (cs)
+		for (auto& shd : shaders)
 		{
-			if (!cs->create())
+			if (!shd->create())
 			{
 				return false;
 			}
-
-			handle_ = bgfx::createProgram(cs->handle(), false);
-		}
-		else
-		{
-			if (!vs->create())
-			{
-				return false;
-			}
-
-			if (!ps->create())
-			{
-				return false;
-			}
-
-			handle_ = bgfx::createProgram(vs->handle(), ps->handle(), false);
 		}
 
 		dirty_ = false;
@@ -257,15 +229,11 @@ namespace Unique
 	{
 		dirty_ = true;
 
-		if (cs)
+		for (auto& shd : shaders)
 		{
-			cs->reload();
+			shd->reload();
 		}
-		else
-		{
-			vs->reload();
-			ps->reload();
-		}
+
 	}
 
 }

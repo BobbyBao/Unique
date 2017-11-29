@@ -55,10 +55,6 @@ public:
 	/// Send event with parameters to all subscribers.
 	void SendEvent(const StringID& eventType, const Event& eventData);
 	
-
-    /// Return execution context.
-    static Context* GetContext() { return context_; }
-
     /// Return whether has subscribed to an event without specific sender.
     bool HasSubscribedToEvent(StringID eventType) const;
     /// Return whether has subscribed to a specific sender's event.
@@ -101,9 +97,6 @@ protected:
 	/// Unsubscribe from all events except those listed, and optionally only those with userdata (script registered events.)
 	void UnsubscribeFromAllEventsExcept(const PODVector<StringID>& exceptions, bool onlyUserData);
 
-    /// Execution context.
-    static Context* context_;
-
 private:
     /// Find the first event handler with no specific sender.
     EventHandler* FindEventHandler(StringID eventType, EventHandler** previous = 0) const;
@@ -120,9 +113,6 @@ private:
 	friend class Context;
 
 };
-
-template <class T> T& Subsystem() { return *Object::GetContext()->Subsystem<T>(); }
-template <class T> bool HasSubsystem() { return Object::GetContext()->Subsystem<T>() != nullptr; }
 
 /// Base class for object factories.
 class UNIQUE_API ObjectFactory

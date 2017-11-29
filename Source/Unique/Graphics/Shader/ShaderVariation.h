@@ -1,17 +1,17 @@
 #pragma once
 #include "../../resource/Resource.h"
 #include "../GraphicsDefs.h"
-#include "../GraphicsObject.h"
+#include "../GfxObject.h"
 
 namespace Unique
 {
 	class Shader;
 	class ShaderPass;
 
-	class ShaderVariation : public RefCounted, public GraphicsObject<bgfx::ShaderHandle>
+	class ShaderVariation : public RefCounted
 	{
 	public:
-		ShaderVariation(Shader& shader, ShaderType type, ShaderPass& shaderPass, unsigned defs);
+		ShaderVariation(Shader& shader, ShaderType type, ShaderPass& shaderPass, uint defs);
 		bool create();
 
 		void reload();
@@ -30,31 +30,28 @@ namespace Unique
 		bool dirty_ = false;
 	};
 
-	class ShaderInstance : public RefCounted, public GraphicsObject<bgfx::ProgramHandle>
+	class ShaderInstance : public TGfxObject<RefCounted, ShaderProgram>
 	{
 	public:
 		ShaderInstance(Shader& shader, ShaderPass& shaderPass, unsigned defs);
-		ShaderInstance(Shader& shader, ShaderPass& shaderPass, unsigned vsDefs, unsigned psDefs);
 
-		bool Create();
+		bool create();
 		void reload();
 
-		bgfx::ProgramHandle GetProgram()
+		ShaderProgram* GetProgram()
 		{
-			if (dirty_ || !valid())
+			if (dirty_ || !IsValid())
 			{
-				Create();
+				create();
 			}
 
-			return handle_;
+			return (ShaderProgram*)handle_;
 
 		}
 
-		SPtr<ShaderVariation> vs;
-		SPtr<ShaderVariation> ps;
-		SPtr<ShaderVariation> cs;
-
+		Vector<SPtr<ShaderVariation>>	shaders;
 		bool dirty_ = true;
+		GraphicsPipeline*			pipeline_;
 
 	};
 }

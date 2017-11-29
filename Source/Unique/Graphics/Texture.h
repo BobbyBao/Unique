@@ -8,7 +8,7 @@ namespace Unique
 {
 	class Image;
 
-	class Texture : public Resource, public TGfxObject<LLGL::Texture>
+	class Texture : public TGfxObject<Resource, LLGL::Texture>
 	{
 		uRTTI(Texture, Resource)
 	public:

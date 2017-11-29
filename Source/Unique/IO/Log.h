@@ -23,7 +23,7 @@
 #pragma once
 
 #include "../Core/Object.h"
-#include "../Core/StringUtil.h"
+#include "../Core/StringUtils.h"
 #include <mutex>
 
 namespace Unique

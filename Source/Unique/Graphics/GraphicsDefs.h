@@ -43,6 +43,6 @@ namespace Unique
 	
 	uEnumTraits(ShaderType, "VertexShader", "HullShader", "DomainShader", "GeometryShader",	"FragmentShader", "ComputeShader")
 	uEnumTraits(CompareOp, "Never", "Less", "Equal", "LessEqual", "Greater", "NotEqual", "GreaterEqual", "Ever")
-	uClassTraits(DepthState, "TestEnabled", self.testEnabled, "WriteEnabled", self.writeEnabled)//, "CompareOp", self.compareOp)
+	uClassTraits(DepthState, "TestEnabled", self.testEnabled, "WriteEnabled", self.writeEnabled, "CompareOp", self.compareOp)
 
 }

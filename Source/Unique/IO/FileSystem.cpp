@@ -396,7 +396,6 @@ int FileSystem::SystemRun(const String& fileName, const Vector<String>& argument
 
 unsigned FileSystem::SystemCommandAsync(const String& commandLine)
 {
-#ifdef UNIQUE_THREADING
     if (allowedPaths_.empty())
     {
         unsigned requestID = nextAsyncExecID_;
@@ -409,15 +408,11 @@ unsigned FileSystem::SystemCommandAsync(const String& commandLine)
         UNIQUE_LOGERROR("Executing an external command is not allowed");
         return M_MAX_UNSIGNED;
     }
-#else
-    UNIQUE_LOGERROR("Can not execute an asynchronous command as threading is disabled");
-    return UINT_MAX;
-#endif
+
 }
 
 unsigned FileSystem::SystemRunAsync(const String& fileName, const Vector<String>& arguments)
 {
-#ifdef UNIQUE_THREADING
     if (allowedPaths_.empty())
     {
         unsigned requestID = nextAsyncExecID_;
@@ -430,10 +425,7 @@ unsigned FileSystem::SystemRunAsync(const String& fileName, const Vector<String>
         UNIQUE_LOGERROR("Executing an external command is not allowed");
         return M_MAX_UNSIGNED;
     }
-#else
-    UNIQUE_LOGERROR("Can not run asynchronously as threading is disabled");
-    return UINT_MAX;
-#endif
+
 }
 
 bool FileSystem::SystemOpen(const String& fileName, const String& mode)

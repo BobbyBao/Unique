@@ -5,7 +5,7 @@
 
 namespace Unique
 {
-	class GraphicsBuffer : public Object, public TGfxObject<LLGL::Buffer>
+	class GraphicsBuffer : public TGfxObject<Object, LLGL::Buffer>
 	{
 		uRTTI(GraphicsBuffer, Object)
 	public:

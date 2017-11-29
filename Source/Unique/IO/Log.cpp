@@ -24,7 +24,7 @@
 
 #include "../Core/Context.h"
 #include "../Core/CoreEvents.h"
-//#include "../Core/ProcessUtils.h"
+#include "../Core/ProcessUtils.h"
 #include "../Core/Thread.h"
 #include "../Core/Timer.h"
 #include "../IO/File.h"
@@ -179,11 +179,11 @@ void Log::Write(int level, const String& message)
     if (logInstance->quiet_)
     {
         // If in quiet mode, still print the error message to the standard error stream
-        //if (level == LOG_ERROR)
-        //    PrintUnicodeLine(formattedMessage, true);
+        if (level == LOG_ERROR)
+			PrintUnicodeLine(formattedMessage, true);
     }
-    //else
-       // PrintUnicodeLine(formattedMessage, level == LOG_ERROR);
+    else
+		PrintUnicodeLine(formattedMessage, level == LOG_ERROR);
 #endif
 
     if (logInstance->logFile_)
@@ -237,11 +237,11 @@ void Log::WriteRaw(const String& message, bool error)
     if (logInstance->quiet_)
     {
         // If in quiet mode, still print the error message to the standard error stream
-//        if (error)
-//            PrintUnicode(message, true);
+		if (error)
+			PrintUnicode(message, true);
     }
-//    else
-//        PrintUnicode(message, error);
+	else
+		PrintUnicode(message, error);
 #endif
 
     if (logInstance->logFile_)

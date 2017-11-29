@@ -6,6 +6,8 @@
 #include "../Graphics/Graphics.h"
 #include "../Graphics/Renderer.h"
 #include "../Core/CoreEvents.h"
+#include "../Core/WorkQueue.h"
+#include "../Resource/ResourceCache.h"
 
 namespace Unique
 {
@@ -40,6 +42,9 @@ namespace Unique
 
 		Log& log = context_->RegisterSubsystem<Log>();
 		log.Open("Unique.log");
+
+		context_->RegisterSubsystem<WorkQueue>();
+		context_->RegisterSubsystem<ResourceCache>();
 
 		context_->RegisterSubsystem<Graphics>();
 		context_->RegisterSubsystem<Renderer>();

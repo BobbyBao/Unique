@@ -14,6 +14,8 @@ namespace Unique
 		Geometry();
 		~Geometry();
 
+		void Draw();
+
 		Vector<SPtr<VertexBuffer>> vertexBuffers_;
 		SPtr<IndexBuffer> indexBuffer_;
 	};

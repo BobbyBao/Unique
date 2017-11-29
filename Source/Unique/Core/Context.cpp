@@ -112,6 +112,14 @@ void ExecuteCleanup(Context* context)
 	}
 }
 
+/// Execution context.
+static Context* context_;
+
+Context* GetContext()
+{
+	return context_;
+}
+
 Context::Context() :
 	eventHandler_(0),
 	timeStep_(0.0f),
@@ -131,7 +139,7 @@ Context::Context() :
     // Always reset the random seed on Android, as the Unique library might not be unloaded between runs
     SetRandomSeed(1);
 #endif
-	Object::context_ = this;
+	context_ = this;
 
 
 	ExecuteInitializations(this);
@@ -145,7 +153,7 @@ Context::~Context()
 	}
 		
 	ExecuteCleanup(this);
-	Object::context_ = nullptr;
+	context_ = nullptr;
 }
 
 SPtr<Object> Context::CreateObject(StringID objectType)

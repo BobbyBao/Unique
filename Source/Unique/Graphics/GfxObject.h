@@ -3,52 +3,59 @@
 
 namespace Unique
 {
-	class GfxObject
+
+	extern UPtr<LLGL::RenderSystem> renderer;
+
+	template<class Super, class T = void>
+	class TGfxObject : public Super
 	{
 	public:
-		GfxObject();
-		~GfxObject();
-
-		virtual void OnCreate();
-		virtual void OnDestroy();
-		virtual void OnSync();
-		
 		enum class State
 		{
 			None,
+			Creating,
 			Created,
+			Dying,
 			Dead
 		};
 
-		State state_;
-	};
-
-	extern UPtr<LLGL::RenderSystem>        renderer;
-
-	template<class T = void>
-	class TGfxObject : public GfxObject
-	{
-	public:
-		
 		bool IsValid() const { return handle_ != nullptr; }
 
-		virtual void OnCreate()
+		void Create()
 		{
-			GfxObject::OnCreate();
+			//	gpuObjects_.push_back(this);
+
+			state_ = State::Creating;
+			Subsystem<Graphics>().AddCommand([this]()
+			{
+				CreateImpl();
+				state_ = State::Created;
+			});
 		}
 
-		virtual void OnDestroy()
+		void Release()
 		{
-			GfxObject::OnDestroy();
+			//	RemoveSwap(gpuObjects_, this);
+			state_ = State::Dying;
+			Subsystem<Graphics>().AddCommand([this]()
+			{
+				ReleaseImpl();
+				state_ = State::Dead;
+			});
+		}
 
+		virtual void ReleaseImpl()
+		{
 			if (handle_ != nullptr)
 			{
 				renderer->Release(*handle_);
+				handle_ = nullptr;
 			}
 		}
 
 		operator T&() { return *handle_; }
 
+		State state_ = State::None;
 		T* handle_ = nullptr;
 
 	};

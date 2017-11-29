@@ -84,7 +84,7 @@ bool FileWatcher::StartWatching(const String& pathName, bool watchSubDirs)
     // Stop any previous watching
     StopWatching();
 
-#if defined(UNIQUE_FILEWATCHER) && defined(UNIQUE_THREADING)
+#if defined(UNIQUE_FILEWATCHER)
 #ifdef _WIN32
     String nativePath = GetNativePath(RemoveTrailingSlash(pathName));
 

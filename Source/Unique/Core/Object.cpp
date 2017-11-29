@@ -8,8 +8,6 @@
 namespace Unique
 {
 
-Context* Object::context_ = nullptr;
-
 Object::Object()
 {
 }
@@ -18,8 +16,8 @@ Object::~Object()
 {
     UnsubscribeFromAllEvents();
 	
-	if(context_)
-		context_->RemoveEventSender(this);
+	if(GetContext())
+		GetContext()->RemoveEventSender(this);
 }
 
 template<class TransferFunction>
@@ -80,7 +78,7 @@ template UNIQUE_API void Object::Transfer(JsonReader&);
 void Object::OnEvent(Object* sender, StringID eventType, const Event& eventData)
 {
     // Make a copy of the context pointer in case the object is destroyed during event handler invocation
-    Context* context = context_;
+    Context* context = GetContext();
     EventHandler* specific = 0;
     EventHandler* nonSpecific = 0;
 
@@ -144,7 +142,7 @@ void Object::SubscribeToEvent(const StringID& eventType, EventHandler* handler)
     else
     {
         eventHandlers_.insert_front(handler);
-        context_->AddEventReceiver(this, eventType);
+		GetContext()->AddEventReceiver(this, eventType);
     }
 }
 
@@ -169,7 +167,7 @@ void Object::SubscribeToEvent(Object* sender, const StringID& eventType, EventHa
     else
     {
         eventHandlers_.insert_front(handler);
-        context_->AddEventReceiver(this, sender, eventType);
+		GetContext()->AddEventReceiver(this, sender, eventType);
     }
 }
 
@@ -182,9 +180,9 @@ void Object::UnsubscribeFromEvent(StringID eventType)
         if (handler)
         {
             if (handler->GetSender())
-                context_->RemoveEventReceiver(this, handler->GetSender(), eventType);
+				GetContext()->RemoveEventReceiver(this, handler->GetSender(), eventType);
             else
-                context_->RemoveEventReceiver(this, eventType);
+				GetContext()->RemoveEventReceiver(this, eventType);
             eventHandlers_.erase(handler, previous);
         }
         else
@@ -201,7 +199,7 @@ void Object::UnsubscribeFromEvent(Object* sender, StringID eventType)
     EventHandler* handler = FindSpecificEventHandler(sender, eventType, &previous);
     if (handler)
     {
-        context_->RemoveEventReceiver(this, handler->GetSender(), eventType);
+		GetContext()->RemoveEventReceiver(this, handler->GetSender(), eventType);
         eventHandlers_.erase(handler, previous);
     }
 }
@@ -217,7 +215,7 @@ void Object::UnsubscribeFromEvents(Object* sender)
         EventHandler* handler = FindSpecificEventHandler(sender, &previous);
         if (handler)
         {
-            context_->RemoveEventReceiver(this, handler->GetSender(), handler->GetEventType());
+			GetContext()->RemoveEventReceiver(this, handler->GetSender(), handler->GetEventType());
             eventHandlers_.erase(handler, previous);
         }
         else
@@ -227,7 +225,7 @@ void Object::UnsubscribeFromEvents(Object* sender)
 
 void Object::UnsubscribeFromAllEvents()
 {
-	if (!context_)
+	if (!GetContext())
 	{
 		return;
 	}
@@ -238,9 +236,9 @@ void Object::UnsubscribeFromAllEvents()
         if (handler)
         {
             if (handler->GetSender())
-                context_->RemoveEventReceiver(this, handler->GetSender(), handler->GetEventType());
+				GetContext()->RemoveEventReceiver(this, handler->GetSender(), handler->GetEventType());
             else
-                context_->RemoveEventReceiver(this, handler->GetEventType());
+				GetContext()->RemoveEventReceiver(this, handler->GetEventType());
             eventHandlers_.erase(handler);
         }
         else
@@ -260,9 +258,9 @@ void Object::UnsubscribeFromAllEventsExcept(const PODVector<StringID>& exception
         if ((!onlyUserData || handler->GetUserData()) && !Contains(exceptions, handler->GetEventType()))
         {
             if (handler->GetSender())
-                context_->RemoveEventReceiver(this, handler->GetSender(), handler->GetEventType());
+				GetContext()->RemoveEventReceiver(this, handler->GetSender(), handler->GetEventType());
             else
-                context_->RemoveEventReceiver(this, handler->GetEventType());
+				GetContext()->RemoveEventReceiver(this, handler->GetEventType());
 
             eventHandlers_.erase(handler, previous);
         }
@@ -290,7 +288,7 @@ void Object::SendEvent(const StringID& eventType, const Event& eventData)
 
     // Make a weak pointer to self to check for destruction during event handling
     WPtr<Object> self(this);
-    Context* context = context_;
+    Context* context = GetContext();
     HashSet<Object*> processed;
 
     context->BeginSendEvent(this, eventType);

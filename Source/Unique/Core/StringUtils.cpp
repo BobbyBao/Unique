@@ -1,5 +1,5 @@
 #include "Precompiled.h"
-#include "StringUtil.h"
+#include "StringUtils.h"
 
 namespace Unique
 {

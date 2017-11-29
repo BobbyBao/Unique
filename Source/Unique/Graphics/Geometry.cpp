@@ -20,5 +20,10 @@ namespace Unique
 	{
 	}
 
+	void Geometry::Draw()
+	{
+
+	}
+
 }
 

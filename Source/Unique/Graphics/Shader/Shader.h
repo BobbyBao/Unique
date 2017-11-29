@@ -36,7 +36,7 @@ namespace Unique
 		String		filename;
 		String		entryPoint;
 		String		target;
-		uint64_t	mask_;
+		uint	mask_;
 	};
 
 	struct ShaderProgramRecall
@@ -55,15 +55,20 @@ namespace Unique
 		Vector<ShaderStage>& GetShaderStages() { return  shaderStages_; }
 		
 	private:
-		StringID					name_;
-		DepthState					depthState_;
-		StencilState				stencilState_;
-		RasterizerState				rasterizerState_;
-		BlendState					blendState_;
-		Vector<ShaderStage>			shaderStages_;
+		StringID				name_;
+		unsigned char			passIdx_;
+		DepthState				depthState_;
+		StencilState			stencilState_;
+		RasterizerState			rasterizerState_;
+		BlendState				blendState_;
+		Vector<ShaderStage>		shaderStages_;
+		Vector<String>			allDefs_;
+		uint					allMask_;
 
-		GraphicsPipeline*			pipeline_;
-		HashMap<uint64_t, ShaderProgram*> shaderPrograms_;
+		HashMap<uint, ShaderProgram*> cachedPass_;
+
+		friend class Shader;
+		friend class ShaderVariation;
 	};
 
 	class Shader : public Resource
