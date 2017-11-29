@@ -70,6 +70,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-writer.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\msgpack2json.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Buffers\StorageBuffer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Shader\Uniform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\ProcessUtils.h" />
@@ -151,6 +152,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\SerializeTraitsStd.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\TransferBase.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Buffers\StorageBuffer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Shader\Uniform.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Unique.h" />
   </ItemGroup>
 </Project>

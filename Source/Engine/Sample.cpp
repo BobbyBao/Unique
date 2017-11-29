@@ -28,6 +28,7 @@ void Sample::Initialize()
 
 	shaderProgram = LoadStandardShaderProgram(vertexFormat);
 	auto& constBuffers = shaderProgram->QueryConstantBuffers();
+	auto& uniforms = shaderProgram->QueryUniforms();
 
 	// Create graphics pipeline
 	LLGL::GraphicsPipelineDescriptor pipelineDesc;

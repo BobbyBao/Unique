@@ -1,7 +1,7 @@
 #include "Precompiled.h"
 #include "ShaderVariation.h"
-#include "../../io/FileSystem.h"
-//#include "../../resource/ResourceCache.h"
+#include "../../IO/FileSystem.h"
+#include "../../Resource/ResourceCache.h"
 #include "ShaderUtil.h"
 #include "Shader.h"
 
@@ -92,11 +92,11 @@ namespace Unique
 	}
 	
 	bool ShaderVariation::loadByteCode(const String& binaryShaderName)
-	{/*
+	{
 		ResourceCache& cache = Subsystem<ResourceCache>();
 		if (!cache.Exists(binaryShaderName))
 			return false;
-
+/*
 		FileSystem& fileSystem = Subsystem<FileSystem>();
 
 		SPtr<File> file = cache.GetFile(binaryShaderName);*/

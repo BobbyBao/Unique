@@ -33,6 +33,8 @@ namespace Unique
 	using ShaderProgram = LLGL::ShaderProgram;
 	using PrimitiveTopology = LLGL::PrimitiveTopology;
 
+	using UniformType = LLGL::UniformType;
+
 	uEnumTraits(PrimitiveTopology,
 				"PointList", "LineList", "LineStrip", "LineLoop", "LineListAdjacency", "LineStripAdjacency",
 				"TriangleList", "TriangleStrip", "TriangleFan", "TriangleListAdjacency", "TriangleStripAdjacency",
@@ -45,4 +47,5 @@ namespace Unique
 	uEnumTraits(CompareOp, "Never", "Less", "Equal", "LessEqual", "Greater", "NotEqual", "GreaterEqual", "Ever")
 	uClassTraits(DepthState, "TestEnabled", self.testEnabled, "WriteEnabled", self.writeEnabled, "CompareOp", self.compareOp)
 
+	uEnumTraits(UniformType, "Float", "Float2", "Float3", "Float4", "Float", "Float")
 }

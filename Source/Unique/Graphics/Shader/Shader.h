@@ -27,7 +27,7 @@ namespace Unique
 		}
 
 		uClass(	
-			"Name", type,
+			"Type", type,
 			"FileName", filename,
 			"EntryPoint", entryPoint,
 			"Target", target);
@@ -47,13 +47,17 @@ namespace Unique
 		LLGL::StreamOutputFormat	streamOutputFormat;
 	};
 
+	class Shader;
+
 	class ShaderPass : public Object
 	{
 		uRTTI(ShaderPass, Object)
 	public:
 
 		Vector<ShaderStage>& GetShaderStages() { return  shaderStages_; }
-		
+		unsigned GetMask(Shader* shader, const String& defs);
+		//SPtr<ShaderInstance> GetProgram(Shader* shader, const String& defs);
+		//SPtr<ShaderInstance> GetProgram(Shader* shader, unsigned defMask);
 	private:
 		StringID				name_;
 		unsigned char			passIdx_;
