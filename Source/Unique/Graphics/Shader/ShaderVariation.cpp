@@ -30,8 +30,8 @@ namespace Unique
 			}
 		}
 
-	//	ResourceCache& cache = Subsystem<ResourceCache>();
-	//	cache.StoreResourceDependency(&owner_, sourceFile());
+		ResourceCache& cache = Subsystem<ResourceCache>();
+		cache.StoreResourceDependency(&owner_, sourceFile());
 
 	}
 
@@ -93,14 +93,11 @@ namespace Unique
 	
 	bool ShaderVariation::loadByteCode(const String& binaryShaderName)
 	{
-		ResourceCache& cache = Subsystem<ResourceCache>();
+		auto& cache = Subsystem<ResourceCache>();
 		if (!cache.Exists(binaryShaderName))
 			return false;
-/*
-		FileSystem& fileSystem = Subsystem<FileSystem>();
 
-		SPtr<File> file = cache.GetFile(binaryShaderName);*/
-		SPtr<File> file(new File(binaryShaderName));
+		SPtr<File> file = cache.GetFile(binaryShaderName);
 		if (!file->IsOpen())
 		{
 			UNIQUE_LOGERROR(binaryShaderName + " is not a valid shader bytecode file");
@@ -204,7 +201,8 @@ namespace Unique
 	{
 		for (auto& shd : shaderPass.GetShaderStages())
 		{
-			ShaderVariation* sv = new ShaderVariation(shader, shd.type, shaderPass, defs);
+			SPtr<ShaderVariation> sv(new ShaderVariation(shader, shd.type, shaderPass, defs));
+			shaders.push_back(sv);
 		}
 		
 	}

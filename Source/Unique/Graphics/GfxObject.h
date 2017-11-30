@@ -37,10 +37,11 @@ namespace Unique
 		{
 			//	RemoveSwap(gpuObjects_, this);
 			state_ = State::Dying;
-			Subsystem<Graphics>().AddCommand([this]()
+			auto self(this);
+			Subsystem<Graphics>().AddCommand([self]()
 			{
-				ReleaseImpl();
-				state_ = State::Dead;
+				self->ReleaseImpl();
+				self->state_ = State::Dead;
 			});
 		}
 

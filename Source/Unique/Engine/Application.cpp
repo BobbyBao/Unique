@@ -38,14 +38,14 @@ namespace Unique
 		resolution_(resolution),
 		context_(new Context())
 	{
+		context_->RegisterSubsystem<WorkQueue>();
+		context_->RegisterSubsystem<Profiler>();
 		context_->RegisterSubsystem<FileSystem>();
 
 		Log& log = context_->RegisterSubsystem<Log>();
 		log.Open("Unique.log");
 
-		context_->RegisterSubsystem<WorkQueue>();
 		context_->RegisterSubsystem<ResourceCache>();
-
 		context_->RegisterSubsystem<Graphics>();
 		context_->RegisterSubsystem<Renderer>();
 
@@ -57,6 +57,12 @@ namespace Unique
 
 	void Application::Initialize()
 	{
+		auto& cache = Subsystem<ResourceCache>();
+		cache.SetAutoReloadResources(true);
+		cache.AddResourceDir("Assets");
+		cache.AddResourceDir("CoreData");
+		cache.AddResourceDir("Cache");
+
 		Graphics& graphics = Subsystem<Graphics>();
 		window_ = graphics.Initialize(rendererModule_, resolution_);
 		
@@ -151,35 +157,8 @@ namespace Unique
 				/* Use the only available module */
 				rendererModule = modules.front();
 			}
-#if false
-			else
-			{
-				/* Let user select a renderer */
-				while (rendererModule.empty())
-				{
-					/* Print list of available modules */
-					std::cout << "select renderer:" << std::endl;
 
-					int i = 0;
-					for (const auto& mod : modules)
-						std::cout << " " << (++i) << ".) " << mod << std::endl;
-
-					/* Wait for user input */
-					std::size_t selection = 0;
-					std::cin >> selection;
-					--selection;
-
-					if (selection < modules.size())
-						rendererModule = modules[selection];
-					else
-						std::cerr << "invalid input" << std::endl;
-				}
-			}
-#endif
 		}
-
-		/* Choose final renderer module */
-		std::cout << "selected renderer: " << rendererModule << std::endl;
 
 		return rendererModule;
 	}

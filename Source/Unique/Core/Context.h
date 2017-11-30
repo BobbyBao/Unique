@@ -218,17 +218,14 @@ private:
 	bool pauseMinimized_;
 };
 
-template <class T> void Context::RegisterFactory() { RegisterFactory(new ObjectFactoryImpl<T>()); }
+template <class T> void Context::RegisterFactory()
+{ RegisterFactory(new ObjectFactoryImpl<T>()); }
 
 template <class T> void Context::RegisterFactory(const char* category)
-{
-	RegisterFactory(new ObjectFactoryImpl<T>(), category);
-}
+{ RegisterFactory(new ObjectFactoryImpl<T>(), category); }
 
 template <class T> void Context::RemoveSubsystem()
-{
-	RemoveSubsystem(T::GetTypeStatic());
-}
+{ RemoveSubsystem(T::GetTypeStatic()); }
 
 class RegisterRuntime
 {

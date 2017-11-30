@@ -1,0 +1,6 @@
+[submodule "LLGL"]
+	path = LLGL
+	url = https://github.com/BobbyBao/LLGL.git
+[submodule "GaussianLib"]
+	path = GaussianLib
+	url = https://github.com/BobbyBao/GaussianLib.git

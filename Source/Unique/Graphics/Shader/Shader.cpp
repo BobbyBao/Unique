@@ -23,7 +23,7 @@ namespace Unique
 	}
 
 	Map< LLGL::ShaderProgram*, ShaderProgramRecall > shaderPrograms_;
-
+	
 	Shader::Shader()
 	{
 	}
@@ -209,8 +209,8 @@ namespace Unique
 		{
 			return LoadShaderProgram(
 			{
-				{ LLGL::ShaderType::Vertex, "Assets/shader.hlsl", "VS", "vs_5_0" },
-				{ LLGL::ShaderType::Fragment, "Assets/shader.hlsl", "PS", "ps_5_0" }
+				{ LLGL::ShaderType::Vertex, "Assets/Shaders/HLSL/shader.hlsl", "VS", "vs_5_0" },
+				{ LLGL::ShaderType::Fragment, "Assets/Shaders/HLSL/shader.hlsl", "PS", "ps_5_0" }
 			},
 				vertexFormat
 			);
@@ -219,8 +219,8 @@ namespace Unique
 		{
 			return LoadShaderProgram(
 			{
-				{ LLGL::ShaderType::Vertex, "Assets/vertex.glsl" },
-				{ LLGL::ShaderType::Fragment, "Assets/fragment.glsl" }
+				{ LLGL::ShaderType::Vertex, "Assets/Shaders/GLSL/vertex.glsl" },
+				{ LLGL::ShaderType::Fragment, "Assets/Shaders/GLSL/fragment.glsl" }
 			},
 				vertexFormat
 			);
