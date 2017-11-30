@@ -1,6 +1,7 @@
 #pragma once
 #include "../../Resource/Resource.h"
 #include "../GraphicsDefs.h"
+#include "ShaderVariation.h"
 
 namespace Unique
 {
@@ -36,7 +37,7 @@ namespace Unique
 		String		filename;
 		String		entryPoint;
 		String		target;
-		uint	mask_;
+		uint		mask_;
 	};
 
 	struct ShaderProgramRecall
@@ -55,9 +56,12 @@ namespace Unique
 	public:
 
 		Vector<ShaderStage>& GetShaderStages() { return  shaderStages_; }
-		unsigned GetMask(Shader* shader, const String& defs);
-		//SPtr<ShaderInstance> GetProgram(Shader* shader, const String& defs);
-		//SPtr<ShaderInstance> GetProgram(Shader* shader, unsigned defMask);
+
+		uint GetMask(Shader* shader, const String& defs);
+
+		ShaderInstance* GetInstance(Shader * shader, const String & defs);
+
+		ShaderInstance* GetInstance(Shader * shader, unsigned defMask);
 	private:
 		StringID				name_;
 		unsigned char			passIdx_;
@@ -69,7 +73,7 @@ namespace Unique
 		Vector<String>			allDefs_;
 		uint					allMask_;
 
-		HashMap<uint, ShaderProgram*> cachedPass_;
+		HashMap<uint, SPtr<ShaderInstance>> cachedPass_;
 
 		friend class Shader;
 		friend class ShaderVariation;
@@ -81,14 +85,22 @@ namespace Unique
 	public:
 		Shader();
 		~Shader();
-
+		
 		const String& GetName() const { return name_; }
 		void SetName(const String& name) { name_ = name;}
 
 		ShaderPass* AddPass(ShaderPass* pass = nullptr);
 
-		ShaderProgram* GetShaderProgram(const StringID& pass, uint64_t defines);
+		ShaderPass* GetShaderPass(const StringID & pass);
 
+		uint GetMask(const StringID& passName, const String & defs);
+
+		ShaderInstance* GetInstance(const StringID& passName, uint defMask);
+
+		ShaderInstance* GetInstance(const StringID& passName, const String & defs);
+
+		static Vector<String>&& SplitDef(const String& defs);
+		static String Shader::GetShaderPath();
 	private:
 		String name_;
 		String shaderDefines_;

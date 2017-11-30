@@ -17,7 +17,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\ProcessUtils.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\WorkQueue.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Drawable.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Shader\ShaderUtil.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Shader\ShaderVariation.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Resource\BackgroundLoader.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Resource\ResourceCache.cpp" />
@@ -76,7 +75,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\ProcessUtils.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\WorkQueue.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Drawable.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Shader\ShaderUtil.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Shader\ShaderVariation.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Resource\BackgroundLoader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Resource\ResourceCache.h" />

@@ -23,26 +23,39 @@ namespace Unique
 
 		void Create()
 		{
-			//	gpuObjects_.push_back(this);
-
-			state_ = State::Creating;
-			Subsystem<Graphics>().AddCommand([this]()
+			if (Context::IsMainThread())
 			{
+				state_ = State::Creating;
+				Subsystem<Graphics>().AddCommand([=]()
+				{
+					ReleaseImpl();
+					CreateImpl();
+					state_ = State::Created;
+				});
+
+			}
+			else
+			{
+				ReleaseImpl();
 				CreateImpl();
 				state_ = State::Created;
-			});
+			}
 		}
 
 		void Release()
 		{
-			//	RemoveSwap(gpuObjects_, this);
 			state_ = State::Dying;
-			auto self(this);
-			Subsystem<Graphics>().AddCommand([self]()
+
+			Subsystem<Graphics>().AddCommand([=]()
 			{
-				self->ReleaseImpl();
-				self->state_ = State::Dead;
+				ReleaseImpl();
+				state_ = State::Dead;
 			});
+		}
+
+		virtual bool CreateImpl()
+		{
+			return false;
 		}
 
 		virtual void ReleaseImpl()

@@ -8,15 +8,15 @@ namespace Unique
 	class Shader;
 	class ShaderPass;
 
-	class ShaderVariation : public RefCounted
+	class ShaderVariation : public TGfxObject<RefCounted, LLGL::Shader>
 	{
 	public:
 		ShaderVariation(Shader& shader, ShaderType type, ShaderPass& shaderPass, uint defs);
-		bool create();
+		bool CreateImpl();
 
-		void reload();
-		bool loadByteCode(const String & binaryShaderName);
-		bool compile(const String& binaryShaderName);
+		void Reload();
+		bool LoadByteCode(const String & binaryShaderName);
+		bool Compile(const String& binaryShaderName);
 
 	private:
 		String sourceFile() const;
@@ -35,14 +35,14 @@ namespace Unique
 	public:
 		ShaderInstance(Shader& shader, ShaderPass& shaderPass, unsigned defs);
 
-		bool create();
-		void reload();
+		bool CreateImpl();
+		void Reload();
 
 		ShaderProgram* GetProgram()
 		{
 			if (dirty_ || !IsValid())
 			{
-				create();
+				CreateImpl();
 			}
 
 			return (ShaderProgram*)handle_;

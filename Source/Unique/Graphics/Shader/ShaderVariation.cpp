@@ -2,7 +2,6 @@
 #include "ShaderVariation.h"
 #include "../../IO/FileSystem.h"
 #include "../../Resource/ResourceCache.h"
-#include "ShaderUtil.h"
 #include "Shader.h"
 
 namespace Unique
@@ -41,9 +40,9 @@ namespace Unique
 		return ReplaceExtension(shaderName, ".hlsl");
 	}
 
-	bool ShaderVariation::create() 
+	bool ShaderVariation::CreateImpl() 
 	{
-	//	Release();
+		ReleaseImpl();
 
 		String name = GetFileName(owner_.GetName());
 		String extension;
@@ -52,7 +51,7 @@ namespace Unique
 
 		String defines = defines_.Replaced(';', '_');
 
-		String binaryShaderName = ShaderUtil::GetShaderPath() + name;
+		String binaryShaderName = Shader::GetShaderPath() + name;
 
 		if (!defines.Empty())
 		{
@@ -60,11 +59,11 @@ namespace Unique
 		}
 
 		binaryShaderName += extension;
-		if (dirty_ || !loadByteCode(binaryShaderName))
+		if (dirty_ || !LoadByteCode(binaryShaderName))
 		{
-			if (!compile(binaryShaderName))
+			if (!Compile(binaryShaderName))
 			{
-				if (loadByteCode(ShaderUtil::GetShaderPath() + name + extension))
+				if (LoadByteCode(Shader::GetShaderPath() + name + extension))
 				{
 					UNIQUE_LOGWARNING("==============================Load shader failed, name : " + binaryShaderName);
 				}
@@ -76,7 +75,7 @@ namespace Unique
 			}
 			else
 			{
-				if (!loadByteCode(binaryShaderName))
+				if (!LoadByteCode(binaryShaderName))
 				{
 					UNIQUE_LOGERROR("Load shader failed, name : " + binaryShaderName);
 				}
@@ -85,13 +84,13 @@ namespace Unique
 		return true;
 	}
 
-	void ShaderVariation::reload() 
+	void ShaderVariation::Reload() 
 	{ 
 		dirty_ = true; 
-		create();
+		CreateImpl();
 	}
 	
-	bool ShaderVariation::loadByteCode(const String& binaryShaderName)
+	bool ShaderVariation::LoadByteCode(const String& binaryShaderName)
 	{
 		auto& cache = Subsystem<ResourceCache>();
 		if (!cache.Exists(binaryShaderName))
@@ -102,6 +101,17 @@ namespace Unique
 		{
 			UNIQUE_LOGERROR(binaryShaderName + " is not a valid shader bytecode file");
 			return false;
+		}
+
+		auto& graphics = Subsystem<Graphics>();
+
+		if (graphics.IsOpenGL())
+		{
+
+		}
+		else
+		{
+
 		}
 
 		/*
@@ -119,9 +129,20 @@ namespace Unique
 		return true;
 	}
 
-	bool ShaderVariation::compile(const String& binaryShaderName)
+	bool ShaderVariation::Compile(const String& binaryShaderName)
 	{
 		String sourceCode = sourceFile();
+
+		auto& graphics = Subsystem<Graphics>();
+		if (graphics.IsOpenGL())
+		{
+
+		}
+		else
+		{
+
+		}
+
 		/*
 		String args;
 		unsigned renderType = bgfx::getRendererType();
@@ -207,13 +228,13 @@ namespace Unique
 		
 	}
 	
-	bool ShaderInstance::create()
+	bool ShaderInstance::CreateImpl()
 	{
-		Release();
+		ReleaseImpl();
 
 		for (auto& shd : shaders)
 		{
-			if (!shd->create())
+			if (!shd->CreateImpl())
 			{
 				return false;
 			}
@@ -223,13 +244,13 @@ namespace Unique
 		return true;
 	}
 
-	void ShaderInstance::reload()
+	void ShaderInstance::Reload()
 	{
 		dirty_ = true;
 
 		for (auto& shd : shaders)
 		{
-			shd->reload();
+			shd->Reload();
 		}
 
 	}

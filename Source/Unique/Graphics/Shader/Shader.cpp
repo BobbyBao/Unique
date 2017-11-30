@@ -22,8 +22,43 @@ namespace Unique
 		uAttribute("ShaderPasses", passes_)
 	}
 
-	Map< LLGL::ShaderProgram*, ShaderProgramRecall > shaderPrograms_;
-	
+	uint ShaderPass::GetMask(Shader* shader, const String& defs)
+	{
+		unsigned mask = 0;
+		for (uint i = 0; i < allDefs_.size(); i++)
+		{
+			if (defs.Find(allDefs_[i]) != String::NPOS)
+			{
+				mask |= (unsigned)(1 << i);
+			}
+		}
+
+		return mask;
+	}
+
+	ShaderInstance* ShaderPass::GetInstance(Shader* shader, const String& defs)
+	{
+		unsigned defMask = GetMask(shader, defs);
+
+		return GetInstance(shader, defMask);
+	}
+
+	ShaderInstance* ShaderPass::GetInstance(Shader* shader, unsigned defMask)
+	{
+		defMask &= allMask_;
+
+		auto it = cachedPass_.find(defMask);;
+		if (it != cachedPass_.end())
+		{
+			return it->second;
+		}
+
+		SPtr<ShaderInstance> inst(new ShaderInstance(*shader, *this, defMask));
+		cachedPass_[defMask] = inst;
+		return inst;
+	}
+
+
 	Shader::Shader()
 	{
 	}
@@ -31,6 +66,7 @@ namespace Unique
 	Shader::~Shader()
 	{
 	}
+
 
 	ShaderPass* Shader::AddPass(ShaderPass* pass)
 	{
@@ -43,11 +79,75 @@ namespace Unique
 		return pass;
 	}
 
-
-	ShaderProgram* Shader::GetShaderProgram(const StringID& pass, uint64_t defines)
+	ShaderPass* Shader::GetShaderPass(const StringID & passName)
 	{
+		for (auto& p : passes_)
+		{
+			if (p->name_ == passName)
+			{
+				return p;
+			}
+		}
+
 		return nullptr;
 	}
+
+	uint Shader::GetMask(const StringID & passName, const String& defs)
+	{
+		ShaderPass* pass = GetShaderPass(passName);
+		if (pass == nullptr)
+		{
+			return 0;
+		}
+
+		return pass->GetMask(this, defs);
+	}
+
+	ShaderInstance* Shader::GetInstance(const StringID& passName, uint defMask)
+	{
+		ShaderPass* pass = GetShaderPass(passName);
+		if (pass == nullptr)
+		{
+			return nullptr;
+		}
+
+		return pass->GetInstance(this, defMask);
+	}
+
+	ShaderInstance* Shader::GetInstance(const StringID& passName, const String& defs)
+	{
+		ShaderPass* pass = GetShaderPass(passName);
+		if (pass == nullptr)
+		{
+			return nullptr;
+		}
+
+		return pass->GetInstance(this, defs);
+	}
+
+	Vector<String>&& Shader::SplitDef(const String& defs)
+	{
+		if (defs.Empty())
+		{
+			return Vector<String>();
+		}
+
+		return defs.Split(' ');
+	}
+
+	String Shader::GetShaderPath()
+	{
+		return "";
+	}
+
+
+
+
+
+	Map< LLGL::ShaderProgram*, ShaderProgramRecall > shaderPrograms_;
+
+
+
 
 	static std::string ReadFileContent(const String& filename)
 	{
@@ -62,8 +162,7 @@ namespace Unique
 			(std::istreambuf_iterator<char>())
 		);
 	}
-
-
+	
 	LLGL::ShaderProgram* LoadShaderProgram(
 		const Vector<ShaderStage>& shaderDescs,
 		const LLGL::VertexFormat& vertexFormat,
