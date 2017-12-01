@@ -25,7 +25,7 @@ void TestIO()
 
 	SPtr<Shader> shader(new Shader());
 	JsonReader jsonReader;
-	jsonReader.Load("Shaders/Test.hjson", shader, true);
+	jsonReader.Load("Shaders/Test.shader", shader, true, true);
 
 	JsonWriter jsonWriter;
 	jsonWriter.Save("test.json", shader);

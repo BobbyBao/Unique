@@ -21,10 +21,10 @@ namespace Unique
 		~JsonReader() {}
 
 		template<class T>
-		bool Load(const String& fileName, T& data, bool hum = false);
+		bool Load(const String& fileName, T& data, bool hum = false, bool dsl = false);
 		
 		template<class T>
-		bool Load(File& source, T& data, bool hum = false);
+		bool Load(File& source, T& data, bool hum = false, bool dsl = false);
 		
 		template<class T>
 		void TransferPrimitive(T& data);
@@ -49,17 +49,20 @@ namespace Unique
 		void EndAttribute();
 		bool StartArray(uint size) { return true; }
 		void EndArray() {}
+		bool SplitTypeInfo(const String& info, const String& type, String& name);
 
-		bool human = false;
+		bool human_ = false;
+		bool dsl_ = false;
 		Value* currentNode_ = nullptr;
 		Vector<Value*> parentNode_;
 
 		Hjson::Value hJsonNode_;
 		Vector<Hjson::Value> hJsonParentNode_;
+		Vector<String> currentObjectName_;
 	};
 
 	template<class T>
-	inline	bool JsonReader::Load(const String& fileName, T& data, bool hum)
+	inline	bool JsonReader::Load(const String& fileName, T& data, bool hum, bool dsl)
 	{
 		auto& cache = Subsystem<ResourceCache>();
 		SPtr<File> file = cache.GetFile(fileName);
@@ -68,13 +71,14 @@ namespace Unique
 			return false;
 		}
 
-		return Load(*file, data, hum);
+		return Load(*file, data, hum, dsl);
 	}
 
 	template<class T>
-	inline bool JsonReader::Load(File& source, T& data, bool hum)
+	inline bool JsonReader::Load(File& source, T& data, bool hum, bool dsl)
 	{
-		human = hum;
+		human_ = hum;
+		dsl_ = dsl;
 
 		unsigned dataSize = source.GetSize();
 		if (!dataSize && !source.GetName().Empty())
@@ -83,45 +87,151 @@ namespace Unique
 			return false;
 		}
 
-		SharedArrayPtr<char> buffer(new char[dataSize + 1]);
+		SharedArrayPtr<char> buffer(new char[dataSize]);
 		if (source.Read(buffer.Get(), dataSize) != dataSize)
 			return false;
-		buffer[dataSize] = '\0';
 
 		rapidjson::Document document;
 		Hjson::Value hJsonRoot;
-		if (human)
+		if (human_)
 		{
-			hJsonRoot = Hjson::Unmarshal(buffer, dataSize);
-			hJsonNode_ = hJsonRoot;
+			if (dsl)
+			{
+				hJsonRoot = Hjson::Unmarshal(buffer, dataSize);
+				for (auto& it = hJsonRoot.begin(); it != hJsonRoot.end(); ++it)
+				{
+					auto& key = it->first;
+					hJsonNode_ = it->second;
+
+					if (SerializeTraits<T>::IsObject())
+					{
+						String name;
+						if (SplitTypeInfo(key.c_str(), SerializeTraits<T>::GetTypeName(), name))
+						{
+							hJsonNode_["Name"] = name.CString();
+						}
+
+					}
+
+					SerializeTraits<T>::Transfer(data, *this);
+				}
+			}
+			else
+			{
+				hJsonRoot = Hjson::Unmarshal(buffer, dataSize);
+				hJsonNode_ = hJsonRoot;
+				SerializeTraits<T>::Transfer(data, *this);
+			}
 		}
 		else
 		{
-			if (document.Parse<kParseCommentsFlag | kParseTrailingCommasFlag>(buffer).HasParseError())
+			if (document.Parse<kParseCommentsFlag | kParseTrailingCommasFlag>(buffer, dataSize).HasParseError())
 			{
 				UNIQUE_LOGERROR("Could not parse JSON data from " + source.GetName());
 				return false;
 			}
 
 			currentNode_ = &document;
+			SerializeTraits<T>::Transfer(data, *this);
 		}
 
-		SerializeTraits<T>::Transfer(data, *this);
 		return true;
 	}
 
-	inline bool JsonReader::StartAttribute(const String& key)
+
+	inline bool JsonReader::SplitTypeInfo(const String& info, const String& type, String& name)
 	{
-		if (human)
+		if (!info.StartsWith(type, false))
 		{
-			Hjson::Value v = hJsonNode_[key.CString()];
-			if (v.empty())
+			return false;
+		}
+
+		uint pos = info.Find('(');
+		if (pos != String::NPOS)
+		{
+			uint pos1 = info.FindLast(')');
+			if (pos1 != String::NPOS)
 			{
-				return false;
+				if (pos1 > pos)
+				{
+					name = info.Substring(pos + 1, pos1);
+				}
 			}
 
-			hJsonParentNode_.push_back(hJsonNode_);
-			hJsonNode_ = v;
+		}
+
+		return true;
+	}
+		
+	inline bool JsonReader::StartAttribute(const String& key)
+	{
+		if (human_)
+		{
+			if (dsl_)
+			{
+				Vector<std::pair<std::string, Hjson::Value>> elements;
+				for (auto& it = hJsonNode_.begin(); it != hJsonNode_.end(); ++it)
+				{
+					auto& mapKey = it->first;
+					auto& mapValue = it->second;
+					String name;
+					if (SplitTypeInfo(mapKey.c_str(), key, name))
+					{
+						elements.push_back(*it);
+
+						if (it->second.type() == Hjson::Value::MAP)
+						{
+							if (!name.Empty())
+							{
+								mapValue["Name"] = name.CString();
+							}
+
+							if (mapValue["Type"].empty())
+							{
+								mapValue["Type"] = key.CString();
+							}
+						}
+					
+					}
+				}
+			
+				if (elements.empty())
+				{
+					return false;
+				}
+				else if (elements.size() == 1)
+				{
+					hJsonParentNode_.push_back(hJsonNode_);
+					hJsonNode_ = elements[0].second;
+				}
+				else
+				{
+					Hjson::Value v(Hjson::Value::VECTOR);
+					for (auto& e : elements)
+					{
+						v.push_back(e.second);
+						hJsonNode_.erase(e.first);
+					}
+
+					hJsonNode_[key.CString()] = v;
+					hJsonParentNode_.push_back(hJsonNode_);
+					hJsonNode_ = v;
+				}
+
+
+			}
+			else
+			{
+				Hjson::Value v = hJsonNode_[key.CString()];
+				if (v.empty())
+				{
+					return false;
+				}
+
+				hJsonParentNode_.push_back(hJsonNode_);
+				hJsonNode_ = v;
+			}
+
 
 		}
 		else
@@ -140,7 +250,7 @@ namespace Unique
 
 	inline void JsonReader::EndAttribute()
 	{
-		if (human)
+		if (human_)
 		{
 			hJsonNode_ = hJsonParentNode_.back();
 			hJsonParentNode_.pop_back();
@@ -157,16 +267,29 @@ namespace Unique
 	{
 		if (data == nullptr)
 		{
-			if (human)
-			{
-				Hjson::Value v = hJsonNode_["Type"];
-				if (v.empty())
+			if (human_)
+			{/*
+				if (dsl_)
 				{
-					UNIQUE_LOGWARNING("Unkown object type.");
-					return;
-				}
+					String name;
+					if (SplitTypeInfo(key.c_str(), SerializeTraits<T>::GetTypeName(), name))
+					{
+						hJsonNode_["Name"] = name.CString();
+					}
 
-				data = StaticCast<T, Object>(GetContext()->CreateObject((const char*)v));
+				}
+				else*/
+				{
+					Hjson::Value v = hJsonNode_["Type"];
+					if (v.empty())
+					{
+						UNIQUE_LOGWARNING("Unkown object type.");
+						return;
+					}
+
+					data = StaticCast<T, Object>(GetContext()->CreateObject((const char*)v));
+
+				}
 
 			}
 			else
@@ -193,7 +316,7 @@ namespace Unique
 
 		data.clear();
 
-		if (human)
+		if (human_)
 		{
 			if (hJsonNode_.type() != Hjson::Value::VECTOR)
 			{
@@ -252,7 +375,7 @@ namespace Unique
 
 		data.clear();
 
-		if (human)
+		if (human_)
 		{
 			if (hJsonNode_.type() != Hjson::Value::VECTOR)
 			{
@@ -296,7 +419,7 @@ namespace Unique
 
 		data.clear();
 
-		if (human)
+		if (human_)
 		{
 			if (hJsonNode_.type() != Hjson::Value::VECTOR)
 			{
@@ -342,7 +465,7 @@ namespace Unique
 	template<class T>
 	inline void JsonReader::TransferPrimitive(T& data)
 	{
-		if (human)
+		if (human_)
 		{
 			data = FromString<T>(String(hJsonNode_));
 		}
@@ -355,7 +478,7 @@ namespace Unique
 	template<>
 	inline void JsonReader::TransferPrimitive<String>(String& data)
 	{
-		if (human)
+		if (human_)
 		{
 			data = (const char*)hJsonNode_;
 		}
@@ -368,7 +491,7 @@ namespace Unique
 	template<>
 	inline void JsonReader::TransferPrimitive<bool>(bool& data)
 	{
-		if (human)
+		if (human_)
 		{
 			data = (bool)hJsonNode_;
 		}
@@ -383,7 +506,7 @@ namespace Unique
 	template<>
 	inline void JsonReader::TransferPrimitive<char>(char& data)
 	{
-		if (human)
+		if (human_)
 		{
 			data = (char)hJsonNode_;
 		}
@@ -397,7 +520,7 @@ namespace Unique
 	template<>
 	inline void JsonReader::TransferPrimitive<char*>(char*& data)
 	{
-		if (human)
+		if (human_)
 		{
 			data = std::strcpy(data, hJsonNode_);
 		}
@@ -411,7 +534,7 @@ namespace Unique
 	template<>
 	inline void JsonReader::TransferPrimitive<byte>(byte& data)
 	{
-		if (human)
+		if (human_)
 		{
 			data = (byte)hJsonNode_;
 		}
@@ -425,7 +548,7 @@ namespace Unique
 	template<>
 	inline void JsonReader::TransferPrimitive<short>(short& data)
 	{
-		if (human)
+		if (human_)
 		{
 			data = (short)hJsonNode_;
 		}
@@ -439,7 +562,7 @@ namespace Unique
 	template<>
 	inline void JsonReader::TransferPrimitive<ushort>(ushort& data)
 	{
-		if (human)
+		if (human_)
 		{
 			data = (ushort)hJsonNode_;
 		}
@@ -453,7 +576,7 @@ namespace Unique
 	template<>
 	inline void JsonReader::TransferPrimitive<int>(int& data)
 	{
-		if (human)
+		if (human_)
 		{
 			data = (int)hJsonNode_;
 		}
@@ -467,7 +590,7 @@ namespace Unique
 	template<>
 	inline void JsonReader::TransferPrimitive<uint>(uint& data)
 	{
-		if (human)
+		if (human_)
 		{
 			data = (uint)hJsonNode_;
 		}
@@ -481,7 +604,7 @@ namespace Unique
 	template<>
 	inline void JsonReader::TransferPrimitive<float>(float& data)
 	{
-		if (human)
+		if (human_)
 		{
 			data = (float)hJsonNode_;
 		}
@@ -495,7 +618,7 @@ namespace Unique
 	template<>
 	inline void JsonReader::TransferPrimitive<double>(double& data)
 	{
-		if (human)
+		if (human_)
 		{
 			data = hJsonNode_;
 		}

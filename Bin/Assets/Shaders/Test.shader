@@ -1,71 +1,72 @@
+
+Shader("Default"):
 {
-    ShaderDefines: ""
-    ShaderPasses: [
-        {
-            Type: "SubShader"
-            Name: ""
-            DepthState: {
-                TestEnabled: false
-                WriteEnabled: false
-                CompareOp: "Less"
-            }
-            ShaderStages: [
-                {
-                    Name: "VertexShader"
-                    EntryPoint: "VS"
-                    Target: "vs_5_0"
-                }
-                {
-                    Name: "FragmentShader"
-                    EntryPoint: "PS"
-                    Target: "ps_5_0"
-                }
-            ]
-            Source:
-            '''
-
-// HLSL texturing shader
-
-float4 color;
-float4 color1;
-Texture2D colorMap : register(t0);
-SamplerState samplerState : register(s0);
-
-struct InputVS
-{
-	float2 position : POSITION;
-	float2 texCoord : TEXCOORD;
-};
-
-struct OutputVS
-{
-	float4 position : SV_Position;
-	float2 texCoord : TEXCOORD;
-};
+    Pass("Main"):
+	{
+		DepthState: 
+		{
+			TestEnabled: false
+			WriteEnabled: false
+			CompareOp: "Less"
+		}
+		
+		ShaderDefines: ""
+		
+		VertexShader:
+		{ 
+			EntryPoint: "VS" 
+			Target: "vs_5_0"
+		}
+		
+		FragmentShader:
+		{
+			EntryPoint: "PS"
+			Target: "ps_5_0"
+		}
+		
+		Source:	'''
 
 
-// VERTEX SHADER
+		// HLSL texturing shader
 
-OutputVS VS(InputVS inp)
-{
-	OutputVS outp;
-	outp.position = float4(inp.position, 0, 1);
-	outp.texCoord = inp.texCoord;
-	return outp;
-}
+		float4 color;
+		float4 color1;
+		Texture2D colorMap : register(t0);
+		SamplerState samplerState : register(s0);
+
+		struct InputVS
+		{
+			float2 position : POSITION;
+			float2 texCoord : TEXCOORD;
+		};
+
+		struct OutputVS
+		{
+			float4 position : SV_Position;
+			float2 texCoord : TEXCOORD;
+		};
 
 
-// PIXEL SHADER
+		// VERTEX SHADER
 
-float4 PS(OutputVS inp) : SV_Target
-{
-	return colorMap.Sample(samplerState, inp.texCoord)*color + color1;
-}
+		OutputVS VS(InputVS inp)
+		{
+			OutputVS outp;
+			outp.position = float4(inp.position, 0, 1);
+			outp.texCoord = inp.texCoord;
+			return outp;
+		}
 
 
+		// PIXEL SHADER
+
+		float4 PS(OutputVS inp) : SV_Target
+		{
+			return colorMap.Sample(samplerState, inp.texCoord)*color + color1;
+		}
 
 
-            '''
-        }
-    ]
+		'''
+	}
+
 }

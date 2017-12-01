@@ -7,7 +7,7 @@ namespace Unique
 {
 
 	class Shader;
-	class SubShader;
+	class Pass;
 
 	struct ShaderStage
 	{
@@ -43,7 +43,7 @@ namespace Unique
 	class ShaderVariation : public TGfxObject<RefCounted, LLGL::Shader>
 	{
 	public:
-		ShaderVariation(Shader& shader, const ShaderStage& type, SubShader& shaderPass, uint defs);
+		ShaderVariation(Shader& shader, const ShaderStage& type, Pass& shaderPass, uint defs);
 		bool CreateImpl();
 
 		void Reload();
@@ -53,7 +53,7 @@ namespace Unique
 	private:
 		Shader& owner_;
 		ShaderStage shaderStage_;
-		SubShader& shaderPass_;
+		Pass& shaderPass_;
 
 		/// Defines to use in compiling.
 		String defines_;
@@ -64,7 +64,7 @@ namespace Unique
 	class ShaderInstance : public TGfxObject<RefCounted, ShaderProgram>
 	{
 	public:
-		ShaderInstance(Shader& shader, SubShader& shaderPass, unsigned defs);
+		ShaderInstance(Shader& shader, Pass& shaderPass, unsigned defs);
 
 		bool CreateImpl();
 		void Reload();

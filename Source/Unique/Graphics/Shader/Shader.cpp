@@ -6,11 +6,12 @@ namespace Unique
 {
 	extern UPtr<LLGL::RenderSystem>        renderer;
 
-	uObject(SubShader)
+	uObject(Pass)
 	{
 		uFactory("Graphics")
 		uAttribute("Name", name_)
 		uAttribute("DepthState", depthState_)
+		uAttribute("ShaderDefines", shaderDefines_)
 		uAttribute("ShaderStages", shaderStages_)
 		uAttribute("Source", source_)
 	}
@@ -19,12 +20,11 @@ namespace Unique
 	{
 		uFactory("Graphics")
 		uAccessor("Name", GetName, SetName)
-		uAttribute("ShaderDefines", shaderDefines_)
 		uAttribute("ShaderPasses", passes_)
 	
 	}
 
-	uint SubShader::GetMask(Shader* shader, const String& defs)
+	uint Pass::GetMask(Shader* shader, const String& defs)
 	{
 		unsigned mask = 0;
 		for (uint i = 0; i < allDefs_.size(); i++)
@@ -38,14 +38,14 @@ namespace Unique
 		return mask;
 	}
 
-	ShaderInstance* SubShader::GetInstance(Shader* shader, const String& defs)
+	ShaderInstance* Pass::GetInstance(Shader* shader, const String& defs)
 	{
 		unsigned defMask = GetMask(shader, defs);
 
 		return GetInstance(shader, defMask);
 	}
 
-	ShaderInstance* SubShader::GetInstance(Shader* shader, unsigned defMask)
+	ShaderInstance* Pass::GetInstance(Shader* shader, unsigned defMask)
 	{
 		defMask &= allMask_;
 
@@ -79,18 +79,18 @@ namespace Unique
 		return true;
 	}
 
-	SubShader* Shader::AddPass(SubShader* pass)
+	Pass* Shader::AddPass(Pass* pass)
 	{
 		if (!pass)
 		{
-			pass = new SubShader();
+			pass = new Pass();
 		}
 
 		passes_.emplace_back(pass);
 		return pass;
 	}
 
-	SubShader* Shader::GetShaderPass(const StringID & passName)
+	Pass* Shader::GetShaderPass(const StringID & passName)
 	{
 		for (auto& p : passes_)
 		{
@@ -105,7 +105,7 @@ namespace Unique
 
 	uint Shader::GetMask(const StringID & passName, const String& defs)
 	{
-		SubShader* pass = GetShaderPass(passName);
+		Pass* pass = GetShaderPass(passName);
 		if (pass == nullptr)
 		{
 			return 0;
@@ -116,7 +116,7 @@ namespace Unique
 
 	ShaderInstance* Shader::GetInstance(const StringID& passName, uint defMask)
 	{
-		SubShader* pass = GetShaderPass(passName);
+		Pass* pass = GetShaderPass(passName);
 		if (pass == nullptr)
 		{
 			return nullptr;
@@ -127,7 +127,7 @@ namespace Unique
 
 	ShaderInstance* Shader::GetInstance(const StringID& passName, const String& defs)
 	{
-		SubShader* pass = GetShaderPass(passName);
+		Pass* pass = GetShaderPass(passName);
 		if (pass == nullptr)
 		{
 			return nullptr;

@@ -100,7 +100,7 @@ namespace Unique
 			return internalData_ ? internalData_->chars : String::EMPTY;
 		}
 
-		size_t ToHash() const { return internalData_ ? (size_t)internalData_->chars : 0; }
+		size_t ToHash() const { return (size_t)internalData_ /*? (size_t)internalData_->chars : 0*/; }
 		
 		inline void* GetInternalData() { return internalData_; }
 

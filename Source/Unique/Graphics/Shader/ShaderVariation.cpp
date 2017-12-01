@@ -7,7 +7,7 @@
 namespace Unique
 {
 
-	ShaderVariation::ShaderVariation(Shader& shader, const ShaderStage& type, SubShader& shaderPass, uint defs)
+	ShaderVariation::ShaderVariation(Shader& shader, const ShaderStage& type, Pass& shaderPass, uint defs)
 		: owner_(shader), shaderPass_(shaderPass)
 	{
 		shaderStage_ = type;
@@ -219,7 +219,7 @@ namespace Unique
 		return true;
 	}
 
-	ShaderInstance::ShaderInstance(Shader& shader, SubShader& shaderPass, unsigned defs)
+	ShaderInstance::ShaderInstance(Shader& shader, Pass& shaderPass, unsigned defs)
 	{
 		for (auto& shd : shaderPass.GetShaderStages())
 		{

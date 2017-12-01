@@ -16,9 +16,9 @@ namespace Unique
 
 	class Shader;
 
-	class SubShader : public Object
+	class Pass : public Object
 	{
-		uRTTI(SubShader, Object)
+		uRTTI(Pass, Object)
 	public:
 
 		Vector<ShaderStage>& GetShaderStages() { return  shaderStages_; }
@@ -35,6 +35,9 @@ namespace Unique
 		StencilState			stencilState_;
 		RasterizerState			rasterizerState_;
 		BlendState				blendState_;
+
+		String					shaderDefines_;
+
 		Vector<ShaderStage>		shaderStages_;
 		Vector<String>			allDefs_;
 
@@ -61,9 +64,9 @@ namespace Unique
 		const String& GetName() const { return name_; }
 		void SetName(const String& name) { name_ = name;}
 
-		SubShader* AddPass(SubShader* pass = nullptr);
+		Pass* AddPass(Pass* pass = nullptr);
 
-		SubShader* GetShaderPass(const StringID & pass);
+		Pass* GetShaderPass(const StringID & pass);
 
 		uint GetMask(const StringID& passName, const String & defs);
 
@@ -76,8 +79,7 @@ namespace Unique
 		static String GetShaderPath();
 	private:
 		String name_;
-		String shaderDefines_;
-		Vector<SPtr<SubShader>> passes_;
+		Vector<SPtr<Pass>> passes_;
 	};
 
 		// Load standard shader program (with vertex- and fragment shaders)

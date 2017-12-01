@@ -42,7 +42,7 @@ namespace Unique
 		typedef T value_type;
 
 		static int GetByteSize() { return sizeof(value_type); }
-
+		inline static const char* GetTypeName() { return "";}
 		inline static bool IsBasicType() { return false; }
 		inline static bool IsObject() { return false; }
 		inline static bool CreateObject(T& obj, const char* type) { return false; }

@@ -15,6 +15,7 @@ namespace Unique
 		typedef Unique::SPtr<T> value_type;
 
 		inline static bool AllowTransferOptimization() { return T::AllowTransferOptimization(); }
+		inline static const char* GetTypeName() { return T::GetTypeStatic().c_str(); }
 		inline static bool IsObject() { return true; }
 
 		inline static bool CreateObject(Unique::SPtr<T>& obj, const char* type)
