@@ -5,13 +5,45 @@
 
 namespace Unique
 {
+
 	class Shader;
-	class ShaderPass;
+	class SubShader;
+
+	struct ShaderStage
+	{
+		ShaderStage()
+		{
+		}
+
+		ShaderStage(
+			ShaderType type, const String& filename) :
+			name_{ type }
+		{
+		}
+
+		ShaderStage(
+			ShaderType type, const String& filename, const String& entryPoint, const String& target) :
+			name_{ type },
+			entryPoint_{ entryPoint },
+			target_{ target }
+		{
+		}
+
+		uClass(
+			"Name", name_,
+			"EntryPoint", entryPoint_,
+			"Target", target_);
+
+		ShaderType	name_;
+		String		entryPoint_;
+		String		target_;
+		uint		mask_;
+	};
 
 	class ShaderVariation : public TGfxObject<RefCounted, LLGL::Shader>
 	{
 	public:
-		ShaderVariation(Shader& shader, ShaderType type, ShaderPass& shaderPass, uint defs);
+		ShaderVariation(Shader& shader, const ShaderStage& type, SubShader& shaderPass, uint defs);
 		bool CreateImpl();
 
 		void Reload();
@@ -19,10 +51,9 @@ namespace Unique
 		bool Compile(const String& binaryShaderName);
 
 	private:
-		String sourceFile() const;
 		Shader& owner_;
-		ShaderType type_;
-		ShaderPass& shaderPass_;
+		ShaderStage shaderStage_;
+		SubShader& shaderPass_;
 
 		/// Defines to use in compiling.
 		String defines_;
@@ -33,7 +64,7 @@ namespace Unique
 	class ShaderInstance : public TGfxObject<RefCounted, ShaderProgram>
 	{
 	public:
-		ShaderInstance(Shader& shader, ShaderPass& shaderPass, unsigned defs);
+		ShaderInstance(Shader& shader, SubShader& shaderPass, unsigned defs);
 
 		bool CreateImpl();
 		void Reload();
@@ -46,7 +77,6 @@ namespace Unique
 			}
 
 			return (ShaderProgram*)handle_;
-
 		}
 
 		Vector<SPtr<ShaderVariation>>	shaders;

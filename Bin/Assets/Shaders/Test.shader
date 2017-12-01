@@ -1,30 +1,71 @@
 {
-    "Type": "Shader",
-    "Name": "Test",
-    "ShaderDefines": "",
-    "ShaderPasses": [
+    ShaderDefines: ""
+    ShaderPasses: [
         {
-            "Type": "ShaderPass",
-            "Name": "",
-            "DepthState": {
-                "TestEnabled": false,
-                "WriteEnabled": false,
-                "CompareOp": "Less"
-            },
-            "ShaderStages": [
+            Type: "SubShader"
+            Name: ""
+            DepthState: {
+                TestEnabled: false
+                WriteEnabled: false
+                CompareOp: "Less"
+            }
+            ShaderStages: [
                 {
-                    "Name": "VertexShader",
-                    "FileName": "Assets/shader.hlsl",
-                    "EntryPoint": "VS",
-                    "Target": "vs_5_0"
-                },
+                    Name: "VertexShader"
+                    EntryPoint: "VS"
+                    Target: "vs_5_0"
+                }
                 {
-                    "Name": "FragmentShader",
-                    "FileName": "Assets/shader.hlsl",
-                    "EntryPoint": "PS",
-                    "Target": "ps_5_0"
+                    Name: "FragmentShader"
+                    EntryPoint: "PS"
+                    Target: "ps_5_0"
                 }
             ]
+            Source:
+            '''
+
+// HLSL texturing shader
+
+float4 color;
+float4 color1;
+Texture2D colorMap : register(t0);
+SamplerState samplerState : register(s0);
+
+struct InputVS
+{
+	float2 position : POSITION;
+	float2 texCoord : TEXCOORD;
+};
+
+struct OutputVS
+{
+	float4 position : SV_Position;
+	float2 texCoord : TEXCOORD;
+};
+
+
+// VERTEX SHADER
+
+OutputVS VS(InputVS inp)
+{
+	OutputVS outp;
+	outp.position = float4(inp.position, 0, 1);
+	outp.texCoord = inp.texCoord;
+	return outp;
+}
+
+
+// PIXEL SHADER
+
+float4 PS(OutputVS inp) : SV_Target
+{
+	return colorMap.Sample(samplerState, inp.texCoord)*color + color1;
+}
+
+
+
+
+            '''
         }
     ]
 }

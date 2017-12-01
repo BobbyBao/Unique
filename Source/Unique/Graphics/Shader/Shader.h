@@ -5,40 +5,6 @@
 
 namespace Unique
 {
-	struct ShaderStage
-	{
-		ShaderStage() 
-		{
-		}
-
-		ShaderStage(
-			ShaderType type, const String& filename) :
-			type{ type },
-			filename{ filename }
-		{
-		}
-
-		ShaderStage(
-			ShaderType type, const String& filename, const String& entryPoint, const String& target) :
-			type{ type },
-			filename{ filename },
-			entryPoint{ entryPoint },
-			target{ target }
-		{
-		}
-
-		uClass(	
-			"Type", type,
-			"FileName", filename,
-			"EntryPoint", entryPoint,
-			"Target", target);
-
-		ShaderType	type;
-		String		filename;
-		String		entryPoint;
-		String		target;
-		uint		mask_;
-	};
 
 	struct ShaderProgramRecall
 	{
@@ -50,27 +16,29 @@ namespace Unique
 
 	class Shader;
 
-	class ShaderPass : public Object
+	class SubShader : public Object
 	{
-		uRTTI(ShaderPass, Object)
+		uRTTI(SubShader, Object)
 	public:
 
 		Vector<ShaderStage>& GetShaderStages() { return  shaderStages_; }
 
 		uint GetMask(Shader* shader, const String& defs);
 
-		ShaderInstance* GetInstance(Shader * shader, const String & defs);
+		ShaderInstance* GetInstance(Shader* shader, const String & defs);
 
-		ShaderInstance* GetInstance(Shader * shader, unsigned defMask);
+		ShaderInstance* GetInstance(Shader* shader, unsigned defMask);
 	private:
 		StringID				name_;
-		unsigned char			passIdx_;
+		
 		DepthState				depthState_;
 		StencilState			stencilState_;
 		RasterizerState			rasterizerState_;
 		BlendState				blendState_;
 		Vector<ShaderStage>		shaderStages_;
 		Vector<String>			allDefs_;
+
+		String					source_;
 		uint					allMask_;
 
 		HashMap<uint, SPtr<ShaderInstance>> cachedPass_;
@@ -85,13 +53,17 @@ namespace Unique
 	public:
 		Shader();
 		~Shader();
+
+		virtual bool BeginLoad(File& source);
 		
+		virtual bool EndLoad();
+
 		const String& GetName() const { return name_; }
 		void SetName(const String& name) { name_ = name;}
 
-		ShaderPass* AddPass(ShaderPass* pass = nullptr);
+		SubShader* AddPass(SubShader* pass = nullptr);
 
-		ShaderPass* GetShaderPass(const StringID & pass);
+		SubShader* GetShaderPass(const StringID & pass);
 
 		uint GetMask(const StringID& passName, const String & defs);
 
@@ -100,11 +72,12 @@ namespace Unique
 		ShaderInstance* GetInstance(const StringID& passName, const String & defs);
 
 		static Vector<String>&& SplitDef(const String& defs);
-		static String Shader::GetShaderPath();
+
+		static String GetShaderPath();
 	private:
 		String name_;
 		String shaderDefines_;
-		Vector<SPtr<ShaderPass>> passes_;
+		Vector<SPtr<SubShader>> passes_;
 	};
 
 		// Load standard shader program (with vertex- and fragment shaders)

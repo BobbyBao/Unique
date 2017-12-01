@@ -7,10 +7,10 @@
 namespace Unique
 {
 
-	ShaderVariation::ShaderVariation(Shader& shader, ShaderType type, ShaderPass& shaderPass, uint defs)
+	ShaderVariation::ShaderVariation(Shader& shader, const ShaderStage& type, SubShader& shaderPass, uint defs)
 		: owner_(shader), shaderPass_(shaderPass)
 	{
-		type_ = type;
+		shaderStage_ = type;
 		mask_ = defs;
 
 		defines_.clear();
@@ -28,26 +28,28 @@ namespace Unique
 				defines_.Append(def);
 			}
 		}
-
-		ResourceCache& cache = Subsystem<ResourceCache>();
-		cache.StoreResourceDependency(&owner_, sourceFile());
-
+		
 	}
-
-	String ShaderVariation::sourceFile() const
-	{
-		const String& shaderName = owner_.GetName();
-		return ReplaceExtension(shaderName, ".hlsl");
-	}
-
+	
 	bool ShaderVariation::CreateImpl() 
 	{
-		ReleaseImpl();
-
 		String name = GetFileName(owner_.GetName());
 		String extension;
 
-		extension = (type_ == ShaderType::Vertex ? "_vs.bin" : "_fs.bin");
+		switch (shaderStage_.name_)
+		{
+		case ShaderType::Vertex:
+			extension = "_vs.bin";
+			break;
+		case ShaderType::Fragment:
+			extension = "_fs.bin";
+			break;
+		case ShaderType::Compute:
+			extension = "_cs.bin";
+			break;
+		default:
+			break;
+		}
 
 		String defines = defines_.Replaced(';', '_');
 
@@ -104,7 +106,6 @@ namespace Unique
 		}
 
 		auto& graphics = Subsystem<Graphics>();
-
 		if (graphics.IsOpenGL())
 		{
 
@@ -131,7 +132,7 @@ namespace Unique
 
 	bool ShaderVariation::Compile(const String& binaryShaderName)
 	{
-		String sourceCode = sourceFile();
+		const String& sourceCode = shaderPass_.source_;
 
 		auto& graphics = Subsystem<Graphics>();
 		if (graphics.IsOpenGL())
@@ -218,11 +219,11 @@ namespace Unique
 		return true;
 	}
 
-	ShaderInstance::ShaderInstance(Shader& shader, ShaderPass& shaderPass, unsigned defs)
+	ShaderInstance::ShaderInstance(Shader& shader, SubShader& shaderPass, unsigned defs)
 	{
 		for (auto& shd : shaderPass.GetShaderStages())
 		{
-			SPtr<ShaderVariation> sv(new ShaderVariation(shader, shd.type, shaderPass, defs));
+			SPtr<ShaderVariation> sv(new ShaderVariation(shader, shd, shaderPass, defs));
 			shaders.push_back(sv);
 		}
 		

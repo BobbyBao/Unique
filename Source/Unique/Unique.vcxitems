@@ -60,6 +60,10 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Precompiled.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Resource\Image.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Resource\Resource.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\hjson\hjson_decode.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\hjson\hjson_encode.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\hjson\hjson_parsenumber.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\hjson\hjson_value.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\json2msgpack.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-common.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-expect.c" />
@@ -135,6 +139,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Resource\Resource.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\BinaryReader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\BinaryWriter.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\hjson\hjson.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\JsonReader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\JsonWriter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-common.h" />

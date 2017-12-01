@@ -5,7 +5,8 @@ namespace Unique
 	enum class TransferState
 	{
 		Reading,
-		Writing
+		Writing,
+		Resolve
 	};
 
 #define uSerializer(clss, state)\

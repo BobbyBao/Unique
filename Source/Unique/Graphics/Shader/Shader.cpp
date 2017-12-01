@@ -6,12 +6,13 @@ namespace Unique
 {
 	extern UPtr<LLGL::RenderSystem>        renderer;
 
-	uObject(ShaderPass)
+	uObject(SubShader)
 	{
 		uFactory("Graphics")
 		uAttribute("Name", name_)
 		uAttribute("DepthState", depthState_)
 		uAttribute("ShaderStages", shaderStages_)
+		uAttribute("Source", source_)
 	}
 
 	uObject(Shader)
@@ -20,9 +21,10 @@ namespace Unique
 		uAccessor("Name", GetName, SetName)
 		uAttribute("ShaderDefines", shaderDefines_)
 		uAttribute("ShaderPasses", passes_)
+	
 	}
 
-	uint ShaderPass::GetMask(Shader* shader, const String& defs)
+	uint SubShader::GetMask(Shader* shader, const String& defs)
 	{
 		unsigned mask = 0;
 		for (uint i = 0; i < allDefs_.size(); i++)
@@ -36,14 +38,14 @@ namespace Unique
 		return mask;
 	}
 
-	ShaderInstance* ShaderPass::GetInstance(Shader* shader, const String& defs)
+	ShaderInstance* SubShader::GetInstance(Shader* shader, const String& defs)
 	{
 		unsigned defMask = GetMask(shader, defs);
 
 		return GetInstance(shader, defMask);
 	}
 
-	ShaderInstance* ShaderPass::GetInstance(Shader* shader, unsigned defMask)
+	ShaderInstance* SubShader::GetInstance(Shader* shader, unsigned defMask)
 	{
 		defMask &= allMask_;
 
@@ -67,19 +69,28 @@ namespace Unique
 	{
 	}
 
+	bool Shader::BeginLoad(File& source)
+	{
+		return true;
+	}
 
-	ShaderPass* Shader::AddPass(ShaderPass* pass)
+	bool Shader::EndLoad()
+	{
+		return true;
+	}
+
+	SubShader* Shader::AddPass(SubShader* pass)
 	{
 		if (!pass)
 		{
-			pass = new ShaderPass();
+			pass = new SubShader();
 		}
 
-		passes_.push_back(SPtr<ShaderPass>(pass));
+		passes_.emplace_back(pass);
 		return pass;
 	}
 
-	ShaderPass* Shader::GetShaderPass(const StringID & passName)
+	SubShader* Shader::GetShaderPass(const StringID & passName)
 	{
 		for (auto& p : passes_)
 		{
@@ -94,7 +105,7 @@ namespace Unique
 
 	uint Shader::GetMask(const StringID & passName, const String& defs)
 	{
-		ShaderPass* pass = GetShaderPass(passName);
+		SubShader* pass = GetShaderPass(passName);
 		if (pass == nullptr)
 		{
 			return 0;
@@ -105,7 +116,7 @@ namespace Unique
 
 	ShaderInstance* Shader::GetInstance(const StringID& passName, uint defMask)
 	{
-		ShaderPass* pass = GetShaderPass(passName);
+		SubShader* pass = GetShaderPass(passName);
 		if (pass == nullptr)
 		{
 			return nullptr;
@@ -116,7 +127,7 @@ namespace Unique
 
 	ShaderInstance* Shader::GetInstance(const StringID& passName, const String& defs)
 	{
-		ShaderPass* pass = GetShaderPass(passName);
+		SubShader* pass = GetShaderPass(passName);
 		if (pass == nullptr)
 		{
 			return nullptr;
@@ -129,7 +140,7 @@ namespace Unique
 	{
 		if (defs.Empty())
 		{
-			return Vector<String>();
+			return std::move(Vector<String>());
 		}
 
 		return defs.Split(' ');
@@ -137,7 +148,7 @@ namespace Unique
 
 	String Shader::GetShaderPath()
 	{
-		return "";
+		return "Shader/HLSL";
 	}
 
 
@@ -162,7 +173,7 @@ namespace Unique
 			(std::istreambuf_iterator<char>())
 		);
 	}
-	
+
 	LLGL::ShaderProgram* LoadShaderProgram(
 		const Vector<ShaderStage>& shaderDescs,
 		const LLGL::VertexFormat& vertexFormat,
@@ -178,13 +189,13 @@ namespace Unique
 		for (const auto& desc : shaderDescs)
 		{
 			// Read shader file
-			auto shaderCode = ReadFileContent(desc.filename);
+			auto shaderCode = "";// ReadFileContent(desc.filename);
 
 			// Create shader
-			auto shader = renderer->CreateShader(desc.type);
+			auto shader = renderer->CreateShader(desc.name_);
 
 			// Compile shader
-			LLGL::ShaderDescriptor shaderDesc(desc.entryPoint.CString(), desc.target.CString(), LLGL::ShaderCompileFlags::Debug);
+			LLGL::ShaderDescriptor shaderDesc(desc.entryPoint_.CString(), desc.target_.CString(), LLGL::ShaderCompileFlags::Debug);
 			shaderDesc.streamOutput.format = streamOutputFormat;
 
 			shader->Compile(shaderCode, shaderDesc);
@@ -216,7 +227,7 @@ namespace Unique
 
 		return shaderProgram;
 	}
-
+	/*
 	// Reloads the specified shader program from the previously specified shader source files.
 	bool ReloadShaderProgram(LLGL::ShaderProgram* shaderProgram)
 	{
@@ -239,13 +250,13 @@ namespace Unique
 			for (const auto& desc : recall.shaderDescs)
 			{
 				// Read shader file
-				auto shaderCode = ReadFileContent(desc.filename);
+				auto shaderCode = "";// ReadFileContent(desc.filename);
 
 				// Create shader
-				auto shader = renderer->CreateShader(desc.type);
+				auto shader = renderer->CreateShader(desc.type_);
 
 				// Compile shader
-				LLGL::ShaderDescriptor shaderDesc(desc.entryPoint.CString(), desc.target.CString(), LLGL::ShaderCompileFlags::Debug);
+				LLGL::ShaderDescriptor shaderDesc(desc.entryPoint_.CString(), desc.target_.CString(), LLGL::ShaderCompileFlags::Debug);
 				shaderDesc.streamOutput.format = recall.streamOutputFormat;
 
 				shader->Compile(shaderCode, shaderDesc);
@@ -298,7 +309,7 @@ namespace Unique
 		recall.shaders = std::move(shaders);
 
 		return true;
-	}
+	}*/
 
 	// Load standard shader program (with vertex- and fragment shaders)
 	LLGL::ShaderProgram* LoadStandardShaderProgram(const LLGL::VertexFormat& vertexFormat)

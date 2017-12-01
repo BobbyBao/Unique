@@ -270,19 +270,9 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Build\LLGL\LLGL_Direct3D11.vcxproj">
-      <Project>{cf3e0458-b6f2-3db9-ac35-5a7716b44eea}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Build\LLGL\LLGL_OpenGL.vcxproj">
-      <Project>{5bb5eff1-f30b-3ef5-97b9-1d10e402ee89}</Project>
-    </ProjectReference>
     <ProjectReference Include="E:\Code\Banana\Build\LLGL\ZERO_CHECK.vcxproj">
       <Project>{8DAB61CD-C233-3697-AEAF-EB284DBBB645}</Project>
       <Name>ZERO_CHECK</Name>
-    </ProjectReference>
-    <ProjectReference Include="E:\Code\Banana\Build\LLGL\LLGL.vcxproj">
-      <Project>{D66D53BC-C82B-3A2C-9E5D-E24025E90E3F}</Project>
-      <Name>LLGL</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
