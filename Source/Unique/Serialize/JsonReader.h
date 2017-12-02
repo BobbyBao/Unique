@@ -108,6 +108,7 @@ namespace Unique
 						std::string name;
 						if (SplitTypeInfo(key.c_str(), SerializeTraits<T>::GetTypeName(), name))
 						{
+							hJsonNode_["Type"] = SerializeTraits<T>::GetTypeName();
 							hJsonNode_["Name"] = name;
 						}
 

@@ -33,6 +33,7 @@ namespace Unique
 	{
 	}
 
+
 	uint Pass::GetMask(Shader* shader, const String& defs)
 	{
 		unsigned mask = 0;
@@ -70,6 +71,56 @@ namespace Unique
 		
 	}
 
+	bool Pass::Prepare()
+	{
+		if (!computeShader_)
+		{
+			allDefs_ = Shader::SplitDef(computeShader_.defines_);
+
+			if (allDefs_.size() > 0)
+			{
+				std::sort(allDefs_.begin(), allDefs_.end());
+				allMask_ = (unsigned)(1 << (allDefs_.size() + 1)) - 1;
+				computeShader_.mask_ = allMask_;
+			}
+		}
+		else
+		{
+			Vector<String> psDefs = Shader::SplitDef(pixelShader_.defines_);
+			Vector<String> vsDefs = Shader::SplitDef(vertexShader_.defines_);
+			allDefs_ = psDefs;
+
+			for (auto& s : vsDefs)
+			{
+				if (!Contains(allDefs_, s))
+				{
+					allDefs_.push_back(s);
+				}
+			}
+			
+			if (allDefs_.size() > 0)
+			{
+				std::sort(allDefs_.begin(), allDefs_.end());
+				allMask_ = (unsigned)(1 << (allDefs_.size() + 1)) - 1;
+
+				for (uint i = 0; i < allDefs_.size(); i++)
+				{
+					if (Find(vsDefs, allDefs_[i]) != vsDefs.end())
+					{
+						pixelShader_.mask_ |= (unsigned)(1 << i);
+					}
+
+					if (Find(psDefs, allDefs_[i]) != psDefs.end())
+					{
+						pixelShader_.mask_ |= (unsigned)(1 << i);
+					}
+				}
+			}
+
+		}
+
+		return true;
+	}
 
 	Shader::Shader()
 	{
@@ -79,12 +130,17 @@ namespace Unique
 	{
 	}
 
-	bool Shader::Prepare(File& source)
+	bool Shader::Prepare()
 	{
+		for (auto& pass : passes_)
+		{
+			pass->Prepare();
+		}
+
 		return true;
 	}
 
-	bool Shader::EndLoad()
+	bool Shader::Create()
 	{
 		return true;
 	}

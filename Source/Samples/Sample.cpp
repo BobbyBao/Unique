@@ -3,6 +3,7 @@
 #include "Graphics/Shader/Shader.h"
 #include "Graphics/Texture.h"
 #include "Graphics/Buffers/VertexBuffer.h"
+#include "Graphics/Geometry.h"
 
 using namespace Unique;
 
@@ -65,9 +66,10 @@ void Sample::Initialize()
 
 	TestIO();
 
-	auto& cache = Subsystem<ResourceCache>();
-	Shader* shader = cache.GetResource<Shader>("Shaders/Test.shader");
-		
+	SubscribeToEvent(&Sample::HandleStartup);
+	SubscribeToEvent(&Sample::HandleShutdown);
+
+	/*
 	// Create all graphics objects
 	auto vertexFormat = CreateBuffers();
 
@@ -84,10 +86,23 @@ void Sample::Initialize()
 	pipeline = renderer->CreateGraphicsPipeline(pipelineDesc);
 	colorMap = Texture::Load("Assets/colorMap.png");
 	
-
+	*/
 }
 
 void Sample::Terminate()
+{
+}
+
+void Sample::HandleStartup(StringID, const Startup&)
+{
+	auto& cache = Subsystem<ResourceCache>();
+	shader_ = cache.GetResource<Shader>("Shaders/Test.shader");
+	shaderInst_ = shader_->GetInstance("Main", "");
+	auto sp = shaderInst_->GetProgram();
+	geometry_ = new Geometry();
+}
+
+void Sample::HandleShutdown(StringID, const struct Shutdown&)
 {
 }
 
@@ -128,7 +143,7 @@ void Sample::OnPostRender()
 
 	// Clear color buffer
 	graphics.Clear(ClearFlags::Color);
-
+	/*
 	// Set graphics pipeline and vertex buffer
 	graphics.SetGraphicsPipeline(pipeline);
 
@@ -138,7 +153,7 @@ void Sample::OnPostRender()
 	graphics.SetTexture(colorMap, 0);
 
 	// Draw fullscreen triangle
-	graphics.Draw(3, 0);
+	graphics.Draw(3, 0);*/
 
 }
 

@@ -85,7 +85,7 @@ namespace Unique
 
 		Vector<SPtr<ShaderVariation>>	shaders;
 		bool dirty_ = true;
-		GraphicsPipeline*			pipeline_;
+		GraphicsPipeline*			pipeline_ = nullptr;
 
 	};
 }

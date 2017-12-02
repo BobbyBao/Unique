@@ -27,6 +27,8 @@ namespace Unique
 		ShaderInstance* GetInstance(Shader* shader, const String & defs);
 
 		ShaderInstance* GetInstance(Shader* shader, unsigned defMask);
+
+		bool Prepare();
 	private:
 		StringID				name_;
 		
@@ -42,7 +44,7 @@ namespace Unique
 		Vector<String>			allDefs_;
 
 		String					source_;
-		uint					allMask_;
+		uint					allMask_ = 0;
 
 		HashMap<uint, SPtr<ShaderInstance>> cachedPass_;
 
@@ -58,9 +60,9 @@ namespace Unique
 		Shader();
 		~Shader();
 
-		virtual bool Prepare(File& source);
+		virtual bool Prepare();
 		
-		virtual bool EndLoad();
+		virtual bool Create();
 
 		const String& GetName() const { return name_; }
 		void SetName(const String& name) { name_ = name;}

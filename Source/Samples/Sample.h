@@ -5,6 +5,8 @@
 
 namespace Unique
 {
+	class Shader;
+	class Geometry;
 	class Texture;
 	class VertexBuffer;
 
@@ -17,7 +19,13 @@ namespace Unique
 	private:
 		virtual void Initialize();
 		virtual void Terminate();
+		void HandleStartup(StringID, const struct Startup&);
+		void HandleShutdown(StringID, const struct Shutdown&);
 		virtual void OnPostRender() override;
+
+		SPtr<Shader> shader_;
+		ShaderInstance* shaderInst_;
+		SPtr<Geometry> geometry_;
 
 		ShaderProgram*    shaderProgram = nullptr;
 		LLGL::GraphicsPipeline* pipeline = nullptr;

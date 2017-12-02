@@ -67,7 +67,7 @@ bool Resource::Load()
 
 bool Resource::Prepare()
 {
-    return false;
+    return true;
 }
 
 bool Resource::Create()
