@@ -11,32 +11,36 @@ namespace Unique
 
 	struct ShaderStage
 	{
-		ShaderStage()
+		ShaderStage(ShaderType type = ShaderType::Vertex) : shaderType_(type)
 		{
 		}
 
 		ShaderStage(
 			ShaderType type, const String& filename) :
-			name_{ type }
+			shaderType_{ type }
 		{
 		}
 
 		ShaderStage(
 			ShaderType type, const String& filename, const String& entryPoint, const String& target) :
-			name_{ type },
+			shaderType_{ type },
 			entryPoint_{ entryPoint },
 			target_{ target }
 		{
 		}
 
-		uClass(
-			"Name", name_,
-			"EntryPoint", entryPoint_,
+		operator bool()
+		{
+			return !entryPoint_.Empty();
+		}
+
+		uClass("EntryPoint", entryPoint_,
 			"Target", target_);
 
-		ShaderType	name_;
+		ShaderType	shaderType_;
 		String		entryPoint_;
 		String		target_;
+		String		defines_;
 		uint		mask_;
 	};
 

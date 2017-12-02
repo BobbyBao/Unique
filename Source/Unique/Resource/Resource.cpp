@@ -36,7 +36,7 @@ Resource::Resource() :
 {
 }
 
-bool Resource::Load(File& source)
+bool Resource::Load()
 {
     // Because BeginLoad() / EndLoad() can be called from worker threads, where profiling would be a no-op,
     // create a type name -based profile block here
@@ -51,9 +51,10 @@ bool Resource::Load(File& source)
     // If we are loading synchronously in a non-main thread, behave as if async loading (for example use
     // GetTempResource() instead of GetResource() to load resource dependencies)
     SetAsyncLoadState(Thread::IsMainThread() ? ASYNC_DONE : ASYNC_LOADING);
-    bool success = BeginLoad(source);
+    bool success = Prepare();
     if (success)
-        success &= EndLoad();
+        success &= Create();
+
     SetAsyncLoadState(ASYNC_DONE);
 
 #ifdef UNIQUE_PROFILING
@@ -64,33 +65,15 @@ bool Resource::Load(File& source)
     return success;
 }
 
-bool Resource::BeginLoad(File& source)
+bool Resource::Prepare()
 {
     return false;
 }
 
-bool Resource::EndLoad()
+bool Resource::Create()
 {
     // If no GPU upload step is necessary, no override is necessary
     return true;
-}
-
-bool Resource::Save(File& dest) const
-{
-    UNIQUE_LOGERROR("Save not supported for " + GetType().ToString());
-    return false;
-}
-
-bool Resource::LoadFile(const String& fileName)
-{
-    File file;
-    return file.Open(fileName, FILE_READ) && Load(file);
-}
-
-bool Resource::SaveFile(const String& fileName) const
-{
-    File file;
-    return file.Open(fileName, FILE_WRITE) && Save(file);
 }
 
 void Resource::SetName(const String& name)

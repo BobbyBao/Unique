@@ -34,7 +34,7 @@ namespace Unique
 
 	void Renderer::Begin()
 	{
-		//	profilerObj_->ResetCounters();
+		graphics.BeginRender();
 	}
 
 	void Renderer::Render()

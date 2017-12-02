@@ -34,7 +34,6 @@
 //#include "../Resource/Image.h"
 #include "../Resource/ResourceCache.h"
 #include "../Resource/ResourceEvents.h"
-#include "texturereader.h"
 #include "../DebugNew.h"
 
 #include <cstdio>
@@ -370,7 +369,7 @@ bool ResourceCache::ReloadResource(Resource* resource)
     bool success = false;
     SPtr<File> file = GetFile(resource->GetName());
     if (file)
-        success = resource->Load(*(file.Get()));
+        success = resource->Load();
 
     if (success)
     {
@@ -1141,38 +1140,24 @@ File* ResourceCache::SearchPackages(const String& nameIn)
 }
 
 
-void ResourceCache::RegisterReader(ResourceReader* reader)
+void ResourceCache::RegisterImporter(ResourceImporter* importer)
 {
-	resourceReaders_[reader->resourceType()] = reader;
+	resourceImporters_[importer->GetResourceType()] = importer;
 }
 
 SPtr<Resource> ResourceCache::LoadResource(StringID type, const String& name)
 {
-	auto it = resourceReaders_.find(type);
-	if (it != resourceReaders_.end())
+	SPtr<Resource> resource;
+	//todo : load from cache dir
+
+	auto it = resourceImporters_.find(type);
+	if (it != resourceImporters_.end())
 	{
-		return it->second->load(name);
+		resource = it->second->Import(name);
 	}
 
-	//to do standard serialize
-	// Attempt to load the resource
-	SPtr<File> file = GetFile(name, false);
-	if (!file)
-		return SPtr<Resource>();   // Error is already logged
-
-
-	// Make sure the pointer is non-null and is a Resource subclass
-	SPtr<Resource> resource = DynamicCast<Resource>(GetContext()->CreateObject(type));
-	if (!resource)
-	{
-		UNIQUE_LOGERROR("Could not load unknown resource type " + String(type));
-		return SPtr<Resource>();
-	}
-
-	UNIQUE_LOGDEBUG("Loading resource " + name);
 	resource->SetName(name);
-
-	if (!resource->Load(*(file.Get())))
+	if (!resource->Load())
 	{
 		return SPtr<Resource>();
 	}

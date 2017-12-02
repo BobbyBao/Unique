@@ -1,12 +1,17 @@
 #pragma once
+#include "../Core/EnumFlags.h"
 
-enum class AttributeFlag
+enum class AttributeFlag : int
 {
 	Editable = 1,
 	FileRead = 2,
 	FileWrite = 4,
 	Default = 7,
+	Array = 8,
+	Map = 16,
 };
+
+ENABLE_BITMASK_OPERATORS(AttributeFlag)
 
 #define uTransferField(NAME, FIELD, ...) transfer.TransferAttribute (NAME, FIELD, ##__VA_ARGS__);
 
@@ -45,6 +50,9 @@ namespace Unique
 		inline static const char* GetTypeName() { return "";}
 		inline static bool IsBasicType() { return false; }
 		inline static bool IsObject() { return false; }
+		inline static bool IsArray() { return false; }
+		inline static bool IsMap() { return false; }
+		inline static bool IsCollection() { return IsArray()||IsMap(); }
 		inline static bool CreateObject(T& obj, const char* type) { return false; }
 
 	};
@@ -53,8 +61,6 @@ namespace Unique
 	class SerializeTraits : public SerializeTraitsBase<T>
 	{
 	public:
-		typedef T value_type;
-
 		template<class TransferFunction>
 		inline static void Transfer(value_type& data, TransferFunction& transfer)
 		{
@@ -67,8 +73,6 @@ namespace Unique
 	class SerializeTraitsPrimitive : public SerializeTraitsBase<T>
 	{
 	public:
-		typedef T value_type;
-
 		inline static bool IsBasicType() { return true; }
 
 		template<class TransferFunction>
@@ -83,6 +87,36 @@ namespace Unique
 	struct NonConstContainerValueType
 	{
 		typedef typename T::value_type value_type;
+	};
+
+	template<class T, bool IsContinous = true>
+	class SerializeTraitsArray : public SerializeTraitsBase<T>
+	{
+	public:
+		inline static bool IsArray() { return true; }
+
+		template<class TransferFunction>
+		inline static void Transfer(value_type& data, TransferFunction& transfer)
+		{
+			transfer.TransferArray(data);
+		}
+
+		static bool IsContinousMemoryArray() { return IsContinous; }
+	};
+
+	template<class T>
+	class SerializeTraitsMap : public SerializeTraitsBase<T>
+	{
+	public:
+		inline static bool IsMap() { return true; }
+
+		template<class TransferFunction>
+		inline static void Transfer(value_type& data, TransferFunction& transfer)
+		{
+			transfer.TransferArray(data);
+		}
+
+		static bool IsContinousMemoryArray() { return false; }
 	};
 
 }

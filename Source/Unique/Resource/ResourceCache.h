@@ -26,7 +26,7 @@
 
 #include "../IO/File.h"
 #include "../Resource/Resource.h"
-#include "../resource/ResourceReader.h"
+#include "../resource/ResourceImporter.h"
 
 namespace Unique
 {
@@ -211,7 +211,7 @@ public:
     /// Returns a formatted string containing the memory actively used.
     String PrintMemoryUsage() const;
 
-	void RegisterReader(ResourceReader* reader);
+	void RegisterImporter(ResourceImporter* importer);
 private:
     /// Find a resource.
     const SPtr<Resource>& FindResource(StringID type, StringID nameHash);
@@ -257,7 +257,7 @@ private:
     /// How many milliseconds maximum per frame to spend on finishing background loaded resources.
     int finishBackgroundResourcesMs_;
 
-	HashMap<StringID, SPtr<ResourceReader>> resourceReaders_;
+	HashMap<StringID, SPtr<ResourceImporter>> resourceImporters_;
 };
 
 template <class T> T* ResourceCache::GetExistingResource(const String& name)

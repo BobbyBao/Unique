@@ -11,8 +11,10 @@ namespace Unique
 		uFactory("Graphics")
 		uAttribute("Name", name_)
 		uAttribute("DepthState", depthState_)
-		uAttribute("ShaderDefines", shaderDefines_)
-		uAttribute("ShaderStages", shaderStages_)
+		uAttribute("ShaderDefines", allDefs_)
+		uAttribute("VertexShader", vertexShader_)
+		uAttribute("PixelShader", pixelShader_)
+		uAttribute("ComputeShader", computeShader_)
 		uAttribute("Source", source_)
 	}
 
@@ -20,8 +22,15 @@ namespace Unique
 	{
 		uFactory("Graphics")
 		uAccessor("Name", GetName, SetName)
-		uAttribute("ShaderPasses", passes_)
+		uAttribute("Pass", passes_)
 	
+	}
+
+	Pass::Pass() : 
+		vertexShader_(ShaderType::Vertex),
+		pixelShader_(ShaderType::Fragment),
+		computeShader_(ShaderType::Compute)
+	{
 	}
 
 	uint Pass::GetMask(Shader* shader, const String& defs)
@@ -58,6 +67,7 @@ namespace Unique
 		SPtr<ShaderInstance> inst(new ShaderInstance(*shader, *this, defMask));
 		cachedPass_[defMask] = inst;
 		return inst;
+		
 	}
 
 
@@ -69,7 +79,7 @@ namespace Unique
 	{
 	}
 
-	bool Shader::BeginLoad(File& source)
+	bool Shader::Prepare(File& source)
 	{
 		return true;
 	}
@@ -192,7 +202,7 @@ namespace Unique
 			auto shaderCode = "";// ReadFileContent(desc.filename);
 
 			// Create shader
-			auto shader = renderer->CreateShader(desc.name_);
+			auto shader = renderer->CreateShader(desc.shaderType_);
 
 			// Compile shader
 			LLGL::ShaderDescriptor shaderDesc(desc.entryPoint_.CString(), desc.target_.CString(), LLGL::ShaderCompileFlags::Debug);

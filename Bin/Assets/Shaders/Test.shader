@@ -6,8 +6,8 @@ Shader("Default"):
 		DepthState: 
 		{
 			TestEnabled: false
-			WriteEnabled: false
-			CompareOp: "Less"
+			WriteEnabled: true
+			CompareOp: Less
 		}
 		
 		ShaderDefines: ""
@@ -18,7 +18,7 @@ Shader("Default"):
 			Target: "vs_5_0"
 		}
 		
-		FragmentShader:
+		PixelShader:
 		{
 			EntryPoint: "PS"
 			Target: "ps_5_0"

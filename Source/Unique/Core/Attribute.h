@@ -39,6 +39,15 @@ namespace Unique
 		TAttribute(const String& name, size_t offset, AttributeFlag flag)
 			: Attribute(name, flag), offset_(offset)
 		{
+			if (SerializeTraits<T>::IsArray())
+			{
+				flag_ |= AttributeFlag::Array;
+			}
+
+			if (SerializeTraits<T>::IsMap())
+			{
+				flag_ |= AttributeFlag::Map;
+			}
 		}
 
 		virtual void Visit(BinaryWriter& serializer, void* obj)
@@ -92,11 +101,20 @@ namespace Unique
 		typedef void (T::*SetFunctionPtr)(typename Trait::ParameterType);
 
 		/// Construct with function pointers.
-		AttributeAccessorImpl(const String& name, GetFunctionPtr getFunction, SetFunctionPtr setFunction, AttributeFlag mode) :
+		AttributeAccessorImpl(const String& name, GetFunctionPtr getFunction, SetFunctionPtr setFunction, AttributeFlag flag) :
 			getFunction_(getFunction),
 			setFunction_(setFunction),
-			Attribute(name, mode)
+			Attribute(name, flag)
 		{
+			if (SerializeTraits<T>::IsArray())
+			{
+				flag_ |= AttributeFlag::Array;
+			}
+
+			if (SerializeTraits<T>::IsMap())
+			{
+				flag_ |= AttributeFlag::Map;
+			}
 			assert(getFunction_);
 			assert(setFunction_);
 		}

@@ -8,7 +8,7 @@ namespace Unique
 {
 
 	ShaderVariation::ShaderVariation(Shader& shader, const ShaderStage& type, Pass& shaderPass, uint defs)
-		: owner_(shader), shaderPass_(shaderPass)
+		: owner_(shader), shaderPass_(shaderPass), shaderStage_(LLGL::ShaderType::Vertex)
 	{
 		shaderStage_ = type;
 		mask_ = defs;
@@ -36,7 +36,7 @@ namespace Unique
 		String name = GetFileName(owner_.GetName());
 		String extension;
 
-		switch (shaderStage_.name_)
+		switch (shaderStage_.shaderType_)
 		{
 		case ShaderType::Vertex:
 			extension = "_vs.bin";
@@ -221,12 +221,24 @@ namespace Unique
 
 	ShaderInstance::ShaderInstance(Shader& shader, Pass& shaderPass, unsigned defs)
 	{
-		for (auto& shd : shaderPass.GetShaderStages())
+		if(shaderPass.vertexShader_)
 		{
-			SPtr<ShaderVariation> sv(new ShaderVariation(shader, shd, shaderPass, defs));
+			SPtr<ShaderVariation> sv(new ShaderVariation(shader, shaderPass.vertexShader_, shaderPass, defs));
 			shaders.push_back(sv);
 		}
-		
+
+		if (shaderPass.pixelShader_)
+		{
+			SPtr<ShaderVariation> sv(new ShaderVariation(shader, shaderPass.pixelShader_, shaderPass, defs));
+			shaders.push_back(sv);
+		}
+
+		if (shaderPass.computeShader_)
+		{
+			SPtr<ShaderVariation> sv(new ShaderVariation(shader, shaderPass.computeShader_, shaderPass, defs));
+			shaders.push_back(sv);
+		}
+
 	}
 	
 	bool ShaderInstance::CreateImpl()

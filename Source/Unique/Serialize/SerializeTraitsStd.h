@@ -45,13 +45,10 @@ namespace Unique
 	}
 
 	template<class T, class Allocator>
-	class SerializeTraits<std::vector<T, Allocator> > : public SerializeTraitsBase<std::vector<T, Allocator> >
+	class SerializeTraits<std::vector<T, Allocator> > : public SerializeTraitsArray<std::vector<T, Allocator> >
 	{
 	public:
-
-		typedef std::vector<T, Allocator>	value_type;
-		DEFINE_GET_TYPESTRING_CONTAINER(vector)
-
+		
 		template<class TransferFunction> 
 		inline static void Transfer(value_type& data, TransferFunction& transfer)
 		{
@@ -63,53 +60,31 @@ namespace Unique
 	};
 
 	template<class Allocator>
-	class SerializeTraits<std::vector<unsigned char, Allocator> > : public SerializeTraitsBase<std::vector<unsigned char, Allocator> >
+	class SerializeTraits<std::vector<unsigned char, Allocator> > : public SerializeTraitsArray<std::vector<unsigned char, Allocator> >
 	{
 	public:
-
-		typedef std::vector<unsigned char, Allocator>	value_type;
-		
+				
 		template<class TransferFunction> inline
 			static void Transfer(value_type& data, TransferFunction& transfer)
 		{
 			transfer.TransferArray(data);
 		}
 
-		static bool IsContinousMemoryArray() { return true; }
 		static void ResizeSTLStyleArray(value_type& data, int rs) { resize_trimmed(data, rs); }
 	};
 
 	template<class T, class Allocator>
-	class SerializeTraits<std::deque<T, Allocator> > : public SerializeTraitsBase<std::deque<T, Allocator> >
+	class SerializeTraits<std::deque<T, Allocator> > : public SerializeTraitsArray<std::deque<T, Allocator>, false >
 	{
 	public:
-
-		typedef std::deque<T, Allocator>	value_type;
-		DEFINE_GET_TYPESTRING_CONTAINER(vector)
-
-		template<class TransferFunction> inline
-		static void Transfer(value_type& data, TransferFunction& transfer)
-		{
-			transfer.TransferArray(data);
-		}
-
 		static void ResizeSTLStyleArray(value_type& data, int rs) { data.resize(rs); }
 	};
 
 	template<class T, class Allocator>
-	class SerializeTraits<std::list<T, Allocator> > : public SerializeTraitsBase<std::list<T, Allocator> >
+	class SerializeTraits<std::list<T, Allocator> > : public SerializeTraitsArray<std::list<T, Allocator>, false >
 	{
 	public:
-		typedef std::list<T, Allocator>	value_type;
-		DEFINE_GET_TYPESTRING_CONTAINER(vector)
 
-		template<class TransferFunction> inline
-		static void Transfer(value_type& data, TransferFunction& transfer)
-		{
-			transfer.TransferArray(data);
-		}
-
-		static bool IsContinousMemoryArray() { return false; }
 		static void ResizeSTLStyleArray(value_type& data, int rs) { data.resize(rs); }
 	};
 
@@ -129,7 +104,7 @@ namespace Unique
 	};
 
 	template<class FirstClass, class SecondClass, class Compare, class Allocator>
-	class SerializeTraits<std::map<FirstClass, SecondClass, Compare, Allocator> > : public SerializeTraitsBase<std::map<FirstClass, SecondClass, Compare, Allocator> >
+	class SerializeTraits<std::map<FirstClass, SecondClass, Compare, Allocator> > : public SerializeTraitsMap<std::map<FirstClass, SecondClass, Compare, Allocator> >
 	{
 	public:
 		typedef std::map<FirstClass, SecondClass, Compare, Allocator>	value_type;
@@ -142,7 +117,7 @@ namespace Unique
 	};
 
 	template<class FirstClass, class SecondClass, class Compare, class Allocator>
-	class SerializeTraits<std::unordered_map<FirstClass, SecondClass, Compare, Allocator> > : public SerializeTraitsBase<std::map<FirstClass, SecondClass, Compare, Allocator> >
+	class SerializeTraits<std::unordered_map<FirstClass, SecondClass, Compare, Allocator> > : public SerializeTraitsMap<std::map<FirstClass, SecondClass, Compare, Allocator> >
 	{
 	public:
 		typedef std::unordered_map<FirstClass, SecondClass, Compare, Allocator>	value_type;
@@ -155,7 +130,7 @@ namespace Unique
 	};
 
 	template<class FirstClass, class SecondClass, class Compare, class Allocator>
-	class SerializeTraits<std::multimap<FirstClass, SecondClass, Compare, Allocator> > : public SerializeTraitsBase<std::multimap<FirstClass, SecondClass, Compare, Allocator> >
+	class SerializeTraits<std::multimap<FirstClass, SecondClass, Compare, Allocator> > : public SerializeTraitsMap<std::multimap<FirstClass, SecondClass, Compare, Allocator> >
 	{
 	public:
 		typedef std::multimap<FirstClass, SecondClass, Compare, Allocator>	value_type;
@@ -169,16 +144,14 @@ namespace Unique
 
 
 	template<class T, class Compare, class Allocator>
-	class SerializeTraits<std::set<T, Compare, Allocator> > : public SerializeTraitsBase<std::set<T, Compare, Allocator> >
+	class SerializeTraits<std::set<T, Compare, Allocator> > : public SerializeTraitsArray<std::set<T, Compare, Allocator> >
 	{
 	public:
-		typedef std::set<T, Compare, Allocator>	value_type;
-		DEFINE_GET_TYPESTRING_CONTAINER(set)
 
 		template<class TransferFunction> 
 		inline static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			transfer.TransferMap(data);
+			transfer.TransferSet(data);
 		}
 	};
 

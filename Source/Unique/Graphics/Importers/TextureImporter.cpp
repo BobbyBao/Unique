@@ -1,16 +1,16 @@
 #include "Precompiled.h"
-#include "texturereader.h"
-#include "../graphics/texture.h"
+#include "TextureImporter.h"
+#include "../texture.h"
 
 
 namespace Unique
 {
 
-	TextureReader::TextureReader() : ResourceReader(Texture::GetTypeStatic())
+	TextureImporter::TextureImporter() : ResourceImporter(Texture::GetTypeStatic())
 	{
 	}
 
-	SPtr<Resource> TextureReader::load(const String& filePath)
+	SPtr<Resource> TextureImporter::Import(const String& filePath)
 	{
 		if (filePath.EndsWith(".raw"))
 		{
@@ -18,7 +18,6 @@ namespace Unique
 		}
 
 		String cachedAsset = ReplaceExtension(filePath, ".ktx");
-		ResourceCache& cache = Subsystem<ResourceCache>();
 		FileSystem& fileSystem = Subsystem<FileSystem>();
 		SPtr<File> file = cache.GetFile(cachedAsset);
 		if (!file)
@@ -61,7 +60,7 @@ namespace Unique
 		UNIQUE_LOGDEBUG("Loading resource " + filePath);
 		resource->SetName(filePath);
 
-		if (!resource->Load(*(file.Get())))
+		if (!resource->Load())
 		{
 			return SPtr<Resource>();
 		}
@@ -70,7 +69,7 @@ namespace Unique
 	}
 
 
-	SPtr<Resource> TextureReader::loadRaw(const String& path)
+	SPtr<Resource> TextureImporter::loadRaw(const String& path)
 	{
 		ResourceCache& cache = Subsystem<ResourceCache>();
 		SPtr<File> file = cache.GetFile(path);

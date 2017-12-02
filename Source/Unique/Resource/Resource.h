@@ -56,20 +56,12 @@ public:
     Resource();
 
     /// Load resource synchronously. Call both BeginLoad() & EndLoad() and return true if both succeeded.
-    bool Load(File& source);
+    bool Load();
     /// Load resource from stream. May be called from a worker thread. Return true if successful.
-	virtual bool BeginLoad(File& source);
+	virtual bool Prepare();
     /// Finish resource loading. Always called from the main thread. Return true if successful.
-	virtual bool EndLoad();
-
-    /// Save resource. Return true if successful.
-    virtual bool Save(File& dest) const;
-
-    /// Load resource from file.
-    bool LoadFile(const String& fileName);
-    /// Save resource to file.
-    virtual bool SaveFile(const String& fileName) const;
-
+	virtual bool Create();
+	
     /// Set name.
     void SetName(const String& name);
     /// Set memory use in bytes, possibly approximate.
@@ -94,7 +86,6 @@ public:
     /// Return the asynchronous loading state.
     AsyncLoadState GetAsyncLoadState() const { return asyncLoadState_; }
 	
-
 private:
     /// Name.
     String name_;

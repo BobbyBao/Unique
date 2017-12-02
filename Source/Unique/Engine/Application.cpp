@@ -8,6 +8,9 @@
 #include "../Core/CoreEvents.h"
 #include "../Core/WorkQueue.h"
 #include "../Resource/ResourceCache.h"
+#include "Graphics/Importers/ShaderImporter.h"
+#include "Graphics/Importers/TextureImporter.h"
+#include "Graphics/Importers/ModelImporter.h"
 
 namespace Unique
 {
@@ -62,6 +65,10 @@ namespace Unique
 		cache.AddResourceDir("Assets");
 		cache.AddResourceDir("CoreData");
 		cache.AddResourceDir("Cache");
+
+		cache.RegisterImporter(new ShaderImporter());
+		cache.RegisterImporter(new TextureImporter());
+		cache.RegisterImporter(new ModelImporter());
 
 		Graphics& graphics = Subsystem<Graphics>();
 		window_ = graphics.Initialize(rendererModule_, resolution_);

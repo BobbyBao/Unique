@@ -19,12 +19,14 @@ public:\
 		template<class T>\
 		void TransferAttribute(const char* name, T& data, AttributeFlag metaFlag = AttributeFlag::Default)\
 		{\
+			AttributeFlag metaFlagSave = metaFlag_;\
 			metaFlag_ = metaFlag;\
 			if (StartAttribute(name))\
 			{\
 				Unique::SerializeTraits<T>::Transfer(data, *this);\
 				EndAttribute();\
 			}\
+			metaFlag_ = metaFlagSave;\
 		}\
 		template <typename... Rest>\
 		void TransferAttributes(Rest&... rest)\

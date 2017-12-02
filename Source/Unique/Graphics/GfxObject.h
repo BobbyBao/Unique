@@ -21,7 +21,7 @@ namespace Unique
 
 		bool IsValid() const { return handle_ != nullptr; }
 
-		void Create()
+	 	virtual bool Create()
 		{
 			if (Context::IsMainThread())
 			{
@@ -40,6 +40,8 @@ namespace Unique
 				CreateImpl();
 				state_ = State::Created;
 			}
+
+			return true;
 		}
 
 		void Release()

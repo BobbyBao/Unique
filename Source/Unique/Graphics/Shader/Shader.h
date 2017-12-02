@@ -20,8 +20,7 @@ namespace Unique
 	{
 		uRTTI(Pass, Object)
 	public:
-
-		Vector<ShaderStage>& GetShaderStages() { return  shaderStages_; }
+		Pass();
 
 		uint GetMask(Shader* shader, const String& defs);
 
@@ -35,10 +34,11 @@ namespace Unique
 		StencilState			stencilState_;
 		RasterizerState			rasterizerState_;
 		BlendState				blendState_;
+				
+		ShaderStage				vertexShader_;
+		ShaderStage				pixelShader_;
+		ShaderStage				computeShader_;
 
-		String					shaderDefines_;
-
-		Vector<ShaderStage>		shaderStages_;
 		Vector<String>			allDefs_;
 
 		String					source_;
@@ -48,6 +48,7 @@ namespace Unique
 
 		friend class Shader;
 		friend class ShaderVariation;
+		friend class ShaderInstance;
 	};
 
 	class Shader : public Resource
@@ -57,7 +58,7 @@ namespace Unique
 		Shader();
 		~Shader();
 
-		virtual bool BeginLoad(File& source);
+		virtual bool Prepare(File& source);
 		
 		virtual bool EndLoad();
 

@@ -12,7 +12,6 @@ namespace Unique
 	class SerializeTraits<Unique::SPtr<T> > : public SerializeTraitsBase<Unique::SPtr<T> >
 	{
 	public:
-		typedef Unique::SPtr<T> value_type;
 
 		inline static bool AllowTransferOptimization() { return T::AllowTransferOptimization(); }
 		inline static const char* GetTypeName() { return T::GetTypeStatic().c_str(); }
@@ -33,12 +32,9 @@ namespace Unique
 	};
 
 	template<class T>
-	class SerializeTraits<Vector<T> > : public SerializeTraitsBase<Vector<T> >
+	class SerializeTraits<Vector<T> > : public SerializeTraitsArray<Vector<T> >
 	{
 	public:
-		typedef Vector<T>	value_type;
-		DEFINE_GET_TYPESTRING_CONTAINER(vector)
-
 		template<class TransferFunction>
 		inline static void Transfer(value_type& data, TransferFunction& transfer)
 		{
@@ -50,11 +46,9 @@ namespace Unique
 	};
 
 	template<>
-	class SerializeTraits<Vector<byte>> : public SerializeTraitsBase<Vector<byte>>
+	class SerializeTraits<Vector<byte>> : public SerializeTraitsArray<Vector<byte>>
 	{
 	public:
-		typedef Vector<byte>	value_type; 
-
 		template<class TransferFunction>
 		inline static void Transfer(value_type& data, TransferFunction& transfer)
 		{
@@ -69,7 +63,6 @@ namespace Unique
 	class SerializeTraitsEnum : public SerializeTraitsBase<T>
 	{
 	public:
-		typedef T value_type;
 
 		static int GetEnum(const char* enumNames[], int count, const Unique::String& val)
 		{

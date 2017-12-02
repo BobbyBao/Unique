@@ -1,3 +1,4 @@
+#include "Precompiled.h"
 #include "Semaphore.h"
 
 #if UNIQUE_PLATFORM_POSIX

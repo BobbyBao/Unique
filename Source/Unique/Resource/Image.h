@@ -27,5 +27,10 @@ namespace Unique
 		LLGL::ImageDescriptor imageDesc_;
 	};
 
+	class ImageImporter : public ResourceImporter
+	{
+	public:
+
+	};
 
 }

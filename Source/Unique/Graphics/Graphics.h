@@ -49,7 +49,6 @@ namespace Unique
 		void BeginFrame();
 		void EndFrame();
 		void AddCommand(std::function<void()> cmd);
-		void PostCommand(std::function<void()> cmd);
 		//****************
 
 		//Execute in render thread
@@ -124,6 +123,9 @@ namespace Unique
         void Dispatch(unsigned int groupSizeX, unsigned int groupSizeY, unsigned int groupSizeZ);
 
 		void Close();
+
+		static int currentContext_;
+		inline static int GetRenderContext() { return 1 - currentContext_; }
 	protected:
 		void ExecuteCommands(CommandQueue& cmds);
 		void FrameNoRenderWait();
@@ -134,22 +136,30 @@ namespace Unique
 		void RenderSemWait();
 
 		bool debugger_ = false;
+
 		bool vsync_ = false;
+
 		int multiSampling_ = 4;
+
 		UPtr<LLGL::RenderingProfiler>    profilerObj_;
+
 		UPtr<LLGL::RenderingDebugger>    debuggerObj_;
+
 		Map<LLGL::SamplerDescriptor, LLGL::Sampler*> samplers_;
 
-		Semaphore renderSem_;
-		Semaphore mainSem_;
-		bool singleThreaded_ = false;
 		bool exit_ = false;
 
-		Vector < std::function<void()>> preComands_;
-		Vector < std::function<void()>> postComands_;
+		bool singleThreaded_ = false;
+
+		Semaphore renderSem_;
+
+		Semaphore mainSem_;
 
 		long long waitSubmit_ = 0;
+
 		long long waitRender_ = 0;
+
+		Vector < std::function<void()>> comands_;;
 	};
 
 }

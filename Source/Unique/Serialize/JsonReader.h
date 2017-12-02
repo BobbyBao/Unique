@@ -49,7 +49,7 @@ namespace Unique
 		void EndAttribute();
 		bool StartArray(uint size) { return true; }
 		void EndArray() {}
-		bool SplitTypeInfo(const String& info, const String& type, String& name);
+		bool SplitTypeInfo(const std::string& info, const std::string& type, std::string& name);
 
 		bool human_ = false;
 		bool dsl_ = false;
@@ -90,7 +90,7 @@ namespace Unique
 		SharedArrayPtr<char> buffer(new char[dataSize]);
 		if (source.Read(buffer.Get(), dataSize) != dataSize)
 			return false;
-
+		
 		rapidjson::Document document;
 		Hjson::Value hJsonRoot;
 		if (human_)
@@ -105,10 +105,10 @@ namespace Unique
 
 					if (SerializeTraits<T>::IsObject())
 					{
-						String name;
+						std::string name;
 						if (SplitTypeInfo(key.c_str(), SerializeTraits<T>::GetTypeName(), name))
 						{
-							hJsonNode_["Name"] = name.CString();
+							hJsonNode_["Name"] = name;
 						}
 
 					}
@@ -139,26 +139,45 @@ namespace Unique
 	}
 
 
-	inline bool JsonReader::SplitTypeInfo(const String& info, const String& type, String& name)
+	inline bool JsonReader::SplitTypeInfo(const std::string& info, const std::string& type, std::string& name)
 	{
-		if (!info.StartsWith(type, false))
+		if (std::strncmp(info.c_str(), type.c_str(), type.length()) != 0)
 		{
 			return false;
 		}
 
-		uint pos = info.Find('(');
-		if (pos != String::NPOS)
+		if (info.length() == type.length())
 		{
-			uint pos1 = info.FindLast(')');
-			if (pos1 != String::NPOS)
+			return true;
+		}
+
+		size_t pos = type.length();
+		if (info[pos] != '(')
+		{
+			return false;
+		}
+
+		size_t pos1 = info.find_last_of(')');
+		if (pos1 != std::string::npos)
+		{
+			pos++;
+			pos1--;
+			if (info[pos] == '"')
 			{
-				if (pos1 > pos)
-				{
-					name = info.Substring(pos + 1, pos1);
-				}
+				pos++;
 			}
 
+			if (info[pos1] == '"')
+			{
+				pos1--;
+			}
+
+			if (pos1 > pos)
+			{
+				name = info.substr(pos, pos1 - pos + 1);
+			}
 		}
+
 
 		return true;
 	}
@@ -167,23 +186,23 @@ namespace Unique
 	{
 		if (human_)
 		{
-			if (dsl_)
+			if (dsl_ && ((metaFlag_ & AttributeFlag::Array) || (metaFlag_ & AttributeFlag::Map)))
 			{
 				Vector<std::pair<std::string, Hjson::Value>> elements;
 				for (auto& it = hJsonNode_.begin(); it != hJsonNode_.end(); ++it)
 				{
 					auto& mapKey = it->first;
 					auto& mapValue = it->second;
-					String name;
-					if (SplitTypeInfo(mapKey.c_str(), key, name))
+					std::string name;
+					if (SplitTypeInfo(mapKey, key.CString(), name))
 					{
 						elements.push_back(*it);
 
 						if (it->second.type() == Hjson::Value::MAP)
 						{
-							if (!name.Empty())
+							if (!name.empty())
 							{
-								mapValue["Name"] = name.CString();
+								mapValue["Name"] = name.c_str();
 							}
 
 							if (mapValue["Type"].empty())
@@ -198,11 +217,6 @@ namespace Unique
 				if (elements.empty())
 				{
 					return false;
-				}
-				else if (elements.size() == 1)
-				{
-					hJsonParentNode_.push_back(hJsonNode_);
-					hJsonNode_ = elements[0].second;
 				}
 				else
 				{
@@ -268,28 +282,15 @@ namespace Unique
 		if (data == nullptr)
 		{
 			if (human_)
-			{/*
-				if (dsl_)
+			{
+				Hjson::Value v = hJsonNode_["Type"];
+				if (v.empty())
 				{
-					String name;
-					if (SplitTypeInfo(key.c_str(), SerializeTraits<T>::GetTypeName(), name))
-					{
-						hJsonNode_["Name"] = name.CString();
-					}
-
+					UNIQUE_LOGWARNING("Unkown object type.");
+					return;
 				}
-				else*/
-				{
-					Hjson::Value v = hJsonNode_["Type"];
-					if (v.empty())
-					{
-						UNIQUE_LOGWARNING("Unkown object type.");
-						return;
-					}
 
-					data = StaticCast<T, Object>(GetContext()->CreateObject((const char*)v));
-
-				}
+				data = StaticCast<T, Object>(GetContext()->CreateObject((const char*)v));
 
 			}
 			else

@@ -34,6 +34,8 @@ namespace Unique
 	// Main command buffer
 	LLGL::CommandBuffer*            commands = nullptr;
 
+	int Graphics::currentContext_ = 0;
+
 	Graphics::Graphics():
 		profilerObj_ {	new LLGL::RenderingProfiler() },
 		debuggerObj_{ new Debugger() }
@@ -51,7 +53,8 @@ namespace Unique
 	Window* Graphics::Initialize(const std::string& rendererModule, const LLGL::Size& size)
 	{
 		// Create render system
-		renderer = LLGL::RenderSystem::Load(
+		renderer = LLGL::RenderSystem::Load
+		(
 			rendererModule,
 			(debugger_ ? profilerObj_.get() : nullptr),
 			(debugger_ ? debuggerObj_.get() : nullptr)
@@ -159,17 +162,12 @@ namespace Unique
 		return ib;
 	}
 
-
 	void Graphics::AddCommand(std::function<void()> cmd)
 	{
-		preComands_.push_back(cmd);
+		assert(Context::IsMainThread());
+		comands_.push_back(cmd);
 	}
-
-	void Graphics::PostCommand(std::function<void()> cmd)
-	{
-		postComands_.push_back(cmd);
-	}
-
+	
 	void Graphics::ExecuteCommands(CommandQueue& cmds)
 	{
 		if (!cmds.empty())
@@ -196,7 +194,7 @@ namespace Unique
 
 	void Graphics::BeginRender()
 	{
-
+		profilerObj_->ResetCounters();
 	}
 
 	void Graphics::EndRender()
@@ -206,14 +204,11 @@ namespace Unique
 		if (MainSemWait())
 		{
 			{
-				UNIQUE_PROFILE(ExecCommandsPre);
-				ExecuteCommands(preComands_);
+				UNIQUE_PROFILE(ExecCommands);
+				ExecuteCommands(comands_);
 			}
 
-			{
-				UNIQUE_PROFILE(ExecCommandsPost);
-				ExecuteCommands(postComands_);
-			}
+			SwapContext();
 
 			RenderSemPost();
 
@@ -320,11 +315,11 @@ namespace Unique
 
 	void Graphics::SwapContext()
 	{
+		currentContext_ = 1 - currentContext_;
 	}
 
 	void Graphics::FrameNoRenderWait()
 	{
-		SwapContext();
 		// release render thread
 		MainSemPost();
 	}

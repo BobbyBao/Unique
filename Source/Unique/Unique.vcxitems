@@ -17,12 +17,13 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\ProcessUtils.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\WorkQueue.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Drawable.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Importers\ModelImporter.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Shader\ShaderVariation.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Resource\BackgroundLoader.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Resource\ResourceCache.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Resource\ResourceReader.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Resource\ResourceImporter.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Resource\ResourceRef.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Resource\Texturereader.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Importers\TextureImporter.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Scene\Component.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Container\RefCounted.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Container\Str.cpp" />
@@ -74,18 +75,21 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\msgpack2json.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Buffers\StorageBuffer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Shader\Uniform.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Importers\ShaderImporter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\ProcessUtils.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\WorkQueue.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\EnumFlags.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Drawable.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Shader\ShaderVariation.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Importers\ModelImporter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Resource\BackgroundLoader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Resource\ResourceCache.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Resource\ResourceEvents.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Resource\ResourceReader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Resource\ResourceImporter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Resource\ResourceRef.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Resource\Texturereader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Importers\TextureImporter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Scene\Component.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\AttributeTraits.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Container\Algorithm.h" />
@@ -156,6 +160,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\TransferBase.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Buffers\StorageBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Shader\Uniform.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Importers\ShaderImporter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Unique.h" />
   </ItemGroup>
 </Project>

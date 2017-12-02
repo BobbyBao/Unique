@@ -61,7 +61,7 @@ void BackgroundLoader::ThreadFunction()
             if (file)
             {
                 resource->SetAsyncLoadState(ASYNC_LOADING);
-                success = resource->BeginLoad(*file);
+                success = resource->Prepare();
             }
 
             // Process dependencies now
@@ -248,7 +248,7 @@ void BackgroundLoader::FinishBackgroundLoading(BackgroundLoadItem& item)
             profiler->BeginBlock(profileBlockName.CString());
 #endif
         UNIQUE_LOGDEBUG("Finishing background loaded resource " + resource->GetName());
-        success = resource->EndLoad();
+        success = resource->Create();
 
 #ifdef UNIQUE_PROFILING
         if (profiler)

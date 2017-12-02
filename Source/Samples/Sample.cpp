@@ -22,14 +22,14 @@ Sample::Sample() :	Application { L"Unique Engine" }
 void TestIO()
 {
 
-
+	/*
 	SPtr<Shader> shader(new Shader());
 	JsonReader jsonReader;
 	jsonReader.Load("Shaders/Test.shader", shader, true, true);
 
 	JsonWriter jsonWriter;
 	jsonWriter.Save("test.json", shader);
-	/*
+
 	shader->SetName("test_shader");
 	SubShader* pass = shader->AddPass();
 	pass->GetShaderStages().push_back({ LLGL::ShaderType::Vertex, "Assets/shader.hlsl", "VS", "vs_5_0" });
@@ -64,6 +64,9 @@ void Sample::Initialize()
 	Application::Initialize();
 
 	TestIO();
+
+	auto& cache = Subsystem<ResourceCache>();
+	Shader* shader = cache.GetResource<Shader>("Shaders/Test.shader");
 		
 	// Create all graphics objects
 	auto vertexFormat = CreateBuffers();
