@@ -102,11 +102,11 @@ void Sample::HandleStartup(StringID, const Startup&)
 	geometry_ = new Geometry();
 }
 
-void Sample::HandleShutdown(StringID, const struct Shutdown&)
+void Sample::HandleShutdown(StringID, const Shutdown&)
 {
 }
 
-VertexFormat Sample::CreateBuffers()
+VertexFormat Sample::CreateGeometry()
 {
 	// Specify vertex format
 	VertexFormat vertexFormat;

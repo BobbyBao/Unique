@@ -792,7 +792,7 @@ void FileSystem::ScanDirInternal(Vector<String>& result, String path, const Stri
 
     String filterExtension = filter.Substring(filter.Find('.'));
     if (filterExtension.Contains('*'))
-        filterExtension.clear();
+        filterExtension.Clear();
 
 #ifdef __ANDROID__
     if (UNIQUE_IS_ASSET(path))
@@ -943,7 +943,7 @@ void SplitPath(const String& fullPath, String& pathName, String& fileName, Strin
         fullPathCopy = fullPathCopy.Substring(0, extPos);
     }
     else
-        extension.clear();
+        extension.Clear();
 
     pathPos = fullPathCopy.FindLast('/');
     if (pathPos != String::NPOS)
@@ -954,7 +954,7 @@ void SplitPath(const String& fullPath, String& pathName, String& fileName, Strin
     else
     {
         fileName = fullPathCopy;
-        pathName.clear();
+        pathName.Clear();
     }
 }
 

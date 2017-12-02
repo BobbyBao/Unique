@@ -15,7 +15,7 @@ namespace Unique
 	public:
 		Sample();
 
-		VertexFormat CreateBuffers();
+		VertexFormat CreateGeometry();
 	private:
 		virtual void Initialize();
 		virtual void Terminate();

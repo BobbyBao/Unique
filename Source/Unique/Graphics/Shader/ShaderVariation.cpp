@@ -13,7 +13,7 @@ namespace Unique
 		shaderStage_ = type;
 		mask_ = defs;
 
-		defines_.clear();
+		defines_.Clear();
 
 		for (uint i = 0; i < shaderPass_.allDefs_.size(); i++)
 		{

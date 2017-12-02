@@ -369,7 +369,7 @@ String GetConsoleInput()
                 {
                     PrintUnicode("\n");
                     ret = currentLine;
-                    currentLine.clear();
+                    currentLine.Clear();
                     return ret;
                 }
                 else

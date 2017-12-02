@@ -233,7 +233,7 @@ namespace Unique
 		}
 		else
 		{
-			data.clear();
+			data.Clear();
 		}
 	}
 

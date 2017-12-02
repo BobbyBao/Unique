@@ -31,11 +31,11 @@ namespace Unique
 	using StreamOutputFormat = LLGL::StreamOutputFormat;
 	using ShaderType = LLGL::ShaderType;
 	using ShaderProgram = LLGL::ShaderProgram;
-	using PrimitiveTopology = LLGL::PrimitiveTopology;
+	using PrimitiveType = LLGL::PrimitiveTopology;
 
 	using UniformType = LLGL::UniformType;
 
-	uEnumTraits(PrimitiveTopology,
+	uEnumTraits(PrimitiveType,
 				"PointList", "LineList", "LineStrip", "LineLoop", "LineListAdjacency", "LineStripAdjacency",
 				"TriangleList", "TriangleStrip", "TriangleFan", "TriangleListAdjacency", "TriangleStripAdjacency",
 				"Patches1", "Patches2", "Patches3", "Patches4", "Patches5", "Patches6", "Patches7", "Patches8",

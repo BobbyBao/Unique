@@ -18,7 +18,7 @@ namespace Unique
 
 	bool AbstractFile::Read(String& str)
 	{
-		str.clear();
+		str.Clear();
 
 		while (!IsEof())
 		{

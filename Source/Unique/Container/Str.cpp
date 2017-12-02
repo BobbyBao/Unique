@@ -455,7 +455,7 @@ void String::Compact()
         Reserve(length_ + 1);
 }
 
-void String::clear()
+void String::Clear()
 {
     Resize(0);
 }
@@ -714,7 +714,7 @@ void String::SetUTF8FromLatin1(const char* str)
 {
     char temp[7];
 
-    clear();
+    Clear();
 
     if (!str)
         return;
@@ -732,7 +732,7 @@ void String::SetUTF8FromWChar(const wchar_t* str)
 {
     char temp[7];
 
-    clear();
+    Clear();
 
     if (!str)
         return;

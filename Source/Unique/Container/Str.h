@@ -322,7 +322,7 @@ public:
     /// Reallocate so that no extra memory is used.
     void Compact();
     /// Clear the string.
-    void clear();
+    void Clear();
     /// Swap with another string.
     void Swap(String& str);
 

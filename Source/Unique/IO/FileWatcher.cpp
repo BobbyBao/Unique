@@ -224,7 +224,7 @@ void FileWatcher::StopWatching()
 #endif
 
         UNIQUE_LOGDEBUG("Stopped watching path " + path_);
-        path_.clear();
+        path_.Clear();
     }
 }
 
