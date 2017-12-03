@@ -3,6 +3,7 @@
 #include "Texture.h"
 #include "Buffers/VertexBuffer.h"
 #include "Buffers/IndexBuffer.h"
+#include "GraphicsContext.h"
 
 namespace Unique
 {
@@ -33,8 +34,6 @@ namespace Unique
 	LLGL::RenderContext*			graphicsContext = nullptr;
 	// Main command buffer
 	LLGL::CommandBuffer*            commands = nullptr;
-
-	int Graphics::currentContext_ = 0;
 
 	Graphics::Graphics():
 		profilerObj_ {	new LLGL::RenderingProfiler() },
@@ -107,7 +106,7 @@ namespace Unique
 		std::cout << "  vendor:           " << info.vendorName << std::endl;
 		std::cout << "  shading language: " << info.shadingLanguageName << std::endl;
 
-		FrameNoRenderWait();
+		GraphicsContext::FrameNoRenderWait();
 
 		return &(Window&)graphicsContext->GetSurface();
 	}
@@ -162,57 +161,27 @@ namespace Unique
 		return ib;
 	}
 
-	void Graphics::AddCommand(std::function<void()> cmd)
-	{
-		assert(Context::IsMainThread());
-		comands_.push_back(cmd);
-	}
-	
-	void Graphics::ExecuteCommands(CommandQueue& cmds)
-	{
-		if (!cmds.empty())
-		{
-			for (auto& fn : cmds)
-			{
-				fn();
-			}
-
-			cmds.clear();
-		}
-	}
-
 	void Graphics::BeginFrame()
 	{
+		GraphicsContext::BeginFrame();
 	}
 
 	void Graphics::EndFrame()
 	{
-		RenderSemWait();
-
-		FrameNoRenderWait();
+		GraphicsContext::EndFrame();
 	}
 
 	void Graphics::BeginRender()
 	{
+		GraphicsContext::BeginRender();
 		profilerObj_->ResetCounters();
 	}
 
 	void Graphics::EndRender()
 	{
 		graphicsContext->Present();
-
-		if (MainSemWait())
-		{
-			{
-				UNIQUE_PROFILE(ExecCommands);
-				ExecuteCommands(comands_);
-			}
-
-			SwapContext();
-
-			RenderSemPost();
-
-		}
+		
+		GraphicsContext::EndRender();
 	}
 
 	void Graphics::Clear(uint flags)
@@ -313,68 +282,10 @@ namespace Unique
 		commands->Dispatch(groupSizeX, groupSizeY, groupSizeZ);
 	}
 
-	void Graphics::SwapContext()
-	{
-		currentContext_ = 1 - currentContext_;
-	}
-
-	void Graphics::FrameNoRenderWait()
-	{
-		// release render thread
-		MainSemPost();
-	}
-	
-	void Graphics::MainSemPost()
-	{
-		if (!singleThreaded_)
-		{
-			mainSem_.post();
-		}
-	}
-
-	bool Graphics::MainSemWait(int _msecs)
-	{
-		if (singleThreaded_)
-		{
-			return true;
-		}
-
-		UNIQUE_PROFILE(MainThreadWait);
-		HiresTimer timer;
-		bool ok = mainSem_.wait(_msecs);
-		if (ok)
-		{
-			waitSubmit_ = timer.GetUSec(false);
-			return true;
-		}
-
-		return false;
-	}
-
-	void Graphics::RenderSemPost()
-	{
-		if (!singleThreaded_)
-		{
-			renderSem_.post();
-		}
-	}
-
-	void Graphics::RenderSemWait()
-	{
-		if (!singleThreaded_)
-		{
-			UNIQUE_PROFILE(RenderThreadWait);
-			HiresTimer timer;
-			bool ok = renderSem_.wait();
-			assert(ok);
-			waitRender_ = timer.GetUSec(false);
-		}
-	}
 
 	void Graphics::Close()
 	{
-		MainSemWait();
-		RenderSemPost();
+		GraphicsContext::Stop();
 	}
 
 }

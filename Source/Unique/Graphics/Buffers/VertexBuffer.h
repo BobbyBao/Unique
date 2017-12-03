@@ -25,7 +25,7 @@ namespace Unique
 		/// Release buffer.
 		virtual void Release();
 
-		bool Create(unsigned vertexCount, unsigned elementMask, const ByteArray& mem);
+		bool Create(unsigned vertexCount, unsigned elementMask, const ByteArray& mem = ByteArray());
 
 		/// Set size, vertex elements and dynamic mode. Previous data will be lost.
 		bool SetSize(unsigned vertexCount, const VertexFormat& vertexFormat, long flag = 0);
@@ -72,24 +72,11 @@ namespace Unique
 	
 		/// Return element with specified type and semantic from a vertex element list, or null if does not exist.
 		static const VertexAttribute* GetElement(const VertexFormat& vertexFormat, VectorType type, const std::string& semantic, unsigned char index = 0);
-	/*
-		/// Return whether element list has a specified element type and semantic.
-		static bool HasElement(const PODVector<VertexAttribute>& elements, VectorType type, const std::string& semantic, unsigned char index = 0);
-
-		/// Return element offset for specified type and semantic from a vertex element list, or M_MAX_UNSIGNED if does not exist.
-		static unsigned GetElementOffset(const PODVector<VertexAttribute>& elements, VectorType type, const std::string& semantic, unsigned char index = 0);
-	*/
 		/// Return a vertex element list from a legacy element bitmask.
 		static VertexFormat&& GetElements(unsigned elementMask);
-
-		/// Return vertex size from an element list.
-	//    static unsigned GetVertexSize(const PODVector<VertexAttribute>& elements);
-	
+		
 		/// Return vertex size for a legacy vertex element bitmask.
 		static unsigned GetVertexSize(unsigned elementMask);
-
-		/// Update offsets of vertex elements.
-		//static void UpdateOffsets(PODVector<VertexAttribute>& elements);
 
 	private:
 		/// Create buffer.

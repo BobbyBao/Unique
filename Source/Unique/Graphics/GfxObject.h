@@ -1,9 +1,9 @@
 #pragma once
 #include "GraphicsDefs.h"
+#include "GraphicsContext.h"
 
 namespace Unique
 {
-
 	extern UPtr<LLGL::RenderSystem> renderer;
 
 	template<class Super, class T = void>
@@ -23,10 +23,10 @@ namespace Unique
 
 	 	virtual bool Create()
 		{
-			if (Context::IsMainThread())
+			if (Thread::IsMainThread())
 			{
 				state_ = State::Creating;
-				Subsystem<Graphics>().AddCommand([=]()
+				GraphicsContext::AddCommand([=]()
 				{
 					ReleaseImpl();
 					CreateImpl();
@@ -47,8 +47,7 @@ namespace Unique
 		void Release()
 		{
 			state_ = State::Dying;
-
-			Subsystem<Graphics>().AddCommand([=]()
+			GraphicsContext::AddCommand([=]()
 			{
 				ReleaseImpl();
 				state_ = State::Dead;

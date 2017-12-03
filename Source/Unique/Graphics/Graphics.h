@@ -1,7 +1,6 @@
 #pragma once
 #include "GraphicsDefs.h"
 #include "../Core/Object.h"
-#include "../Core/Semaphore.h"
 
 namespace Unique
 {
@@ -9,7 +8,6 @@ namespace Unique
 	class IndexBuffer;
 	class Texture;
 
-	using CommandQueue = Vector<std::function<void()>>;
 
 	class Graphics : public Object
 	{
@@ -48,7 +46,6 @@ namespace Unique
 		//***MainThread***
 		void BeginFrame();
 		void EndFrame();
-		void AddCommand(std::function<void()> cmd);
 		//****************
 
 		//Execute in render thread
@@ -124,16 +121,7 @@ namespace Unique
 
 		void Close();
 
-		static int currentContext_;
-		inline static int GetRenderContext() { return 1 - currentContext_; }
 	protected:
-		void ExecuteCommands(CommandQueue& cmds);
-		void FrameNoRenderWait();
-		void MainSemPost();
-		bool MainSemWait(int _msecs = -1);
-		void SwapContext();
-		void RenderSemPost();
-		void RenderSemWait();
 
 		bool debugger_ = false;
 
@@ -149,17 +137,6 @@ namespace Unique
 
 		bool exit_ = false;
 
-		bool singleThreaded_ = false;
-
-		Semaphore renderSem_;
-
-		Semaphore mainSem_;
-
-		long long waitSubmit_ = 0;
-
-		long long waitRender_ = 0;
-
-		Vector < std::function<void()>> comands_;;
 	};
 
 }

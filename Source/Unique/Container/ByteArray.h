@@ -62,10 +62,6 @@ namespace Unique
 		ByteArray(Data *dd, int /*dummy*/, int /*dummy*/) 
 			: d(dd) {}
 		void realloc(int alloc);
-		void expand(int i);
-		ByteArray nulTerminated() const;
-
-	public:
 		typedef Data * DataPtr;
 		inline DataPtr &data_ptr() { return d; }
 	};
@@ -93,9 +89,9 @@ namespace Unique
 	{ return d == &shared_null; }
 	inline bool ByteArray::empty() const
 	{ return d->size == 0; }
-	inline char *ByteArray::data()
+	inline char* ByteArray::data()
 	{ detach(); return d->data; }
-	inline const char *ByteArray::data() const
+	inline const char* ByteArray::data() const
 	{ return d->data; }
 	inline void ByteArray::detach()
 	{ if (d->ref != 1 || d->data != d->array) realloc(d->size); }

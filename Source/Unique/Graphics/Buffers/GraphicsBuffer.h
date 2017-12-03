@@ -18,10 +18,9 @@ namespace Unique
 		bool IsDynamic() const { return (flags_ &  BufferFlags::DynamicUsage) != 0; }
 		bool IsShadowed() const { return shadowed_; }
 
-		long flags_ = 0;
 		uint elementSize_ = 0;
 		uint elementCount_ = 0;
-		ByteArray data_;
+		long flags_ = 0;
 		bool shadowed_ = false;
 		ByteArray shadowData_;
 	};

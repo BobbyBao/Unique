@@ -20,6 +20,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Drawable.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Importers\ModelImporter.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Shader\ShaderVariation.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\GraphicsContext.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Resource\BackgroundLoader.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Resource\ResourceCache.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Resource\ResourceImporter.cpp" />
@@ -86,6 +87,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Drawable.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Shader\ShaderVariation.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Importers\ModelImporter.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\GraphicsContext.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Resource\BackgroundLoader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Resource\ResourceCache.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Resource\ResourceEvents.h" />

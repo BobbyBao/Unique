@@ -29,8 +29,6 @@ int qAllocMore(int alloc, int extra)
 
 ByteArray::Data ByteArray::shared_null = {1, 0, 0, shared_null.array, {0} };
 ByteArray::Data ByteArray::shared_empty = { 1, 0, 0, shared_empty.array, {0} };
-
-
 ByteArray::ByteArray(const char *str)
 {
 	if (!str) {
@@ -329,7 +327,7 @@ ByteArray ByteArray::fromRawData(const char *data, int size)
 	return ByteArray(x, 0, 0);
 }
 
-ByteArray &ByteArray::setRawData(const char *data, uint size)
+ByteArray& ByteArray::setRawData(const char *data, uint size)
 {
 	if (d->ref != 1 || d->alloc) {
 		*this = fromRawData(data, size);
@@ -346,7 +344,7 @@ ByteArray &ByteArray::setRawData(const char *data, uint size)
 	return *this;
 }
 
-ByteArray ByteArray::fromBase64(const ByteArray &base64)
+ByteArray ByteArray::fromBase64(const ByteArray& base64)
 {
 	unsigned int buf = 0;
 	int nbits = 0;

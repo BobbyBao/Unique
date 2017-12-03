@@ -2,7 +2,7 @@
 #include "../Graphics.h"
 #include "VertexBuffer.h"
 #include "../../Math/MathDefs.h"
-
+#include <LLGL/Utility.h>
 #include "../../DebugNew.h"
 
 namespace Unique
@@ -19,12 +19,12 @@ namespace Unique
 		VertexAttribute("texcoord", 0, VectorType::Float3, 0),     // Cubetexcoord1
 		VertexAttribute("texcoord", 1, VectorType::Float3, 0),     // Cubetexcoord2
 		VertexAttribute("tangent", 0, VectorType::Float4, 0),      // Tangent
-		VertexAttribute("BLENDWEIGHTS", 0, VectorType::Float4, 0), // Blendweights
-		VertexAttribute("BLENDINDICES", 0, VectorType::Int4, 0),  // Blendindices
+		VertexAttribute("blendweights", 0, VectorType::Float4, 0), // Blendweights
+		VertexAttribute("blendindices", 0, VectorType::Int4, 0),  // Blendindices
 		VertexAttribute("texcoord", 4, VectorType::Float4, true),      // Instancematrix1
 		VertexAttribute("texcoord", 5, VectorType::Float4, true),      // Instancematrix2
 		VertexAttribute("texcoord", 6, VectorType::Float4, true),      // Instancematrix3
-		VertexAttribute("OBJECTINDEX", 0, VectorType::Int, 0)       // Objectindex
+		VertexAttribute("objectindex", 0, VectorType::Int, 0)       // Objectindex
 	};
 
 	extern const unsigned ELEMENT_TYPESIZES[] =
@@ -47,6 +47,14 @@ namespace Unique
 	{
 	}
 
+	bool VertexBuffer::Create(unsigned vertexCount, unsigned elementMask, const ByteArray& data)
+	{
+		shadowData_ = data;
+		vertexFormat_ = GetElements(elementMask);
+		handle_ = renderer->CreateBuffer(VertexBufferDesc(vertexCount * vertexFormat_.stride, vertexFormat_), data.data());
+		return handle_ != nullptr;
+	}
+
 	bool VertexBuffer::SetSize(unsigned vertexCount, unsigned elementMask, long flag)
 	{
 		return SetSize(vertexCount, GetElements(elementMask), flag);
@@ -66,31 +74,7 @@ namespace Unique
 
 		return Create();
 	}
-	/*
-	void VertexBuffer::UpdateOffsets()
-	{
-		unsigned elementOffset = 0;
-		elementHash_ = 0;
-		elementMask_ = 0;
-
-		for (PODVector<VertexAttribute>::iterator i = elements_.begin(); i != elements_.end(); ++i)
-		{
-			i->offset = elementOffset;
-			elementOffset += ELEMENT_TYPESIZES[i->type_];
-			elementHash_ <<= 6;
-			elementHash_ += (((int)i->type_ + 1) * ((int)i->semantic_ + 1) + i->index_);
-
-			for (unsigned j = 0; j < MAX_LEGACY_VERTEX_ELEMENTS; ++j)
-			{
-				const VertexAttribute& legacy = LEGACY_VERTEXELEMENTS[j];
-				if (i->type_ == legacy.type_ && i->semantic_ == legacy.semantic_ && i->index_ == legacy.index_)
-					elementMask_ |= (1 << j);
-			}
-		}
-
-		elementSize_ = elementOffset;
-	}
-	*/
+	
 	const VertexAttribute* VertexBuffer::GetElement(const std::string& semantic, unsigned char index) const
 	{
 		for (auto& i = vertexFormat_.attributes.begin(); i != vertexFormat_.attributes.end(); ++i)
@@ -155,16 +139,6 @@ namespace Unique
 		Unlock();
 
 		GraphicsBuffer::Release();
-	}
-
-
-	bool VertexBuffer::Create(unsigned vertexCount, unsigned elementMask, const ByteArray& mem)
-	{
-	//	elements_ = GetElements(elementMask);
-	// 	VertexDecl vertexDecl;
-	// 	ToVertexDecl(elements_, vertexDecl);
-	// 	handle_ = bgfx::createVertexBuffer(mem, vertexDecl).idx;
-		return handle_ != nullptr;
 	}
 
 	bool VertexBuffer::SetData(const void* data)

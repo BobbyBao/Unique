@@ -11,6 +11,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LLGL", "..\build\LLGL.vcxpr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LLGL_Direct3D11", "..\build\LLGL_Direct3D11.vcxproj", "{1F990814-D6D2-3BD3-BB3F-0AFA3E1E0A5B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LLGL_OpenGL", "..\build\LLGL_OpenGL.vcxproj", "{488A5ECB-95AE-37D3-BE49-FBCCE108357F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial07_Array", "..\build\Tutorial07_Array.vcxproj", "{4219AFC6-C3B2-3531-B411-3ED4509F42EF}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Unique\Unique.vcxitems*{8bdd6af5-cb1d-4ad6-a5ce-7ac304b28e77}*SharedItemsImports = 4
@@ -47,6 +51,22 @@ Global
 		{1F990814-D6D2-3BD3-BB3F-0AFA3E1E0A5B}.Release|x64.Build.0 = Release|x64
 		{1F990814-D6D2-3BD3-BB3F-0AFA3E1E0A5B}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|x64
 		{1F990814-D6D2-3BD3-BB3F-0AFA3E1E0A5B}.RelWithDebInfo|x64.Build.0 = RelWithDebInfo|x64
+		{488A5ECB-95AE-37D3-BE49-FBCCE108357F}.Debug|x64.ActiveCfg = Debug|x64
+		{488A5ECB-95AE-37D3-BE49-FBCCE108357F}.Debug|x64.Build.0 = Debug|x64
+		{488A5ECB-95AE-37D3-BE49-FBCCE108357F}.MinSizeRel|x64.ActiveCfg = MinSizeRel|x64
+		{488A5ECB-95AE-37D3-BE49-FBCCE108357F}.MinSizeRel|x64.Build.0 = MinSizeRel|x64
+		{488A5ECB-95AE-37D3-BE49-FBCCE108357F}.Release|x64.ActiveCfg = Release|x64
+		{488A5ECB-95AE-37D3-BE49-FBCCE108357F}.Release|x64.Build.0 = Release|x64
+		{488A5ECB-95AE-37D3-BE49-FBCCE108357F}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|x64
+		{488A5ECB-95AE-37D3-BE49-FBCCE108357F}.RelWithDebInfo|x64.Build.0 = RelWithDebInfo|x64
+		{4219AFC6-C3B2-3531-B411-3ED4509F42EF}.Debug|x64.ActiveCfg = Debug|x64
+		{4219AFC6-C3B2-3531-B411-3ED4509F42EF}.Debug|x64.Build.0 = Debug|x64
+		{4219AFC6-C3B2-3531-B411-3ED4509F42EF}.MinSizeRel|x64.ActiveCfg = MinSizeRel|x64
+		{4219AFC6-C3B2-3531-B411-3ED4509F42EF}.MinSizeRel|x64.Build.0 = MinSizeRel|x64
+		{4219AFC6-C3B2-3531-B411-3ED4509F42EF}.Release|x64.ActiveCfg = Release|x64
+		{4219AFC6-C3B2-3531-B411-3ED4509F42EF}.Release|x64.Build.0 = Release|x64
+		{4219AFC6-C3B2-3531-B411-3ED4509F42EF}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|x64
+		{4219AFC6-C3B2-3531-B411-3ED4509F42EF}.RelWithDebInfo|x64.Build.0 = RelWithDebInfo|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
