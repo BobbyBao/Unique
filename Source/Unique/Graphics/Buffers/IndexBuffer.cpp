@@ -35,17 +35,13 @@ bool IndexBuffer::SetSize(unsigned indexCount, bool largeIndices, bool dynamic)
     elementSize_ = (unsigned)(largeIndices ? sizeof(unsigned) : sizeof(unsigned short));
     flags_ = dynamic ? BufferFlags::DynamicUsage : 0;
 
-    if (shadowed_ && elementCount_ && elementSize_)
-        shadowData_.resize(elementCount_ * elementSize_);
-    else
-        shadowData_.resize(0);
 
     return Create();
 }
 
 bool IndexBuffer::GetUsedVertexRange(unsigned start, unsigned count, unsigned& minVertex, unsigned& vertexCount)
 {
-    if (shadowData_.empty())
+    if (data_.empty())
     {
         UNIQUE_LOGERROR("Used vertex range can only be queried from an index buffer with shadow data");
         return false;
@@ -62,7 +58,7 @@ bool IndexBuffer::GetUsedVertexRange(unsigned start, unsigned count, unsigned& m
 
     if (elementSize_ == sizeof(unsigned))
     {
-        unsigned* indices = (unsigned*)shadowData_.data() + start;
+        unsigned* indices = (unsigned*)data_.data() + start;
 
         for (unsigned i = 0; i < count; ++i)
         {
@@ -74,7 +70,7 @@ bool IndexBuffer::GetUsedVertexRange(unsigned start, unsigned count, unsigned& m
     }
     else
     {
-        unsigned short* indices = (unsigned short*)shadowData_.data() + start;
+        unsigned short* indices = (unsigned short*)data_.data() + start;
 
         for (unsigned i = 0; i < count; ++i)
         {

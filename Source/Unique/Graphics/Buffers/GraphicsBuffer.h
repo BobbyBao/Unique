@@ -16,13 +16,11 @@ namespace Unique
 		~GraphicsBuffer();
 
 		bool IsDynamic() const { return (flags_ &  BufferFlags::DynamicUsage) != 0; }
-		bool IsShadowed() const { return shadowed_; }
 
 		uint elementSize_ = 0;
 		uint elementCount_ = 0;
 		long flags_ = 0;
-		bool shadowed_ = false;
-		ByteArray shadowData_;
+		ByteArray data_;
 	};
 
 

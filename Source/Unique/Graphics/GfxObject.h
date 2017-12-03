@@ -54,6 +54,8 @@ namespace Unique
 			});
 		}
 
+		operator T&() { return *handle_; }
+	protected:
 		virtual bool CreateImpl()
 		{
 			return false;
@@ -68,11 +70,10 @@ namespace Unique
 			}
 		}
 
-		operator T&() { return *handle_; }
-
 		State state_ = State::None;
 		T* handle_ = nullptr;
 
+		friend class Graphics;
 	};
 
 
