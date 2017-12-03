@@ -22,7 +22,7 @@
 
 #pragma once
 #include "../Unique.h"
-
+#include "../Container/ByteArray.h"
 
 namespace Unique
 {
@@ -61,10 +61,13 @@ public:
 	}
 
 	bool Read(String& str);
+	bool Read(ByteArray& bytes);
 
 	String ReadFileID();
 
 	String ReadLine();
+
+	ByteArray ReadAll();
 	
 	template<class T>
 	bool Write(const T& value)
@@ -78,6 +81,7 @@ public:
 
 	bool WriteLine(const String& value);
 
+	bool Write(const ByteArray& bytes);
 protected:
 	/// Stream position.
 	unsigned position_;

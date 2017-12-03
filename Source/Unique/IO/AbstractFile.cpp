@@ -33,6 +33,14 @@ namespace Unique
 		return true;
 	}
 
+	bool AbstractFile::Read(ByteArray& bytes)
+	{
+		int sz = 0;
+		Read<int>(sz);
+		bytes.resize(sz);
+		return Read(bytes.data(), sz);
+	}
+
 	String AbstractFile::ReadFileID()
 	{
 		String ret;
@@ -70,6 +78,18 @@ namespace Unique
 		return ret;
 	}
 
+
+	ByteArray AbstractFile::ReadAll()
+	{
+		uint size = GetSize();
+		ByteArray byteArray(size);
+		if (Read(byteArray.data(), size) != size)
+		{
+			return ByteArray();
+		}
+		return byteArray;
+	}
+
 	bool AbstractFile::Write(const String& value)
 	{
 		const char* chars = value.CString();
@@ -96,5 +116,13 @@ namespace Unique
 		success &= Write<byte>(13);
 		success &= Write<byte>(10);
 		return success;
+	}
+
+
+	bool AbstractFile::Write(const ByteArray& bytes)
+	{
+		Write(bytes.size());
+		return Write(bytes.data(), bytes.size());
+		
 	}
 }
