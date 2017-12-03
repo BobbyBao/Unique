@@ -64,7 +64,7 @@ namespace Unique
 	public:
 		static bool IsContinousMemoryArray() { return true; }
 	};
-
+	
 	template<>
 	class SerializeTraits<Unique::Vector2> : public SerializeTraitsBase<Unique::Vector2>
 	{

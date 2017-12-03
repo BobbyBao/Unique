@@ -1,6 +1,7 @@
 #pragma once
 #include "../Core/CoreDefs.h"
 #include "../Container/Ptr.h"
+#include "../Container/ByteArray.h"
 #include "SerializeTraitsBasic.h"
 #include "SerializeTraitsStd.h"
 	
@@ -57,6 +58,18 @@ namespace Unique
 
 		static bool IsContinousMemoryArray() { return true; }
 		static void ResizeSTLStyleArray(value_type& data, int rs) { resize_trimmed(data, rs); }
+	};
+
+	template<>
+	class SerializeTraits<ByteArray> : public SerializeTraitsArray<ByteArray>
+	{
+	public:
+		template<class TransferFunction>
+		inline static void Transfer(value_type& data, TransferFunction& transfer)
+		{
+			transfer.TransferBin(data);
+		}
+
 	};
 
 	template<class T>

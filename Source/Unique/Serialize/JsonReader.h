@@ -40,6 +40,8 @@ namespace Unique
 
 		template<class T>
 		void TransferSet(T& data, int metaFlag = 0);
+
+		void TransferBin(ByteArray& data) {}
 		
 		bool StartObject(uint size) { return true; }
 
