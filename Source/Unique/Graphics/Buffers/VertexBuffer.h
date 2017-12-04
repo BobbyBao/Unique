@@ -23,7 +23,7 @@ namespace Unique
 		virtual ~VertexBuffer();
 		
 		/// Set size, vertex elements and dynamic mode. Previous data will be lost.
-		bool Create(unsigned vertexCount, const VertexFormat& vertexFormat, long flag = 0, const ByteArray& data = ByteArray());
+		bool Create(uint vertexCount, const VertexFormat& vertexFormat, long flag = 0, void* data = 0);
 		
 		bool SetData(const void* data);
 		/// Set a data range in the buffer. Optionally discard data outside the range.
@@ -38,6 +38,9 @@ namespace Unique
 
 		/// Return vertex size in bytes.
 		unsigned GetVertexSize() const { return elementSize_; }
+
+		/// Return vertex size in bytes.
+		const VertexFormat& GetVertexFormat() const { return vertexFormat_; }
 
 		/// Return vertex element, or null if does not exist.
 		const VertexAttribute* GetElement(const std::string& semantic, unsigned char index = 0) const;

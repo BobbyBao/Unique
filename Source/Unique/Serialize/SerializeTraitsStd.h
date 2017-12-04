@@ -18,73 +18,25 @@ namespace Unique
 		static bool IsContinousMemoryArray() { return true; }
 	};
 
-
-	template<class T>
-	inline void resize_trimmed(T& v, unsigned int sz)
-	{
-		// the vector is growing
-		if (sz > v.size())
-		{
-			if (sz != v.capacity())
-			{
-				T temp(v.get_allocator());
-				temp.reserve(sz);
-				temp.assign(v.begin(), v.end());
-				temp.resize(sz);
-				temp.swap(v);
-			}
-			else
-				v.resize(sz);
-		}
-		// the vector is shrinking
-		else if (sz < v.size())
-		{
-			T temp(v.begin(), v.begin() + sz, v.get_allocator());
-			temp.swap(v);
-		}
-	}
-
 	template<class T, class Allocator>
 	class SerializeTraits<std::vector<T, Allocator> > : public SerializeTraitsArray<std::vector<T, Allocator> >
 	{
-	public:
-		
-		template<class TransferFunction> 
-		inline static void Transfer(value_type& data, TransferFunction& transfer)
-		{
-			transfer.TransferArray(data);
-		}
-
-		static bool IsContinousMemoryArray() { return true; }
-		static void ResizeSTLStyleArray(value_type& data, int rs) { resize_trimmed(data, rs); }
 	};
 
 	template<class Allocator>
 	class SerializeTraits<std::vector<unsigned char, Allocator> > : public SerializeTraitsArray<std::vector<unsigned char, Allocator> >
 	{
-	public:
-				
-		template<class TransferFunction> inline
-			static void Transfer(value_type& data, TransferFunction& transfer)
-		{
-			transfer.TransferArray(data);
-		}
-
-		static void ResizeSTLStyleArray(value_type& data, int rs) { resize_trimmed(data, rs); }
 	};
 
 	template<class T, class Allocator>
 	class SerializeTraits<std::deque<T, Allocator> > : public SerializeTraitsArray<std::deque<T, Allocator>, false >
 	{
-	public:
-		static void ResizeSTLStyleArray(value_type& data, int rs) { data.resize(rs); }
 	};
 
 	template<class T, class Allocator>
 	class SerializeTraits<std::list<T, Allocator> > : public SerializeTraitsArray<std::list<T, Allocator>, false >
 	{
 	public:
-
 		static void ResizeSTLStyleArray(value_type& data, int rs) { data.resize(rs); }
 	};
 

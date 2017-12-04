@@ -49,15 +49,12 @@ namespace Unique
 	template<>
 	class SerializeTraits<Vector<byte>> : public SerializeTraitsArray<Vector<byte>>
 	{
-	public:
+	public:	
 		template<class TransferFunction>
 		inline static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			transfer.TransferArray(data);
+			transfer.TransferBin(data);
 		}
-
-		static bool IsContinousMemoryArray() { return true; }
-		static void ResizeSTLStyleArray(value_type& data, int rs) { resize_trimmed(data, rs); }
 	};
 
 	template<>

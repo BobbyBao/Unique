@@ -33,6 +33,25 @@ namespace Unique
 	
 	bool ShaderVariation::CreateImpl() 
 	{
+		auto& graphics = Subsystem<Graphics>();
+
+		handle_ = renderer->CreateShader(shaderStage_.shaderType_);
+
+		if (graphics.GetRenderName().find("Direct3D") != std::string::npos)
+		{
+			// Compile shader
+			LLGL::ShaderDescriptor shaderDesc(shaderStage_.entryPoint_.CString(),
+				shaderStage_.target_.CString(), LLGL::ShaderCompileFlags::Debug);
+
+			if (!handle_->Compile(shaderPass_.source_.CString(), shaderDesc))
+			{
+				UNIQUE_LOGERRORF(handle_->QueryInfoLog().c_str());
+				return false;
+			}
+
+			return true;
+		}
+
 		String name = GetFileName(owner_.GetName());
 		String extension;
 
@@ -40,6 +59,9 @@ namespace Unique
 		{
 		case ShaderType::Vertex:
 			extension = "_vs.bin";
+			break;
+		case ShaderType::Geometry:
+			extension = "_gs.bin";
 			break;
 		case ShaderType::Fragment:
 			extension = "_fs.bin";
@@ -105,26 +127,24 @@ namespace Unique
 			return false;
 		}
 
+		// Compile shader
+		LLGL::ShaderDescriptor shaderDesc(shaderStage_.entryPoint_.CString(), shaderStage_.target_.CString(), LLGL::ShaderCompileFlags::Debug);
 		auto& graphics = Subsystem<Graphics>();
-		if (graphics.IsOpenGL())
+		ByteArray source = file->ReadAll();
+		if (!handle_->Compile(source.data(), shaderDesc))
 		{
-
-		}
-		else
-		{
-
+			UNIQUE_LOGERRORF(handle_->QueryInfoLog().c_str());
 		}
 
 		/*
-		const bgfx::Memory* mem = bgfx::alloc(file->GetSize() + 1);
-		file->Read(mem->data, mem->size);
-		mem->data[file->GetSize()] = '\0';
-		handle_ = bgfx::createShader(mem);
-
-		if (!bgfx::isValid(handle_))
 		{
-			UNIQUE_LOGERROR("Failed to create shader.");
-			return false;
+			std::vector<char> bytes;
+			bytes.resize(file->GetSize());
+			file->Read(bytes.data(), bytes.size());
+			if (!handle_->LoadBinary(std::move(bytes), shaderDesc))
+			{
+				UNIQUE_LOGERRORF(handle_->QueryInfoLog().c_str());
+			}
 		}*/
 
 		return true;
@@ -134,15 +154,6 @@ namespace Unique
 	{
 		const String& sourceCode = shaderPass_.source_;
 
-		auto& graphics = Subsystem<Graphics>();
-		if (graphics.IsOpenGL())
-		{
-
-		}
-		else
-		{
-
-		}
 
 		/*
 		String args;
@@ -243,18 +254,56 @@ namespace Unique
 	
 	bool ShaderInstance::CreateImpl()
 	{
-		ReleaseImpl();
-
-		for (auto& shd : shaders)
+		if (!handle_)
 		{
-			if (!shd->CreateImpl())
+			handle_ = renderer->CreateShaderProgram();
+		}
+		else
+		{
+			handle_->DetachAll();
+		}
+
+		for (auto& shader : shaders)
+		{
+			if (!shader->CreateImpl())
 			{
 				return false;
 			}
+
+			handle_->AttachShader(*shader);
 		}
 
 		dirty_ = false;
 		return true;
+	}
+
+	GraphicsPipeline* ShaderInstance::GetPipeline(const VertexFormat& vertexFormat)
+	{
+		if (dirty_ || !IsValid())
+		{
+			if (!CreateImpl())
+			{
+				return nullptr;
+			}
+		} 
+
+		if (!vertexFormat.attributes.empty())
+			handle_->BuildInputLayout(vertexFormat);
+
+		if (!handle_->LinkShaders())
+			UNIQUE_LOGERRORF(handle_->QueryInfoLog().c_str());
+
+		if (!pipeline_)
+		{
+			LLGL::GraphicsPipelineDescriptor pipelineDesc;
+			{
+				pipelineDesc.shaderProgram = handle_;
+			}
+
+			pipeline_ = renderer->CreateGraphicsPipeline(pipelineDesc);
+		}
+
+		return pipeline_;
 	}
 
 	void ShaderInstance::Reload()

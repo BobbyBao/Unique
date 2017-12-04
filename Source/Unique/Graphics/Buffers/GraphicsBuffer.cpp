@@ -5,6 +5,8 @@ namespace Unique
 {
 	uObject(GraphicsBuffer)
 	{
+		uAttribute("ElementSize", elementSize_)
+		uAttribute("ElementCount", elementCount_)
 		uAttribute("Data", data_)
 	}
 

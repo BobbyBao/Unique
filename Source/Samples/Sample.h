@@ -2,6 +2,7 @@
 
 #include "Engine/Application.h"
 #include "Graphics/Shader/Shader.h"
+#include "Graphics/View.h"
 
 namespace Unique
 {
@@ -15,17 +16,19 @@ namespace Unique
 	public:
 		Sample();
 
-		VertexFormat CreateGeometry();
 	private:
 		virtual void Initialize();
 		virtual void Terminate();
 		void HandleStartup(StringID, const struct Startup&);
 		void HandleShutdown(StringID, const struct Shutdown&);
 		virtual void OnPostRender() override;
+		void CreateGeometry();
 
 		SPtr<Shader> shader_;
 		ShaderInstance* shaderInst_;
 		SPtr<Geometry> geometry_;
+
+		Vector<Batch> batches_[2];
 
 		ShaderProgram*    shaderProgram = nullptr;
 		LLGL::GraphicsPipeline* pipeline = nullptr;

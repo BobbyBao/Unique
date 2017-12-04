@@ -293,6 +293,7 @@ namespace Unique
 
 		return shaderProgram;
 	}
+
 	/*
 	// Reloads the specified shader program from the previously specified shader source files.
 	bool ReloadShaderProgram(LLGL::ShaderProgram* shaderProgram)

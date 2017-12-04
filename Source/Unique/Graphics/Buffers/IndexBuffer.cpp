@@ -3,7 +3,7 @@
 #include "../Graphics.h"
 #include "IndexBuffer.h"
 #include "../../IO/Log.h"
-
+#include <LLGL/Utility.h>
 #include "../../DebugNew.h"
 
 namespace Unique
@@ -18,25 +18,34 @@ IndexBuffer::~IndexBuffer()
     Release();
 }
 
-bool IndexBuffer::Create(unsigned indexCount, bool largeIndices, const ByteArray& mem)
+bool IndexBuffer::Create(unsigned indexCount, bool largeIndices, long flag, void* data)
 {
-	elementCount_ = indexCount;
 	elementSize_ = (unsigned)(largeIndices ? sizeof(unsigned) : sizeof(unsigned short));
+	elementCount_ = indexCount;
+	flags_ = flag;
 
+	data_.resize(elementCount_ * elementSize_);
+	if (data)
+	{
+		std::memcpy(data_.data(), data, elementCount_*elementSize_);
+	}
+
+	return GraphicsBuffer::Create();
 	
-	return true;
 }
 
-bool IndexBuffer::SetSize(unsigned indexCount, bool largeIndices, bool dynamic)
+bool IndexBuffer::CreateImpl()
 {
-    Unlock();
+	ReleaseImpl();
 
-    elementCount_ = indexCount;
-    elementSize_ = (unsigned)(largeIndices ? sizeof(unsigned) : sizeof(unsigned short));
-    flags_ = dynamic ? BufferFlags::DynamicUsage : 0;
+	if (!elementCount_ || !elementSize_)
+		return true;
 
 
-    return Create();
+	handle_ = renderer->CreateBuffer(IndexBufferDesc((uint)data_.size(), 
+		IndexFormat(elementSize_ == 4 ?LLGL::DataType::UInt32 : LLGL::DataType::UInt16), flags_), data_.data());
+	return handle_ != nullptr;
+
 }
 
 bool IndexBuffer::GetUsedVertexRange(unsigned start, unsigned count, unsigned& minVertex, unsigned& vertexCount)
@@ -83,13 +92,6 @@ bool IndexBuffer::GetUsedVertexRange(unsigned start, unsigned count, unsigned& m
 
     vertexCount = maxVertex - minVertex + 1;
     return true;
-}
-
-void IndexBuffer::Release()
-{
-	Unlock();
-
-	GraphicsBuffer::Release();
 }
 
 bool IndexBuffer::SetData(const void* data)
@@ -243,25 +245,5 @@ void IndexBuffer::Unlock()
 	}*/
 }
 
-bool IndexBuffer::Create()
-{
-	Release();
-
-	if (!elementCount_ || !elementSize_)
-		return true;
-
-	if (IsDynamic())
-	{
-		/*
-		if (!shadowData_)
-			shadowData_ = new unsigned char[elementCount_ * elementSize_];
-
-		const bgfx::Memory* mem = bgfx::makeRef(shadowData_.data(), elementCount_ * elementSize_);
-		handle_ = bgfx::createDynamicIndexBuffer(mem).idx;
-		*/
-	}
-
-	return true;
-}
 
 }

@@ -39,7 +39,7 @@ namespace Unique
 		template<class T>
 		void TransferSet(T& data, int metaFlag = 0);
 
-		void TransferBin(ByteArray& data) {}
+		void TransferBin(ByteArray& data);
 
 		bool StartObject(uint size);
 		void EndObject();
@@ -149,6 +149,12 @@ namespace Unique
 		}
 
 		EndArray();
+	}
+
+	inline void JsonWriter::TransferBin(ByteArray& data)
+	{
+		ByteArray bytes = toBase64(data);
+		writer_->String(bytes.data());
 	}
 
 	template<class T>

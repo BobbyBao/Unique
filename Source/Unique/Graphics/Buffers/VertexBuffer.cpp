@@ -7,6 +7,28 @@
 
 namespace Unique
 {
+	uEnumTraits(VectorType, 
+		"Float", "Float2", "Float3", "Float4",
+		"Double", "Double2", "Double3", "Double4",
+		"Int", "Int2", "Int3", "Int4",
+		"UInt", "UInt2", "UInt3", "UInt4")
+
+	uClassTraits(VertexAttribute,
+		"SemanticName", self.name,
+		"SemanticIndex", self.semanticIndex,
+		"VectorType", self.vectorType,
+		"InstanceDivisor", self.instanceDivisor)
+
+	uClassTraits(VertexFormat, "Attributes", self.attributes)
+
+	uObject(VertexBuffer)
+	{
+		uFactory("Graphics")
+			uAttribute("ElementSize", elementSize_)
+			uAttribute("ElementCount", elementCount_)
+			uAttribute("Data", data_)
+	}
+
 	extern UPtr<LLGL::RenderSystem>        renderer;
 	
 	VertexBuffer::VertexBuffer()
@@ -17,54 +39,40 @@ namespace Unique
 	{
 	}
 
-	bool VertexBuffer::Create(unsigned vertexCount, const VertexFormat& elements, long flag, const ByteArray& data)
+	bool VertexBuffer::Create(uint vertexCount, const VertexFormat& vertexFormat, long flag, void* data)
 	{
+		elementSize_ = vertexFormat.stride;
 		elementCount_ = vertexCount;
+		vertexFormat_ = vertexFormat;
 		flags_ = flag;
-	
-		if (data.empty())
+
+		data_.resize(elementCount_ * elementSize_);
+		if (data)
 		{
-			data_.resize(elementCount_ * elementSize_);
+			std::memcpy(data_.data(), data, elementCount_ * elementSize_);
 		}
-		else
-			data_ = data;
+	
 
 		return GraphicsBuffer::Create();
 	}
-	
-	const VertexAttribute* VertexBuffer::GetElement(const std::string& semantic, unsigned char index) const
+
+	bool VertexBuffer::CreateImpl()
 	{
-		for (auto& i = vertexFormat_.attributes.begin(); i != vertexFormat_.attributes.end(); ++i)
+		if (!elementCount_ || !elementSize_)
+			return false;
+		
+		try
 		{
-			if (i->name == semantic && i->semanticIndex == index)
-				return &(*i);
+			handle_ = renderer->CreateBuffer(VertexBufferDesc((uint)data_.size(), vertexFormat_, flags_), data_.data());
+		}
+		catch (std::exception& e)
+		{
+			UNIQUE_LOGERRORF(e.what());
 		}
 
-		return 0;
+		return handle_ != nullptr;
 	}
 
-	const VertexAttribute* VertexBuffer::GetElement(VectorType type, const std::string& semantic, unsigned char index) const
-	{
-		for (auto& i = vertexFormat_.attributes.begin(); i != vertexFormat_.attributes.end(); ++i)
-		{
-			if (i->vectorType == type && i->name == semantic && i->semanticIndex == index)
-				return &(*i);
-		}
-
-		return 0;
-	}
-
-	const VertexAttribute* VertexBuffer::GetElement(const VertexFormat& vertexFormat, VectorType type, const std::string& semantic, unsigned char index)
-	{
-		for (PODVector<VertexAttribute>::const_iterator i = vertexFormat.attributes.begin(); i != vertexFormat.attributes.end(); ++i)
-		{
-			if (i->vectorType == type && i->name == semantic && i->semanticIndex == index)
-				return &(*i);
-		}
-
-		return 0;
-	}
-	
 	bool VertexBuffer::SetData(const void* data)
 	{	
 		if (!data)
@@ -78,38 +86,16 @@ namespace Unique
 			UNIQUE_LOGERROR("Vertex elements not defined, can not set vertex buffer data");
 			return false;
 		}
-		/*
-		const bgfx::Memory* mem = nullptr;
 
-		if (shadowData_)
+		std::memcpy(data_.data(), data, data_.size());
+
+		GraphicsContext::AddCommand([=]()
 		{
-			if (data != shadowData_.Get())
-				memcpy(shadowData_.Get(), data, elementCount_ * elementSize_);
-
-			mem = bgfx::makeRef(data, elementCount_ * elementSize_);
-		}
-		else
-		{
-			mem = bgfx::copy(data, elementCount_ * elementSize_);
-		}
-
-		if (IsDynamic())
-		{
-			bgfx::updateDynamicVertexBuffer({ handle_ }, 0, mem);
-		}
-		else
-		{
-			if (handle_ != bgfx::kInvalidHandle)
-			{
-				Release();
-			}
-
-			bgfx::VertexDecl vertexDecl;
-			ToVertexDecl(elements_, vertexDecl);
-
-			handle_ = bgfx::createVertexBuffer(mem, vertexDecl).idx;
-		}*/
-
+			void* buffer = renderer->MapBuffer(*this, LLGL::BufferCPUAccess::WriteOnly);
+			memcpy(buffer, data_.data(), data_.size());
+			renderer->UnmapBuffer(*this);
+		});
+		
 		return true;
 	}
 
@@ -138,36 +124,7 @@ namespace Unique
 
 		if (!count)
 			return true;
-		/*
-		const bgfx::Memory* mem = nullptr;
-		if (shadowData_)
-		{
-			if (shadowData_.Get() + start * elementSize_ != data)
-				memcpy(shadowData_.Get() + start * elementSize_, data, count * elementSize_);
-
-			mem = bgfx::makeRef(shadowData_.Get(), count * elementSize_);
-		}
-		else
-		{
-			mem = bgfx::copy(((unsigned char*)data + start * elementSize_), count * elementSize_);
-		}
-
-		if (IsDynamic())
-		{
-			bgfx::updateDynamicVertexBuffer({ handle_ }, start * elementSize_, mem);
-		}
-		else
-		{
-			if (valid())
-			{
-				Release();
-			}
-
-			bgfx::VertexDecl vertexDecl;
-			ToVertexDecl(elements_, vertexDecl);
-			handle_ = bgfx::createVertexBuffer(mem, vertexDecl).idx;
-		}
-		*/
+		
 		return true;
 	}
 
@@ -218,26 +175,38 @@ namespace Unique
 		}*/
 	}
 
-	bool VertexBuffer::CreateImpl()
+	const VertexAttribute* VertexBuffer::GetElement(const std::string& semantic, unsigned char index) const
 	{
-		if (!elementCount_ || !elementSize_ || vertexFormat_.stride == 0)
-			return true;
-		/*
-		if (IsDynamic())
+		for (auto& i = vertexFormat_.attributes.begin(); i != vertexFormat_.attributes.end(); ++i)
 		{
-			if (!shadowData_)
-				shadowData_ = new unsigned char[elementCount_ * elementSize_];
-
-			bgfx::VertexDecl vertexDecl;
-
-			ToVertexDecl(elements_, vertexDecl);
-
-			const bgfx::Memory* mem = bgfx::makeRef(shadowData_.Get(), elementCount_ * elementSize_);
-			handle_ = bgfx::createDynamicVertexBuffer(mem, vertexDecl).idx;
-
+			if (i->name == semantic && i->semanticIndex == index)
+				return &(*i);
 		}
-		*/
-		return true;
+
+		return 0;
 	}
+
+	const VertexAttribute* VertexBuffer::GetElement(VectorType type, const std::string& semantic, unsigned char index) const
+	{
+		for (auto& i = vertexFormat_.attributes.begin(); i != vertexFormat_.attributes.end(); ++i)
+		{
+			if (i->vectorType == type && i->name == semantic && i->semanticIndex == index)
+				return &(*i);
+		}
+
+		return 0;
+	}
+
+	const VertexAttribute* VertexBuffer::GetElement(const VertexFormat& vertexFormat, VectorType type, const std::string& semantic, unsigned char index)
+	{
+		for (PODVector<VertexAttribute>::const_iterator i = vertexFormat.attributes.begin(); i != vertexFormat.attributes.end(); ++i)
+		{
+			if (i->vectorType == type && i->name == semantic && i->semanticIndex == index)
+				return &(*i);
+		}
+
+		return 0;
+	}
+
 
 }

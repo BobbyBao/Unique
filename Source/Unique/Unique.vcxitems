@@ -67,14 +67,12 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\hjson\hjson_encode.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\hjson\hjson_parsenumber.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\hjson\hjson_value.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\json2msgpack.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-common.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-expect.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-node.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-platform.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-reader.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-writer.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\msgpack2json.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Buffers\StorageBuffer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Shader\Uniform.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Importers\ShaderImporter.cpp" />

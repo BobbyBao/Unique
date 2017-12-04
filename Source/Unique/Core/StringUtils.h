@@ -3,6 +3,8 @@
 
 namespace Unique
 {
+	String FormatString(const char* formatString, ...);
+
 	template<typename T>
 	inline String ToString(const T& v)
 	{

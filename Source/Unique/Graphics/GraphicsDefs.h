@@ -47,5 +47,7 @@ namespace Unique
 	uEnumTraits(CompareOp, "Never", "Less", "Equal", "LessEqual", "Greater", "NotEqual", "GreaterEqual", "Ever")
 	uClassTraits(DepthState, "TestEnabled", self.testEnabled, "WriteEnabled", self.writeEnabled, "CompareOp", self.compareOp)
 
-	uEnumTraits(UniformType, "Float", "Float2", "Float3", "Float4", "Float", "Float")
+	uEnumTraits(UniformType, "Float", "Float2", "Float3", "Float4", 
+							 "Double", "Double2", "Double3", "Double4",
+							 "Int", "Int2", "Int3", "Int4", )
 }

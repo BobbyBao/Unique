@@ -35,10 +35,10 @@ namespace Unique
 
 	bool AbstractFile::Read(ByteArray& bytes)
 	{
-		int sz = 0;
-		Read<int>(sz);
+		uint sz = 0;
+		Read<uint>(sz);
 		bytes.resize(sz);
-		return Read(bytes.data(), sz);
+		return Read((void*)bytes.data(), sz) == sz;
 	}
 
 	String AbstractFile::ReadFileID()
@@ -122,7 +122,7 @@ namespace Unique
 	bool AbstractFile::Write(const ByteArray& bytes)
 	{
 		Write(bytes.size());
-		return Write(bytes.data(), bytes.size());
+		return Write(bytes.data(), (uint)bytes.size()) == (uint)bytes.size();
 		
 	}
 }

@@ -162,7 +162,7 @@ namespace Unique
 			else// if (modules.size() == 1)
 			{
 				/* Use the only available module */
-				rendererModule = modules.front();
+				rendererModule = modules.back();
 			}
 
 		}

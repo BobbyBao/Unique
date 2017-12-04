@@ -19,8 +19,8 @@ namespace Unique
 
 		uint elementSize_ = 0;
 		uint elementCount_ = 0;
-		long flags_ = 0;
 		ByteArray data_;
+		long flags_ = 0;
 	};
 
 

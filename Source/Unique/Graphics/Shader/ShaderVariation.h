@@ -73,15 +73,7 @@ namespace Unique
 		bool CreateImpl();
 		void Reload();
 
-		ShaderProgram* GetProgram()
-		{
-			if (dirty_ || !IsValid())
-			{
-				CreateImpl();
-			}
-
-			return (ShaderProgram*)handle_;
-		}
+		GraphicsPipeline* GetPipeline(const VertexFormat& vertexFormat);
 
 		Vector<SPtr<ShaderVariation>>	shaders;
 		bool dirty_ = true;

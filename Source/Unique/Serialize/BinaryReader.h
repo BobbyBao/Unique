@@ -30,7 +30,7 @@ namespace Unique
 		template<class T>
 		void TransferSet(T& data, int metaFlag = 0);
 
-		void TransferBin(ByteArray& data) {}
+		void TransferBin(ByteArray& data);
 
 		bool StartObject(uint size) { return true; }
 		void EndObject() {}
@@ -204,6 +204,18 @@ namespace Unique
 		}
 
 		currentNode_ = parentNode;
+	}
+
+	inline void BinaryReader::TransferBin(ByteArray& data)
+	{
+		uint size = mpack_node_data_len(currentNode_);
+
+		data.resize(size);
+
+		if (size != mpack_node_copy_data(currentNode_, data.data(), size))
+		{
+			assert(false);
+		}
 	}
 
 	template<class T>

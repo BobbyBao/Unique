@@ -29,7 +29,10 @@ namespace Unique
 		template<class T>
 		void TransferSet(T& data, int metaFlag = 0);
 
-		void TransferBin(ByteArray& data) {}
+		void TransferBin(ByteArray& data)
+		{
+			mpack_write_bin(&writer_, data.data(), (uint)data.size());
+		}
 
 		bool StartObject(uint sz)
 		{
@@ -83,7 +86,7 @@ namespace Unique
 		// finish writing
 		if (mpack_writer_destroy(&writer_) != mpack_ok)
 		{
-		//	UNIQUE_LOGERROR("An error occurred encoding the data!");
+			UNIQUE_LOGERROR("An error occurred encoding the data!");
 			return false;
 		}
 

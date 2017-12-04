@@ -35,3 +35,5 @@
 typedef unsigned uint;
 typedef unsigned short ushort;
 typedef unsigned char byte;
+
+#define UNIQUE_LOGGING 1

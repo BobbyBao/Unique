@@ -76,17 +76,18 @@ void Sample::Initialize()
 	shaderProgram = LoadStandardShaderProgram(vertexFormat);
 	auto& constBuffers = shaderProgram->QueryConstantBuffers();
 	auto& uniforms = shaderProgram->QueryUniforms();
-
+	
 	// Create graphics pipeline
 	LLGL::GraphicsPipelineDescriptor pipelineDesc;
 	{
 		pipelineDesc.shaderProgram = shaderProgram;
 	}
 
-	pipeline = renderer->CreateGraphicsPipeline(pipelineDesc);
+	pipeline = renderer->CreateGraphicsPipeline(pipelineDesc);	
+*/
 	colorMap = Texture::Load("Assets/colorMap.png");
 	
-	*/
+
 }
 
 void Sample::Terminate()
@@ -98,15 +99,16 @@ void Sample::HandleStartup(StringID, const Startup&)
 	auto& cache = Subsystem<ResourceCache>();
 	shader_ = cache.GetResource<Shader>("Shaders/Test.shader");
 	shaderInst_ = shader_->GetInstance("Main", "");
-	auto sp = shaderInst_->GetProgram();
-	geometry_ = new Geometry();
+
+	CreateGeometry();
+	
 }
 
 void Sample::HandleShutdown(StringID, const Shutdown&)
 {
 }
 
-VertexFormat Sample::CreateGeometry()
+void Sample::CreateGeometry()
 {
 	// Specify vertex format
 	VertexFormat vertexFormat;
@@ -128,9 +130,18 @@ VertexFormat Sample::CreateGeometry()
 	};
 
 	// Create vertex buffer
-	vertexBuffer = Subsystem<Graphics>().CreateVertexBuffer((uint)vertices.size(), vertexFormat, vertices.data());
+	//vertexBuffer = Subsystem<Graphics>().CreateVertexBuffer((uint)vertices.size(), vertexFormat, vertices.data());
+	
+	vertexBuffer = new VertexBuffer();
+	vertexBuffer->Create((uint)vertices.size(), vertexFormat, 0, vertices.data());
+	geometry_ = new Geometry();
+	geometry_->SetNumVertexBuffers(1);
+	geometry_->SetVertexBuffer(0, vertexBuffer);
 
-	return vertexFormat;
+	Batch batch;
+	batch.geometry_ = geometry_;
+	batch.shaderInstance_ = shaderInst_;
+	batches_[GraphicsContext::currentContext_].emplace_back(batch);
 }
 
 void Sample::OnPostRender()
@@ -144,16 +155,22 @@ void Sample::OnPostRender()
 	// Clear color buffer
 	graphics.Clear(ClearFlags::Color);
 	/*
-	// Set graphics pipeline and vertex buffer
+	*/
+
+	for (auto& batch : batches_[GraphicsContext::GetRenderContext()])
+	{
+
+		graphics.SetVertexBuffer(vertexBuffer);
+		pipeline = shaderInst_->GetPipeline(vertexBuffer->GetVertexFormat());
+// Set graphics pipeline and vertex buffer
 	graphics.SetGraphicsPipeline(pipeline);
+		// Set texture and sampler state on slot index 0
+		graphics.SetTexture(colorMap, 0);
 
-	graphics.SetVertexBuffer(vertexBuffer);
+		// Draw fullscreen triangle
+		graphics.Draw(3, 0);
+	}
 
-	// Set texture and sampler state on slot index 0
-	graphics.SetTexture(colorMap, 0);
-
-	// Draw fullscreen triangle
-	graphics.Draw(3, 0);*/
 
 }
 

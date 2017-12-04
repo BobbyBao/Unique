@@ -41,7 +41,7 @@ namespace Unique
 		template<class T>
 		void TransferSet(T& data, int metaFlag = 0);
 
-		void TransferBin(ByteArray& data) {}
+		void TransferBin(ByteArray& data);
 		
 		bool StartObject(uint size) { return true; }
 
@@ -140,7 +140,6 @@ namespace Unique
 
 		return true;
 	}
-
 
 	inline bool JsonReader::SplitTypeInfo(const std::string& info, const std::string& type, std::string& name)
 	{
@@ -464,6 +463,21 @@ namespace Unique
 
 			currentNode_ = parentNode;
 		}
+	}
+
+	inline void JsonReader::TransferBin(ByteArray& data)
+	{
+		if (human_)
+		{
+			std::string& base64 = (std::string&)hJsonNode_;
+			data = fromBase64(base64.c_str(), base64.length());
+		}
+		else
+		{
+			const char* base64 = currentNode_->GetString();
+			data = fromBase64(base64, currentNode_->GetStringLength());
+		}
+
 	}
 
 	template<class T>

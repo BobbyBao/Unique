@@ -309,7 +309,7 @@ void Context::ThreadFunction()
 
 	while (shouldRun_)
 	{
-		timer.BeginFrame(0.05f);
+		timer.BeginFrame(timeStep_);
 
 		{
 			UNIQUE_PROFILE(Update);

@@ -10,20 +10,14 @@ namespace Unique
 class UNIQUE_API IndexBuffer : public GraphicsBuffer
 {
     uRTTI(IndexBuffer, GraphicsBuffer)
-
 public:
     /// Construct.
     IndexBuffer();
     /// Destruct.
     virtual ~IndexBuffer();
+	
+	bool Create(unsigned indexCount, bool largeIndices, long flag = 0, void* data = 0);
 
-    /// Release buffer.
-    virtual void Release();
-
-	bool Create(unsigned indexCount, bool largeIndices, const ByteArray& mem);
-
-    /// Set size and vertex elements and dynamic mode. Previous data will be lost.
-    bool SetSize(unsigned indexCount, bool largeIndices, bool dynamic = false);
     /// Set all data in the buffer.
     bool SetData(const void* data);
     /// Set a data range in the buffer. Optionally discard data outside the range.
@@ -44,7 +38,7 @@ public:
 	
 private:
     /// Create buffer.
-    bool Create();
+    virtual bool CreateImpl();
 
 };
 

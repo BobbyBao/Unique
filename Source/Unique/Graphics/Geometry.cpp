@@ -35,6 +35,17 @@
 
 namespace Unique
 {
+	uObject(Geometry)
+	{
+		uFactory("Graphics")
+			uAttribute("PrimitiveType", primitiveType_)
+			uAttribute("VertexBuffers", vertexBuffers_)
+			uAttribute("IndexStart", indexStart_)
+			uAttribute("IndexCount", indexCount_)
+			uAttribute("VertexStart", vertexStart_)
+			uAttribute("VertexCount", vertexCount_)
+
+	}
 
 Geometry::Geometry() :
     primitiveType_(PrimitiveType::TriangleList),

@@ -102,6 +102,7 @@ namespace Unique
 		}
 
 		static bool IsContinousMemoryArray() { return IsContinous; }
+		static void ResizeSTLStyleArray(value_type& data, int rs) { data.shrink_to_fit(); }
 	};
 
 	template<class T>
