@@ -58,16 +58,16 @@ namespace Unique
 		switch (shaderStage_.shaderType_)
 		{
 		case ShaderType::Vertex:
-			extension = "_vs.bin";
+			extension = "_vs.glsl";
 			break;
 		case ShaderType::Geometry:
-			extension = "_gs.bin";
+			extension = "_gs.glsl";
 			break;
 		case ShaderType::Fragment:
-			extension = "_fs.bin";
+			extension = "_fs.glsl";
 			break;
 		case ShaderType::Compute:
-			extension = "_cs.bin";
+			extension = "_cs.glsl";
 			break;
 		default:
 			break;
@@ -132,10 +132,8 @@ namespace Unique
 		// Compile shader
 		if (graphics.IsOpenGL())
 		{
-			LLGL::ShaderDescriptor shaderDesc("main", "", LLGL::ShaderCompileFlags::Debug);
-
 			ByteArray source = file->ReadAll();
-			if (!handle_->Compile(source.data()))//, shaderDesc))
+			if (!handle_->Compile(source.data()))
 			{
 				UNIQUE_LOGERRORF(handle_->QueryInfoLog().c_str());
 			}
@@ -199,24 +197,27 @@ namespace Unique
 		}
 
 		FileSystem& fileSystem = Subsystem<FileSystem>();
-		String inputFile = "Cache/" + Shader::GetShaderPath(LLGL::RendererID::Direct3D11) + owner_.GetName();
-		fileSystem.CreateDir(GetPath(inputFile));
-		
-		File file;
-		file.Open(inputFile, FILE_WRITE);
-		if (!file.Write(shaderPass_.source_.CString(), shaderPass_.source_.Length()))
-		{
-			UNIQUE_LOGERROR("Write source file failed.");
+
+		String inputFile = "Cache/" + Shader::GetShaderPath(RendererID::Direct3D11) 
+			+ ReplaceExtension( owner_.GetName(), ".hlsl");
+
+		{	
+			fileSystem.CreateDir(GetPath(inputFile));
+
+			File file;
+			file.Open(inputFile, FILE_WRITE);
+			if (!file.Write(shaderPass_.source_.CString(), shaderPass_.source_.Length()))
+			{
+				UNIQUE_LOGERROR("Write source file failed.");
+			}
 		}
-		file.Close();
 
 		args.Append(defines_)
 			.Append(" -o Cache/" + binaryShaderName)
-			//.Append(" -I Assets/Shaders/Common" + binaryShaderName)
+			.Append(" -I Assets/Shaders/Common")
 			.Append(" ").Append(inputFile);
 
 		String exeFileName = "tools\\xsc.exe";
-
 
 		fileSystem.CreateDir("cache/" + GetPath(binaryShaderName));
 

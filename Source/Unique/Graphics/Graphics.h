@@ -8,6 +8,8 @@ namespace Unique
 	class IndexBuffer;
 	class Texture;
 
+	using RendererID = LLGL::RendererID;
+
 	class Graphics : public Object
 	{
 		uRTTI(Graphics, Object)

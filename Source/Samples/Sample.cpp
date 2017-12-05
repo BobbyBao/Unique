@@ -126,11 +126,11 @@ namespace Unique
 		geometry_ = new Geometry();
 		geometry_->SetNumVertexBuffers(1);
 		geometry_->SetVertexBuffer(0, vertexBuffer);
-
+		/*
 		BinaryWriter ser;
 		ser.Save("TestGeo.bin", geometry_);
 		JsonWriter jser;
-		jser.Save("TestGeo.json", geometry_);
+		jser.Save("TestGeo.json", geometry_);*/
 	}
 
 	void Sample::OnPostRender()
