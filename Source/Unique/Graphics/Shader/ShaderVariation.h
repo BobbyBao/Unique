@@ -1,7 +1,7 @@
 #pragma once
 #include "../../resource/Resource.h"
 #include "../GraphicsDefs.h"
-#include "../GfxObject.h"
+#include "../GPUObject.h"
 
 namespace Unique
 {
@@ -43,7 +43,7 @@ namespace Unique
 		uint		mask_;
 	};
 
-	class ShaderVariation : public TGfxObject<RefCounted, LLGL::Shader>
+	class ShaderVariation : public GPUObject<RefCounted, LLGL::Shader>
 	{
 	public:
 		ShaderVariation(Shader& shader, const ShaderStage& type, Pass& shaderPass, uint defs);
@@ -64,7 +64,7 @@ namespace Unique
 		bool dirty_ = false;
 	};
 
-	class ShaderInstance : public TGfxObject<RefCounted, ShaderProgram>
+	class ShaderInstance : public GPUObject<RefCounted, ShaderProgram>
 	{
 	public:
 		ShaderInstance(Shader& shader, Pass& shaderPass, unsigned defs);

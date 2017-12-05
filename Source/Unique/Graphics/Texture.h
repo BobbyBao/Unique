@@ -1,14 +1,14 @@
 #pragma once
 #include "../Resource/Resource.h"
 #include "../Graphics/GraphicsDefs.h"
-#include "../Graphics/GfxObject.h"
+#include "../Graphics/GPUObject.h"
 #include <LLGL/Texture.h>
 
 namespace Unique
 {
 	class Image;
 
-	class Texture : public TGfxObject<Resource, LLGL::Texture>
+	class Texture : public GPUObject<Resource, LLGL::Texture>
 	{
 		uRTTI(Texture, Resource)
 	public:

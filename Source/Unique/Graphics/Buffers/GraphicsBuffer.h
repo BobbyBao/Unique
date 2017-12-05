@@ -1,19 +1,25 @@
 #pragma once
 #include "../../Core/Object.h"
 #include <LLGL/Buffer.h>
-#include "../GfxObject.h"
+#include "../GPUObject.h"
 
 namespace Unique
 {
 	using BufferFlags = LLGL::BufferFlags;
 
-	class GraphicsBuffer : public TGfxObject<Object, LLGL::Buffer>
+	class GraphicsBuffer : public GPUObject<Object, LLGL::Buffer>
 	{
 		uRTTI(GraphicsBuffer, Object)
 	public:
 		GraphicsBuffer();
 		~GraphicsBuffer();
 
+		bool SetData(const void* data);
+		/// Set a data range in the buffer. Optionally discard data outside the range.
+		bool SetDataRange(const void* data, unsigned start, unsigned count, bool discard = false);
+
+		bool CpuRead() const { return (flags_ &  BufferFlags::MapReadAccess) != 0; }
+		bool CpuWrite() const { return (flags_ &  BufferFlags::MapWriteAccess) != 0; }
 		bool IsDynamic() const { return (flags_ &  BufferFlags::DynamicUsage) != 0; }
 
 		uint elementSize_ = 0;

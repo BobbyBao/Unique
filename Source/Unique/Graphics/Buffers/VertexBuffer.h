@@ -25,14 +25,6 @@ namespace Unique
 		/// Set size, vertex elements and dynamic mode. Previous data will be lost.
 		bool Create(uint vertexCount, const VertexFormat& vertexFormat, long flag = 0, void* data = 0);
 		
-		bool SetData(const void* data);
-		/// Set a data range in the buffer. Optionally discard data outside the range.
-		bool SetDataRange(const void* data, unsigned start, unsigned count, bool discard = false);
-		/// Lock the buffer for write-only editing. Return data pointer if successful. Optionally discard data outside the range.
-		void* Lock(unsigned start, unsigned count, bool discard = false);
-		/// Unlock the buffer and apply changes to the GPU buffer.
-		void Unlock();
-	
 		/// Return number of vertices.
 		unsigned GetVertexCount() const { return elementCount_; }
 

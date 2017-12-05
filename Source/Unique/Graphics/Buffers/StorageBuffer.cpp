@@ -3,6 +3,12 @@
 
 namespace Unique
 {
+	uObject(StorageBuffer)
+	{
+		uFactory("Graphics")
+		uAttribute("Data", data_)
+	}
+
 	StorageBuffer::StorageBuffer()
 	{
 	}
