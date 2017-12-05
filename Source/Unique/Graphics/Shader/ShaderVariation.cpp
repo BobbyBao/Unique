@@ -127,17 +127,23 @@ namespace Unique
 			return false;
 		}
 
-		// Compile shader
-		LLGL::ShaderDescriptor shaderDesc(shaderStage_.entryPoint_.CString(), shaderStage_.target_.CString(), LLGL::ShaderCompileFlags::Debug);
 		auto& graphics = Subsystem<Graphics>();
-		ByteArray source = file->ReadAll();
-		if (!handle_->Compile(source.data(), shaderDesc))
+	
+		// Compile shader
+		if (graphics.IsOpenGL())
 		{
-			UNIQUE_LOGERRORF(handle_->QueryInfoLog().c_str());
-		}
+			LLGL::ShaderDescriptor shaderDesc("main", "", LLGL::ShaderCompileFlags::Debug);
 
-		/*
+			ByteArray source = file->ReadAll();
+			if (!handle_->Compile(source.data()))//, shaderDesc))
+			{
+				UNIQUE_LOGERRORF(handle_->QueryInfoLog().c_str());
+			}
+		}
+		else
 		{
+			LLGL::ShaderDescriptor shaderDesc(shaderStage_.entryPoint_.CString(), shaderStage_.target_.CString(), LLGL::ShaderCompileFlags::Debug);
+
 			std::vector<char> bytes;
 			bytes.resize(file->GetSize());
 			file->Read(bytes.data(), bytes.size());
@@ -145,7 +151,7 @@ namespace Unique
 			{
 				UNIQUE_LOGERRORF(handle_->QueryInfoLog().c_str());
 			}
-		}*/
+		}
 
 		return true;
 	}
@@ -195,15 +201,17 @@ namespace Unique
 		FileSystem& fileSystem = Subsystem<FileSystem>();
 		String inputFile = "Cache/" + Shader::GetShaderPath(LLGL::RendererID::Direct3D11) + owner_.GetName();
 		fileSystem.CreateDir(GetPath(inputFile));
+		
 		File file;
 		file.Open(inputFile, FILE_WRITE);
 		if (!file.Write(shaderPass_.source_.CString(), shaderPass_.source_.Length()))
 		{
 			UNIQUE_LOGERROR("Write source file failed.");
 		}
+		file.Close();
 
 		args.Append(defines_)
-			.Append(" -O Cache/" + binaryShaderName)
+			.Append(" -o Cache/" + binaryShaderName)
 			//.Append(" -I Assets/Shaders/Common" + binaryShaderName)
 			.Append(" ").Append(inputFile);
 
