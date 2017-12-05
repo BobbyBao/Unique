@@ -22,8 +22,7 @@ namespace Unique
 	{
 		uFactory("Graphics")
 		uAccessor("Name", GetName, SetName)
-		uAttribute("Pass", passes_)
-	
+		uAttribute("Pass", passes_)	
 	}
 
 	Pass::Pass() : 
@@ -33,6 +32,9 @@ namespace Unique
 	{
 	}
 
+	Pass::~Pass()
+	{
+	}
 
 	uint Pass::GetMask(Shader* shader, const String& defs)
 	{
@@ -202,11 +204,11 @@ namespace Unique
 		return pass->GetInstance(this, defs);
 	}
 
-	Vector<String>&& Shader::SplitDef(const String& defs)
+	Vector<String>/*&&*/ Shader::SplitDef(const String& defs)
 	{
 		if (defs.Empty())
 		{
-			return std::move(Vector<String>());
+			return /*std::move*/(Vector<String>());
 		}
 
 		return defs.Split(' ');

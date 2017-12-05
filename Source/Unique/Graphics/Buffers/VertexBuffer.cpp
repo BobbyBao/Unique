@@ -24,8 +24,7 @@ namespace Unique
 	uObject(VertexBuffer)
 	{
 		uFactory("Graphics")
-			uAttribute("ElementSize", elementSize_)
-			uAttribute("ElementCount", elementCount_)
+			uAttribute("VertexFormat", vertexFormat_)
 			uAttribute("Data", data_)
 	}
 

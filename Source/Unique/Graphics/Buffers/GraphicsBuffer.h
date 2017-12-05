@@ -2,7 +2,6 @@
 #include "../../Core/Object.h"
 #include <LLGL/Buffer.h>
 #include "../GfxObject.h"
-#include "../../Container/ByteArray.h"
 
 namespace Unique
 {

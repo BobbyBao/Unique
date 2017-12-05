@@ -237,6 +237,7 @@ public:
 
 extern Context* GetContext();
 template <class T> T& Subsystem() { return *GetContext()->Subsystem<T>(); }
+template <class T> T& GetSubsystem() { return *GetContext()->Subsystem<T>(); }
 template <class T> bool HasSubsystem() { return GetContext()->Subsystem<T>() != nullptr; }
 
 

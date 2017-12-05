@@ -36,9 +36,8 @@ namespace Unique
 	Vector<String> Application::argv_;
 	std::string Application::rendererModule_;
 	
-	Application::Application(const std::wstring& title, LLGL::Size resolution) :
-		title_(title), 
-		resolution_(resolution),
+	Application::Application() :
+		resolution_ { 800, 600 },
 		context_(new Context())
 	{
 		context_->RegisterSubsystem<WorkQueue>();
@@ -48,8 +47,10 @@ namespace Unique
 		Log& log = context_->RegisterSubsystem<Log>();
 		log.Open("Unique.log");
 
-		context_->RegisterSubsystem<ResourceCache>();
 		context_->RegisterSubsystem<Graphics>();
+
+		context_->RegisterSubsystem<ResourceCache>();
+	
 		context_->RegisterSubsystem<Renderer>();
 
 	}
@@ -91,13 +92,23 @@ namespace Unique
 		window_->Show();
 
 		auto rendererName = graphics.GetRenderName();
-		window_->SetTitle(title_ + L" ( " + std::wstring(rendererName.begin(), rendererName.end()) + L" )");
+		window_->SetTitle(title_);
 		// Store information that loading is done
 		loadingDone_ = true;
 	}
 
 	void Application::Terminate()
 	{
+	}
+
+	void Application::SetTitle(const std::wstring& title) 
+	{
+		title_ = title;
+	}
+
+	void Application::SetResolution(const Size& res)
+	{ 
+		resolution_ = res; 
 	}
 
 	void Application::Run()
@@ -123,9 +134,11 @@ namespace Unique
 
 		renderer.Stop();
 
+		context_->Stop();
+
 		Terminate();
 
-		context_->Stop();
+		context_ = nullptr;
 	}
 
 	

@@ -153,8 +153,8 @@ namespace Unique
 
 	inline void JsonWriter::TransferBin(ByteArray& data)
 	{
-		ByteArray bytes = toBase64(data);
-		writer_->String(bytes.data());
+		ByteArray bytes = std::move(ToBase64(data));
+		writer_->String(bytes.data(), (rapidjson::SizeType)bytes.size());
 	}
 
 	template<class T>

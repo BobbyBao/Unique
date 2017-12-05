@@ -334,6 +334,7 @@ void Context::ThreadFunction()
 	}
 
 	SendEvent(Shutdown());
+	
 }
 
 void Context::ApplyFrameLimit()

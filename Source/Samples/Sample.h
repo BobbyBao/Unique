@@ -21,6 +21,7 @@ namespace Unique
 		virtual void Terminate();
 		void HandleStartup(StringID, const struct Startup&);
 		void HandleShutdown(StringID, const struct Shutdown&);
+		void HandleRenderUpdate(StringID, const struct RenderUpdate&);
 		virtual void OnPostRender() override;
 		void CreateGeometry();
 
@@ -29,12 +30,7 @@ namespace Unique
 		SPtr<Geometry> geometry_;
 
 		Vector<Batch> batches_[2];
-
-		ShaderProgram*    shaderProgram = nullptr;
-		LLGL::GraphicsPipeline* pipeline = nullptr;
-		SPtr<VertexBuffer>      vertexBuffer = nullptr;
 		SPtr<Unique::Texture>   colorMap = nullptr;
-		int                     samplerIndex = 0;
 	};
 
 }

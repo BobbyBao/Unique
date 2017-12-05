@@ -29,9 +29,11 @@ namespace Unique
 	class Application : public Object
 	{
 	public:
-		Application(const std::wstring& title, LLGL::Size resolution = { 800, 600 });
-
+		Application();
 		virtual ~Application();
+
+		void SetTitle(const std::wstring& title);
+		void SetResolution(const Size& res);
 
 		void Run();
 
@@ -45,7 +47,7 @@ namespace Unique
 
 		static Vector<String>			argv_;
 		static std::string				rendererModule_;
-		std::wstring					title_;	
+		std::wstring					title_;
 		LLGL::Size						resolution_;
 		uint							multiSampling_ = 8;
 		bool							vsync_ = true;

@@ -7,7 +7,6 @@ namespace Unique
 	{
 		uAttribute("ElementSize", elementSize_)
 		uAttribute("ElementCount", elementCount_)
-		uAttribute("Data", data_)
 	}
 
 	GraphicsBuffer::GraphicsBuffer()

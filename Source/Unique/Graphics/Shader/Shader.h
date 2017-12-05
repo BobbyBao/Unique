@@ -21,6 +21,7 @@ namespace Unique
 		uRTTI(Pass, Object)
 	public:
 		Pass();
+		~Pass();
 
 		uint GetMask(Shader* shader, const String& defs);
 
@@ -77,7 +78,7 @@ namespace Unique
 
 		ShaderInstance* GetInstance(const StringID& passName, const String & defs);
 
-		static Vector<String>&& SplitDef(const String& defs);
+		static Vector<String>/*&&*/ SplitDef(const String& defs);
 
 		static String GetShaderPath();
 	private:

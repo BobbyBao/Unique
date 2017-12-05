@@ -29,7 +29,7 @@ Shader("Default"):
 
 		// HLSL texturing shader
 
-		float4 color;
+		float4 color = float4(1,1,1,1);
 		float4 color1;
 		Texture2D colorMap : register(t0);
 		SamplerState samplerState : register(s0);
@@ -62,7 +62,7 @@ Shader("Default"):
 
 		float4 PS(OutputVS inp) : SV_Target
 		{
-			return colorMap.Sample(samplerState, inp.texCoord)*color + color1;
+			return colorMap.Sample(samplerState, inp.texCoord);//*color + color1;
 		}
 
 

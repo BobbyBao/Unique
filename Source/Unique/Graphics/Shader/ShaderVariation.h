@@ -34,8 +34,7 @@ namespace Unique
 			return !entryPoint_.Empty();
 		}
 
-		uClass("EntryPoint", entryPoint_,
-			"Target", target_);
+		uClass("EntryPoint", entryPoint_, "Target", target_, "Defines", defines_);
 
 		ShaderType	shaderType_;
 		String		entryPoint_;

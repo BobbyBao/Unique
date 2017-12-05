@@ -22,7 +22,6 @@
 
 #pragma once
 #include "../Unique.h"
-#include "../Container/ByteArray.h"
 
 namespace Unique
 {

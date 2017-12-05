@@ -31,7 +31,7 @@ namespace Unique
 	// Render system
 	UPtr<LLGL::RenderSystem>        renderer;
 	// Main render context
-	LLGL::RenderContext*			graphicsContext = nullptr;
+	LLGL::RenderContext*			renderContext = nullptr;
 	// Main command buffer
 	LLGL::CommandBuffer*            commands = nullptr;
 
@@ -45,6 +45,9 @@ namespace Unique
 	{
 		if (renderer)
 		{
+			renderer->Release(*renderContext);
+			renderer->Release(*commands);
+
 			LLGL::RenderSystem::Unload(std::move(renderer));
 		}
 	}
@@ -84,7 +87,7 @@ namespace Unique
 #endif
 		}
 
-		graphicsContext = renderer->CreateRenderContext(contextDesc);
+		renderContext = renderer->CreateRenderContext(contextDesc);
 
 		// Create command buffer
 		commands = renderer->CreateCommandBuffer();
@@ -93,7 +96,7 @@ namespace Unique
 
 		// Initialize command buffer
 		commands->SetClearColor(defaultClearColor);
-		commands->SetRenderTarget(*graphicsContext);
+		commands->SetRenderTarget(*renderContext);
 		commands->SetViewport({ 0.0f, 0.0f, static_cast<float>(size.x), static_cast<float>(size.y) });
 		commands->SetScissor({ 0, 0, size.x, size.y });
 
@@ -108,28 +111,41 @@ namespace Unique
 
 		GraphicsContext::FrameNoRenderWait();
 
-		return &(Window&)graphicsContext->GetSurface();
+		return &(Window&)renderContext->GetSurface();
 	}
 
 	void Graphics::Resize(const LLGL::Size& size)
 	{
-		auto videoMode = graphicsContext->GetVideoMode();
+		auto fn = [=]()
+		{
+			auto videoMode = renderContext->GetVideoMode();
 
-		// Update video mode
-		videoMode.resolution = size;
-		graphicsContext->SetVideoMode(videoMode);
+			// Update video mode
+			videoMode.resolution = size;
+			renderContext->SetVideoMode(videoMode);
 
-		SetRenderTarget(nullptr);
+			SetRenderTarget(nullptr);
 
-		SetViewport(Viewport(0, 0, (float)size.x, (float)size.y));
+			SetViewport(Viewport(0, 0, (float)size.x, (float)size.y));
 
-		// Update scissor
-		SetScissor({ 0, 0, videoMode.resolution.x, videoMode.resolution.y });
+			// Update scissor
+			SetScissor({ 0, 0, videoMode.resolution.x, videoMode.resolution.y });
+		};
+
+		if (Thread::IsMainThread())
+		{
+			GraphicsContext::AddCommand(fn);
+		}
+		else
+		{
+			fn();
+		}
+
 	}
 
-	const std::string Graphics::GetRenderName() const
+	uint Graphics::GetRenderName() const
 	{
-		return renderer->GetName();
+		return renderer->GetRendererID();
 	}
 
 	void Graphics::SetDebug(bool val)
@@ -139,12 +155,23 @@ namespace Unique
 
 	const Size& Graphics::GetResolution() const
 	{
-		return graphicsContext->GetVideoMode().resolution;
+		return renderContext->GetVideoMode().resolution;
+	}
+
+	bool Graphics::IsDirect3D() const
+	{
+		return (renderer->GetRendererID() == LLGL::RendererID::Direct3D9
+			|| renderer->GetRendererID() == LLGL::RendererID::Direct3D10
+			|| renderer->GetRendererID() == LLGL::RendererID::Direct3D11
+		|| renderer->GetRendererID() == LLGL::RendererID::Direct3D12);
 	}
 
 	bool Graphics::IsOpenGL() const
 	{
-		return (renderer->GetRendererID() == LLGL::RendererID::OpenGL);
+		return (renderer->GetRendererID() == LLGL::RendererID::OpenGL
+			|| renderer->GetRendererID() == LLGL::RendererID::OpenGLES1
+			|| renderer->GetRendererID() == LLGL::RendererID::OpenGLES2
+			|| renderer->GetRendererID() == LLGL::RendererID::OpenGLES3);
 	}
 
 	SPtr<VertexBuffer> Graphics::CreateVertexBuffer(uint size, const LLGL::VertexFormat& vertexFormat, void* data)
@@ -179,7 +206,7 @@ namespace Unique
 
 	void Graphics::EndRender()
 	{
-		graphicsContext->Present();
+		renderContext->Present();
 		
 		GraphicsContext::EndRender();
 	}
@@ -197,7 +224,7 @@ namespace Unique
 		}
 		else
 		{
-			commands->SetRenderTarget(*graphicsContext);
+			commands->SetRenderTarget(*renderContext);
 		}
 	}
 

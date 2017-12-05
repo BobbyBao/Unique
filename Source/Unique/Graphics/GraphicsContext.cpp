@@ -80,6 +80,7 @@ namespace Unique
 	void GraphicsContext::Stop()
 	{
 		MainSemWait();
+		//FrameNoRenderWait();
 		RenderSemPost();
 	}
 

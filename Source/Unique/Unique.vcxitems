@@ -14,7 +14,6 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)Container\ByteArray.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\ProcessUtils.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\WorkQueue.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Drawable.cpp" />
@@ -78,7 +77,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Importers\ShaderImporter.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Container\ByteArray.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\ProcessUtils.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\WorkQueue.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\EnumFlags.h" />

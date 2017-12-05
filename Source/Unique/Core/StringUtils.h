@@ -4,6 +4,10 @@
 namespace Unique
 {
 	String FormatString(const char* formatString, ...);
+	
+	ByteArray ToBase64(ByteArray& v);
+
+	ByteArray FromBase64(const char* base64, size_t size);
 
 	template<typename T>
 	inline String ToString(const T& v)

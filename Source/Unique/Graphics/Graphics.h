@@ -8,7 +8,6 @@ namespace Unique
 	class IndexBuffer;
 	class Texture;
 
-
 	class Graphics : public Object
 	{
 		uRTTI(Graphics, Object)
@@ -19,7 +18,7 @@ namespace Unique
 		Window* Initialize(const std::string& rendererModule, const Size& size);
 		void Resize(const Size& size);
 
-		const std::string GetRenderName() const;
+		uint GetRenderName() const;
 		void SetDebug(bool val);
 		const Size& GetResolution() const;
 
@@ -30,6 +29,7 @@ namespace Unique
 			return (resolution.x / resolution.y);
 		}
 
+		bool IsDirect3D() const;
 		bool IsOpenGL() const;
 
 

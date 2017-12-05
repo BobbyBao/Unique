@@ -470,12 +470,12 @@ namespace Unique
 		if (human_)
 		{
 			std::string& base64 = (std::string&)hJsonNode_;
-			data = fromBase64(base64.c_str(), base64.length());
+			data = FromBase64(base64.c_str(), base64.length());
 		}
 		else
 		{
 			const char* base64 = currentNode_->GetString();
-			data = fromBase64(base64, currentNode_->GetStringLength());
+			data = FromBase64(base64, currentNode_->GetStringLength());
 		}
 
 	}
@@ -485,7 +485,7 @@ namespace Unique
 	{
 		if (human_)
 		{
-			data = FromString<T>(String(hJsonNode_));
+			data = FromString<T>(String((const char*)hJsonNode_));
 		}
 		else
 		{

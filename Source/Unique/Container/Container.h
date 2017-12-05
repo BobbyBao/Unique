@@ -38,6 +38,7 @@ namespace Unique
 	template<class T>
 	using HashSet = std::unordered_set<T>;
 
+	using ByteArray = Vector<char>;
 }
 
 #include "Container/Algorithm.h"

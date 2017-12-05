@@ -37,7 +37,7 @@ namespace Unique
 
 		handle_ = renderer->CreateShader(shaderStage_.shaderType_);
 
-		if (graphics.GetRenderName().find("Direct3D") != std::string::npos)
+		if (graphics.IsDirect3D())
 		{
 			// Compile shader
 			LLGL::ShaderDescriptor shaderDesc(shaderStage_.entryPoint_.CString(),
@@ -152,7 +152,16 @@ namespace Unique
 
 	bool ShaderVariation::Compile(const String& binaryShaderName)
 	{
+		auto& graphics = GetSubsystem<Graphics>();
+
 		const String& sourceCode = shaderPass_.source_;
+		if (graphics.IsDirect3D())
+		{
+			//to do compile hlsl to binary code
+			return true;
+		}
+
+
 
 
 		/*
