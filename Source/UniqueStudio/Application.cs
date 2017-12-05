@@ -11,12 +11,16 @@ namespace UniqueStudio
     {
         public Application()
         {
-
         }
 
         public void Run()
         {
             Unique_Start("Direct3D11", IntPtr.Zero);
+        }
+
+        public static void Quit()
+        {
+            Unique_Shutdown();
         }
 
 #if DEBUG
