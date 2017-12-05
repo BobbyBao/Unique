@@ -34,7 +34,8 @@ namespace Unique
 
 		size_t toHash() const
 		{
-			return std::_Hash_bytes((byte*)data, 16);
+			return 0;
+		//	return std::_Hash_seq((byte*)data, 16);
 		}
 	};
 

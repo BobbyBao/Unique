@@ -36,17 +36,16 @@ namespace Unique
 		void SetResolution(const Size& res);
 
 		void Run();
-
-		static void Setup(int argc, char* argv[]);
-
+		
+		static void Quit();
+		static Vector<String>			argv_;
+		static std::string				rendererModule_;
 	protected:
 		virtual void Initialize();
 		virtual void Terminate();
 		virtual void OnPreRender();
 		virtual void OnPostRender();
 
-		static Vector<String>			argv_;
-		static std::string				rendererModule_;
 		std::wstring					title_;
 		LLGL::Size						resolution_;
 		uint							multiSampling_ = 8;
@@ -56,6 +55,7 @@ namespace Unique
 		bool                            loadingDone_ = false;
 		std::shared_ptr<LLGL::Input>    input;
 		UPtr<Context>					context_;
+		static bool						quit_;
 
 		friend class ResizeEventHandler;
 
@@ -66,7 +66,7 @@ namespace Unique
 	{
 		try
 		{
-			Application::Setup(argc, argv);
+			Unique_Setup(argc, argv);
 			auto app = UPtr<T>(new T());
 			app->Run();
 		}
@@ -79,8 +79,11 @@ namespace Unique
 		}
 		return 0;
 	}
+	
+	UNIQUE_C_API void Unique_Setup(int argc, char* argv[]);
 
-
+	UNIQUE_C_API int Unique_Start(const char* rendererModule, LLGL::Surface* window);
+	UNIQUE_C_API void Unique_Shutdown();
 }
 
 

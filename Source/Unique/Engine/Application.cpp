@@ -35,7 +35,7 @@ namespace Unique
 
 	Vector<String> Application::argv_;
 	std::string Application::rendererModule_;
-	
+	bool Application::quit_ = false;
 	Application::Application() :
 		resolution_ { 800, 600 },
 		context_(new Context())
@@ -99,6 +99,11 @@ namespace Unique
 	{
 	}
 
+	void Application::Quit()
+	{
+		quit_ = true;
+	}
+
 	void Application::SetTitle(const std::wstring& title) 
 	{
 		title_ = title;
@@ -117,7 +122,7 @@ namespace Unique
 
 		context_->Run();
 
-		while (window_->ProcessEvents() && !input->KeyDown(LLGL::Key::Escape))
+		while (window_->ProcessEvents() && !quit_)
 		{
 			renderer.Begin();
 			
@@ -181,15 +186,33 @@ namespace Unique
 		return rendererModule;
 	}
 
-	void Application::Setup(int argc, char* argv[])
+	UNIQUE_C_API void Unique_Setup(int argc, char* argv[])
 	{
 		for (int i = 0; i < argc; i++)
 		{
-			argv_.push_back(argv[i]);
+			Application::argv_.push_back(argv[i]);
 		}
 
-		rendererModule_ = GetSelectedRendererModule(argc, argv);
+		Application::rendererModule_ = GetSelectedRendererModule(argc, argv);
 	}
 	
+	UNIQUE_C_API int Unique_Start(const char* rendererModule, LLGL::Surface* window)
+	{
+		try
+		{
+			Application::rendererModule_ = rendererModule;
+			auto app = UPtr<Application>(new Application());
+			app->Run();
+		}
+		catch (const std::exception& e)
+		{
+			std::cerr << e.what() << std::endl;
+		}
+		return 0;
+	}
 
+	UNIQUE_C_API void Unique_Shutdown()
+	{
+		Application::Quit();
+	}
 }

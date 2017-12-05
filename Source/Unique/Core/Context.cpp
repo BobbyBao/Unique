@@ -115,7 +115,7 @@ void ExecuteCleanup(Context* context)
 /// Execution context.
 static Context* context_;
 
-Context* GetContext()
+UNIQUE_C_API Context* GetContext()
 {
 	return context_;
 }
