@@ -65,9 +65,6 @@ namespace Unique
 		
 		virtual bool Create();
 
-		const String& GetName() const { return name_; }
-		void SetName(const String& name) { name_ = name;}
-
 		Pass* AddPass(Pass* pass = nullptr);
 
 		Pass* GetShaderPass(const StringID & pass);
@@ -78,11 +75,11 @@ namespace Unique
 
 		ShaderInstance* GetInstance(const StringID& passName, const String & defs);
 
-		static Vector<String>/*&&*/ SplitDef(const String& defs);
+		static Vector<String> SplitDef(const String& defs);
 
-		static String GetShaderPath();
+		static String GetShaderPath(uint renderID);
 	private:
-		String name_;
+		String shaderName_;
 		Vector<SPtr<Pass>> passes_;
 	};
 

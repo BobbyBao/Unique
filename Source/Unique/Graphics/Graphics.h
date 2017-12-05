@@ -18,7 +18,7 @@ namespace Unique
 		Window* Initialize(const std::string& rendererModule, const Size& size);
 		void Resize(const Size& size);
 
-		uint GetRenderName() const;
+		uint GetRenderID() const;
 		void SetDebug(bool val);
 		const Size& GetResolution() const;
 

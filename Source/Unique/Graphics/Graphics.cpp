@@ -143,7 +143,7 @@ namespace Unique
 
 	}
 
-	uint Graphics::GetRenderName() const
+	uint Graphics::GetRenderID() const
 	{
 		return renderer->GetRendererID();
 	}

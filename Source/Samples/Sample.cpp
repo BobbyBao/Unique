@@ -65,22 +65,6 @@ namespace Unique
 		SubscribeToEvent(&Sample::HandleShutdown);
 		SubscribeToEvent(&Sample::HandleRenderUpdate);
 
-		/*
-		// Create all graphics objects
-		auto vertexFormat = CreateBuffers();
-
-		shaderProgram = LoadStandardShaderProgram(vertexFormat);
-		auto& constBuffers = shaderProgram->QueryConstantBuffers();
-		auto& uniforms = shaderProgram->QueryUniforms();
-
-		// Create graphics pipeline
-		LLGL::GraphicsPipelineDescriptor pipelineDesc;
-		{
-			pipelineDesc.shaderProgram = shaderProgram;
-		}
-
-		pipeline = renderer->CreateGraphicsPipeline(pipelineDesc);
-	*/
 		colorMap = Texture::Load("Assets/colorMap.png");
 
 

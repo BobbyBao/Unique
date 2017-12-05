@@ -21,7 +21,7 @@ namespace Unique
 			{
 				if (defines_.Length() > 0)
 				{
-					defines_.Append(';');
+					defines_.Append(" -D");
 				}
 
 				String& def = shaderPass_.allDefs_[i];
@@ -73,9 +73,9 @@ namespace Unique
 			break;
 		}
 
-		String defines = defines_.Replaced(';', '_');
+		String defines = defines_.Replaced(' -D', '_');
 
-		String binaryShaderName = Shader::GetShaderPath() + name;
+		String binaryShaderName = Shader::GetShaderPath(graphics.GetRenderID()) + name;
 
 		if (!defines.Empty())
 		{
@@ -87,7 +87,7 @@ namespace Unique
 		{
 			if (!Compile(binaryShaderName))
 			{
-				if (LoadByteCode(Shader::GetShaderPath() + name + extension))
+				if (LoadByteCode(Shader::GetShaderPath(graphics.GetRenderID()) + name + extension))
 				{
 					UNIQUE_LOGWARNING("==============================Load shader failed, name : " + binaryShaderName);
 				}
@@ -161,71 +161,54 @@ namespace Unique
 			return true;
 		}
 
-		// compile hlsh to glsl
-
-
-		/*
 		String args;
-		unsigned renderType = bgfx::getRendererType();
-		bool isOpenGL = ((renderType == bgfx::RendererType::OpenGL) 
-			|| (renderType == bgfx::RendererType::OpenGLES));
+		unsigned renderType = graphics.GetRenderID();
+		bool isOpenGL = graphics.IsOpenGL();
 
 		if (isOpenGL)
 		{
-			args.Append(" --platform linux");
+		//	args.Append(" --platform linux");
 		}
 		else
 		{
-			args.Append(" --platform windows");
+		//	args.Append(" --platform windows");
 		}
 
-		switch (type_)
+		switch (shaderStage_.shaderType_)
 		{
-		case ShaderType::VS:
-			if (isOpenGL)
-			{
-				args.Append(" -p 130");
-			}
-			else
-			{
-				args.Append(" -p vs_4_0");
-			}
-			args.Append(" --type vertex");
+		case ShaderType::Vertex:
+			args.Append(" -T vert");
+			args.Append(" -E ").Append(shaderStage_.entryPoint_);
 			break;
-		case ShaderType::PS:
-			if (isOpenGL)
-			{
-				args.Append(" -p 130");
-			}
-			else
-			{
-				args.Append(" -p ps_4_0");
-			}
-			args.Append(" --type fragment");
+		case ShaderType::Fragment:
+			args.Append(" -T frag");
+			args.Append(" -E ").Append(shaderStage_.entryPoint_);
 			break;
-		case ShaderType::CS:
-			if (isOpenGL)
-			{
-				args.Append(" -p 430");
-			}
-			else
-			{
-				args.Append(" -p cs_5_0");
-			}
-			args.Append(" --type compute");
+		case ShaderType::Compute:
+			args.Append(" -T comp");
+			args.Append(" -E ").Append(shaderStage_.entryPoint_);
 			break;
 		default:
 			break;
 		}
 
-		args.Append(" --define ").Append(defines_)
-			.Append(" -f CoreData/").Append(sourceCode)
-			.Append(" -i CoreData/Shaders/")
-			.Append(" -o cache/" + binaryShaderName);
-
-		String exeFileName = "tools\\shadercRelease.exe";
-
 		FileSystem& fileSystem = Subsystem<FileSystem>();
+		String inputFile = "Cache/" + Shader::GetShaderPath(LLGL::RendererID::Direct3D11) + owner_.GetName();
+		fileSystem.CreateDir(GetPath(inputFile));
+		File file;
+		file.Open(inputFile, FILE_WRITE);
+		if (!file.Write(shaderPass_.source_.CString(), shaderPass_.source_.Length()))
+		{
+			UNIQUE_LOGERROR("Write source file failed.");
+		}
+
+		args.Append(defines_)
+			.Append(" -O Cache/" + binaryShaderName)
+			//.Append(" -I Assets/Shaders/Common" + binaryShaderName)
+			.Append(" ").Append(inputFile);
+
+		String exeFileName = "tools\\xsc.exe";
+
 
 		fileSystem.CreateDir("cache/" + GetPath(binaryShaderName));
 
@@ -235,7 +218,7 @@ namespace Unique
 			return false;
 		}
 
-		dirty_ = false;*/
+		dirty_ = false;
 		return true;
 	}
 

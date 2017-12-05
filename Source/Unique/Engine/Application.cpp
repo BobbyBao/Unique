@@ -90,8 +90,6 @@ namespace Unique
 		window_->SetBehavior(behavior);
 		window_->AddEventListener(std::make_shared<ResizeEventHandler>(*this));
 		window_->Show();
-
-		auto rendererName = graphics.GetRenderName();
 		window_->SetTitle(title_);
 		// Store information that loading is done
 		loadingDone_ = true;
@@ -175,7 +173,7 @@ namespace Unique
 			else// if (modules.size() == 1)
 			{
 				/* Use the only available module */
-				rendererModule = modules.back();
+				rendererModule = modules.front();
 			}
 
 		}

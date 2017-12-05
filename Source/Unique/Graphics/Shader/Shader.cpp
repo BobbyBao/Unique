@@ -21,7 +21,7 @@ namespace Unique
 	uObject(Shader)
 	{
 		uFactory("Graphics")
-		uAccessor("Name", GetName, SetName)
+		uAttribute("ShaderName", shaderName_)
 		uAttribute("Pass", passes_)	
 	}
 
@@ -204,19 +204,42 @@ namespace Unique
 		return pass->GetInstance(this, defs);
 	}
 
-	Vector<String>/*&&*/ Shader::SplitDef(const String& defs)
+	Vector<String> Shader::SplitDef(const String& defs)
 	{
 		if (defs.Empty())
 		{
-			return /*std::move*/(Vector<String>());
+			return Vector<String>();
 		}
 
 		return defs.Split(' ');
 	}
 
-	String Shader::GetShaderPath()
+	String Shader::GetShaderPath(uint renderID)
 	{
-		return "Shader/HLSL";
+		switch (renderID)
+		{
+		case LLGL::RendererID::Direct3D9:
+		case LLGL::RendererID::Direct3D10:
+		case LLGL::RendererID::Direct3D11:
+		case LLGL::RendererID::Direct3D12:
+			return "Shaders/HLSL/";
+			
+		case LLGL::RendererID::OpenGL:
+			return "Shaders/GLSL/";
+		case LLGL::RendererID::OpenGLES1:
+		case LLGL::RendererID::OpenGLES2:
+		case LLGL::RendererID::OpenGLES3:
+			return "Shaders/ESSL/";
+
+		case LLGL::RendererID::Vulkan:
+			return "Shaders/VKSL/";
+		case LLGL::RendererID::Metal:
+			return "Shaders/metal/";
+		default:
+			break;
+		}
+
+		return "";
 	}
 
 
