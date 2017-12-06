@@ -46,11 +46,10 @@ namespace Unique
 		if (!elementCount_ || !elementSize_)
 			return true;
 
-
 		handle_ = renderer->CreateBuffer(IndexBufferDesc((uint)data_.size(), 
-			IndexFormat(elementSize_ == 4 ?LLGL::DataType::UInt32 : LLGL::DataType::UInt16), flags_), data_.data());
+			LLGL::IndexFormat(elementSize_ == 4 ?LLGL::DataType::UInt32 : LLGL::DataType::UInt16), flags_), data_.data());
+		
 		return handle_ != nullptr;
-
 	}
 
 	bool IndexBuffer::GetUsedVertexRange(unsigned start, unsigned count, unsigned& minVertex, unsigned& vertexCount)

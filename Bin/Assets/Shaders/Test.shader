@@ -15,13 +15,13 @@ Shader("Default"):
 		VertexShader:
 		{ 
 			EntryPoint: "VS" 
-			Target: "vs_5_0"
+			Target: "vs_4_0"
 		}
 		
 		PixelShader:
 		{
 			EntryPoint: "PS"
-			Target: "ps_5_0"
+			Target: "ps_4_0"
 		}
 		
 		Source:	'''

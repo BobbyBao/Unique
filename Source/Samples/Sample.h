@@ -11,7 +11,7 @@ namespace Unique
 	class Texture;
 	class VertexBuffer;
 
-	class Sample : public Unique::Application
+	class Sample : public Application
 	{
 	public:
 		Sample();

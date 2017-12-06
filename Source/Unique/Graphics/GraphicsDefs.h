@@ -27,7 +27,6 @@ namespace Unique
 	using ComputePipeline = LLGL::ComputePipeline;
 
 	using VertexFormat = LLGL::VertexFormat;
-	using IndexFormat = LLGL::IndexFormat;
 	using StreamOutputFormat = LLGL::StreamOutputFormat;
 	using ShaderType = LLGL::ShaderType;
 	using ShaderProgram = LLGL::ShaderProgram;

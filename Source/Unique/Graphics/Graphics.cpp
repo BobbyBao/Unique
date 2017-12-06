@@ -174,21 +174,7 @@ namespace Unique
 			|| renderer->GetRendererID() == LLGL::RendererID::OpenGLES2
 			|| renderer->GetRendererID() == LLGL::RendererID::OpenGLES3);
 	}
-
-	SPtr<VertexBuffer> Graphics::CreateVertexBuffer(uint size, const LLGL::VertexFormat& vertexFormat, void* data)
-	{
-		SPtr<VertexBuffer> vb(new VertexBuffer());
-		vb->handle_ = renderer->CreateBuffer(VertexBufferDesc(size * vertexFormat.stride, vertexFormat), data);
-		return vb;
-	}
-
-	SPtr<IndexBuffer> Graphics::CreateIndexBuffer(uint size, const LLGL::IndexFormat& indexFormat, void* data)
-	{
-		SPtr<IndexBuffer> ib(new IndexBuffer());
-		ib->handle_ = renderer->CreateBuffer(IndexBufferDesc(size * indexFormat.GetFormatSize(), indexFormat), data);
-		return ib;
-	}
-
+	
 	void Graphics::BeginFrame()
 	{
 		GraphicsContext::BeginFrame();
