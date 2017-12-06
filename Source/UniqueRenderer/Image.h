@@ -22,7 +22,7 @@
 #ifndef _IMAGE_H_
 #define _IMAGE_H_
 
-#include "../Platform.h"
+#include "Platform.h"
 
 #define ALL_MIPMAPS 127
 

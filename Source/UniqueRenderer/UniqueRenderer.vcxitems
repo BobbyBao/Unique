@@ -15,43 +15,30 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)BaseApp.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Config.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)CPU.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Direct3D11\D3D11App.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Direct3D11\Direct3D11Renderer.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Imaging\Image.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Math\Frustum.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Math\MathTools.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Math\Noise.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Math\Vector.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Image.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Vector.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Platform.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Renderer.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Util\BSP.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Util\Model.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Util\String.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Util\Tokenizer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Windows\WindowsBase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)BaseApp.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Config.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CPU.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Direct3D11\D3D11App.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Direct3D11\Direct3D11Renderer.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Imaging\Image.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Math\Frustum.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Math\MathTools.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Math\MyMath.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Math\Noise.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Math\Vector.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Image.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vector.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Platform.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Renderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Util\Array.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Util\BSP.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Util\Hash.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Util\KdTree.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Util\Model.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Util\String.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Util\Tokenizer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Windows\resource.h" />
   </ItemGroup>

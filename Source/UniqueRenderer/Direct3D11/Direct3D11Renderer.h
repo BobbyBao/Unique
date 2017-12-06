@@ -69,7 +69,7 @@ public:
 	DepthStateID addDepthState(const bool depthTest, const bool depthWrite, const int depthFunc, const bool stencilTest, const uint8 stencilReadMask, const uint8 stencilWriteMask,
 		const int stencilFuncFront, const int stencilFuncBack, const int stencilFailFront, const int stencilFailBack,
 		const int depthFailFront, const int depthFailBack, const int stencilPassFront, const int stencilPassBack);
-	RasterizerStateID addRasterizerState(const int cullMode, const int fillMode = SOLID, const bool multiSample = true, const bool scissor = false, const float depthBias = 0.0f, const float slopeDepthBias = 0.0f);
+	RasterizerStateID addRasterizerState(CullMode cullMode, const int fillMode = SOLID, const bool multiSample = true, const bool scissor = false, const float depthBias = 0.0f, const float slopeDepthBias = 0.0f);
 
 	void setTexture(const char *textureName, const TextureID texture);
 	void setTexture(const char *textureName, const TextureID texture, const SamplerStateID samplerState);

@@ -23,6 +23,8 @@
 
 #include <string.h>
 #include <stdio.h>
+#include "Math/MathDefs.h"
+using namespace Unique;
 
 BaseApp::BaseApp(){
 	mouseCaptured = false;
@@ -35,119 +37,13 @@ BaseApp::BaseApp(){
 	stencilBits = 0;
 
 	benchMarkFile = NULL;
-
-	config.init();
 }
 
 BaseApp::~BaseApp(){
-	config.flush();
 
 	if (benchMarkFile) fclose(benchMarkFile);
 
 }
-
-void BaseApp::loadConfig()
-{
-	// Reset keys
-	memset(keys, 0, sizeof(keys));
-	memset(joystickAxes, 0, sizeof(joystickAxes));
-	memset(joystickButtons, 0, sizeof(joystickButtons));
-
-	done = false;
-
-	showFPS = config.getBoolDef("ShowFPS", true);
-	invertMouse = config.getBoolDef("InvertMouse", false);
-
-	mouseSensibility = config.getFloatDef("MouseSensibility", 0.003f);
-
-	screen = config.getIntegerDef("Screen", 0);
-	fullscreenWidth  = config.getIntegerDef("FullscreenWidth",  640);
-	fullscreenHeight = config.getIntegerDef("FullscreenHeight", 480);
-
-	if (fullscreen = config.getBoolDef("Fullscreen", false)){
-		width  = fullscreenWidth;
-		height = fullscreenHeight;
-	} else {
-		width  = config.getIntegerDef("WindowedWidth",  640);
-		height = config.getIntegerDef("WindowedHeight", 480);
-	}
-	antiAliasSamples = config.getIntegerDef("AntiAliasSamples", 0);
-
-	vSync = config.getBoolDef("VSync", false);
-	done = true;
-	return;
-	leftKey       = config.getIntegerDef("KeyLeft",  KEY_LEFT);
-	rightKey      = config.getIntegerDef("KeyRight", KEY_RIGHT);
-	upKey         = config.getIntegerDef("KeyUp",    KEY_CTRL);
-	downKey       = config.getIntegerDef("KeyDown",  KEY_SHIFT);
-	forwardKey    = config.getIntegerDef("KeyForward",  KEY_UP);
-	backwardKey   = config.getIntegerDef("KeyBackward", KEY_DOWN);
-	resetKey      = config.getIntegerDef("KeyReset",    KEY_ENTER);
-	fpsKey        = config.getIntegerDef("KeyFPS",      KEY_SPACE);
-	optionsKey    = config.getIntegerDef("KeyOptions",    KEY_F1);
-	screenshotKey = config.getIntegerDef("KeyScreenshot", KEY_F9);
-	benchmarkKey  = config.getIntegerDef("KeyBenchmark",  KEY_F10);
-
-	xStrafeAxis = config.getIntegerDef("StrafeXAxis", 0);
-	yStrafeAxis = config.getIntegerDef("StrafeYAxis", 1);
-	zStrafeAxis = config.getIntegerDef("StrafeZAxis", 2);
-	xTurnAxis = config.getIntegerDef("TurnXAxis", 3);
-	yTurnAxis = config.getIntegerDef("TurnYAxis", 4);
-
-	invertXStrafeAxis = config.getBoolDef("StrafeXAxisInvert", false);
-	invertYStrafeAxis = config.getBoolDef("StrafeYAxisInvert", true);
-	invertZStrafeAxis = config.getBoolDef("StrafeZAxisInvert", true);
-	invertXTurnAxis = config.getBoolDef("TurnXAxisInvert", false);
-	invertYTurnAxis = config.getBoolDef("TurnYAxisInvert", true);
-
-	optionsButton = config.getIntegerDef("OptionsButton", 7);
-}
-
-void BaseApp::initGUI(){
-
-}
-
-void BaseApp::updateConfig(){
-	config.setBool("ShowFPS", showFPS);
-	config.setBool("InvertMouse", invertMouse);
-	config.setFloat("MouseSensibility", mouseSensibility);
-
-	config.setBool("Fullscreen", fullscreen);
-	config.setInteger("FullscreenWidth",  fullscreenWidth);
-	config.setInteger("FullscreenHeight", fullscreenHeight);
-	if (!fullscreen){
-		config.setInteger("WindowedWidth",  width);
-		config.setInteger("WindowedHeight", height);
-	}
-	config.setInteger("AntiAliasSamples", antiAliasSamples);
-	config.setBool("VSync", vSync);
-
-	config.setInteger("KeyLeft",       leftKey);
-	config.setInteger("KeyRight",      rightKey);
-	config.setInteger("KeyUp",         upKey);
-	config.setInteger("KeyDown",       downKey);
-	config.setInteger("KeyForward",    forwardKey);
-	config.setInteger("KeyBackward",   backwardKey);
-	config.setInteger("KeyReset",      resetKey);
-	config.setInteger("KeyFPS",        fpsKey);
-	config.setInteger("KeyOptions",    optionsKey);
-	config.setInteger("KeyScreenshot", screenshotKey);
-
-	config.setInteger("StrafeXAxis", xStrafeAxis);
-	config.setInteger("StrafeYAxis", yStrafeAxis);
-	config.setInteger("StrafeZAxis", zStrafeAxis);
-	config.setInteger("TurnXAxis", xTurnAxis);
-	config.setInteger("TurnYAxis", yTurnAxis);
-
-	config.setBool("StrafeXAxisInvert", invertXStrafeAxis);
-	config.setBool("StrafeYAxisInvert", invertYStrafeAxis);
-	config.setBool("StrafeZAxisInvert", invertZStrafeAxis);
-	config.setBool("TurnXAxisInvert", invertXTurnAxis);
-	config.setBool("TurnYAxisInvert", invertYTurnAxis);
-
-	config.setInteger("OptionsButton", optionsButton);
-}
-
 
 void BaseApp::drawGUI(){
 	//switchTo2DMode(false);
@@ -251,7 +147,7 @@ void BaseApp::moveCamera(const vec3 &dir){
 
 void BaseApp::controls(){
 	// Compute directional vectors from euler angles
-	float cosX = cosf(wx), sinX = sinf(wx), cosY = cosf(wy), sinY = sinf(wy);
+	float cosX = Cos(wx), sinX = Sin(wx), cosY = Cos(wy), sinY = Sin(wy);
 	vec3 dx(cosY, 0, sinY);
 	vec3 dy(-sinX * sinY,  cosX, sinX * cosY);
 	vec3 dz(-cosX * sinY, -sinX, cosX * cosY);
@@ -266,7 +162,7 @@ void BaseApp::controls(){
 
 	float lenSq = dot(dir, dir);
 	if (lenSq > 0){
-		moveCamera(dir * (1.0f / sqrtf(lenSq)));
+		moveCamera(dir * (1.0f / Sqrt(lenSq)));
 	}
 
 	dir = vec3(0, 0, 0);
@@ -396,7 +292,7 @@ bool BaseApp::onJoystickAxis(const int axis, const float value){
 	
 	const float deadZone = 0.2f;
 
-	if (fabsf(value) < deadZone){
+	if (Abs(value) < deadZone){
 		joystickAxes[axis] = 0;
 	} else {
 		if (value > 0.0f){
@@ -441,14 +337,11 @@ void BaseApp::onSize(const int w, const int h){
 }
 
 void BaseApp::onClose(){
-	updateConfig();
-
 	captureMouse(false);
 }
 
-void BaseApp::toggleFullscreen(){
+void BaseApp::toggleFullscreen() {
 	closeWindow(false, true);
-	config.setBool("Fullscreen", !fullscreen);
 }
 
 void BaseApp::closeWindow(const bool quit, const bool callUnLoad){

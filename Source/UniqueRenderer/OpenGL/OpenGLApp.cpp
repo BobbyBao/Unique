@@ -122,17 +122,15 @@ bool OpenGLApp::initAPI(){
 	int targetHz = 85;
 	char str[128];
 
-	resolution->clear();
 	while (EnumDisplaySettings((const char *) device.DeviceName, i, &tdm)){
 		if (int(tdm.dmBitsPerPel) == colorBits && tdm.dmPelsWidth >= 640 && tdm.dmPelsHeight >= 480){
 			sprintf(str, "%dx%d", tdm.dmPelsWidth, tdm.dmPelsHeight);
-			int index = resolution->addItemUnique(str);
+			//int index = resolution->addItemUnique(str);
 
 			if (int(tdm.dmPelsWidth) == fullscreenWidth && int(tdm.dmPelsHeight) == fullscreenHeight){
 				if (abs(int(tdm.dmDisplayFrequency) - targetHz) < abs(int(dm.dmDisplayFrequency) - targetHz)){
 					dm = tdm;
 				}
-				resolution->selectItem(index);
 			}
 		}
 		i++;
@@ -142,7 +140,7 @@ bool OpenGLApp::initAPI(){
 	if (fullscreen){
 		if (ChangeDisplaySettingsEx((const char *) device.DeviceName, &dm, NULL, CDS_FULLSCREEN, NULL) == DISP_CHANGE_SUCCESSFUL){
 			flags |= WS_POPUP;
-			captureMouse(!configDialog->isVisible());
+		//	captureMouse(!configDialog->isVisible());
 		} else {
 			ErrorMsg("Couldn't set fullscreen mode");
 			fullscreen = false;
@@ -231,12 +229,10 @@ bool OpenGLApp::initAPI(){
 		glEnable(GL_MULTISAMPLE_ARB);
 	}
 
-	if (fullscreen) captureMouse(!configDialog->isVisible());
+	//if (fullscreen) captureMouse(!configDialog->isVisible());
 
 	renderer = new OpenGLRenderer(hdc, glContext);
 	renderer->setViewport(width, height);
-
-	antiAlias->selectItem(antiAliasSamples / 2);
 
 	linearClamp = renderer->addSamplerState(LINEAR, CLAMP, CLAMP, CLAMP);
 	defaultFont = renderer->addFont("../Textures/Fonts/Future.dds", "../Textures/Fonts/Future.font", linearClamp);

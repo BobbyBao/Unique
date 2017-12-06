@@ -22,7 +22,6 @@
 #ifndef _VECTOR_H_
 #define _VECTOR_H_
 
-#include "MyMath.h"
 #include <limits.h>
 #include <float.h>
 

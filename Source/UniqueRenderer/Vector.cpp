@@ -20,6 +20,9 @@
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #include "Vector.h"
+#include "Math/MathDefs.h"
+
+using namespace Unique;
 
 half::half(const float x){
 	union {
@@ -497,73 +500,73 @@ vec4 sign(const vec4 &v){
 }
 
 float clamp(const float v, const float c0, const float c1){
-	return min(max(v, c0), c1);
+	return Min(Max(v, c0), c1);
 }
 
 vec2 clamp(const vec2 &v, const float c0, const float c1){
-	return vec2(min(max(v.x, c0), c1), min(max(v.y, c0), c1));
+	return vec2(Min(Max(v.x, c0), c1), Min(Max(v.y, c0), c1));
 }
 
 vec2 clamp(const vec2 &v, const vec2 &c0, const vec2 &c1){
-	return vec2(min(max(v.x, c0.x), c1.x), min(max(v.y, c0.y), c1.y));
+	return vec2(Min(Max(v.x, c0.x), c1.x), Min(Max(v.y, c0.y), c1.y));
 }
 
 vec3 clamp(const vec3 &v, const float c0, const float c1){
-	return vec3(min(max(v.x, c0), c1), min(max(v.y, c0), c1), min(max(v.z, c0), c1));
+	return vec3(Min(Max(v.x, c0), c1), Min(Max(v.y, c0), c1), Min(Max(v.z, c0), c1));
 }
 
 vec3 clamp(const vec3 &v, const vec3 &c0, const vec3 &c1){
-	return vec3(min(max(v.x, c0.x), c1.x), min(max(v.y, c0.y), c1.y), min(max(v.z, c0.z), c1.z));
+	return vec3(Min(Max(v.x, c0.x), c1.x), Min(Max(v.y, c0.y), c1.y), Min(Max(v.z, c0.z), c1.z));
 }
 
 vec4 clamp(const vec4 &v, const float c0, const float c1){
-	return vec4(min(max(v.x, c0), c1), min(max(v.y, c0), c1), min(max(v.z, c0), c1), min(max(v.z, c0), c1));
+	return vec4(Min(Max(v.x, c0), c1), Min(Max(v.y, c0), c1), Min(Max(v.z, c0), c1), Min(Max(v.z, c0), c1));
 }
 
 vec4 clamp(const vec4 &v, const vec4 &c0, const vec4 &c1){
-	return vec4(min(max(v.x, c0.x), c1.x), min(max(v.y, c0.y), c1.y), min(max(v.z, c0.z), c1.z), min(max(v.w, c0.w), c1.w));
+	return vec4(Min(Max(v.x, c0.x), c1.x), Min(Max(v.y, c0.y), c1.y), Min(Max(v.z, c0.z), c1.z), Min(Max(v.w, c0.w), c1.w));
 }
 
 vec2 normalize(const vec2 &v){
-	float invLen = 1.0f / sqrtf(v.x * v.x + v.y * v.y);
+	float invLen = 1.0f / Sqrt(v.x * v.x + v.y * v.y);
 	return v * invLen;
 }
 
 vec3 normalize(const vec3 &v){
-	float invLen = 1.0f / sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
+	float invLen = 1.0f / Sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 	return v * invLen;
 }
 
 vec4 normalize(const vec4 &v){
-	float invLen = 1.0f / sqrtf(v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w);
+	float invLen = 1.0f / Sqrt(v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w);
 	return v * invLen;
 }
 
 vec2 fastNormalize(const vec2 &v){
-	float invLen = rsqrtf(v.x * v.x + v.y * v.y);
+	float invLen = Sqrt(v.x * v.x + v.y * v.y);
 	return v * invLen;
 }
 
 vec3 fastNormalize(const vec3 &v){
-	float invLen = rsqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
+	float invLen = Sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 	return v * invLen;
 }
 
 vec4 fastNormalize(const vec4 &v){
-	float invLen = rsqrtf(v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w);
+	float invLen = Sqrt(v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w);
 	return v * invLen;
 }
 
 float length(const vec2 &v){
-	return sqrtf(v.x * v.x + v.y * v.y);
+	return Sqrt(v.x * v.x + v.y * v.y);
 }
 
 float length(const vec3 &v){
-	return sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
+	return Sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 }
 
 float length(const vec4 &v){
-	return sqrtf(v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w);
+	return Sqrt(v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w);
 }
 
 vec3 reflect(const vec3 &v, const vec3 &normal){
@@ -578,12 +581,12 @@ float distance(const vec2 &u, const vec2 &v){
 
 float distance(const vec3 &u, const vec3 &v){
     vec3 d = u - v;
-	return sqrtf(dot(d, d));
+	return Sqrt(dot(d, d));
 }
 
 float distance(const vec4 &u, const vec4 &v){
     vec4 d = u - v;
-	return sqrtf(dot(d, d));
+	return Sqrt(dot(d, d));
 }
 
 float planeDistance(const vec3 &normal, const float offset, const vec3 &point){
@@ -622,8 +625,8 @@ vec3 rgbeToRGB(unsigned char *rgbe){
 }
 
 unsigned int rgbToRGBE8(const vec3 &rgb){
-	float v = max(rgb.x, rgb.y);
-	v = max(v, rgb.z);
+	float v = Max(rgb.x, rgb.y);
+	v = Max(v, rgb.z);
 
 	if (v < 1e-32f){
 		return 0;
@@ -641,8 +644,8 @@ unsigned int rgbToRGBE8(const vec3 &rgb){
 }
 
 unsigned int rgbToRGB9E5(const vec3 &rgb){
-	float v = max(rgb.x, rgb.y);
-	v = max(v, rgb.z);
+	float v = Max(rgb.x, rgb.y);
+	v = Max(v, rgb.z);
 
 	if (v < 1.52587890625e-5f){
 		return 0;
@@ -867,13 +870,13 @@ mat4 operator ! (const mat4 &m){
 /* --------------------------------------------------------------------------------- */
 
 mat2 rotate(const float angle){
-	float cosA = cosf(angle), sinA = sinf(angle);
+	float cosA = Cos(angle), sinA = Sin(angle);
 
 	return mat2(cosA, -sinA, sinA, cosA);
 }
 
 mat4 rotateX(const float angle){
-	float cosA = cosf(angle), sinA = sinf(angle);
+	float cosA = Cos(angle), sinA = Sin(angle);
 	
 	return mat4(
 		1, 0,     0,    0,
@@ -883,7 +886,7 @@ mat4 rotateX(const float angle){
 }
 
 mat4 rotateY(const float angle){
-	float cosA = cosf(angle), sinA = sinf(angle);
+	float cosA = Cos(angle), sinA = Sin(angle);
 
 	return mat4(
 		cosA, 0, -sinA, 0,
@@ -893,7 +896,7 @@ mat4 rotateY(const float angle){
 }
 
 mat4 rotateZ(const float angle){
-	float cosA = cosf(angle), sinA = sinf(angle);
+	float cosA = Cos(angle), sinA = Sin(angle);
 
 	return mat4(
 		cosA, -sinA, 0, 0,
@@ -903,8 +906,8 @@ mat4 rotateZ(const float angle){
 }
 
 mat4 rotateXY(const float angleX, const float angleY){
-	float cosX = cosf(angleX), sinX = sinf(angleX), 
-		  cosY = cosf(angleY), sinY = sinf(angleY);
+	float cosX = Cos(angleX), sinX = Sin(angleX), 
+		  cosY = Cos(angleY), sinY = Sin(angleY);
 
 	return mat4(
 		 cosY,        0,    -sinY,        0,
@@ -914,8 +917,8 @@ mat4 rotateXY(const float angleX, const float angleY){
 }
 
 mat4 rotateYX(const float angleX, const float angleY){
-	float cosX = cosf(angleX), sinX = sinf(angleX), 
-		  cosY = cosf(angleY), sinY = sinf(angleY);
+	float cosX = Cos(angleX), sinX = Sin(angleX), 
+		  cosY = Cos(angleY), sinY = Sin(angleY);
 
 	return mat4(
 		cosY, -sinX * sinY, -cosX * sinY, 0,
@@ -925,9 +928,9 @@ mat4 rotateYX(const float angleX, const float angleY){
 }
 
 mat4 rotateZXY(const float angleX, const float angleY, const float angleZ){
-	float cosX = cosf(angleX), sinX = sinf(angleX), 
-		  cosY = cosf(angleY), sinY = sinf(angleY),
-		  cosZ = cosf(angleZ), sinZ = sinf(angleZ);
+	float cosX = Cos(angleX), sinX = Sin(angleX), 
+		  cosY = Cos(angleY), sinY = Sin(angleY),
+		  cosZ = Cos(angleZ), sinZ = Sin(angleZ);
 
 	return mat4(
 		cosY * cosZ + sinX * sinY * sinZ,   -cosX * sinZ,    sinX * cosY * sinZ - sinY * cosZ,  0,
@@ -949,7 +952,7 @@ mat4 scale(const float x, const float y, const float z){
 }
 
 mat4 perspectiveMatrix(const float fov, const float zNear, const float zFar){
-	float s = cosf(0.5f * fov) / sinf(0.5f * fov);
+	float s = Cos(0.5f * fov) / Sin(0.5f * fov);
 
 	return mat4(
 		s, 0, 0, 0,
@@ -959,7 +962,7 @@ mat4 perspectiveMatrix(const float fov, const float zNear, const float zFar){
 }
 
 mat4 perspectiveMatrixX(const float fov, const int width, const int height, const float zNear, const float zFar){
-	float w = cosf(0.5f * fov) / sinf(0.5f * fov);
+	float w = Cos(0.5f * fov) / Sin(0.5f * fov);
 	float h = (w * width) / height;
 
 	return mat4(
@@ -970,7 +973,7 @@ mat4 perspectiveMatrixX(const float fov, const int width, const int height, cons
 }
 
 mat4 perspectiveMatrixY(const float fov, const int width, const int height, const float zNear, const float zFar){
-	float h = cosf(0.5f * fov) / sinf(0.5f * fov);
+	float h = Cos(0.5f * fov) / Sin(0.5f * fov);
 	float w = (h * height) / width;
 
 	return mat4(

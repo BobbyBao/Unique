@@ -19,7 +19,6 @@
 *                                                                *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#include "Config.h"
 
 #ifdef _WIN32
 #include <shlobj.h>
@@ -30,7 +29,6 @@
 #endif
 #endif
 #include "../UniqueRenderer/Renderer.h"
-#include "../UniqueRenderer/Math/Vector.h"
 
 enum MouseButton
 {
@@ -46,10 +44,7 @@ public:
 	virtual ~BaseApp();
 
 	virtual char *getTitle() const = 0;
-
-	void loadConfig();
-	void updateConfig();
-
+	
 	virtual bool init(){ return true; };
 	virtual void exit(){};
 
@@ -148,20 +143,20 @@ protected:
 	bool invertXStrafeAxis, invertYStrafeAxis, invertZStrafeAxis, invertXTurnAxis, invertYTurnAxis;
 	int optionsButton;
 
-	Config config;
-	int width, height, fullscreenWidth, fullscreenHeight, screen;
+	int width = 1280, height = 720,
+		fullscreenWidth = 1280, fullscreenHeight = 720, screen;
 	int colorBits, depthBits, stencilBits;
 
-	int antiAliasSamples;
+	int antiAliasSamples = 0;
 
-	bool fullscreen;
-	bool mouseCaptured;
-	bool done;
+	bool fullscreen = false;
+	bool mouseCaptured = false;
+	bool done = false;
 
-	bool invertMouse;
+	bool invertMouse = false;
 	float mouseSensibility;
-	bool showFPS;
-	bool vSync;
+	bool showFPS = true;
+	bool vSync = false;
 
 	// Benchmarking
 	FILE *benchMarkFile;

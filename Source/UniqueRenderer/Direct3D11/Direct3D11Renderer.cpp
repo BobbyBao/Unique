@@ -20,12 +20,14 @@
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #include "Direct3D11Renderer.h"
-#include "../Util/String.h"
+#include "Container/Str.h"
 
 #define INITGUID
 #include <D3DCompiler.h>
 #pragma comment (lib, "d3dcompiler.lib")
 #pragma comment (lib, "dxguid.lib")
+
+using namespace Unique;
 
 struct Texture
 {
@@ -191,9 +193,14 @@ const int INCR_SAT = D3D11_STENCIL_OP_INCR_SAT;
 const int DECR_SAT = D3D11_STENCIL_OP_DECR_SAT;
 
 // Culling constants
+/*
 const int CULL_NONE  = D3D11_CULL_NONE;
 const int CULL_BACK  = D3D11_CULL_BACK;
 const int CULL_FRONT = D3D11_CULL_FRONT;
+*/
+const int mapCullMode[] = {
+	D3D11_CULL_NONE, D3D11_CULL_BACK, D3D11_CULL_FRONT
+};
 
 // Fillmode constants
 const int SOLID = D3D11_FILL_SOLID;
@@ -1061,12 +1068,12 @@ ShaderID Direct3D11Renderer::addShader(const char *vsText, const char *gsText, c
 		String shaderString;
 		if (extra != NULL) shaderString += extra;
 		if (header != NULL) shaderString += header;
-		shaderString.sprintf("#line %d\n", vsLine + 1);
+		shaderString.AppendWithFormat("#line %d\n", vsLine + 1);
 		shaderString += vsText;
 
 		const char *target = (feature_level == D3D_FEATURE_LEVEL_11_0)? "vs_5_0" : (feature_level == D3D_FEATURE_LEVEL_10_1)? "vs_4_1" : "vs_4_0";
 
-		if (SUCCEEDED(D3DCompile(shaderString, shaderString.getLength(), fileName, NULL, NULL, "main", target, compileFlags, 0, &shaderBuf, &errorsBuf)))
+		if (SUCCEEDED(D3DCompile(shaderString, shaderString.Length(), fileName, NULL, NULL, "main", target, compileFlags, 0, &shaderBuf, &errorsBuf)))
 		{
 			if (SUCCEEDED(device->CreateVertexShader(shaderBuf->GetBufferPointer(), shaderBuf->GetBufferSize(), NULL, &shader.vertexShader)))
 			{
@@ -1102,12 +1109,12 @@ ShaderID Direct3D11Renderer::addShader(const char *vsText, const char *gsText, c
 		String shaderString;
 		if (extra != NULL) shaderString += extra;
 		if (header != NULL) shaderString += header;
-		shaderString.sprintf("#line %d\n", gsLine + 1);
+		shaderString.AppendWithFormat("#line %d\n", gsLine + 1);
 		shaderString += gsText;
 
 		const char *target = (feature_level == D3D_FEATURE_LEVEL_11_0)? "gs_5_0" : (feature_level == D3D_FEATURE_LEVEL_10_1)? "gs_4_1" : "gs_4_0";
 
-		if (SUCCEEDED(D3DCompile(shaderString, shaderString.getLength(), fileName, NULL, NULL, "main", target, compileFlags, 0, &shaderBuf, &errorsBuf)))
+		if (SUCCEEDED(D3DCompile(shaderString, shaderString.Length(), fileName, NULL, NULL, "main", target, compileFlags, 0, &shaderBuf, &errorsBuf)))
 		{
 			if (SUCCEEDED(device->CreateGeometryShader(shaderBuf->GetBufferPointer(), shaderBuf->GetBufferSize(), NULL, &shader.geometryShader)))
 			{
@@ -1141,12 +1148,12 @@ ShaderID Direct3D11Renderer::addShader(const char *vsText, const char *gsText, c
 		String shaderString;
 		if (extra != NULL) shaderString += extra;
 		if (header != NULL) shaderString += header;
-		shaderString.sprintf("#line %d\n", fsLine + 1);
+		shaderString.AppendWithFormat("#line %d\n", fsLine + 1);
 		shaderString += fsText;
 
 		const char *target = (feature_level == D3D_FEATURE_LEVEL_11_0)? "ps_5_0" : (feature_level == D3D_FEATURE_LEVEL_10_1)? "ps_4_1" : "ps_4_0";
 
-		if (SUCCEEDED(D3DCompile(shaderString, shaderString.getLength(), fileName, NULL, NULL, "main", target, compileFlags, 0, &shaderBuf, &errorsBuf)))
+		if (SUCCEEDED(D3DCompile(shaderString, shaderString.Length(), fileName, NULL, NULL, "main", target, compileFlags, 0, &shaderBuf, &errorsBuf)))
 		{
 			if (SUCCEEDED(device->CreatePixelShader(shaderBuf->GetBufferPointer(), shaderBuf->GetBufferSize(), NULL, &shader.pixelShader)))
 			{
@@ -1180,12 +1187,12 @@ ShaderID Direct3D11Renderer::addShader(const char *vsText, const char *gsText, c
 		String shaderString;
 		if (extra != NULL) shaderString += extra;
 		if (header != NULL) shaderString += header;
-		shaderString.sprintf("#line %d\n", csLine + 1);
+		shaderString.AppendWithFormat("#line %d\n", csLine + 1);
 		shaderString += csText;
 
 		const char *target = "cs_5_0";
 
-		if (SUCCEEDED(D3DCompile(shaderString, shaderString.getLength(), fileName, NULL, NULL, "main", target, compileFlags, 0, &shaderBuf, &errorsBuf)))
+		if (SUCCEEDED(D3DCompile(shaderString, shaderString.Length(), fileName, NULL, NULL, "main", target, compileFlags, 0, &shaderBuf, &errorsBuf)))
 		{
 			if (SUCCEEDED(device->CreateComputeShader(shaderBuf->GetBufferPointer(), shaderBuf->GetBufferSize(), NULL, &shader.computeShader)))
 			{
@@ -1863,12 +1870,12 @@ DepthStateID Direct3D11Renderer::addDepthState(const bool depthTest, const bool 
 	return depthStates.add(depthState);	
 }
 
-RasterizerStateID Direct3D11Renderer::addRasterizerState(const int cullMode, const int fillMode, const bool multiSample, const bool scissor, const float depthBias, const float slopeDepthBias)
+RasterizerStateID Direct3D11Renderer::addRasterizerState(CullMode cullMode, const int fillMode, const bool multiSample, const bool scissor, const float depthBias, const float slopeDepthBias)
 {
 	RasterizerState rasterizerState;
 
 	D3D11_RASTERIZER_DESC desc;
-	desc.CullMode = (D3D11_CULL_MODE) cullMode;
+	desc.CullMode = (D3D11_CULL_MODE) mapCullMode[(int)cullMode];
 	desc.FillMode = (D3D11_FILL_MODE) fillMode;
 	desc.FrontCounterClockwise = FALSE;
 	desc.DepthBias = (INT) depthBias;

@@ -70,11 +70,8 @@ public:
 
 	void getBoundingBox(const StreamID stream, float *minCoord, float *maxCoord) const;
 
-	bool load(const char *fileName);
-	bool save(const char *fileName);
 	bool loadObj(const char *fileName);
 	bool saveObj(const char *fileName);
-	bool loadT3d(const char *fileName, const bool removePortals = true, const bool removeInvisible = true, const bool removeTwoSided = false, const float texSize = 256.0f);
 
 	uint getVertexSize() const;
 	uint getComponentCount() const;
@@ -101,11 +98,8 @@ public:
 	void copyVertex(const uint destIndex, const Model &srcModel, const uint srcIndex);
 	void interpolateVertex(const uint destIndex, const Model &srcModel, const uint srcIndex0, const uint srcIndex1, const float x);
 	bool split(const vec3 &normal, const float offset, Model *front, Model *back) const;
-	bool merge(const Model *model);
 
 	void clear();
-	void copy(const Model *model);
-
 	void optimize();
 	void optimizeStream(const StreamID streamID);
 	uint assemble(const StreamID *aStreams, const uint nStreams, float **destVertices, uint **destIndices, bool separateArrays);

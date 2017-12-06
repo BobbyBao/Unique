@@ -133,25 +133,25 @@ inline T SmoothStep(T lhs, T rhs, T t)
 }
 
 /// Return sine of an angle in degrees.
-template <class T> inline T Sin(T angle) { return sin(angle * M_DEGTORAD); }
+template <class T> inline T Sin(T angle) { return sin(angle /** M_DEGTORAD*/); }
 
 /// Return cosine of an angle in degrees.
-template <class T> inline T Cos(T angle) { return cos(angle * M_DEGTORAD); }
+template <class T> inline T Cos(T angle) { return cos(angle /** M_DEGTORAD*/); }
 
 /// Return tangent of an angle in degrees.
-template <class T> inline T Tan(T angle) { return tan(angle * M_DEGTORAD); }
+template <class T> inline T Tan(T angle) { return tan(angle /** M_DEGTORAD*/); }
 
 /// Return arc sine in degrees.
-template <class T> inline T Asin(T x) { return M_RADTODEG * asin(Clamp(x, T(-1.0), T(1.0))); }
+template <class T> inline T Asin(T x) { return /*M_RADTODEG **/ asin(Clamp(x, T(-1.0), T(1.0))); }
 
 /// Return arc cosine in degrees.
-template <class T> inline T Acos(T x) { return M_RADTODEG * acos(Clamp(x, T(-1.0), T(1.0))); }
+template <class T> inline T Acos(T x) { return /*M_RADTODEG **/ acos(Clamp(x, T(-1.0), T(1.0))); }
 
 /// Return arc tangent in degrees.
-template <class T> inline T Atan(T x) { return M_RADTODEG * atan(x); }
+template <class T> inline T Atan(T x) { return /*M_RADTODEG **/ atan(x); }
 
 /// Return arc tangent of y/x in degrees.
-template <class T> inline T Atan2(T y, T x) { return M_RADTODEG * atan2(y, x); }
+template <class T> inline T Atan2(T y, T x) { return/* M_RADTODEG * */atan2(y, x); }
 
 /// Return X in power Y.
 template <class T> T Pow(T x, T y) { return pow(x, y); }

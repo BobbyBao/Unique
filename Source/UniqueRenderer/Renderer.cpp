@@ -20,7 +20,9 @@
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #include "Renderer.h"
-#include "Util/String.h"
+#include "Container/Str.h"
+
+using namespace Unique;
 
 int constantTypeSizes[CONSTANT_TYPE_COUNT] = {
 	sizeof(float),

@@ -23,6 +23,9 @@
 #include "Tokenizer.h"
 
 #include "Hash.h"
+#include "Math/MathDefs.h"
+
+using namespace Unique;
 
 Model::Model(){
 	vertexFormat = VF_NONE;
@@ -206,81 +209,6 @@ uint *rearrange(Array <ObjMaterial> &materials, const uint *srcIndices, const ui
 	ASSERT(currIndex == nIndices);
 
 	return indices;
-}
-
-bool Model::load(const char *fileName){
-	clear();
-
-	FILE *file = fopen(fileName, "rb");
-	if (file == NULL) return false;
-
-	uint version = 0;
-	fread(&version, sizeof(uint), 1, file);
-	if (version != 2){
-		fclose(file);
-		return false;
-	}
-	fread(&nIndices, sizeof(uint), 1, file);
-
-	uint nBatches = 0;
-	fread(&nBatches, sizeof(uint), 1, file);
-	batches.setCount(nBatches);
-	for (uint i = 0; i < batches.getCount(); i++){
-		fread(&batches[i], 2 * sizeof(uint), 1, file);
-	}
-
-	uint nStreams = 0;
-	fread(&nStreams, sizeof(uint), 1, file);
-	for (uint i = 0; i < nStreams; i++){
-		uint nVertices, nComponents;
-		AttributeType type;
-
-		fread(&nVertices, sizeof(uint), 1, file);
-		fread(&nComponents, sizeof(uint), 1, file);
-		fread(&type, sizeof(AttributeType), 1, file);
-
-		float *vertices = new float[nVertices * nComponents];
-		fread(vertices, nComponents * sizeof(float), nVertices, file);
-
-		uint *indices = new uint[nIndices];
-		fread(indices, sizeof(uint), nIndices, file);
-
-		addStream(type, nComponents, nVertices, vertices, indices, true);
-	}
-
-	fclose(file);
-	return true;
-}
-
-bool Model::save(const char *fileName){
-	optimize();
-
-	FILE *file = fopen(fileName, "wb");
-	if (file == NULL) return false;
-
-	uint version = 2;
-	fwrite(&version, sizeof(uint), 1, file);
-	fwrite(&nIndices, sizeof(uint), 1, file);
-
-	uint nBatches = batches.getCount();
-	fwrite(&nBatches, sizeof(uint), 1, file);
-	for (uint i = 0; i < batches.getCount(); i++){
-		fwrite(&batches[i], 2 * sizeof(uint), 1, file);
-	}
-
-	uint nStreams = streams.getCount();
-	fwrite(&nStreams, sizeof(uint), 1, file);
-	for (uint i = 0; i < nStreams; i++){
-		fwrite(&streams[i].nVertices, sizeof(uint), 1, file);
-		fwrite(&streams[i].nComponents, sizeof(uint), 1, file);
-		fwrite(&streams[i].type, sizeof(AttributeType), 1, file);
-
-		fwrite(streams[i].vertices, streams[i].nComponents * sizeof(float), streams[i].nVertices, file);
-		fwrite(streams[i].indices, sizeof(uint), nIndices, file);
-	}
-
-	fclose(file);
-	return true;
 }
 
 bool Model::loadObj(const char *fileName){
@@ -555,174 +483,6 @@ struct T3dPoly {
 
 int comparePolys(T3dPoly *const &elem0, T3dPoly *const &elem1){
 	return strcmp(elem0->textureName, elem1->textureName);
-}
-
-bool Model::loadT3d(const char *fileName, const bool removePortals, const bool removeInvisible, const bool removeTwoSided, const float texSize){
-	Tokenizer tok;
-	if (!tok.setFile(fileName)){
-		char str[256];
-		sprintf(str, "Couldn't open \"%s\"", fileName);
-		ErrorMsg(str);
-		return false;
-	}
-
-	uint polyMask = 0;
-	if (removePortals)   polyMask |= 0x4000000;
-	if (removeInvisible) polyMask |= 0x1;
-	if (removeTwoSided)  polyMask |= 0x100;
-
-
-	Array <T3dPoly *> polys;
-	char *str;
-	while ((str = tok.next()) != NULL){
-		if (stricmp(str, "Begin") == 0){
-			str = tok.next();
-			if (stricmp(str, "Polygon") == 0){
-				T3dPoly *poly = new T3dPoly;
-				poly->textureName = NULL;
-				poly->flags = 0;
-
-				str = tok.next();
-				while (stricmp(str, "End") != 0){
-					if (stricmp(str, "Vertex") == 0){
-						vec3 v;
-						v.x = readFloat(tok);
-						tok.goToNext();
-						v.z = -readFloat(tok);
-						tok.goToNext();
-						v.y = readFloat(tok);
-						poly->vertices.add(v);
-					} else if (stricmp(str, "Texture") == 0){
-						tok.goToNext();
-						str = tok.next(textureNameAlphabetical);
-						poly->textureName = new char[strlen(str) + 1];
-						strcpy(poly->textureName, str);
-					} else if (stricmp(str, "Flags") == 0){
-						tok.goToNext();
-						str = tok.next();
-						poly->flags = strtoul(str, NULL, 10);
-					} else if (stricmp(str, "Origin") == 0){
-						poly->origin.x = readFloat(tok);
-						tok.goToNext();
-						poly->origin.z = -readFloat(tok);
-						tok.goToNext();
-						poly->origin.y = readFloat(tok);
-					} else if (stricmp(str, "Normal") == 0){
-						poly->normal.x = readFloat(tok);
-						tok.goToNext();
-						poly->normal.z = -readFloat(tok);
-						tok.goToNext();
-						poly->normal.y = readFloat(tok);
-					} else if (stricmp(str, "TextureU") == 0){
-						poly->sVec.x = readFloat(tok);
-						tok.goToNext();
-						poly->sVec.z = -readFloat(tok);
-						tok.goToNext();
-						poly->sVec.y = readFloat(tok);
-					} else if (stricmp(str, "TextureV") == 0){
-						poly->tVec.x = readFloat(tok);
-						tok.goToNext();
-						poly->tVec.z = -readFloat(tok);
-						tok.goToNext();
-						poly->tVec.y = readFloat(tok);
-					}
-					str = tok.next();
-				}
-				tok.goToNext();
-
-				if (poly->textureName && (poly->flags & polyMask) == 0){
-					polys.add(poly);
-				} else {
-					delete poly->textureName;
-					delete poly;
-				}
-			}
-		}
-	}
-
-	polys.sort(comparePolys);
-
-	uint nVertices = 0;
-	for (uint i = 0; i < polys.getCount(); i++){
-		nVertices += polys[i]->vertices.getCount();
-	}
-	nIndices = 3 * nVertices - 6 * polys.getCount();
-
-	vec3 *vertices  = new vec3[nVertices];
-	vec2 *texCoords = new vec2[nVertices];
-	vec3 *tangents  = new vec3[polys.getCount()];
-	vec3 *binormals = new vec3[polys.getCount()];
-	vec3 *normals   = new vec3[polys.getCount()];
-
-	uint *vtxIndices = new uint[nIndices];
-	uint *tanIndices = new uint[nIndices];
-	uint *binIndices = new uint[nIndices];
-	uint *nrmIndices = new uint[nIndices];
-
-	uint iDest = 0;
-	uint startIndex = 0;
-	for (uint i = 0; i < polys.getCount(); i++){
-		T3dPoly *poly = polys[i];
-
-		vec3 *vtxDest = vertices  + startIndex;
-		vec2 *texDest = texCoords + startIndex;
-		
-		for (uint j = 0; j < 3 * poly->vertices.getCount() - 6; j++){
-			tanIndices[iDest + j] = i;
-			binIndices[iDest + j] = i;
-			nrmIndices[iDest + j] = i;
-		}
-
-		for (uint j = 0; j < poly->vertices.getCount(); j++){
-			vtxDest[j] = poly->vertices[j];
-			texDest[j].x = dot(poly->vertices[j] - poly->origin, poly->sVec / texSize);
-			texDest[j].y = dot(poly->vertices[j] - poly->origin, poly->tVec / texSize);
-			if (j > 2){
-				vtxIndices[iDest++] = startIndex;
-				vtxIndices[iDest++] = startIndex + j - 1;
-			}
-			vtxIndices[iDest++] = startIndex + j;
-		}
-
-		tangents [i] = normalize(poly->sVec);
-		binormals[i] = normalize(poly->tVec);
-		normals  [i] = normalize(poly->normal);
-
-		startIndex += poly->vertices.getCount();
-	}
-
-	uint *texIndices = new uint[nIndices];
-	memcpy(texIndices, vtxIndices, nIndices * sizeof(uint));
-
-	addStream(TYPE_VERTEX,   3, nVertices,        (float *) vertices,  vtxIndices, false);
-	addStream(TYPE_TEXCOORD, 2, nVertices,        (float *) texCoords, texIndices, false);
-	addStream(TYPE_TANGENT,  3, polys.getCount(), (float *) tangents,  tanIndices, false);
-	addStream(TYPE_BINORMAL, 3, polys.getCount(), (float *) binormals, binIndices, false);
-	addStream(TYPE_NORMAL,   3, polys.getCount(), (float *) normals,   nrmIndices, false);
-
-	// Extract batches
-	char *currName = polys[0]->textureName;
-	uint i = 0;
-	startIndex = 0;
-	while (true){
-		uint indexCount = 0;
-		while (i < polys.getCount() && strcmp(polys[i]->textureName, currName) == 0){
-			indexCount += 3 * (polys[i]->vertices.getCount() - 2);
-			i++;
-		}
-		addBatch(startIndex, indexCount);
-		startIndex += indexCount;
-		if (i < polys.getCount()){
-			currName = polys[i]->textureName;
-		} else break;
-	}
-
-	// Clean up
-	for (uint i = 0; i < polys.getCount(); i++){
-		delete polys[i]->textureName;
-		delete polys[i];
-	}
-	return true;
 }
 
 uint Model::getVertexSize() const {
@@ -1052,7 +812,7 @@ bool Model::addStencilVolume(){
 				// .. then create a quad between the two edges
 
 				// Don't include edges that aren't at an angle (like the internal edge in a quad)
-				if (fabsf(dot(normal, normList[index]) - 1) > 0.01f){
+				if (Abs(dot(normal, normList[index]) - 1) > 0.01f){
 					*dest++ = i + prev;
 					*dest++ = list[2 * index];
 					*dest++ = i + k;
@@ -1409,57 +1169,6 @@ bool Model::split(const vec3 &normal, const float offset, Model *front, Model *b
 	if (back) back->setIndexCount(nBackVertices);
 
 	return true;
-}
-
-bool Model::merge(const Model *model){
-	if (streams.getCount() == 0){
-        copy(model);
-	} else {
-		if (streams.getCount() != model->streams.getCount()) return false;
-		for (uint i = 0; i < streams.getCount(); i++){
-			if (streams[i].nComponents != model->streams[i].nComponents || streams[i].type != model->streams[i].type) return false;
-		}
-
-		uint newIndexCount = nIndices + model->nIndices;
-		for (uint i = 0; i < streams.getCount(); i++){
-			uint nVertices = streams[i].nVertices + model->streams[i].nVertices;
-			uint vertexSize = streams[i].nComponents * sizeof(float);
-			streams[i].vertices = (float *) realloc(streams[i].vertices, nVertices * vertexSize);
-			memcpy(streams[i].vertices + streams[i].nVertices * streams[i].nComponents, model->streams[i].vertices, model->streams[i].nVertices * vertexSize);
-
-			streams[i].indices = (uint *) realloc(streams[i].indices, newIndexCount * sizeof(uint));
-			for (uint k = 0; k < model->nIndices; k++){
-				streams[i].indices[nIndices + k] = model->streams[i].indices[k] + streams[i].nVertices;
-			}
-
-			streams[i].nVertices = nVertices;
-			streams[i].optimized = false;
-		}
-		for (uint i = 0; i < model->getBatchCount(); i++){
-			addBatch(nIndices + model->batches[i].startIndex, model->batches[i].nIndices);
-		}
-
-		nIndices = newIndexCount;
-	}
-
-	return true;
-}
-
-void Model::copy(const Model *model){
-	clear();
-	nIndices = model->nIndices;
-	for (uint i = 0; i < model->getStreamCount(); i++){
-		Stream stream = model->streams[i];
-		float *vertices = new float[stream.nComponents * stream.nVertices];
-		memcpy(vertices, stream.vertices, stream.nComponents * stream.nVertices * sizeof(float));
-		uint *indices = new uint[nIndices];
-		memcpy(indices, stream.indices, nIndices * sizeof(uint));
-		addStream(stream.type, stream.nComponents, stream.nVertices, vertices, indices, stream.optimized);
-	}
-
-	for (uint i = 0; i < model->batches.getCount(); i++){
-		batches.add(model->batches[i]);
-	}
 }
 
 void Model::clear(){

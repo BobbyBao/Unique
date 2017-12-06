@@ -210,10 +210,7 @@ int WINAPI WinMain(HINSTANCE hThisInst, HINSTANCE hLastInst, LPSTR lpszCmdLine, 
 
 	// Initialize timer
 	app->initTime();
-
-	app->loadConfig();
-	app->initGUI();
-
+	
 	/*
 		Force the main thread to always run on CPU 0.
 		This is done because on some systems QueryPerformanceCounter returns a bit different counter values
@@ -227,7 +224,6 @@ int WINAPI WinMain(HINSTANCE hThisInst, HINSTANCE hLastInst, LPSTR lpszCmdLine, 
 		app->resetCamera();
 
 		do {
-			app->loadConfig();
 
 			if (!app->initCaps()) break;
 			if (!app->initAPI()) break;

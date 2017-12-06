@@ -25,7 +25,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../Math/Vector.h"
+#include "Vector.h"
+#include "Math/MathDefs.h"
+
+using namespace Unique;
 
 #ifndef NO_JPEG
 extern "C" {
@@ -2638,10 +2641,10 @@ bool Image::toRGBE16(float &scale, float &bias){
 		if (maxChannel < minExp) minExp = maxChannel;
 	}
 
-	const float invLog2 = 1.0f / logf(2.0f);
+	const float invLog2 = 1.0f / Ln(2.0f);
 
-	maxExp = logf(maxExp) * invLog2;
-	minExp = logf(minExp) * invLog2;
+	maxExp = Ln(maxExp) * invLog2;
+	minExp = Ln(minExp) * invLog2;
 
 	scale = maxExp - minExp;
 	bias  = minExp;
@@ -2649,7 +2652,7 @@ bool Image::toRGBE16(float &scale, float &bias){
 	ushort *newPixels = new ushort[nPixels * 4];
 	for (uint i = 0; i < nPixels; i++){
 		float maxChannel = max(max(src[3 * i], src[3 * i + 1]), src[3 * i + 2]);
-		float chExp = logf(maxChannel) * invLog2;
+		float chExp = Ln(maxChannel) * invLog2;
 
 		newPixels[4 * i + 0] = (ushort) (65535 * src[3 * i + 0] / maxChannel);
 		newPixels[4 * i + 1] = (ushort) (65535 * src[3 * i + 1] / maxChannel);
@@ -2688,11 +2691,11 @@ bool Image::toE16(float *scale, float *bias, const bool useAllSameRange, const f
 		}
 	}
 
-	const float invLog2 = 1.0f / logf(2.0f);
+	const float invLog2 = 1.0f / Ln(2.0f);
 
 	for (uint k = 0; k < nRanges; k++){
-		maxExp[k] = logf(maxExp[k]) * invLog2;
-		minExp[k] = logf(minExp[k]) * invLog2;
+		maxExp[k] = Ln(maxExp[k]) * invLog2;
+		minExp[k] = Ln(minExp[k]) * invLog2;
 
 		scale[k] = maxExp[k] - minExp[k];
 		bias[k]  = minExp[k];
@@ -2703,7 +2706,7 @@ bool Image::toE16(float *scale, float *bias, const bool useAllSameRange, const f
 		for (uint k = 0; k < nRanges; k++){
 			if (src[i + k] > minValue){
 				if (src[i + k] < maxValue){
-					float chExp = logf(src[i + k]) * invLog2;
+					float chExp = Ln(src[i + k]) * invLog2;
 					newPixels[i + k] = (ushort) (65535 * (chExp - bias[k]) / scale[k]);
 				} else {
 					newPixels[i + k] = 65535;
@@ -2769,7 +2772,7 @@ bool Image::toFixedPointHDR(float *maxValue, const int finalRgbBits, const int f
 		//float rgbMin = minChannel / maxChannel;
 		//if (range * rangeScale < rgbMin * rgbScale){
 			//float f = sqrtf((rgbMin * rgbScale) / (range * rangeScale));
-			float f = sqrtf(range * rangeScale / rgbScale);
+			float f = Sqrt(range * rangeScale / rgbScale);
 
 			//float f = powf(range * rangeScale / rgbScale, 1.0f / 3.0f);
 
@@ -2911,7 +2914,7 @@ bool Image::toNormalMap(FORMAT destFormat, float sZ, float mipMapScaleZ){
 				sY *= 1.0f / (48 * 255);
 
 				// Normalize and store
-				float invLen = 1.0f / sqrtf(sX * sX + sY * sY + sZ * sZ);
+				float invLen = 1.0f / Sqrt(sX * sX + sY * sY + sZ * sZ);
 				float rX = xFactor * (sX * invLen + bias);
 				float rY = yFactor * (sY * invLen + bias);
 				float rZ = zFactor * (sZ * invLen + bias);

@@ -24,8 +24,8 @@
 
 #include "Platform.h"
 #include "Util/Array.h"
-#include "Math/Vector.h"
-#include "Imaging/Image.h"
+#include "Vector.h"
+#include "Image.h"
 
 #include <stdio.h>
 
@@ -230,6 +230,21 @@ struct FormatDesc {
 #define MAX_VERTEXSTREAM 8
 #define MAX_TEXTUREUNIT  16
 #define MAX_SAMPLERSTATE 16
+/*
+enum class BlendOp
+{
+	ZERO,
+	ONE,
+	SRC_COLOR,
+	ONE_MINUS_SRC_COLOR,
+	DST_COLOR,
+	ONE_MINUS_DST_COLOR,
+	SRC_ALPHA,
+	ONE_MINUS_SRC_ALPHA,
+	DST_ALPHA,
+	ONE_MINUS_DST_ALPHA,
+	SRC_ALPHA_SATURATE
+};*/
 
 // Blending constants
 extern const int ZERO;
@@ -270,17 +285,25 @@ extern const int DECR;
 extern const int INCR_SAT;
 extern const int DECR_SAT;
 
+enum class CullMode
+{
+	CULL_NONE,
+	CULL_BACK,
+	CULL_FRONT
+};
+/*
 // Culling constants
 extern const int CULL_NONE;
 extern const int CULL_BACK;
 extern const int CULL_FRONT;
-
+*/
 // Fillmode constants
 extern const int SOLID;
 extern const int WIREFRAME;
 
 
-class Renderer {
+class Renderer 
+{
 public:
 	Renderer();
 	virtual ~Renderer();
@@ -333,7 +356,7 @@ public:
 	{
 		return addDepthState(depthTest, depthWrite, depthFunc, stencilTest, stencilMask, stencilMask, stencilFunc, stencilFunc, stencilFail, stencilFail, depthFail, depthFail, stencilPass, stencilPass);
 	}
-	virtual RasterizerStateID addRasterizerState(const int cullMode, const int fillMode = SOLID, const bool multiSample = true, const bool scissor = false, const float depthBias = 0.0f, const float slopeDepthBias = 0.0f) = 0;
+	virtual RasterizerStateID addRasterizerState(CullMode cullMode, const int fillMode = SOLID, const bool multiSample = true, const bool scissor = false, const float depthBias = 0.0f, const float slopeDepthBias = 0.0f) = 0;
 
 	FontID addFont(const char *textureFile, const char *fontFile, const SamplerStateID samplerState);
 
