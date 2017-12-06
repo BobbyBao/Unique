@@ -55,11 +55,13 @@ public:
 	void animateLights();
 	void drawLights(const float4x4& view_proj, bool deferred_shader);
 	void drawClustered(const float4x4& view_proj, bool show_clusters);
-	void drawClassicDeferred(const float4x4& view_proj, const float4x4& view, const float4x4& projection, const float near_plane, bool visualize_stencil);
 	void drawFrame();
 
 protected:
-	ShaderID m_Clustered, m_ShowClusters, m_PreZ, m_FillBuffers, m_Ambient[2], m_Lighting[2], m_CreateMask, m_LightBlob[2];
+	ShaderID m_Clustered, m_ShowClusters, m_PreZ , m_FillBuffers;
+	//, m_Ambient[2],
+	ShaderID m_Lighting[2];// , m_CreateMask,
+	ShaderID m_LightBlob[2];
 	TextureID m_Base[5], m_Bump[5];
 	TextureID m_Clusters, m_BaseRT, m_NormalRT, m_DepthRT, m_StencilMask;
 

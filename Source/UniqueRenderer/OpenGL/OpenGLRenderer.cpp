@@ -182,18 +182,23 @@ struct RasterizerState
 // const int DST_ALPHA            = GL_DST_ALPHA;
 // const int ONE_MINUS_DST_ALPHA  = GL_ONE_MINUS_DST_ALPHA;
 // const int SRC_ALPHA_SATURATE   = GL_SRC_ALPHA_SATURATE;
-const int mapBlendOp[] = {
+
+const int mapBlendOp[] =
+{
 	GL_ZERO, GL_ONE, GL_SRC_COLOR,
 	GL_ONE_MINUS_SRC_COLOR, GL_DST_COLOR, GL_ONE_MINUS_DST_COLOR,
 	GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,
 	GL_DST_ALPHA, GL_ONE_MINUS_DST_ALPHA, GL_SRC_ALPHA_SATURATE
 };
+
 // const int BM_ADD              = GL_FUNC_ADD_EXT;
 // const int BM_SUBTRACT         = GL_FUNC_SUBTRACT_EXT;
 // const int BM_REVERSE_SUBTRACT = GL_FUNC_REVERSE_SUBTRACT_EXT;
 // const int BM_MIN              = GL_MIN_EXT;
 // const int BM_MAX              = GL_MAX_EXT;
-const int mapBlendMode[] = {
+
+const int mapBlendMode[] =
+{
 	GL_FUNC_ADD_EXT, GL_FUNC_SUBTRACT_EXT, GL_FUNC_REVERSE_SUBTRACT_EXT,
 	GL_MIN_EXT, GL_MAX_EXT
 };
@@ -207,7 +212,9 @@ const int mapBlendMode[] = {
 // const int NOTEQUAL = GL_NOTEQUAL;
 // const int GEQUAL   = GL_GEQUAL;
 // const int ALWAYS   = GL_ALWAYS;
-static const int mapCompareMode[] = {
+
+static const int mapCompareMode[] =
+{
 	GL_NEVER, GL_LESS, GL_EQUAL,
 	GL_LEQUAL, GL_GREATER, GL_NOTEQUAL,
 	GL_GEQUAL, GL_ALWAYS

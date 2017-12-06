@@ -67,9 +67,9 @@ void App::onSize(const int w, const int h)
 	{
 		// Make sure render targets are the size of the window
 		renderer->resizeRenderTarget(m_BaseRT,      w, h, 1, 1, 1);
-		renderer->resizeRenderTarget(m_NormalRT,    w, h, 1, 1, 1);
-		renderer->resizeRenderTarget(m_DepthRT,     w, h, 1, 1, 1);
-		renderer->resizeRenderTarget(m_StencilMask, w, h, 1, 1, 1);
+// 		renderer->resizeRenderTarget(m_NormalRT,    w, h, 1, 1, 1);
+// 		renderer->resizeRenderTarget(m_DepthRT,     w, h, 1, 1, 1);
+// 		renderer->resizeRenderTarget(m_StencilMask, w, h, 1, 1, 1);
 	}
 }
 
@@ -166,15 +166,15 @@ bool App::load()
 	if ((m_Clustered    = renderer->addShader("Clustered.shd", DEFINE_STR(LIGHT_COUNT))) == SHADER_NONE) return false;
 	if ((m_ShowClusters = renderer->addShader("Clustered.shd", DEFINE_STR(LIGHT_COUNT) "#define SHOW_CLUSTERS\n")) == SHADER_NONE) return false;
 	if ((m_PreZ         = renderer->addShader("PreZ.shd")) == SHADER_NONE) return false;
-	if ((m_FillBuffers  = renderer->addShader("FillBuffers.shd")) == SHADER_NONE) return false;
-	if ((m_CreateMask   = renderer->addShader("CreateMask.shd")) == SHADER_NONE) return false;
-	if ((m_Ambient[0]   = renderer->addShader("Ambient.shd", def)) == SHADER_NONE) return false;
-	if ((m_Lighting[0]  = renderer->addShader("Lighting.shd", def)) == SHADER_NONE) return false;
-	strcat(def, "#define SINGLE_SAMPLE\n");
-	if ((m_Ambient[1]   = renderer->addShader("Ambient.shd", def)) == SHADER_NONE) return false;
-	if ((m_Lighting[1]  = renderer->addShader("Lighting.shd", def)) == SHADER_NONE) return false;
-	if ((m_LightBlob[0] = renderer->addShader("LightBlob.shd")) == SHADER_NONE) return false;
-	if ((m_LightBlob[1] = renderer->addShader("LightBlob.shd", "#define DEFERRED\n")) == SHADER_NONE) return false;
+ 	if ((m_FillBuffers  = renderer->addShader("FillBuffers.shd")) == SHADER_NONE) return false;
+// 	if ((m_CreateMask   = renderer->addShader("CreateMask.shd")) == SHADER_NONE) return false;
+// 	if ((m_Ambient[0]   = renderer->addShader("Ambient.shd", def)) == SHADER_NONE) return false;
+ 	if ((m_Lighting[0]  = renderer->addShader("Lighting.shd", def)) == SHADER_NONE) return false;
+//	strcat(def, "#define SINGLE_SAMPLE\n");
+// 	if ((m_Ambient[1]   = renderer->addShader("Ambient.shd", def)) == SHADER_NONE) return false;
+// 	if ((m_Lighting[1]  = renderer->addShader("Lighting.shd", def)) == SHADER_NONE) return false;
+ 	if ((m_LightBlob[0] = renderer->addShader("LightBlob.shd")) == SHADER_NONE) return false;
+// 	if ((m_LightBlob[1] = renderer->addShader("LightBlob.shd", "#define DEFERRED\n")) == SHADER_NONE) return false;
 
 	// Samplerstates
 	if ((m_TrilinearAniso = renderer->addSamplerState(TRILINEAR_ANISO, WRAP, WRAP, WRAP)) == SS_NONE) return false;
@@ -182,9 +182,9 @@ bool App::load()
 
 	// Main render targets
 	if ((m_BaseRT      = renderer->addRenderTarget(width, height, 1, 1, 1, FORMAT_RGBA8,   sampleCount, SS_NONE, SRGB)) == TEXTURE_NONE) return false;
-	if ((m_NormalRT    = renderer->addRenderTarget(width, height, 1, 1, 1, FORMAT_RGBA8S,  sampleCount, SS_NONE)) == TEXTURE_NONE) return false;
-	if ((m_DepthRT     = renderer->addRenderDepth (width, height, 1,       FORMAT_D16,     sampleCount, SS_NONE, SAMPLE_DEPTH)) == TEXTURE_NONE) return false;
-	if ((m_StencilMask = renderer->addRenderDepth (width, height, 1,       FORMAT_D24S8,   1,           SS_NONE)) == TEXTURE_NONE) return false;
+// 	if ((m_NormalRT    = renderer->addRenderTarget(width, height, 1, 1, 1, FORMAT_RGBA8S,  sampleCount, SS_NONE)) == TEXTURE_NONE) return false;
+ 	if ((m_DepthRT     = renderer->addRenderDepth (width, height, 1,       FORMAT_D16,     sampleCount, SS_NONE, SAMPLE_DEPTH)) == TEXTURE_NONE) return false;
+// 	if ((m_StencilMask = renderer->addRenderDepth (width, height, 1,       FORMAT_D24S8,   1,           SS_NONE)) == TEXTURE_NONE) return false;
 
 	// Create a dynamic texture for the clusters. We're using a 32bit integer format where each set bit enables the light of that index.
 	// This supports up to 32 lights, which is enough for this demo, and probably for some games. It's possible to expand if more lights are needed,
@@ -231,8 +231,8 @@ bool App::load()
 	if ((m_StencilTest = renderer->addDepthState(false, false, CompareMode::GEQUAL, true, 0xFF, CompareMode::EQUAL, StencilOp::KEEP, StencilOp::KEEP, StencilOp::KEEP)) == DS_NONE) return false;
 
 	// Upload map to vertex/index buffer
-	if (!m_Map.makeDrawable(renderer, true, m_FillBuffers)) return false;
-	if (!m_Sphere.makeDrawable(renderer, true, m_Lighting[0])) return false;
+ 	if (!m_Map.makeDrawable(renderer, true, m_FillBuffers)) return false;
+ 	if (!m_Sphere.makeDrawable(renderer, true, m_Lighting[0])) return false;
 
 	return true;
 }
@@ -287,7 +287,7 @@ void App::drawLights(const float4x4& view_proj, bool deferred_shader)
 {
 	renderer->reset();
 	renderer->setRasterizerState(cullFront);
-	renderer->setShader(m_LightBlob[deferred_shader? 1 : 0]);
+	renderer->setShader(m_LightBlob[deferred_shader ? 1 : 0]);
 	renderer->setShaderConstant4x4f("ViewProj", view_proj);
 	renderer->setDepthState(m_DepthTest);
 	renderer->apply();
@@ -423,159 +423,13 @@ void App::drawClustered(const float4x4& view_proj, bool show_clusters)
 			m_Map.drawBatch(renderer, i);
 		}
 
-		drawLights(view_proj, false);
+	drawLights(view_proj, false);
 
 	renderer->changeToMainFramebuffer();
 
 	if (antiAliasSamples > 1)
 		context->ResolveSubresource(backBuffer, 0, ((Direct3D11Renderer*)renderer)->getResource(m_BaseRT), 0, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
 
-}
-
-void App::drawClassicDeferred(const float4x4& view_proj, const float4x4& view, const float4x4& projection, const float near_plane, bool visualize_stencil)
-{
-	// Pre-scale-bias the matrix so I can use the screen position directly
-	float4x4 view_proj_inv = (!view_proj) * (translate(-1.0f, 1.0f, 0.0f) * scale(2.0f / width, -2.0f / height, 1.0f));
-
-	TextureID bufferRTs[] = { m_BaseRT, m_NormalRT };
-	renderer->changeRenderTargets(bufferRTs, elementsOf(bufferRTs), m_DepthRT);
-		renderer->clear(false, true, false, NULL, 0.0f);
-
-		/*
-			Main scene pass.
-			This is where the buffers are filled for the later deferred passes.
-		*/
-		renderer->reset();
-		renderer->setRasterizerState(cullBack);
-		renderer->setShader(m_FillBuffers);
-		renderer->setShaderConstant4x4f("ViewProj", view_proj);
-		renderer->setShaderConstant3f("CamPos", camPos);
-		renderer->setSamplerState("Filter", m_TrilinearAniso);
-		renderer->setDepthState(m_DepthTest);
-		renderer->apply();
-
-		for (uint i = 0; i < m_Map.getBatchCount(); i++)
-		{
-			renderer->setTexture("Base", m_Base[i]);
-			renderer->setTexture("Bump", m_Bump[i]);
-			renderer->applyTextures();
-
-			m_Map.drawBatch(renderer, i);
-		}
-
-		drawLights(view_proj, true);
-
-	renderer->changeRenderTargets(NULL, 0, m_StencilMask);
-		renderer->clear(false, true, true, NULL, 0.0f, 0);
-
-		/*
-			Create the stencil mask
-		*/
-		renderer->reset();
-		renderer->setRasterizerState(cullNone);
-		renderer->setShader(m_CreateMask);
-		renderer->setTexture("BackBuffer", backBufferTexture);
-		renderer->setSamplerState("Filter", m_PointClamp);
-		renderer->setDepthState(m_StencilSet, 0x1);
-		renderer->apply();
-
-		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		context->Draw(3, 0);
-
-	renderer->changeRenderTarget(FB_COLOR, m_StencilMask);
-
-
-
-
-	/*
-		Deferred lighting pass.
-		Draw twice, using stencil to separate pixels for single or multiple sample evaluation.
-	*/
-	float2 zw = projection.rows[2].zw();
-
-	int passCount = (!visualize_stencil && antiAliasSamples > 1)? 2 : 1;
-
-	for (int p = 0; p < passCount; p++)
-	{
-		/*
-			Deferred ambient pass
-		*/
-		renderer->reset();
-		if (!visualize_stencil && antiAliasSamples > 1)
-		{
-			renderer->setDepthState(m_StencilTest, (p == 0)? 0x1 : 0x0);
-			renderer->setShader(m_Ambient[p]);
-		}
-		else
-		{
-			renderer->setDepthState(noDepthTest);
-			renderer->setShader(m_Ambient[1]);
-		}
-		renderer->setRasterizerState(cullNone);
-		renderer->setShaderConstant1f("Factor", visualize_stencil? 1.0f : 0.0f);
-		renderer->setTexture("Base", m_BaseRT);
-		if (antiAliasSamples <= 1)
-			renderer->setSamplerState("Filter", m_PointClamp);
-		renderer->apply();
-
-
-		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		context->Draw(3, 0);
-
-
-
-		/*
-			Deferred lighting pass
-		*/
-		renderer->reset();
-		if (!visualize_stencil && antiAliasSamples > 1)
-		{
-			renderer->setDepthState(m_StencilTest, (p == 0)? 0x1 : 0x0);
-			renderer->setShader(m_Lighting[p]);
-		}
-		else
-		{
-			renderer->setDepthState(noDepthTest);
-			renderer->setShader(m_Lighting[1]);
-		}
-		renderer->setRasterizerState(cullFront);
-		renderer->setBlendState(m_BlendAdd);
-		renderer->setShaderConstant4x4f("ViewProj", view_proj);
-		renderer->setShaderConstant4x4f("ViewProjInv", view_proj_inv);
-		renderer->setShaderConstant3f("CamPos", camPos);
-		renderer->setTexture("Base", m_BaseRT);
-		renderer->setTexture("Normal", m_NormalRT);
-		renderer->setTexture("Depth", m_DepthRT);
-		renderer->apply();
-
-		for (uint i = 0; i < LIGHT_COUNT; i++)
-		{
-			const float3& lightPos = m_Lights[i].Position;
-			const float radius = m_Lights[i].Radius;
-			const float inv_radius_sqr = 1.0f / (radius * radius);
-
-			// Compute z-bounds
-			float4 lPos = view * float4(lightPos, 1.0f);
-			float z1 = lPos.z + radius;
-
-			if (z1 > near_plane)
-			{
-				float z0 = max(lPos.z - radius, near_plane);
-
-				float2 zBounds;
-				zBounds.y = saturate(zw.x + zw.y / z0);
-				zBounds.x = saturate(zw.x + zw.y / z1);
-
-				renderer->setShaderConstant3f("LightPos", lightPos);
-				renderer->setShaderConstant1f("Radius", radius);
-				renderer->setShaderConstant1f("InvRadiusSqr", inv_radius_sqr);
-				renderer->setShaderConstant2f("ZBounds", zBounds);
-				renderer->applyConstants();
-
-				m_Sphere.draw(renderer);
-			}
-		}
-	}
 }
 
 void App::drawFrame()
@@ -591,14 +445,6 @@ void App::drawFrame()
 
 	animateLights();
 
-	RenderMode mode = CLUSTERED_SHADING;// (RenderMode)m_RenderMode->getSelectedItem();
-
-	if (mode <= VISUALIZE_CLUSTERS)
-	{
-		drawClustered(view_proj, (mode == VISUALIZE_CLUSTERS));
-	}
-	else
-	{
-		drawClassicDeferred(view_proj, view, projection, near_plane, (mode == VISUALIZE_STENCIL));
-	}
+	drawClustered(view_proj, false);
+	
 }
