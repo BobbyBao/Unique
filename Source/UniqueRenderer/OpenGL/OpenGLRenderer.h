@@ -57,11 +57,11 @@ public:
 	IndexBufferID addIndexBuffer(const uint nIndices, const uint indexSize, const BufferAccess bufferAccess, const void *data = NULL);
 
 	SamplerStateID addSamplerState(const Filter filter, const AddressMode s, const AddressMode t, const AddressMode r, const float lod = 0, const uint maxAniso = 16, const int compareFunc = 0, const float *border_color = NULL);
-	BlendStateID addBlendState(const int srcFactorRGB, const int destFactorRGB, const int srcFactorAlpha, const int destFactorAlpha, const int blendModeRGB, const int blendModeAlpha, const int mask = ALL, const bool alphaToCoverage = false);
-	DepthStateID addDepthState(const bool depthTest, const bool depthWrite, const int depthFunc, const bool stencilTest, const uint8 stencilReadMask, const uint8 stencilWriteMask,
-		const int stencilFuncFront, const int stencilFuncBack, const int stencilFailFront, const int stencilFailBack,
-		const int depthFailFront, const int depthFailBack, const int stencilPassFront, const int stencilPassBack);
-	RasterizerStateID addRasterizerState(const int cullMode, const int fillMode = SOLID, const bool multiSample = true, const bool scissor = false, const float depthBias = 0.0f, const float slopeDepthBias = 0.0f);
+	BlendStateID addBlendState(const BlendOp srcFactorRGB, const BlendOp destFactorRGB, const BlendOp srcFactorAlpha, const BlendOp destFactorAlpha, const BlendMode blendModeRGB, const BlendMode blendModeAlpha, const int mask = ALL, const bool alphaToCoverage = false);
+	DepthStateID addDepthState(const bool depthTest, const bool depthWrite, const CompareMode depthFunc, const bool stencilTest, const uint8 stencilReadMask, const uint8 stencilWriteMask,
+		const CompareMode stencilFuncFront, const CompareMode stencilFuncBack, const StencilOp stencilFailFront, const StencilOp stencilFailBack,
+		const StencilOp depthFailFront, const StencilOp depthFailBack, const StencilOp stencilPassFront, const StencilOp stencilPassBack);
+	RasterizerStateID addRasterizerState(const CullMode cullMode, const FillMode fillMode = FillMode::SOLID, const bool multiSample = true, const bool scissor = false, const float depthBias = 0.0f, const float slopeDepthBias = 0.0f);
 
 	int getSamplerUnit(const ShaderID shader, const char *samplerName) const;
 
@@ -89,20 +89,6 @@ public:
 	void changeBlendState(const BlendStateID blendState, const uint sampleMask = ~0);
 	void changeDepthState(const DepthStateID depthState, const uint stencilRef = 0);
 	void changeRasterizerState(const RasterizerStateID rasterizerState);
-
-/*
-	void changeShaderConstant1i(const char *name, const int constant);
-	void changeShaderConstant1f(const char *name, const float constant);
-	void changeShaderConstant2f(const char *name, const vec2 &constant);
-	void changeShaderConstant3f(const char *name, const vec3 &constant);
-	void changeShaderConstant4f(const char *name, const vec4 &constant);
-	void changeShaderConstant3x3f(const char *name, const mat3 &constant);
-	void changeShaderConstant4x4f(const char *name, const mat4 &constant);
-	void changeShaderConstantArray1f(const char *name, const float *constant, const uint count);
-	void changeShaderConstantArray2f(const char *name, const vec2 *constant, const uint count);
-	void changeShaderConstantArray3f(const char *name, const vec3 *constant, const uint count);
-	void changeShaderConstantArray4f(const char *name, const vec4 *constant, const uint count);
-*/
 
 	void clear(const bool clearColor, const bool clearDepth, const bool clearStencil, const float *color = NULL, const float depth = 1.0f, const uint stencil = 0);
 
@@ -153,14 +139,14 @@ protected:
 	bool currentBlendEnable;
 	bool currentAlphaToCoverageEnable;
 
-	int currentDepthFunc;
+	CompareMode currentDepthFunc;
 	bool currentDepthTestEnable;
 	bool currentDepthWriteEnable;
 
 	bool currentMultiSampleEnable;
 	bool currentScissorEnable;
-	int currentCullMode;
-	int currentFillMode;
+	CullMode currentCullMode;
+	FillMode currentFillMode;
 
 	GLuint currentVBO;
 

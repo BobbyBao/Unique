@@ -223,12 +223,12 @@ bool App::load()
 	if ((m_Bump[4] = renderer->addNormalMap("Assets/Textures/light2Bump.dds", FORMAT_RGBA8S, true, m_TrilinearAniso)) == TEXTURE_NONE) return false;
 
 	// Blendstates
-	if ((m_BlendAdd = renderer->addBlendState(ONE, ONE)) == BS_NONE) return false;
+	if ((m_BlendAdd = renderer->addBlendState(BlendOp::ONE, BlendOp::ONE)) == BS_NONE) return false;
 
 	// Depth states - use reversed depth (1 to 0) to improve precision
-	if ((m_DepthTest = renderer->addDepthState(true, true, GEQUAL)) == DS_NONE) return false;
-	if ((m_StencilSet = renderer->addDepthState(false, false, GEQUAL, true, 0xFF, ALWAYS, REPLACE, REPLACE, REPLACE)) == DS_NONE) return false;
-	if ((m_StencilTest = renderer->addDepthState(false, false, GEQUAL, true, 0xFF, EQUAL, KEEP, KEEP, KEEP)) == DS_NONE) return false;
+	if ((m_DepthTest = renderer->addDepthState(true, true, CompareMode::GEQUAL)) == DS_NONE) return false;
+	if ((m_StencilSet = renderer->addDepthState(false, false, CompareMode::GEQUAL, true, 0xFF, CompareMode::ALWAYS, StencilOp::REPLACE, StencilOp::REPLACE, StencilOp::REPLACE)) == DS_NONE) return false;
+	if ((m_StencilTest = renderer->addDepthState(false, false, CompareMode::GEQUAL, true, 0xFF, CompareMode::EQUAL, StencilOp::KEEP, StencilOp::KEEP, StencilOp::KEEP)) == DS_NONE) return false;
 
 	// Upload map to vertex/index buffer
 	if (!m_Map.makeDrawable(renderer, true, m_FillBuffers)) return false;

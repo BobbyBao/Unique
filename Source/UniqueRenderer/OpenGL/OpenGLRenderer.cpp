@@ -69,7 +69,7 @@ struct Constant {
 	bool dirty;
 };
 
-int constantComp(const void *s0, const void *s1){
+static int constantComp(const void *s0, const void *s1){
 	return strcmp(((Constant *) s0)->name, ((Constant *) s1)->name);
 }
 
@@ -78,7 +78,7 @@ struct Sampler {
 	uint index;
 };
 
-int samplerComp(const void *s0, const void *s1){
+static int samplerComp(const void *s0, const void *s1){
 	return strcmp(((Sampler *) s0)->name, ((Sampler *) s1)->name);
 }
 
@@ -151,7 +151,7 @@ struct BlendState {
 };
 
 struct DepthState {
-	int depthFunc;
+	CompareMode depthFunc;
 	bool depthTest;
 	bool depthWrite;
 //	bool stencilTest;
@@ -162,60 +162,85 @@ struct DepthState {
 //	int stencilPass;
 };
 
-struct RasterizerState {
-	int cullMode;
-	int fillMode;
+struct RasterizerState
+{
+	CullMode cullMode;
+	FillMode fillMode;
 	bool multiSample;
 	bool scissor;
 };
 
 // Blending constants
-const int ZERO                 = GL_ZERO;
-const int ONE                  = GL_ONE;
-const int SRC_COLOR            = GL_SRC_COLOR;
-const int ONE_MINUS_SRC_COLOR  = GL_ONE_MINUS_SRC_COLOR;
-const int DST_COLOR            = GL_DST_COLOR;
-const int ONE_MINUS_DST_COLOR  = GL_ONE_MINUS_DST_COLOR;
-const int SRC_ALPHA            = GL_SRC_ALPHA;
-const int ONE_MINUS_SRC_ALPHA  = GL_ONE_MINUS_SRC_ALPHA;
-const int DST_ALPHA            = GL_DST_ALPHA;
-const int ONE_MINUS_DST_ALPHA  = GL_ONE_MINUS_DST_ALPHA;
-const int SRC_ALPHA_SATURATE   = GL_SRC_ALPHA_SATURATE;
-
-const int BM_ADD              = GL_FUNC_ADD_EXT;
-const int BM_SUBTRACT         = GL_FUNC_SUBTRACT_EXT;
-const int BM_REVERSE_SUBTRACT = GL_FUNC_REVERSE_SUBTRACT_EXT;
-const int BM_MIN              = GL_MIN_EXT;
-const int BM_MAX              = GL_MAX_EXT;
+// const int ZERO                 = GL_ZERO;
+// const int ONE                  = GL_ONE;
+// const int SRC_COLOR            = GL_SRC_COLOR;
+// const int ONE_MINUS_SRC_COLOR  = GL_ONE_MINUS_SRC_COLOR;
+// const int DST_COLOR            = GL_DST_COLOR;
+// const int ONE_MINUS_DST_COLOR  = GL_ONE_MINUS_DST_COLOR;
+// const int SRC_ALPHA            = GL_SRC_ALPHA;
+// const int ONE_MINUS_SRC_ALPHA  = GL_ONE_MINUS_SRC_ALPHA;
+// const int DST_ALPHA            = GL_DST_ALPHA;
+// const int ONE_MINUS_DST_ALPHA  = GL_ONE_MINUS_DST_ALPHA;
+// const int SRC_ALPHA_SATURATE   = GL_SRC_ALPHA_SATURATE;
+const int mapBlendOp[] = {
+	GL_ZERO, GL_ONE, GL_SRC_COLOR,
+	GL_ONE_MINUS_SRC_COLOR, GL_DST_COLOR, GL_ONE_MINUS_DST_COLOR,
+	GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,
+	GL_DST_ALPHA, GL_ONE_MINUS_DST_ALPHA, GL_SRC_ALPHA_SATURATE
+};
+// const int BM_ADD              = GL_FUNC_ADD_EXT;
+// const int BM_SUBTRACT         = GL_FUNC_SUBTRACT_EXT;
+// const int BM_REVERSE_SUBTRACT = GL_FUNC_REVERSE_SUBTRACT_EXT;
+// const int BM_MIN              = GL_MIN_EXT;
+// const int BM_MAX              = GL_MAX_EXT;
+const int mapBlendMode[] = {
+	GL_FUNC_ADD_EXT, GL_FUNC_SUBTRACT_EXT, GL_FUNC_REVERSE_SUBTRACT_EXT,
+	GL_MIN_EXT, GL_MAX_EXT
+};
 
 // Depth-test constants
-const int NEVER    = GL_NEVER;
-const int LESS     = GL_LESS;
-const int EQUAL    = GL_EQUAL;
-const int LEQUAL   = GL_LEQUAL;
-const int GREATER  = GL_GREATER;
-const int NOTEQUAL = GL_NOTEQUAL;
-const int GEQUAL   = GL_GEQUAL;
-const int ALWAYS   = GL_ALWAYS;
-
+// const int NEVER    = GL_NEVER;
+// const int LESS     = GL_LESS;
+// const int EQUAL    = GL_EQUAL;
+// const int LEQUAL   = GL_LEQUAL;
+// const int GREATER  = GL_GREATER;
+// const int NOTEQUAL = GL_NOTEQUAL;
+// const int GEQUAL   = GL_GEQUAL;
+// const int ALWAYS   = GL_ALWAYS;
+static const int mapCompareMode[] = {
+	GL_NEVER, GL_LESS, GL_EQUAL,
+	GL_LEQUAL, GL_GREATER, GL_NOTEQUAL,
+	GL_GEQUAL, GL_ALWAYS
+};
 // Stencil-test constants
-const int KEEP     = GL_KEEP;
-const int SET_ZERO = GL_ZERO;
-const int REPLACE  = GL_REPLACE;
-const int INVERT   = GL_INVERT;
-const int INCR     = GL_INCR_WRAP;
-const int DECR     = GL_DECR_WRAP;
-const int INCR_SAT = GL_INCR;
-const int DECR_SAT = GL_DECR;
+// const int KEEP     = GL_KEEP;
+// const int SET_ZERO = GL_ZERO;
+// const int REPLACE  = GL_REPLACE;
+// const int INVERT   = GL_INVERT;
+// const int INCR     = GL_INCR_WRAP;
+// const int DECR     = GL_DECR_WRAP;
+// const int INCR_SAT = GL_INCR;
+// const int DECR_SAT = GL_DECR;
+static const int mapStencilOp[] = {
+	GL_KEEP, GL_ZERO, GL_REPLACE,
+	GL_INVERT, GL_INCR_WRAP, GL_DECR_WRAP,
+	GL_INCR, GL_DECR
+};
 
 // Culling constants
-const int CULL_NONE  = 0;
-const int CULL_BACK  = GL_BACK;
-const int CULL_FRONT = GL_FRONT;
+//const int CULL_NONE  = 0;
+//const int CULL_BACK  = GL_BACK;
+//const int CULL_FRONT = GL_FRONT;
+static const int mapCullMode[] = {
+	0, GL_BACK, GL_FRONT
+};
 
 // Fillmode constants
-const int SOLID = GL_FILL;
-const int WIREFRAME = GL_LINE;
+//const int SOLID = GL_FILL;
+//const int WIREFRAME = GL_LINE;
+static const int mapFillMode[] = {
+	GL_FILL, GL_LINE
+};
 
 void setGLdefaults(){
 	// Set some of my preferred defaults
@@ -309,7 +334,7 @@ OpenGLRenderer::~OpenGLRenderer(){
 	apply();
 
 	// Delete shaders
-	for (uint i = 0; i < shaders.getCount(); i++){
+	for (uint i = 0; i < shaders.size(); i++){
 		for (uint j = 0; j < shaders[i].nSamplers; j++){
 			delete [] shaders[i].samplers[j].name;
 		}
@@ -325,17 +350,17 @@ OpenGLRenderer::~OpenGLRenderer(){
 	}
 
     // Delete vertex buffers
-	for (uint i = 0; i < vertexBuffers.getCount(); i++){
+	for (uint i = 0; i < vertexBuffers.size(); i++){
 		glDeleteBuffersARB(1, &vertexBuffers[i].vboVB);
 	}
 
 	// Delete index buffers
-	for (uint i = 0; i < indexBuffers.getCount(); i++){
+	for (uint i = 0; i < indexBuffers.size(); i++){
 		glDeleteBuffersARB(1, &indexBuffers[i].vboIB);
 	}
 
 	// Delete textures
-	for (uint i = 0; i < textures.getCount(); i++){
+	for (uint i = 0; i < textures.size(); i++){
 		removeTexture(i);
 	}
 
@@ -353,19 +378,19 @@ void OpenGLRenderer::resetToDefaults(){
 		currentSamplerStates[i] = SS_NONE;
 	}
 
-	currentSrcFactorRGB = currentSrcFactorAlpha = ONE;
-	currentDstFactorRGB = currentDstFactorAlpha = ZERO;
-	currentBlendModeRGB = currentBlendModeAlpha = BM_ADD;
+	currentSrcFactorRGB = currentSrcFactorAlpha = mapBlendOp[(int)BlendOp::ONE];
+	currentDstFactorRGB = currentDstFactorAlpha = mapBlendOp[(int)BlendOp::ZERO];
+	currentBlendModeRGB = currentBlendModeAlpha = mapBlendMode[(int)BlendMode::BM_ADD];
 	currentMask = ALL;
 	currentBlendEnable = false;
 	currentAlphaToCoverageEnable = false;
 
-	currentDepthFunc = LEQUAL;
+	currentDepthFunc = CompareMode::LEQUAL;
 	currentDepthTestEnable = true;
 	currentDepthWriteEnable = true;
 
-	currentCullMode = CULL_NONE;
-	currentFillMode = SOLID;
+	currentCullMode = CullMode::CULL_NONE;
+	currentFillMode = FillMode::SOLID;
 	currentMultiSampleEnable = true;
 	currentScissorEnable = false;
 }
@@ -619,7 +644,7 @@ TextureID OpenGLRenderer::addTexture(Image &img, const SamplerStateID samplerSta
 
 	glBindTexture(tex.glTarget, 0);
 
-	return textures.add(tex);
+	return textures.push_back(tex);
 }
 
 TextureID OpenGLRenderer::addRenderTarget(const int width, const int height, const int depth, const int mipMapCount, const int arraySize, const FORMAT format, const int msaaSamples, const SamplerStateID samplerState, uint flags){
@@ -641,7 +666,7 @@ TextureID OpenGLRenderer::addRenderTarget(const int width, const int height, con
 	setupSampler(tex.glTarget, samplerStates[samplerState]);
 	tex.samplerState = samplerState;
 
-	TextureID rt = textures.add(tex);
+	TextureID rt = textures.push_back(tex);
 	setRenderTargetSize(rt, width, height);
 
 	glBindTexture(tex.glTarget, 0);
@@ -660,7 +685,7 @@ TextureID OpenGLRenderer::addRenderDepth(const int width, const int height, cons
 	// Create depth renderbuffer
 	glGenRenderbuffersEXT(1, &tex.glDepthID);
 
-	TextureID rt = textures.add(tex);
+	TextureID rt = textures.push_back(tex);
 	setRenderTargetSize(rt, width, height);
 
 	return rt;
@@ -914,7 +939,7 @@ ShaderID OpenGLRenderer::addShader(const char *vsText, const char *gsText, const
 			shader.nUniforms = nUniforms;
 			shader.nSamplers = nSamplers;
 
-			return shaders.add(shader);
+			return shaders.push_back(shader);
 		}
 	}
 
@@ -977,7 +1002,7 @@ VertexFormatID OpenGLRenderer::addVertexFormat(const FormatDesc *formatDesc, con
 	vertexFormat.maxGeneric = nGeneric;
 	vertexFormat.maxTexCoord = nTexCoord;
 
-	return vertexFormats.add(vertexFormat);
+	return vertexFormats.push_back(vertexFormat);
 }
 
 GLenum usages[] = {
@@ -995,7 +1020,7 @@ VertexBufferID OpenGLRenderer::addVertexBuffer(const long size, const BufferAcce
 	glBufferDataARB(GL_ARRAY_BUFFER_ARB, size, data, usages[bufferAccess]);
 	glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
 
-	return vertexBuffers.add(vb);
+	return vertexBuffers.push_back(vb);
 }
 
 IndexBufferID OpenGLRenderer::addIndexBuffer(const uint nIndices, const uint indexSize, const BufferAccess bufferAccess, const void *data){
@@ -1010,7 +1035,7 @@ IndexBufferID OpenGLRenderer::addIndexBuffer(const uint nIndices, const uint ind
 	glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, size, data, usages[bufferAccess]);
 	glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, 0);
 
-	return indexBuffers.add(ib);
+	return indexBuffers.push_back(ib);
 }
 
 GLint minFilters[] = {
@@ -1036,38 +1061,38 @@ SamplerStateID OpenGLRenderer::addSamplerState(const Filter filter, const Addres
 	samplerState.aniso = hasAniso(filter)? min((uint) maxAnisotropic, maxAniso) : 1;
 	samplerState.lod = lod;
 
-	return samplerStates.add(samplerState);
+	return samplerStates.push_back(samplerState);
 }
 
-BlendStateID OpenGLRenderer::addBlendState(const int srcFactorRGB, const int destFactorRGB, const int srcFactorAlpha, const int destFactorAlpha, const int blendModeRGB, const int blendModeAlpha, const int mask, const bool alphaToCoverage){
+BlendStateID OpenGLRenderer::addBlendState(const BlendOp srcFactorRGB, const BlendOp destFactorRGB, const BlendOp srcFactorAlpha, const BlendOp destFactorAlpha, const BlendMode blendModeRGB, const BlendMode blendModeAlpha, const int mask, const bool alphaToCoverage){
 	BlendState blendState;
 
-	blendState.srcFactorRGB   = srcFactorRGB;
-	blendState.dstFactorRGB   = destFactorRGB;
-	blendState.srcFactorAlpha = srcFactorAlpha;
-	blendState.dstFactorAlpha = destFactorAlpha;
-	blendState.blendModeRGB   = blendModeRGB;
-	blendState.blendModeAlpha = blendModeAlpha;
+	blendState.srcFactorRGB   = mapBlendOp[(int)srcFactorRGB];
+	blendState.dstFactorRGB   = mapBlendOp[(int)destFactorRGB];
+	blendState.srcFactorAlpha = mapBlendOp[(int)srcFactorAlpha];
+	blendState.dstFactorAlpha = mapBlendOp[(int)destFactorAlpha];
+	blendState.blendModeRGB   = mapBlendMode[(int)blendModeRGB];
+	blendState.blendModeAlpha = mapBlendMode[(int)blendModeAlpha];
 	blendState.mask = mask;
-	blendState.blendEnable = (srcFactorRGB != ONE || destFactorRGB != ZERO || srcFactorAlpha != ONE || destFactorAlpha != ZERO);
+	blendState.blendEnable = (srcFactorRGB != BlendOp::ONE || destFactorRGB != BlendOp::ZERO || srcFactorAlpha != BlendOp::ONE || destFactorAlpha != BlendOp::ZERO);
 	blendState.alphaToCoverageEnable = alphaToCoverage;
 
-	return blendStates.add(blendState);
+	return blendStates.push_back(blendState);
 }
 
-DepthStateID OpenGLRenderer::addDepthState(const bool depthTest, const bool depthWrite, const int depthFunc, const bool stencilTest, const uint8 stencilReadMask, const uint8 stencilWriteMask,
-						   const int stencilFuncFront, const int stencilFuncBack, const int stencilFailFront, const int stencilFailBack,
-						   const int depthFailFront, const int depthFailBack, const int stencilPassFront, const int stencilPassBack){
+DepthStateID OpenGLRenderer::addDepthState(const bool depthTest, const bool depthWrite, const CompareMode depthFunc, const bool stencilTest, const uint8 stencilReadMask, const uint8 stencilWriteMask,
+						   const CompareMode stencilFuncFront, const CompareMode stencilFuncBack, const StencilOp stencilFailFront, const StencilOp stencilFailBack,
+						   const StencilOp depthFailFront, const StencilOp depthFailBack, const StencilOp stencilPassFront, const StencilOp stencilPassBack){
 	DepthState depthState;
 
 	depthState.depthTest  = depthTest;
 	depthState.depthWrite = depthWrite;
 	depthState.depthFunc  = depthFunc;
 
-	return depthStates.add(depthState);
+	return depthStates.push_back(depthState);
 }
 
-RasterizerStateID OpenGLRenderer::addRasterizerState(const int cullMode, const int fillMode, const bool multiSample, const bool scissor, const float depthBias, const float slopeDepthBias){
+RasterizerStateID OpenGLRenderer::addRasterizerState(const CullMode cullMode, const FillMode fillMode, const bool multiSample, const bool scissor, const float depthBias, const float slopeDepthBias){
 	RasterizerState rasterizerState;
 
 	rasterizerState.cullMode = cullMode;
@@ -1075,7 +1100,7 @@ RasterizerStateID OpenGLRenderer::addRasterizerState(const int cullMode, const i
 	rasterizerState.multiSample = multiSample;
 	rasterizerState.scissor = scissor;
 
-	return rasterizerStates.add(rasterizerState);
+	return rasterizerStates.push_back(rasterizerState);
 }
 
 int OpenGLRenderer::getSamplerUnit(const ShaderID shader, const char *samplerName) const {
@@ -1502,8 +1527,9 @@ void OpenGLRenderer::changeDepthState(const DepthStateID depthState, const uint 
 				currentDepthWriteEnable = true;
 			}
 
-			if (currentDepthFunc != LEQUAL){
-				glDepthFunc(currentDepthFunc = LEQUAL);
+			if (currentDepthFunc != CompareMode::LEQUAL){
+				currentDepthFunc = CompareMode::LEQUAL;
+				glDepthFunc(mapCompareMode[(int)currentDepthFunc]);
 			}
 		} else {
 			if (depthStates[depthState].depthTest){
@@ -1514,8 +1540,9 @@ void OpenGLRenderer::changeDepthState(const DepthStateID depthState, const uint 
 				if (depthStates[depthState].depthWrite != currentDepthWriteEnable){
 					glDepthMask((currentDepthWriteEnable = depthStates[depthState].depthWrite)? GL_TRUE : GL_FALSE);
 				}
-				if (depthStates[depthState].depthFunc != currentDepthFunc){
-					glDepthFunc(currentDepthFunc = depthStates[depthState].depthFunc);
+				if (depthStates[depthState].depthFunc != currentDepthFunc) {
+					currentDepthFunc = depthStates[depthState].depthFunc;
+					glDepthFunc(mapCompareMode[(int)currentDepthFunc]);
 				}
 			} else {
 				if (currentDepthTestEnable){
@@ -1533,8 +1560,8 @@ void OpenGLRenderer::changeRasterizerState(const RasterizerStateID rasterizerSta
 	if (rasterizerState != currentRasterizerState){
 		RasterizerState state;
 		if (rasterizerState == RS_NONE){
-			state.cullMode = CULL_NONE;
-			state.fillMode = SOLID;
+			state.cullMode = CullMode::CULL_NONE;
+			state.fillMode = FillMode::SOLID;
 			state.multiSample = true;
 			state.scissor = false;
 		} else {
@@ -1543,18 +1570,19 @@ void OpenGLRenderer::changeRasterizerState(const RasterizerStateID rasterizerSta
 
 
 		if (state.cullMode != currentCullMode){
-			if (state.cullMode == CULL_NONE){
+			if (state.cullMode == CullMode::CULL_NONE){
 				glDisable(GL_CULL_FACE);
 			} else {
-				if (currentCullMode == CULL_NONE) glEnable(GL_CULL_FACE);
-				glCullFace(state.cullMode);
+				if (currentCullMode == CullMode::CULL_NONE) glEnable(GL_CULL_FACE);
+				glCullFace(mapCullMode[(int)state.cullMode]);
 			}
 
 			currentCullMode = state.cullMode;
 		}
 
-		if (state.fillMode != currentFillMode){
-			glPolygonMode(GL_FRONT_AND_BACK, currentFillMode = state.fillMode);
+		if (state.fillMode != currentFillMode) {
+			currentFillMode = state.fillMode;
+			glPolygonMode(GL_FRONT_AND_BACK, mapFillMode[(int)currentFillMode]);
 		}
 
 		if (state.multiSample != currentMultiSampleEnable){

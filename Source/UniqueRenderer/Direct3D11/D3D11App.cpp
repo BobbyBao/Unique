@@ -287,7 +287,7 @@ bool D3D11App::initAPI(const API_Revision api_revision, const DXGI_FORMAT backBu
 
 	linearClamp = renderer->addSamplerState(LINEAR, CLAMP, CLAMP, CLAMP);
 	defaultFont = renderer->addFont("Assets/Textures/Fonts/Future.dds", "Assets/Textures/Fonts/Future.font", linearClamp);
-	blendSrcAlpha = renderer->addBlendState(SRC_ALPHA, ONE_MINUS_SRC_ALPHA);
+	blendSrcAlpha = renderer->addBlendState(BlendOp::SRC_ALPHA, BlendOp::ONE_MINUS_SRC_ALPHA);
 	noDepthTest  = renderer->addDepthState(false, false);
 	noDepthWrite = renderer->addDepthState(true,  false);
 	cullNone  = renderer->addRasterizerState(CullMode::CULL_NONE);

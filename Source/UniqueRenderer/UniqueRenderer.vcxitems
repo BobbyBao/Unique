@@ -19,12 +19,15 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Direct3D11\D3D11App.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Direct3D11\Direct3D11Renderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Image.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)OpenGL\OpenGLApp.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)OpenGL\OpenGLExtensions.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)OpenGL\OpenGLRenderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Vector.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Platform.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Renderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Util\Model.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Util\Tokenizer.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Windows\WindowsBase.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Platform\Windows\WindowsBase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)BaseApp.h" />
@@ -32,6 +35,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Direct3D11\D3D11App.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Direct3D11\Direct3D11Renderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Image.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenGL\OpenGLApp.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenGL\OpenGLExtensions.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenGL\OpenGLRenderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vector.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Platform.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Renderer.h" />
@@ -39,9 +45,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Util\KdTree.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Util\Model.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Util\Tokenizer.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Windows\resource.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Platform\Windows\resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="$(MSBuildThisFileDirectory)Windows\Resources.rc" />
+    <ResourceCompile Include="$(MSBuildThisFileDirectory)Platform\Windows\Resources.rc" />
   </ItemGroup>
 </Project>

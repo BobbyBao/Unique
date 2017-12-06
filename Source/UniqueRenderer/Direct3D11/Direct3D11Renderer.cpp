@@ -60,7 +60,7 @@ struct Constant
 	int csBuffer;
 };
 
-int constantComp(const void *s0, const void *s1)
+static int constantComp(const void *s0, const void *s1)
 {
 	return strcmp(((Constant *) s0)->name, ((Constant *) s1)->name);
 }
@@ -73,7 +73,7 @@ struct Sampler
 	int psIndex;
 };
 
-int samplerComp(const void *s0, const void *s1)
+static int samplerComp(const void *s0, const void *s1)
 {
 	return strcmp(((Sampler *) s0)->name, ((Sampler *) s1)->name);
 }
@@ -154,44 +154,65 @@ struct RasterizerState
 };
 
 // Blending constants
-const int ZERO                = D3D11_BLEND_ZERO;
-const int ONE                 = D3D11_BLEND_ONE;
-const int SRC_COLOR           = D3D11_BLEND_SRC_COLOR;
-const int ONE_MINUS_SRC_COLOR = D3D11_BLEND_INV_SRC_COLOR;
-const int DST_COLOR           = D3D11_BLEND_DEST_COLOR;
-const int ONE_MINUS_DST_COLOR = D3D11_BLEND_INV_DEST_COLOR;
-const int SRC_ALPHA           = D3D11_BLEND_SRC_ALPHA;
-const int ONE_MINUS_SRC_ALPHA = D3D11_BLEND_INV_SRC_ALPHA;
-const int DST_ALPHA           = D3D11_BLEND_DEST_ALPHA;
-const int ONE_MINUS_DST_ALPHA = D3D11_BLEND_INV_DEST_ALPHA;
-const int SRC_ALPHA_SATURATE  = D3D11_BLEND_SRC_ALPHA_SAT;
+// const int ZERO                = D3D11_BLEND_ZERO;
+// const int ONE                 = D3D11_BLEND_ONE;
+// const int SRC_COLOR           = D3D11_BLEND_SRC_COLOR;
+// const int ONE_MINUS_SRC_COLOR = D3D11_BLEND_INV_SRC_COLOR;
+// const int DST_COLOR           = D3D11_BLEND_DEST_COLOR;
+// const int ONE_MINUS_DST_COLOR = D3D11_BLEND_INV_DEST_COLOR;
+// const int SRC_ALPHA           = D3D11_BLEND_SRC_ALPHA;
+// const int ONE_MINUS_SRC_ALPHA = D3D11_BLEND_INV_SRC_ALPHA;
+// const int DST_ALPHA           = D3D11_BLEND_DEST_ALPHA;
+// const int ONE_MINUS_DST_ALPHA = D3D11_BLEND_INV_DEST_ALPHA;
+// const int SRC_ALPHA_SATURATE  = D3D11_BLEND_SRC_ALPHA_SAT;
 
-const int BM_ADD              = D3D11_BLEND_OP_ADD;
-const int BM_SUBTRACT         = D3D11_BLEND_OP_SUBTRACT;
-const int BM_REVERSE_SUBTRACT = D3D11_BLEND_OP_REV_SUBTRACT;
-const int BM_MIN              = D3D11_BLEND_OP_MIN;
-const int BM_MAX              = D3D11_BLEND_OP_MAX;
+const int mapBlendOp[] = {
+	D3D11_BLEND_ZERO, D3D11_BLEND_ONE, D3D11_BLEND_SRC_COLOR,
+	D3D11_BLEND_INV_SRC_COLOR, D3D11_BLEND_DEST_COLOR, D3D11_BLEND_INV_DEST_COLOR,
+	D3D11_BLEND_SRC_ALPHA, D3D11_BLEND_INV_SRC_ALPHA,
+	D3D11_BLEND_DEST_ALPHA, D3D11_BLEND_INV_DEST_ALPHA,D3D11_BLEND_SRC_ALPHA_SAT
+};
+
+// const int BM_ADD              = D3D11_BLEND_OP_ADD;
+// const int BM_SUBTRACT         = D3D11_BLEND_OP_SUBTRACT;
+// const int BM_REVERSE_SUBTRACT = D3D11_BLEND_OP_REV_SUBTRACT;
+// const int BM_MIN              = D3D11_BLEND_OP_MIN;
+// const int BM_MAX              = D3D11_BLEND_OP_MAX;
+
+const int mapBlendMode[] = {
+	D3D11_BLEND_OP_ADD, D3D11_BLEND_OP_SUBTRACT, D3D11_BLEND_OP_REV_SUBTRACT,
+	D3D11_BLEND_OP_MIN, D3D11_BLEND_OP_MAX
+};
 
 // Depth-test constants
-const int NEVER    = D3D11_COMPARISON_NEVER;
-const int LESS     = D3D11_COMPARISON_LESS;
-const int EQUAL    = D3D11_COMPARISON_EQUAL;
-const int LEQUAL   = D3D11_COMPARISON_LESS_EQUAL;
-const int GREATER  = D3D11_COMPARISON_GREATER;
-const int NOTEQUAL = D3D11_COMPARISON_NOT_EQUAL;
-const int GEQUAL   = D3D11_COMPARISON_GREATER_EQUAL;
-const int ALWAYS   = D3D11_COMPARISON_ALWAYS;
+// const int NEVER    = D3D11_COMPARISON_NEVER;
+// const int LESS     = D3D11_COMPARISON_LESS;
+// const int EQUAL    = D3D11_COMPARISON_EQUAL;
+// const int LEQUAL   = D3D11_COMPARISON_LESS_EQUAL;
+// const int GREATER  = D3D11_COMPARISON_GREATER;
+// const int NOTEQUAL = D3D11_COMPARISON_NOT_EQUAL;
+// const int GEQUAL   = D3D11_COMPARISON_GREATER_EQUAL;
+// const int ALWAYS   = D3D11_COMPARISON_ALWAYS;
 
+const int mapCompareMode[] = {
+	D3D11_COMPARISON_NEVER, D3D11_COMPARISON_LESS, D3D11_COMPARISON_EQUAL,
+	D3D11_COMPARISON_LESS_EQUAL, D3D11_COMPARISON_GREATER, D3D11_COMPARISON_NOT_EQUAL,
+	D3D11_COMPARISON_GREATER_EQUAL, D3D11_COMPARISON_ALWAYS
+};
 // Stencil-test constants
-const int KEEP     = D3D11_STENCIL_OP_KEEP;
-const int SET_ZERO = D3D11_STENCIL_OP_ZERO;
-const int REPLACE  = D3D11_STENCIL_OP_REPLACE;
-const int INVERT   = D3D11_STENCIL_OP_INVERT;
-const int INCR     = D3D11_STENCIL_OP_INCR;
-const int DECR     = D3D11_STENCIL_OP_DECR;
-const int INCR_SAT = D3D11_STENCIL_OP_INCR_SAT;
-const int DECR_SAT = D3D11_STENCIL_OP_DECR_SAT;
-
+// const int KEEP     = D3D11_STENCIL_OP_KEEP;
+// const int SET_ZERO = D3D11_STENCIL_OP_ZERO;
+// const int REPLACE  = D3D11_STENCIL_OP_REPLACE;
+// const int INVERT   = D3D11_STENCIL_OP_INVERT;
+// const int INCR     = D3D11_STENCIL_OP_INCR;
+// const int DECR     = D3D11_STENCIL_OP_DECR;
+// const int INCR_SAT = D3D11_STENCIL_OP_INCR_SAT;
+// const int DECR_SAT = D3D11_STENCIL_OP_DECR_SAT;
+const int mapStencilOp[] = {
+	D3D11_STENCIL_OP_KEEP, D3D11_STENCIL_OP_ZERO, D3D11_STENCIL_OP_REPLACE,
+	D3D11_STENCIL_OP_INVERT, D3D11_STENCIL_OP_INCR, D3D11_STENCIL_OP_DECR,
+	D3D11_STENCIL_OP_INCR_SAT, D3D11_STENCIL_OP_DECR_SAT
+};
 // Culling constants
 /*
 const int CULL_NONE  = D3D11_CULL_NONE;
@@ -203,9 +224,11 @@ const int mapCullMode[] = {
 };
 
 // Fillmode constants
-const int SOLID = D3D11_FILL_SOLID;
-const int WIREFRAME = D3D11_FILL_WIREFRAME;
-
+//const int SOLID = D3D11_FILL_SOLID;
+//const int WIREFRAME = D3D11_FILL_WIREFRAME;
+const int mapFillMode[] = {
+	D3D11_FILL_SOLID, D3D11_FILL_WIREFRAME
+};
 
 static DXGI_FORMAT formats[] =
 {
@@ -1813,13 +1836,13 @@ SamplerStateID Direct3D11Renderer::addSamplerState(const Filter filter, const Ad
 	return samplerStates.size() - 1;
 }
 
-BlendStateID Direct3D11Renderer::addBlendState(const int srcFactorRGB, const int destFactorRGB, const int srcFactorAlpha, const int destFactorAlpha, const int blendModeRGB, const int blendModeAlpha, const int mask, const bool alphaToCoverage)
+BlendStateID Direct3D11Renderer::addBlendState(const BlendOp srcFactorRGB, const BlendOp destFactorRGB, const BlendOp srcFactorAlpha, const BlendOp destFactorAlpha, const BlendMode blendModeRGB, const BlendMode blendModeAlpha, const int mask, const bool alphaToCoverage)
 {
 	BlendState blendState;
 
 	BOOL blendEnable =
-		srcFactorRGB   != D3D11_BLEND_ONE || destFactorRGB   != D3D11_BLEND_ZERO ||
-		srcFactorAlpha != D3D11_BLEND_ONE || destFactorAlpha != D3D11_BLEND_ZERO;
+		srcFactorRGB   != BlendOp::ONE || destFactorRGB   != BlendOp::ZERO ||
+		srcFactorAlpha != BlendOp::ONE || destFactorAlpha != BlendOp::ZERO;
 
 	D3D11_BLEND_DESC desc;
 	desc.AlphaToCoverageEnable = (BOOL) alphaToCoverage;
@@ -1829,12 +1852,12 @@ BlendStateID Direct3D11Renderer::addBlendState(const int srcFactorRGB, const int
 		D3D11_RENDER_TARGET_BLEND_DESC &rt = desc.RenderTarget[i];
 
 		rt.BlendEnable = blendEnable;
-		rt.SrcBlend = (D3D11_BLEND) srcFactorRGB;
-		rt.DestBlend = (D3D11_BLEND) destFactorRGB;
-		rt.BlendOp = (D3D11_BLEND_OP) blendModeAlpha;
-		rt.SrcBlendAlpha = (D3D11_BLEND) srcFactorAlpha;
-		rt.DestBlendAlpha = (D3D11_BLEND) destFactorAlpha;
-		rt.BlendOpAlpha = (D3D11_BLEND_OP) blendModeAlpha;
+		rt.SrcBlend = (D3D11_BLEND) mapBlendOp[(int)srcFactorRGB];
+		rt.DestBlend = (D3D11_BLEND)mapBlendOp[(int)destFactorRGB];
+		rt.BlendOp = (D3D11_BLEND_OP)mapBlendMode[(int)blendModeAlpha];
+		rt.SrcBlendAlpha = (D3D11_BLEND) mapBlendOp[(int)srcFactorAlpha];
+		rt.DestBlendAlpha = (D3D11_BLEND)mapBlendOp[(int)destFactorAlpha];
+		rt.BlendOpAlpha = (D3D11_BLEND_OP)mapBlendMode[(int)blendModeAlpha];
 		rt.RenderTargetWriteMask = mask;
 	}
 
@@ -1848,27 +1871,27 @@ BlendStateID Direct3D11Renderer::addBlendState(const int srcFactorRGB, const int
 	return blendStates.size() - 1;
 }
 
-DepthStateID Direct3D11Renderer::addDepthState(const bool depthTest, const bool depthWrite, const int depthFunc, const bool stencilTest, const uint8 stencilReadMask, const uint8 stencilWriteMask,
-		const int stencilFuncFront, const int stencilFuncBack, const int stencilFailFront, const int stencilFailBack,
-		const int depthFailFront, const int depthFailBack, const int stencilPassFront, const int stencilPassBack)
+DepthStateID Direct3D11Renderer::addDepthState(const bool depthTest, const bool depthWrite, const CompareMode depthFunc, const bool stencilTest, const uint8 stencilReadMask, const uint8 stencilWriteMask,
+		const CompareMode stencilFuncFront, const CompareMode stencilFuncBack, const StencilOp stencilFailFront, const StencilOp stencilFailBack,
+		const StencilOp depthFailFront, const StencilOp depthFailBack, const StencilOp stencilPassFront, const StencilOp stencilPassBack)
 {
 	DepthState depthState;
 
 	D3D11_DEPTH_STENCIL_DESC desc;
 	desc.DepthEnable = (BOOL) depthTest;
 	desc.DepthWriteMask = depthWrite? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO;
-	desc.DepthFunc = (D3D11_COMPARISON_FUNC) depthFunc;
+	desc.DepthFunc = (D3D11_COMPARISON_FUNC)mapCompareMode[(int)depthFunc];
 	desc.StencilEnable = (BOOL) stencilTest;
 	desc.StencilReadMask  = stencilReadMask;
 	desc.StencilWriteMask = stencilWriteMask;
-	desc.BackFace. StencilFunc = (D3D11_COMPARISON_FUNC) stencilFuncBack;
-	desc.FrontFace.StencilFunc = (D3D11_COMPARISON_FUNC) stencilFuncFront;
-	desc.BackFace. StencilDepthFailOp = (D3D11_STENCIL_OP) depthFailBack;
-	desc.FrontFace.StencilDepthFailOp = (D3D11_STENCIL_OP) depthFailFront;
-	desc.BackFace. StencilFailOp = (D3D11_STENCIL_OP) stencilFailBack;
-	desc.FrontFace.StencilFailOp = (D3D11_STENCIL_OP) stencilFailFront;
-	desc.BackFace. StencilPassOp = (D3D11_STENCIL_OP) stencilPassBack;
-	desc.FrontFace.StencilPassOp = (D3D11_STENCIL_OP) stencilPassFront;
+	desc.BackFace. StencilFunc = (D3D11_COMPARISON_FUNC)mapCompareMode[(int)stencilFuncBack];
+	desc.FrontFace.StencilFunc = (D3D11_COMPARISON_FUNC)mapCompareMode[(int)stencilFuncFront];
+	desc.BackFace. StencilDepthFailOp = (D3D11_STENCIL_OP)mapStencilOp[(int)depthFailBack];
+	desc.FrontFace.StencilDepthFailOp = (D3D11_STENCIL_OP)mapStencilOp[(int)depthFailFront];
+	desc.BackFace. StencilFailOp = (D3D11_STENCIL_OP)mapStencilOp[(int)stencilFailBack];
+	desc.FrontFace.StencilFailOp = (D3D11_STENCIL_OP)mapStencilOp[(int)stencilFailFront];
+	desc.BackFace. StencilPassOp = (D3D11_STENCIL_OP)mapStencilOp[(int)stencilPassBack];
+	desc.FrontFace.StencilPassOp = (D3D11_STENCIL_OP)mapStencilOp[(int)stencilPassFront];
 
 	if (FAILED(device->CreateDepthStencilState(&desc, &depthState.dsState)))
 	{
@@ -1880,13 +1903,13 @@ DepthStateID Direct3D11Renderer::addDepthState(const bool depthTest, const bool 
 	return depthStates.size() - 1;
 }
 
-RasterizerStateID Direct3D11Renderer::addRasterizerState(CullMode cullMode, const int fillMode, const bool multiSample, const bool scissor, const float depthBias, const float slopeDepthBias)
+RasterizerStateID Direct3D11Renderer::addRasterizerState(const CullMode cullMode, const FillMode fillMode, const bool multiSample, const bool scissor, const float depthBias, const float slopeDepthBias)
 {
 	RasterizerState rasterizerState;
 
 	D3D11_RASTERIZER_DESC desc;
 	desc.CullMode = (D3D11_CULL_MODE) mapCullMode[(int)cullMode];
-	desc.FillMode = (D3D11_FILL_MODE) fillMode;
+	desc.FillMode = (D3D11_FILL_MODE) mapFillMode[(int)fillMode];
 	desc.FrontCounterClockwise = FALSE;
 	desc.DepthBias = (INT) depthBias;
 	desc.DepthBiasClamp = 0.0f;

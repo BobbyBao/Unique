@@ -65,11 +65,11 @@ public:
 	IndexBufferID addIndexBuffer(ID3D11Buffer* buffer, const uint nIndices, const uint indexSize);
 
 	SamplerStateID addSamplerState(const Filter filter, const AddressMode s, const AddressMode t, const AddressMode r, const float lod = 0, const uint maxAniso = 16, const int compareFunc = 0, const float *border_color = NULL);
-	BlendStateID addBlendState(const int srcFactorRGB, const int destFactorRGB, const int srcFactorAlpha, const int destFactorAlpha, const int blendModeRGB, const int blendModeAlpha, const int mask = ALL, const bool alphaToCoverage = false);
-	DepthStateID addDepthState(const bool depthTest, const bool depthWrite, const int depthFunc, const bool stencilTest, const uint8 stencilReadMask, const uint8 stencilWriteMask,
-		const int stencilFuncFront, const int stencilFuncBack, const int stencilFailFront, const int stencilFailBack,
-		const int depthFailFront, const int depthFailBack, const int stencilPassFront, const int stencilPassBack);
-	RasterizerStateID addRasterizerState(CullMode cullMode, const int fillMode = SOLID, const bool multiSample = true, const bool scissor = false, const float depthBias = 0.0f, const float slopeDepthBias = 0.0f);
+	BlendStateID addBlendState(const BlendOp srcFactorRGB, const BlendOp destFactorRGB, const BlendOp srcFactorAlpha, const BlendOp destFactorAlpha, const BlendMode blendModeRGB, const BlendMode blendModeAlpha, const int mask = ALL, const bool alphaToCoverage = false);
+	DepthStateID addDepthState(const bool depthTest, const bool depthWrite, const CompareMode depthFunc, const bool stencilTest, const uint8 stencilReadMask, const uint8 stencilWriteMask,
+		const CompareMode stencilFuncFront, const CompareMode stencilFuncBack, const StencilOp stencilFailFront, const StencilOp stencilFailBack,
+		const StencilOp depthFailFront, const StencilOp depthFailBack, const StencilOp stencilPassFront, const StencilOp stencilPassBack);
+	RasterizerStateID addRasterizerState(CullMode cullMode, const FillMode fillMode = FillMode::SOLID, const bool multiSample = true, const bool scissor = false, const float depthBias = 0.0f, const float slopeDepthBias = 0.0f);
 
 	void setTexture(const char *textureName, const TextureID texture);
 	void setTexture(const char *textureName, const TextureID texture, const SamplerStateID samplerState);

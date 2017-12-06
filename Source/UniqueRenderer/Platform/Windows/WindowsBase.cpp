@@ -21,8 +21,8 @@
 
 #include "Resource.h"
 
-#include "../CPU.h"
-#include "../BaseApp.h"
+#include "../../CPU.h"
+#include "../../BaseApp.h"
 #include <direct.h>
 
 #include <mmsystem.h>

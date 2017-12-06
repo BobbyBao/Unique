@@ -22,6 +22,7 @@ EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		..\Source\UniqueRenderer\UniqueRenderer.vcxitems*{0e03f349-0b30-4ea2-ab9a-c90565909a26}*SharedItemsImports = 9
+		..\Source\UniqueBase\UniqueBase.vcxitems*{414e9ecc-66ec-4205-9144-06cc2aa7d243}*SharedItemsImports = 4
 		..\Source\UniqueRenderer\UniqueRenderer.vcxitems*{414e9ecc-66ec-4205-9144-06cc2aa7d243}*SharedItemsImports = 4
 		..\Source\UniqueBase\UniqueBase.vcxitems*{4a6b9a4e-845f-43db-8292-6ead5c7630ce}*SharedItemsImports = 9
 		..\Source\UniqueBase\UniqueBase.vcxitems*{8bdd6af5-cb1d-4ad6-a5ce-7ac304b28e77}*SharedItemsImports = 4
@@ -132,7 +133,7 @@ Global
 		{991E3FEA-21E5-424C-83EE-B8ADEFE52472}.RelWithDebInfo|x86.ActiveCfg = Release|Any CPU
 		{991E3FEA-21E5-424C-83EE-B8ADEFE52472}.RelWithDebInfo|x86.Build.0 = Release|Any CPU
 		{414E9ECC-66EC-4205-9144-06CC2AA7D243}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{414E9ECC-66EC-4205-9144-06CC2AA7D243}.Debug|x64.ActiveCfg = Debug|Win32
+		{414E9ECC-66EC-4205-9144-06CC2AA7D243}.Debug|x64.ActiveCfg = Debug|x64
 		{414E9ECC-66EC-4205-9144-06CC2AA7D243}.Debug|x86.ActiveCfg = Debug|Win32
 		{414E9ECC-66EC-4205-9144-06CC2AA7D243}.Debug|x86.Build.0 = Debug|Win32
 		{414E9ECC-66EC-4205-9144-06CC2AA7D243}.MinSizeRel|Any CPU.ActiveCfg = Release|Win32

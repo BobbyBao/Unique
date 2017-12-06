@@ -112,7 +112,7 @@ struct TexVertex {
 	vec2 position;
 	vec2 texCoord;
 };
-
+/*
 #define MAKEQUAD(x0, y0, x1, y1, o)\
 	vec2(x0 + o, y0 + o),\
 	vec2(x0 + o, y1 - o),\
@@ -136,7 +136,7 @@ struct TexVertex {
 	vec2(x0 + lw, y1 - lw),\
 	vec2(x0, y0),\
 	vec2(x0 + lw, y0 + lw),
-
+*/
 
 #define TEXTURE_NONE  (-1)
 #define SHADER_NONE   (-1)
@@ -233,7 +233,21 @@ struct FormatDesc {
 #define MAX_VERTEXSTREAM 8
 #define MAX_TEXTUREUNIT  16
 #define MAX_SAMPLERSTATE 16
-/*
+
+
+// Blending constants
+// extern const int ZERO;
+// extern const int ONE;
+// extern const int SRC_COLOR;
+// extern const int ONE_MINUS_SRC_COLOR;
+// extern const int DST_COLOR;
+// extern const int ONE_MINUS_DST_COLOR;
+// extern const int SRC_ALPHA;
+// extern const int ONE_MINUS_SRC_ALPHA;
+// extern const int DST_ALPHA;
+// extern const int ONE_MINUS_DST_ALPHA;
+// extern const int SRC_ALPHA_SATURATE;
+
 enum class BlendOp
 {
 	ZERO,
@@ -247,63 +261,81 @@ enum class BlendOp
 	DST_ALPHA,
 	ONE_MINUS_DST_ALPHA,
 	SRC_ALPHA_SATURATE
-};*/
+};
 
-// Blending constants
-extern const int ZERO;
-extern const int ONE;
-extern const int SRC_COLOR;
-extern const int ONE_MINUS_SRC_COLOR;
-extern const int DST_COLOR;
-extern const int ONE_MINUS_DST_COLOR;
-extern const int SRC_ALPHA;
-extern const int ONE_MINUS_SRC_ALPHA;
-extern const int DST_ALPHA;
-extern const int ONE_MINUS_DST_ALPHA;
-extern const int SRC_ALPHA_SATURATE;
+// extern const int BM_ADD;
+// extern const int BM_SUBTRACT;
+// extern const int BM_REVERSE_SUBTRACT;
+// extern const int BM_MIN;
+// extern const int BM_MAX;
 
-extern const int BM_ADD;
-extern const int BM_SUBTRACT;
-extern const int BM_REVERSE_SUBTRACT;
-extern const int BM_MIN;
-extern const int BM_MAX;
+enum class BlendMode
+{
+	BM_ADD,
+	BM_SUBTRACT,
+	BM_REVERSE_SUBTRACT,
+	BM_MIN,
+	BM_MAX,
+};
 
 // Depth-test constants
-extern const int NEVER;
-extern const int LESS;
-extern const int EQUAL;
-extern const int LEQUAL;
-extern const int GREATER;
-extern const int NOTEQUAL;
-extern const int GEQUAL;
-extern const int ALWAYS;
+// extern const int NEVER;
+// extern const int LESS;
+// extern const int EQUAL;
+// extern const int LEQUAL;
+// extern const int GREATER;
+// extern const int NOTEQUAL;
+// extern const int GEQUAL;
+// extern const int ALWAYS;
+
+enum class CompareMode
+{
+	NEVER, LESS, EQUAL, LEQUAL, GREATER, NOTEQUAL, GEQUAL, ALWAYS
+};
 
 // Stencil-test constants
-extern const int KEEP;
-extern const int SET_ZERO;
-extern const int REPLACE;
-extern const int INVERT;
-extern const int INCR;
-extern const int DECR;
-extern const int INCR_SAT;
-extern const int DECR_SAT;
+// extern const int KEEP;
+// extern const int SET_ZERO;
+// extern const int REPLACE;
+// extern const int INVERT;
+// extern const int INCR;
+// extern const int DECR;
+// extern const int INCR_SAT;
+// extern const int DECR_SAT;
 
-enum class CullMode
+enum class StencilOp : int
 {
-	CULL_NONE,
-	CULL_BACK,
-	CULL_FRONT
+	KEEP,
+	SET_ZERO,
+	REPLACE,
+	INVERT,
+	INCR,
+	DECR,
+	INCR_SAT,
+	DECR_SAT
 };
+
 /*
 // Culling constants
 extern const int CULL_NONE;
 extern const int CULL_BACK;
 extern const int CULL_FRONT;
 */
-// Fillmode constants
-extern const int SOLID;
-extern const int WIREFRAME;
+enum class CullMode : int
+{
+	CULL_NONE,
+	CULL_BACK,
+	CULL_FRONT
+};
 
+// Fillmode constants
+//extern const int SOLID;
+//extern const int WIREFRAME;
+enum class FillMode
+{
+	SOLID,
+	WIREFRAME
+};
 
 class Renderer 
 {
@@ -347,19 +379,19 @@ public:
 	virtual IndexBufferID addIndexBuffer(const uint nIndices, const uint indexSize, const BufferAccess bufferAccess, const void *data = NULL) = 0;
 
 	virtual SamplerStateID addSamplerState(const Filter filter, const AddressMode s, const AddressMode t, const AddressMode r, const float lod = 0, const uint maxAniso = 16, const int compareFunc = 0, const float *border_color = NULL) = 0;
-	BlendStateID addBlendState(const int srcFactor, const int destFactor, const int blendMode = BM_ADD, const int mask = ALL, const bool alphaToCoverage = false){
+	BlendStateID addBlendState(const BlendOp srcFactor, const BlendOp destFactor, const BlendMode blendMode = BlendMode::BM_ADD, const int mask = ALL, const bool alphaToCoverage = false){
 		return addBlendState(srcFactor, destFactor, srcFactor, destFactor, blendMode, blendMode, mask, alphaToCoverage);
 	}
-	virtual BlendStateID addBlendState(const int srcFactorRGB, const int destFactorRGB, const int srcFactorAlpha, const int destFactorAlpha, const int blendModeRGB, const int blendModeAlpha, const int mask = ALL, const bool alphaToCoverage = false) = 0;
-	virtual DepthStateID addDepthState(const bool depthTest, const bool depthWrite, const int depthFunc, const bool stencilTest, const uint8 stencilReadMask, const uint8 stencilWriteMask,
-		const int stencilFuncFront, const int stencilFuncBack, const int stencilFailFront, const int stencilFailBack,
-		const int depthFailFront, const int depthFailBack, const int stencilPassFront, const int stencilPassBack) = 0;
-	DepthStateID addDepthState(const bool depthTest, const bool depthWrite, const int depthFunc = LEQUAL, const bool stencilTest = false,
-		const uint8 stencilMask = 0xFF, const int stencilFunc = ALWAYS, const int stencilFail = KEEP, const int depthFail = KEEP, const int stencilPass = KEEP)
+	virtual BlendStateID addBlendState(const BlendOp srcFactorRGB, const BlendOp destFactorRGB, const BlendOp srcFactorAlpha, const BlendOp destFactorAlpha, const BlendMode blendModeRGB, const BlendMode blendModeAlpha, const int mask = ALL, const bool alphaToCoverage = false) = 0;
+	virtual DepthStateID addDepthState(const bool depthTest, const bool depthWrite, const CompareMode depthFunc, const bool stencilTest, const uint8 stencilReadMask, const uint8 stencilWriteMask,
+		const CompareMode stencilFuncFront, const CompareMode stencilFuncBack, const StencilOp stencilFailFront, const StencilOp stencilFailBack,
+		const StencilOp depthFailFront, const StencilOp depthFailBack, const StencilOp stencilPassFront, const StencilOp stencilPassBack) = 0;
+	DepthStateID addDepthState(const bool depthTest, const bool depthWrite, const CompareMode depthFunc = CompareMode::LEQUAL, const bool stencilTest = false,
+		const uint8 stencilMask = 0xFF, const CompareMode stencilFunc = CompareMode::ALWAYS, const StencilOp stencilFail = StencilOp::KEEP, const StencilOp depthFail = StencilOp::KEEP, const StencilOp stencilPass = StencilOp::KEEP)
 	{
 		return addDepthState(depthTest, depthWrite, depthFunc, stencilTest, stencilMask, stencilMask, stencilFunc, stencilFunc, stencilFail, stencilFail, depthFail, depthFail, stencilPass, stencilPass);
 	}
-	virtual RasterizerStateID addRasterizerState(CullMode cullMode, const int fillMode = SOLID, const bool multiSample = true, const bool scissor = false, const float depthBias = 0.0f, const float slopeDepthBias = 0.0f) = 0;
+	virtual RasterizerStateID addRasterizerState(const CullMode cullMode, const FillMode fillMode = FillMode::SOLID, const bool multiSample = true, const bool scissor = false, const float depthBias = 0.0f, const float slopeDepthBias = 0.0f) = 0;
 
 	FontID addFont(const char *textureFile, const char *fontFile, const SamplerStateID samplerState);
 
