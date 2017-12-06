@@ -156,13 +156,13 @@ bool D3D11App::initAPI(const API_Revision api_revision, const DXGI_FORMAT backBu
 	DXGI_MODE_DESC *modes = new DXGI_MODE_DESC[nModes];
 	dxgiOutput->GetDisplayModeList(backBufferFormat, 0, &nModes, modes);
 
-	resolution->clear();
+	//resolution->clear();
 	for (uint i = 0; i < nModes; i++)
 	{
 		if (modes[i].Width >= 640 && modes[i].Height >= 480)
 		{
 			sprintf(str, "%dx%d", modes[i].Width, modes[i].Height);
-			int index = resolution->addItemUnique(str);
+			//int index = resolution->addItemUnique(str);
 
 			if (int(modes[i].Width) == fullscreenWidth && int(modes[i].Height) == fullscreenHeight)
 			{
@@ -172,7 +172,7 @@ bool D3D11App::initAPI(const API_Revision api_revision, const DXGI_FORMAT backBu
 					fsRefresh = refresh;
 					fullScreenRefresh = modes[i].RefreshRate;
 				}
-				resolution->selectItem(index);
+			//	resolution->selectItem(index);
 			}
 		}
 	}
@@ -273,7 +273,7 @@ bool D3D11App::initAPI(const API_Revision api_revision, const DXGI_FORMAT backBu
 
 	if (fullscreen)
 	{
-		captureMouse(!configDialog->isVisible());
+	//	captureMouse(!configDialog->isVisible());
 	}
 
 	renderer = new Direct3D11Renderer(device, context);
@@ -283,7 +283,7 @@ bool D3D11App::initAPI(const API_Revision api_revision, const DXGI_FORMAT backBu
 		delete renderer;
 		return false;
 	}
-	antiAlias->selectItem(antiAliasSamples / 2);
+	//antiAlias->selectItem(antiAliasSamples / 2);
 
 	linearClamp = renderer->addSamplerState(LINEAR, CLAMP, CLAMP, CLAMP);
 	defaultFont = renderer->addFont("../Textures/Fonts/Future.dds", "../Textures/Fonts/Future.font", linearClamp);

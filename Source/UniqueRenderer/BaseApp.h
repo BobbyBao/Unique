@@ -20,11 +20,6 @@
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #include "Config.h"
-#include "GUI/Dialog.h"
-#include "GUI/CheckBox.h"
-#include "GUI/Slider.h"
-#include "GUI/Label.h"
-#include "GUI/DropDownList.h"
 
 #ifdef _WIN32
 #include <shlobj.h>
@@ -34,8 +29,18 @@
 #include <GL/glx.h>
 #endif
 #endif
+#include "../UniqueRenderer/Renderer.h"
+#include "../UniqueRenderer/Math/Vector.h"
 
-class BaseApp : public SliderListener, public CheckBoxListener, public DropDownListener, public PushButtonListener {
+enum MouseButton
+{
+	MOUSE_LEFT = 0,
+	MOUSE_MIDDLE = 1,
+	MOUSE_RIGHT = 2,
+};
+
+class BaseApp
+{
 public:
 	BaseApp();
 	virtual ~BaseApp();
@@ -44,10 +49,6 @@ public:
 
 	void loadConfig();
 	void updateConfig();
-	virtual void onCheckBoxClicked(CheckBox *checkBox);
-	virtual void onSliderChanged(Slider *Slider);
-	virtual void onDropDownChanged(DropDownList *dropDownList);
-	virtual void onButtonClicked(PushButton *button);
 
 	virtual bool init(){ return true; };
 	virtual void exit(){};
@@ -138,14 +139,7 @@ protected:
 #endif
 
 #endif
-
-	Queue <Widget *> widgets;
-	Dialog *configDialog, *keysDialog, *joystickDialog;
-	CheckBox *invertMouseBox, *fullscreenBox, *vSyncBox;
-	Slider *mouseSensSlider;
-	DropDownList *resolution, *antiAlias;
-	PushButton *applyRes, *configureKeys, *configureJoystick;
-
+	
 	bool keys[65536];
 	uint leftKey, rightKey, upKey, downKey, forwardKey, backwardKey, resetKey, fpsKey, optionsKey, screenshotKey, benchmarkKey;
 	float joystickAxes[8];

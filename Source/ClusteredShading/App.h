@@ -75,5 +75,4 @@ protected:
 	Model m_Sphere;
 	BSP m_BSP;
 
-	DropDownList* m_RenderMode;
 };

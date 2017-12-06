@@ -36,7 +36,7 @@ bool App::onKey(const uint key, const bool pressed)
 	{
 		if (key >= KEY_F5 && key <= KEY_F8)
 		{
-			m_RenderMode->selectItem(key - KEY_F5);
+		//	m_RenderMode->selectItem(key - KEY_F5);
 			return true;
 		}
 	}
@@ -145,19 +145,6 @@ bool App::init()
 	m_Lights[19] = { float3(   0,  0,    0), 350.0f };
 	m_Lights[20] = { float3(   0,  0,    0), 650.0f };
 	m_Lights[21] = { float3(   0,  0,    0), 500.0f };
-
-
-	// Init GUI components
-	int tab = configDialog->addTab("Rendering mode");
-	configDialog->addWidget(tab, new Label(10, 10, 340, 36, "Rendering mode (F5-F7)"));
-
-	m_RenderMode = new DropDownList(10, 50, 380, 36);
-	m_RenderMode->addItem("Clustered Shading");
-	m_RenderMode->addItem("Visualize clusters");
-	m_RenderMode->addItem("Deferred Shading");
-	m_RenderMode->addItem("Visualize stencil mask");
-	m_RenderMode->selectItem(0);
-	configDialog->addWidget(tab, m_RenderMode);
 
 	return true;
 }
@@ -621,7 +608,7 @@ void App::drawFrame()
 
 	animateLights();
 
-	RenderMode mode = (RenderMode) m_RenderMode->getSelectedItem();
+	RenderMode mode = CLUSTERED_SHADING;// (RenderMode)m_RenderMode->getSelectedItem();
 
 	if (mode <= VISUALIZE_CLUSTERS)
 	{

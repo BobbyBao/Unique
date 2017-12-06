@@ -44,14 +44,10 @@ BaseApp::~BaseApp(){
 
 	if (benchMarkFile) fclose(benchMarkFile);
 
-	if (widgets.goToFirst()){
-		do {
-			delete widgets.getCurrent();
-		} while (widgets.goToNext());
-	}
 }
 
-void BaseApp::loadConfig(){
+void BaseApp::loadConfig()
+{
 	// Reset keys
 	memset(keys, 0, sizeof(keys));
 	memset(joystickAxes, 0, sizeof(joystickAxes));
@@ -78,7 +74,8 @@ void BaseApp::loadConfig(){
 	antiAliasSamples = config.getIntegerDef("AntiAliasSamples", 0);
 
 	vSync = config.getBoolDef("VSync", false);
-
+	done = true;
+	return;
 	leftKey       = config.getIntegerDef("KeyLeft",  KEY_LEFT);
 	rightKey      = config.getIntegerDef("KeyRight", KEY_RIGHT);
 	upKey         = config.getIntegerDef("KeyUp",    KEY_CTRL);
@@ -107,61 +104,7 @@ void BaseApp::loadConfig(){
 }
 
 void BaseApp::initGUI(){
-	const float w = 430;
-	const float h = 350;
-	configDialog = new Dialog(0.5f * (width - w), 0.5f * (height - h), w, h, false, true);
-	configDialog->setVisible(false);
-	int tab = configDialog->addTab("Options");
 
-	invertMouseBox = new CheckBox(0, 0, 180, 36, "Invert mouse", invertMouse);
-	invertMouseBox->setListener(this);
-	configDialog->addWidget(tab, invertMouseBox);
-
-	configDialog->addWidget(tab, new Label(0, 40, 192, 36, "Mouse sensitivity"));
-	mouseSensSlider = new Slider(0, 80, 300, 24, 0.0005f, 0.01f, mouseSensibility);
-	mouseSensSlider->setListener(this);
-	configDialog->addWidget(tab, mouseSensSlider);
-
-	configDialog->addWidget(tab, new Label(0, 120, 128, 36, "Resolution"));
-	resolution = new DropDownList(0, 160, 192, 36);
-	resolution->setListener(this);
-	if (!fullscreen) resolution->setEnabled(false);
-	configDialog->addWidget(tab, resolution);
-
-	configDialog->addWidget(tab, new Label(0, 200, 128, 36, "Anti-aliasing"));
-	antiAlias = new DropDownList(0, 240, 192, 36);
-	antiAlias->addItem("None");
-	antiAlias->addItem("2x");
-	antiAlias->addItem("4x");
-	antiAlias->addItem("6x");
-	antiAlias->addItem("8x");
-	antiAlias->setListener(this);
-	configDialog->addWidget(tab, antiAlias);
-
-	fullscreenBox = new CheckBox(200, 160, 140, 36, "Fullscreen", fullscreen);
-	fullscreenBox->setListener(this);
-	configDialog->addWidget(tab, fullscreenBox);
-
-	vSyncBox = new CheckBox(200, 196, 100, 36, "VSync", vSync);
-	vSyncBox->setListener(this);
-	configDialog->addWidget(tab, vSyncBox);
-
-	applyRes = new PushButton(260, 240, 100, 36, "Apply");
-	applyRes->setListener(this);
-	configDialog->addWidget(tab, applyRes);
-
-	configureKeys = new PushButton(200, 6, 198, 32, "Configure keys");
-	configureKeys->setListener(this);
-	configDialog->addWidget(tab, configureKeys);
-
-	configureJoystick = new PushButton(200, 42, 198, 32, "Configure joystick");
-	configureJoystick->setListener(this);
-	configDialog->addWidget(tab, configureJoystick);
-
-	widgets.addFirst(configDialog);
-
-	keysDialog = NULL;
-	joystickDialog = NULL;
 }
 
 void BaseApp::updateConfig(){
@@ -205,96 +148,11 @@ void BaseApp::updateConfig(){
 	config.setInteger("OptionsButton", optionsButton);
 }
 
-void BaseApp::onCheckBoxClicked(CheckBox *checkBox){
-	if (checkBox == invertMouseBox){
-		invertMouse = invertMouseBox->isChecked();
-	} else if (checkBox == fullscreenBox){
-		resolution->setEnabled(fullscreenBox->isChecked());
-	} else if (checkBox == vSyncBox){
-		vSync = vSyncBox->isChecked();
-	}
-}
-
-void BaseApp::onSliderChanged(Slider *Slider){
-	mouseSensibility = mouseSensSlider->getValue();
-}
-
-void BaseApp::onDropDownChanged(DropDownList *dropDownList){
-}
-
-void BaseApp::onButtonClicked(PushButton *button){
-	if (button == applyRes){
-		closeWindow(false, true);
-		config.setBool("Fullscreen", fullscreenBox->isChecked());
-
-		const char *str = resolution->getSelectedText();
-		config.setInteger("FullscreenWidth", atoi(str));
-		const char *next = strchr(str, 'x');
-		config.setInteger("FullscreenHeight", atoi(next + 1));
-
-		int item = antiAlias->getSelectedItem();
-		if (item >= 0) antiAliasSamples = item * 2;
-		config.setInteger("AntiAliasSamples", antiAliasSamples);
-	} else if (button == configureKeys){
-		float w = 480;
-		float h = 410;
-
-		keysDialog = new Dialog(0.5f * (width - w), 0.5f * (height - h), w, h, true, false);
-		keysDialog->setColor(vec4(0.2f, 0.3f, 1.0f, 0.8f));
-
-		int tab = keysDialog->addTab("Keys");
-		keysDialog->addWidget(tab, new KeyWaiterButton(210,  60, 100, 40, "Left",  &leftKey));
-		keysDialog->addWidget(tab, new KeyWaiterButton(340,  60, 100, 40, "Right", &rightKey));
-		keysDialog->addWidget(tab, new KeyWaiterButton(260,  10, 130, 40, "Forward",  &forwardKey));
-		keysDialog->addWidget(tab, new KeyWaiterButton(260, 110, 130, 40, "Backward", &backwardKey));
-
-		keysDialog->addWidget(tab, new KeyWaiterButton(10, 30, 180, 40, "Up/Jump",     &upKey));
-		keysDialog->addWidget(tab, new KeyWaiterButton(10, 90, 180, 40, "Down/Crouch", &downKey));
-
-		keysDialog->addWidget(tab, new KeyWaiterButton(10, 180, 190, 35, "Reset camera",   &resetKey));
-		keysDialog->addWidget(tab, new KeyWaiterButton(10, 220, 190, 35, "Toggle FPS",     &fpsKey));
-		keysDialog->addWidget(tab, new KeyWaiterButton(10, 260, 190, 35, "Options dialog", &optionsKey));
-		keysDialog->addWidget(tab, new KeyWaiterButton(10, 300, 190, 35, "Screenshot",     &screenshotKey));
-
-		widgets.addFirst(keysDialog);
-	} else if (button == configureJoystick){
-		float w = 270;
-		float h = 320;
-
-		joystickDialog = new Dialog(0.5f * (width - w), 0.5f * (height - h), w, h, true, false);
-		joystickDialog->setColor(vec4(0.2f, 0.3f, 1.0f, 0.8f));
-
-		int tab = joystickDialog->addTab("Joystick");
-		joystickDialog->addWidget(tab, new AxisWaiterButton(10, 10, 220, 35, "Left/Right", &xStrafeAxis, &invertXStrafeAxis));
-		joystickDialog->addWidget(tab, new AxisWaiterButton(10, 50, 220, 35, "Up/Down", &yStrafeAxis, &invertYStrafeAxis));
-		joystickDialog->addWidget(tab, new AxisWaiterButton(10, 90, 220, 35, "Forward/backward", &zStrafeAxis, &invertZStrafeAxis));
-
-		joystickDialog->addWidget(tab, new AxisWaiterButton(10,  150, 105, 35, "Pitch", &xTurnAxis, &invertXTurnAxis));
-		joystickDialog->addWidget(tab, new AxisWaiterButton(125, 150, 105, 35, "Yaw",   &yTurnAxis, &invertYTurnAxis));
-
-		joystickDialog->addWidget(tab, new ButtonWaiterButton(30, 220, 180, 35, "Options dialog", &optionsButton));
-
-		widgets.addFirst(joystickDialog);
-	}
-}
 
 void BaseApp::drawGUI(){
 	//switchTo2DMode(false);
 	renderer->setup2DMode(0, (float) width, 0, (float) height);
 
-	if (widgets.goToLast()){
-		// Draw widgets back to front
-		do {
-			Widget *widget = widgets.getCurrent();
-			if (widget->isDead()){
-				// Remove dead widgets
-				delete widget;
-				widgets.removeCurrent();
-			} else if (widget->isVisible()){
-				widget->draw(renderer, defaultFont, linearClamp, blendSrcAlpha, noDepthTest);
-			}
-		} while (widgets.goToPrev());
-	}
 
 	if (showFPS){
 		static float accTime = 0.1f;
@@ -340,7 +198,7 @@ void BaseApp::updateTime(){
 }
 
 void BaseApp::makeFrame(){
-	if (!configDialog->isVisible()) controls();
+//	if (!configDialog->isVisible()) controls();
 
 	renderer->resetStatistics();
 
@@ -439,33 +297,12 @@ bool BaseApp::onMouseMove(const int x, const int y, const int deltaX, const int 
 #endif
 
 		return true;
-	} else {
-
-		if (widgets.goToFirst()){
-			do {
-				Widget *widget = widgets.getCurrent();
-				if (widget->isEnabled() && widget->isVisible() && (widget->isInWidget(x, y) || widget->isCapturing())){
-					//widgets.moveCurrentToTop();
-					return widget->onMouseMove(x, y);
-				}
-			} while (widgets.goToNext());
-		}
-	}
+	} 
 	return false;
 }
 
 bool BaseApp::onMouseButton(const int x, const int y, const MouseButton button, const bool pressed){
 	if (!mouseCaptured){
-		if (widgets.goToFirst()){
-			do {
-				Widget *widget = widgets.getCurrent();
-				if (widget->isEnabled() && widget->isVisible() && (widget->isInWidget(x, y) || widget->isCapturing())){
-					widgets.moveCurrentToTop();
-					return widget->onMouseButton(x, y, button, pressed);
-				}
-			} while (widgets.goToNext());
-		}
-
 		if (button == MOUSE_LEFT && pressed){
 			captureMouse(true);
 			return true;
@@ -476,15 +313,6 @@ bool BaseApp::onMouseButton(const int x, const int y, const MouseButton button, 
 
 bool BaseApp::onMouseWheel(const int x, const int y, const int scroll){
 	if (!mouseCaptured){
-		if (widgets.goToFirst()){
-			do {
-				Widget *widget = widgets.getCurrent();
-				if (widget->isEnabled() && widget->isVisible() && (widget->isInWidget(x, y) || widget->isCapturing())){
-					widgets.moveCurrentToTop();
-					return widget->onMouseWheel(x, y, scroll);
-				}
-			} while (widgets.goToNext());
-		}
 	}
 	return false;
 }
@@ -533,16 +361,6 @@ bool BaseApp::onKey(const uint key, const bool pressed){
 	bool processed = false;
 
 	if (!mouseCaptured){
-		if (widgets.goToFirst()){
-			do {
-				Widget *widget = widgets.getCurrent();
-				if (widget->isVisible() || widget->isCapturing()){
-					widgets.moveCurrentToTop();
-					processed = widget->onKey(key, pressed);
-					break;
-				}
-			} while (widgets.goToNext());
-		}
 	}
 
 	if (!processed){
@@ -559,16 +377,7 @@ bool BaseApp::onKey(const uint key, const bool pressed){
 			} else if (key == resetKey){
 				resetCamera();
 			} else if (key == optionsKey){
-				if (configDialog->isVisible()){
-					configDialog->setVisible(false);
-					if (keysDialog) keysDialog->setVisible(false);
-					if (joystickDialog) joystickDialog->setVisible(false);
-				} else {
-					captureMouse(false);
-					configDialog->setVisible(true);
-					if (keysDialog) keysDialog->setVisible(true);
-					if (joystickDialog) joystickDialog->setVisible(true);
-				}
+				
 			} else {
 				processed = false;
 			}
@@ -584,18 +393,7 @@ bool BaseApp::onJoystickAxis(const int axis, const float value){
 	if (axis >= 8) return false;
 
 	bool processed = false;
-
-	if (widgets.goToFirst()){
-		do {
-			Widget *widget = widgets.getCurrent();
-			if (widget->isVisible() || widget->isCapturing()){
-				widgets.moveCurrentToTop();
-				processed = widget->onJoystickAxis(axis, value);
-				break;
-			}
-		} while (widgets.goToNext());
-	}
-
+	
 	const float deadZone = 0.2f;
 
 	if (fabsf(value) < deadZone){
@@ -615,32 +413,12 @@ bool BaseApp::onJoystickButton(const int button, const bool pressed){
 	if (button >= 32) return false;
 
 	bool processed = false;
-
-	if (widgets.goToFirst()){
-		do {
-			Widget *widget = widgets.getCurrent();
-			if (widget->isVisible() || widget->isCapturing()){
-				widgets.moveCurrentToTop();
-				processed = widget->onJoystickButton(button, pressed);
-				break;
-			}
-		} while (widgets.goToNext());
-	}
-
+	
 	if (!processed){
 		if (pressed){
 			processed = true;
 			if (button == optionsButton){
-				if (configDialog->isVisible()){
-					configDialog->setVisible(false);
-					if (keysDialog) keysDialog->setVisible(false);
-					if (joystickDialog) joystickDialog->setVisible(false);
-				} else {
-					captureMouse(false);
-					configDialog->setVisible(true);
-					if (keysDialog) keysDialog->setVisible(true);
-					if (joystickDialog) joystickDialog->setVisible(true);
-				}
+				
 			} else {
 				processed = false;
 			}
@@ -660,21 +438,6 @@ void BaseApp::onSize(const int w, const int h){
 	sprintf(str, "%s (%dx%d)", getTitle(), w, h);
 	setWindowTitle(str);
 
-	float cdx = configDialog->getX();
-	float cdy = configDialog->getY();
-	float cdw = configDialog->getWidth();
-	float cdh = configDialog->getHeight();
-
-	bool move_x = cdx + cdw > (float) w;
-	bool move_y = cdy + cdh > (float) h;
-
-	if (move_x) cdx = max(w - cdw, 0);
-	if (move_y) cdy = max(h - cdh, 0);
-
-	if (move_x || move_y){
-		configDialog->setPosition(cdx, cdy);
-		configDialog->updateWidgets();
-	}
 }
 
 void BaseApp::onClose(){
@@ -696,8 +459,6 @@ void BaseApp::closeWindow(const bool quit, const bool callUnLoad){
 		unload();
 	}
 	exitAPI();
-
-	Widget::clean();
 
 #if defined(__APPLE__)
 	QuitApplicationEventLoop();
