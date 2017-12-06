@@ -1,0 +1,110 @@
+
+struct VsIn
+{
+	float4 Position : Position;
+	float2 TexCoord : TexCoord;
+	float3 Tangent  : Tangent;
+	float3 Binormal : Binormal;
+	float3 Normal   : Normal;
+};
+
+struct PsIn
+{
+	float4 Position : SV_Position;
+	float3 WorldPos : Position;
+	float2 TexCoord : TexCoord;
+	float3 Tangent  : Tangent;
+	float3 Binormal : Binormal;
+	float3 Normal   : Normal;
+};
+
+[Vertex shader]
+
+float4x4 ViewProj;
+float3 CamPos;
+
+PsIn main(VsIn In)
+{
+	PsIn Out;
+
+	Out.Position = mul(ViewProj, In.Position);
+	Out.WorldPos = In.Position.xyz;
+	Out.TexCoord = In.TexCoord;
+	Out.Tangent  = In.Tangent;
+	Out.Binormal = In.Binormal;
+	Out.Normal   = In.Normal;
+
+	return Out;
+}
+
+
+[Fragment shader]
+
+Texture2D Base;
+Texture2D Bump;
+SamplerState Filter;
+Texture3D<uint> Clusters;
+
+struct Light
+{
+	float3 Position;
+	float Radius;
+};
+
+Light Lights[LIGHT_COUNT];
+float3 CamPos;
+float3 Scale;
+float3 Bias;
+
+float4 main(PsIn In) : SV_Target
+{
+	float3 base = Base.Sample(Filter, In.TexCoord).rgb;
+	float3 bump = Bump.Sample(Filter, In.TexCoord).xyz;
+
+	// Compute world-space normal
+	float3 normal = normalize(In.Tangent * bump.x + In.Binormal * bump.y + In.Normal * bump.z);
+
+	float3 view_vec = normalize(CamPos - In.WorldPos);
+	float3 refl_vec = reflect(-view_vec, normal);
+
+	// Compute cluster and fetch its light mask
+	int4 coord = int4(In.WorldPos * Scale + Bias, 0);
+	uint light_mask = Clusters.Load(coord);
+
+	float3 total_light = 0.02f * base;
+#ifdef SHOW_CLUSTERS
+	total_light = 0; // Disable ambient
+#endif
+
+	while (light_mask)
+	{
+		// Extract a light from the mask and disable that bit
+		uint i = firstbitlow(light_mask);
+		light_mask &= ~(1 << i);
+
+		const Light light = Lights[i];
+
+		// Lighting vectors
+		float3 lVec = light.Position - In.WorldPos;
+		float3 light_vec = normalize(lVec);
+
+		float atten = saturate(1.0f - dot(lVec, lVec) * (1.0f / (light.Radius * light.Radius)));
+		atten *= atten * atten;
+
+		// Lighting
+		float diffuse = saturate(dot(light_vec, normal));
+		float specular = 0.2f * pow(saturate(dot(refl_vec, light_vec)), 10.0f);
+
+#ifdef SHOW_CLUSTERS
+		atten = (atten > 0)? 0.25f : 0.0f;
+		if (i >= LIGHT_COUNT - 3) // Color the dynamic lights green and static lights red for clarity
+			total_light.g += 0.1f;
+		else
+			total_light.r += 0.05f;
+#endif
+
+		total_light += atten * (diffuse * base + specular);
+	}
+
+	return float4(total_light, 1.0f);
+}

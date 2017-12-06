@@ -1,0 +1,69 @@
+
+struct VsIn
+{
+	float4 Position : Position;
+	float2 TexCoord : TexCoord;
+	float3 Tangent  : Tangent;
+	float3 Binormal : Binormal;
+	float3 Normal   : Normal;
+};
+
+struct PsIn
+{
+	centroid float4 Position : SV_Position;
+	float2 TexCoord : TexCoord;
+	float3 Tangent  : Tangent;
+	float3 Binormal : Binormal;
+	float3 Normal   : Normal;
+};
+
+[Vertex shader]
+
+float4x4 ViewProj;
+float3 CamPos;
+
+PsIn main(VsIn In)
+{
+	PsIn Out;
+
+	Out.Position = mul(ViewProj, In.Position);
+	Out.TexCoord = In.TexCoord;
+	Out.Tangent  = In.Tangent;
+	Out.Binormal = In.Binormal;
+	Out.Normal   = In.Normal;
+
+	return Out;
+}
+
+
+[Fragment shader]
+
+struct PsOut
+{
+	float4 Diffuse : SV_Target0;
+	float4 Normal  : SV_Target1;
+};
+
+Texture2D Base;
+Texture2D Bump;
+SamplerState Filter;
+
+PsOut main(PsIn In)
+{
+	PsOut Out;
+
+	float3 base = Base.Sample(Filter, In.TexCoord).rgb;
+	float3 bump = Bump.Sample(Filter, In.TexCoord).xyz;
+
+	// Compute world-space normal
+	float3 normal = normalize(In.Tangent * bump.x + In.Binormal * bump.y + In.Normal * bump.z);
+
+	// Fill the buffers
+	Out.Diffuse.rgb = base;
+	// Detect multisample edge pixels by checking whether the sample position has been shifted from center of pixel by centroid sampling
+	Out.Diffuse.a = dot(abs(frac(In.Position.xy) - 0.5f), 1000.0f);
+	Out.Normal.rgb = normal;
+	Out.Normal.a = 0;
+
+	return Out;
+}

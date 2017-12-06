@@ -1,0 +1,42 @@
+[Vertex shader]
+
+struct VsIn
+{
+	float4 Position : Position;
+};
+
+float4x4 ViewProj;
+float3 LightPos;
+
+float4 main(VsIn In) : SV_Position
+{
+	float4 position = In.Position;
+	position.xyz *= 20.0f;
+	position.xyz += LightPos;
+	return mul(ViewProj, position);
+}
+
+[Fragment shader]
+
+#ifdef DEFERRED
+
+struct PsOut
+{
+	float4 Color0 : SV_Target0;
+	float4 Color1 : SV_Target1;
+};
+
+void main(out PsOut Out)
+{
+	Out.Color0 = float4(1, 1, 1, 0);
+	Out.Color1 = float4(0, 0, 0, 1);
+}
+
+#else
+
+float4 main() : SV_Target
+{
+	return 1.0f;
+}
+
+#endif

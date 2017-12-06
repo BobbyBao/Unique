@@ -1,0 +1,9 @@
+E:\Code\Banana\Unique\Source\UniqueEngine\bin\Debug\netstandard2.0\UniqueEngine.deps.json
+E:\Code\Banana\Unique\Source\UniqueEngine\bin\Debug\netstandard2.0\UniqueEngine.dll
+E:\Code\Banana\Unique\Source\UniqueEngine\bin\Debug\netstandard2.0\UniqueEngine.pdb
+E:\Code\Banana\Unique\Source\UniqueEngine\obj\Debug\netstandard2.0\UniqueEngine.csprojResolveAssemblyReference.cache
+E:\Code\Banana\Unique\Source\UniqueEngine\obj\Debug\netstandard2.0\UniqueEngine.csproj.CoreCompileInputs.cache
+E:\Code\Banana\Unique\Source\UniqueEngine\obj\Debug\netstandard2.0\UniqueEngine.AssemblyInfoInputs.cache
+E:\Code\Banana\Unique\Source\UniqueEngine\obj\Debug\netstandard2.0\UniqueEngine.AssemblyInfo.cs
+E:\Code\Banana\Unique\Source\UniqueEngine\obj\Debug\netstandard2.0\UniqueEngine.dll
+E:\Code\Banana\Unique\Source\UniqueEngine\obj\Debug\netstandard2.0\UniqueEngine.pdb
