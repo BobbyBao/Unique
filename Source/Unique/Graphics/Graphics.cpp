@@ -4,6 +4,7 @@
 #include "Buffers/VertexBuffer.h"
 #include "Buffers/IndexBuffer.h"
 #include "GraphicsContext.h"
+#include <iostream>
 
 namespace Unique
 {
@@ -52,7 +53,7 @@ namespace Unique
 		}
 	}
 
-	Window* Graphics::Initialize(const std::string& rendererModule, const LLGL::Size& size)
+	Window* Graphics::Initialize(const std::string& rendererModule, const IntVector2& size)
 	{
 		// Create render system
 		renderer = LLGL::RenderSystem::Load
@@ -65,7 +66,7 @@ namespace Unique
 		// Create render context
 		LLGL::RenderContextDescriptor contextDesc;
 		{
-			contextDesc.videoMode.resolution = size;
+			contextDesc.videoMode.resolution = (LLGL::Size&)size;
 			contextDesc.vsync.enabled = vsync_;
 			contextDesc.multiSampling.enabled = (multiSampling_ > 1);
 			contextDesc.multiSampling.samples = multiSampling_;
@@ -97,8 +98,8 @@ namespace Unique
 		// Initialize command buffer
 		commands->SetClearColor(defaultClearColor);
 		commands->SetRenderTarget(*renderContext);
-		commands->SetViewport({ 0.0f, 0.0f, static_cast<float>(size.x), static_cast<float>(size.y) });
-		commands->SetScissor({ 0, 0, size.x, size.y });
+		commands->SetViewport({ 0.0f, 0.0f, static_cast<float>(size.x_), static_cast<float>(size.y_) });
+		commands->SetScissor({ 0, 0, size.x_, size.y_ });
 
 		// Print renderer information
 		const auto& info = renderer->GetRendererInfo();
@@ -114,19 +115,19 @@ namespace Unique
 		return &(Window&)renderContext->GetSurface();
 	}
 
-	void Graphics::Resize(const LLGL::Size& size)
+	void Graphics::Resize(const IntVector2& size)
 	{
 		auto fn = [=]()
 		{
 			auto videoMode = renderContext->GetVideoMode();
 
 			// Update video mode
-			videoMode.resolution = size;
+			videoMode.resolution = (LLGL::Size&)size;
 			renderContext->SetVideoMode(videoMode);
 
 			SetRenderTarget(nullptr);
 
-			SetViewport(Viewport(0, 0, (float)size.x, (float)size.y));
+			SetViewport(Viewport(0, 0, (float)size.x_, (float)size.y_));
 
 			// Update scissor
 			SetScissor({ 0, 0, videoMode.resolution.x, videoMode.resolution.y });
@@ -153,9 +154,9 @@ namespace Unique
 		debugger_ = val;
 	}
 
-	const Size& Graphics::GetResolution() const
+	const IntVector2& Graphics::GetResolution() const
 	{
-		return renderContext->GetVideoMode().resolution;
+		return (const IntVector2&)renderContext->GetVideoMode().resolution;
 	}
 
 	bool Graphics::IsDirect3D() const

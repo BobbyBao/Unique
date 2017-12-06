@@ -5,15 +5,6 @@
 
 namespace Unique
 {
-
-	struct ShaderProgramRecall
-	{
-		Vector<ShaderStage>		shaderDescs;
-		Vector<LLGL::Shader*>	shaders;
-		VertexFormat			vertexFormat;
-		LLGL::StreamOutputFormat	streamOutputFormat;
-	};
-
 	class Shader;
 
 	class Pass : public Object
@@ -82,16 +73,5 @@ namespace Unique
 		String shaderName_;
 		Vector<SPtr<Pass>> passes_;
 	};
-
-		// Load standard shader program (with vertex- and fragment shaders)
-	UNIQUE_C_API ShaderProgram* LoadStandardShaderProgram(const LLGL::VertexFormat& vertexFormat);
-
-	UNIQUE_C_API ShaderProgram* LoadShaderProgram(
-			const Vector<ShaderStage>& shaderDescs,
-			const VertexFormat& vertexFormat = {},
-			const LLGL::StreamOutputFormat& streamOutputFormat = {});
-
-		// Reloads the specified shader program from the previously specified shader source files.
-	UNIQUE_C_API bool ReloadShaderProgram(ShaderProgram* shaderProgram);
 
 }

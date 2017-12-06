@@ -22,24 +22,40 @@
 
 #include "Precompiled.h"
 
-#include "../Math/MathDefs.h"
+#include "../Math/Random.h"
 
 #include "../DebugNew.h"
 
 namespace Unique
 {
 
-void SinCos(float angle, float& sin, float& cos)
+static unsigned randomSeed = 1;
+
+void SetRandomSeed(unsigned seed)
 {
-    float angleRadians = angle * M_DEGTORAD;
-#if defined(HAVE_SINCOSF)
-    sincosf(angleRadians, &sin, &cos);
-#elif defined(HAVE___SINCOSF)
-    __sincosf(angleRadians, &sin, &cos);
-#else
-    sin = sinf(angleRadians);
-    cos = cosf(angleRadians);
-#endif
+    randomSeed = seed;
+}
+
+unsigned GetRandomSeed()
+{
+    return randomSeed;
+}
+
+int Rand()
+{
+    randomSeed = randomSeed * 214013 + 2531011;
+    return (randomSeed >> 16) & 32767;
+}
+
+float RandStandardNormal()
+{
+    float val = 0.0f;
+    for (int i = 0; i < 12; i++)
+        val += Rand() / 32768.0f;
+    val -= 6.0f;
+
+    // Now val is approximatly standard normal distributed
+    return val;
 }
 
 }

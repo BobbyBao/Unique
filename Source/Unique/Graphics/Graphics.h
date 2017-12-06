@@ -10,6 +10,7 @@ namespace Unique
 
 	using RendererID = LLGL::RendererID;
 
+
 	class Graphics : public Object
 	{
 		uRTTI(Graphics, Object)
@@ -17,29 +18,28 @@ namespace Unique
 		Graphics();
 		~Graphics();
 		
-		Window* Initialize(const std::string& rendererModule, const Size& size);
-		void Resize(const Size& size);
+		Window* Initialize(const std::string& rendererModule, const IntVector2& size);
+		void Resize(const IntVector2& size);
 
 		uint GetRenderID() const;
 		void SetDebug(bool val);
-		const Size& GetResolution() const;
+		const IntVector2& GetResolution() const;
 
 		// Returns the aspect ratio of the render context resolution (X:Y).
 		inline float GetAspectRatio() const
 		{
-			auto resolution = GetResolution().Cast<float>();
-			return (resolution.x / resolution.y);
+			return GetResolution().x_ / (float)GetResolution().y_;
 		}
 
 		bool IsDirect3D() const;
 		bool IsOpenGL() const;
 
-
+		/*
 		inline Gs::Matrix4f PerspectiveProjection(float aspectRatio, float near, float far, float fov)
 		{
 			int flags = (IsOpenGL() ? Gs::ProjectionFlags::UnitCube : 0);
 			return Gs::ProjectionMatrix4f::Perspective(aspectRatio, near, far, fov, flags).ToMatrix4();
-		}
+		}*/
 
 		SPtr<VertexBuffer> CreateVertexBuffer(uint size, const VertexFormat& vertexFormat, void* data = nullptr);
 		SPtr<IndexBuffer> CreateIndexBuffer(uint size, const IndexFormat& indexFormat, void* data = nullptr);

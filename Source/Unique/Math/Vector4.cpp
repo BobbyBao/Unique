@@ -22,24 +22,23 @@
 
 #include "Precompiled.h"
 
-#include "../Math/MathDefs.h"
+#include "../Math/Vector4.h"
+
+#include <cstdio>
 
 #include "../DebugNew.h"
 
 namespace Unique
 {
 
-void SinCos(float angle, float& sin, float& cos)
+const Vector4 Vector4::ZERO;
+const Vector4 Vector4::ONE(1.0f, 1.0f, 1.0f, 1.0f);
+
+String Vector4::ToString() const
 {
-    float angleRadians = angle * M_DEGTORAD;
-#if defined(HAVE_SINCOSF)
-    sincosf(angleRadians, &sin, &cos);
-#elif defined(HAVE___SINCOSF)
-    __sincosf(angleRadians, &sin, &cos);
-#else
-    sin = sinf(angleRadians);
-    cos = cosf(angleRadians);
-#endif
+    char tempBuffer[CONVERSION_BUFFER_LENGTH];
+    sprintf(tempBuffer, "%g %g %g %g", x_, y_, z_, w_);
+    return String(tempBuffer);
 }
 
 }

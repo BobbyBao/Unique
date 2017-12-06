@@ -8,21 +8,13 @@
 #ifndef LLGL_TUTORIAL_H
 #define LLGL_TUTORIAL_H
 
-
-#include <LLGL/LLGL.h>
-#include <LLGL/Utility.h>
-#include <Gauss/Gauss.h>
-
-#include <vector>
-#include <map>
-#include <type_traits>
-
 #include "../Core/Context.h"
 #include "../Core/Thread.h"
 #include "../Graphics/Shader/Shader.h"
 #include "../Resource/Image.h"
 #include "../Graphics/Graphics.h"
 #include "../Graphics/Texture.h"
+#include <iostream>
 
 namespace Unique
 {
@@ -33,7 +25,7 @@ namespace Unique
 		virtual ~Application();
 
 		void SetTitle(const std::wstring& title);
-		void SetResolution(const Size& res);
+		void SetResolution(const IntVector2& res);
 
 		void Run();
 		
@@ -47,7 +39,7 @@ namespace Unique
 		virtual void OnPostRender();
 
 		std::wstring					title_;
-		LLGL::Size						resolution_;
+		IntVector2						resolution_;
 		uint							multiSampling_ = 8;
 		bool							vsync_ = true;
 		bool							debugger = true;
@@ -81,7 +73,6 @@ namespace Unique
 	}
 	
 	UNIQUE_C_API void Unique_Setup(int argc, char* argv[]);
-
 	UNIQUE_C_API int Unique_Start(const char* rendererModule, LLGL::Surface* window);
 	UNIQUE_C_API void Unique_Shutdown();
 }

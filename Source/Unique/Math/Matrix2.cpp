@@ -22,24 +22,38 @@
 
 #include "Precompiled.h"
 
-#include "../Math/MathDefs.h"
+#include "../Math/Matrix2.h"
+
+#include <cstdio>
 
 #include "../DebugNew.h"
 
 namespace Unique
 {
 
-void SinCos(float angle, float& sin, float& cos)
+const Matrix2 Matrix2::ZERO(
+    0.0f, 0.0f,
+    0.0f, 0.0f);
+
+const Matrix2 Matrix2::IDENTITY;
+
+Matrix2 Matrix2::Inverse() const
 {
-    float angleRadians = angle * M_DEGTORAD;
-#if defined(HAVE_SINCOSF)
-    sincosf(angleRadians, &sin, &cos);
-#elif defined(HAVE___SINCOSF)
-    __sincosf(angleRadians, &sin, &cos);
-#else
-    sin = sinf(angleRadians);
-    cos = cosf(angleRadians);
-#endif
+    float det = m00_ * m11_ -
+                m01_ * m10_;
+
+    float invDet = 1.0f / det;
+
+    return Matrix2(
+        m11_, -m01_,
+        -m10_, m00_
+    ) * invDet;
 }
 
+String Matrix2::ToString() const
+{
+    char tempBuffer[MATRIX_CONVERSION_BUFFER_LENGTH];
+    sprintf(tempBuffer, "%g %g %g %g", m00_, m01_, m10_, m11_);
+    return String(tempBuffer);
+}
 }

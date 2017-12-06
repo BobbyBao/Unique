@@ -20,26 +20,20 @@
 // THE SOFTWARE.
 //
 
-#include "Precompiled.h"
+#pragma once
 
-#include "../Math/MathDefs.h"
-
-#include "../DebugNew.h"
+#include "Unique.h"
 
 namespace Unique
 {
 
-void SinCos(float angle, float& sin, float& cos)
-{
-    float angleRadians = angle * M_DEGTORAD;
-#if defined(HAVE_SINCOSF)
-    sincosf(angleRadians, &sin, &cos);
-#elif defined(HAVE___SINCOSF)
-    __sincosf(angleRadians, &sin, &cos);
-#else
-    sin = sinf(angleRadians);
-    cos = cosf(angleRadians);
-#endif
-}
+/// Set the random seed. The default seed is 1.
+UNIQUE_API void SetRandomSeed(unsigned seed);
+/// Return the current random seed.
+UNIQUE_API unsigned GetRandomSeed();
+/// Return a random number between 0-32767. Should operate similarly to MSVC rand().
+UNIQUE_API int Rand();
+/// Return a standard normal distributed number.
+UNIQUE_API float RandStandardNormal();
 
 }

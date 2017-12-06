@@ -25,7 +25,7 @@ namespace Unique
 		void OnResize(LLGL::Window& sender, const LLGL::Size& clientAreaSize) override
 		{
 			Graphics& graphics = Subsystem<Graphics>();
-			graphics.Resize(clientAreaSize);
+			graphics.Resize((const IntVector2&)clientAreaSize);
 		}
 
 	private:
@@ -34,7 +34,7 @@ namespace Unique
 	};
 
 	Vector<String> Application::argv_;
-	std::string Application::rendererModule_;
+	std::string Application::rendererModule_ = "Direct3D11";
 	bool Application::quit_ = false;
 	Application::Application() :
 		resolution_ { 800, 600 },
@@ -109,7 +109,7 @@ namespace Unique
 		title_ = title;
 	}
 
-	void Application::SetResolution(const Size& res)
+	void Application::SetResolution(const IntVector2& res)
 	{ 
 		resolution_ = res; 
 	}
@@ -152,40 +152,7 @@ namespace Unique
 	void Application::OnPostRender()
 	{
 	}
-
-	/* ----- Global helper functions ----- */
-
-	static std::string GetSelectedRendererModule(int argc, char* argv[])
-	{
-		/* Select renderer module */
-		std::string rendererModule;
-
-		if (argc > 1)
-		{
-			/* Get renderer module name from command line argument */
-			rendererModule = argv[1];
-		}
-		else
-		{
-			/* Find available modules */
-			auto modules = LLGL::RenderSystem::FindModules();
-
-			if (modules.empty())
-			{
-				/* No modules available -> throw error */
-				throw std::runtime_error("no renderer modules available on target platform");
-			}
-			else// if (modules.size() == 1)
-			{
-				/* Use the only available module */
-				rendererModule = modules.front();
-			}
-
-		}
-
-		return rendererModule;
-	}
-
+	
 	UNIQUE_C_API void Unique_Setup(int argc, char* argv[])
 	{
 		for (int i = 0; i < argc; i++)
@@ -193,7 +160,6 @@ namespace Unique
 			Application::argv_.push_back(argv[i]);
 		}
 
-		Application::rendererModule_ = GetSelectedRendererModule(argc, argv);
 	}
 	
 	UNIQUE_C_API int Unique_Start(const char* rendererModule, LLGL::Surface* window)
