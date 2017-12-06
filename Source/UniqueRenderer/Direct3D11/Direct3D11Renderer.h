@@ -1,27 +1,5 @@
-
-/* * * * * * * * * * * * * Author's note * * * * * * * * * * * *\
-*   _       _   _       _   _       _   _       _     _ _ _ _   *
-*  |_|     |_| |_|     |_| |_|_   _|_| |_|     |_|  _|_|_|_|_|  *
-*  |_|_ _ _|_| |_|     |_| |_|_|_|_|_| |_|     |_| |_|_ _ _     *
-*  |_|_|_|_|_| |_|     |_| |_| |_| |_| |_|     |_|   |_|_|_|_   *
-*  |_|     |_| |_|_ _ _|_| |_|     |_| |_|_ _ _|_|  _ _ _ _|_|  *
-*  |_|     |_|   |_|_|_|   |_|     |_|   |_|_|_|   |_|_|_|_|    *
-*                                                               *
-*                     http://www.humus.name                     *
-*                                                                *
-* This file is a part of the work done by Humus. You are free to   *
-* use the code in any way you like, modified, unmodified or copied   *
-* into your own work. However, I expect you to respect these points:  *
-*  - If you use this file and its contents unmodified, or use a major *
-*    part of this file, please credit the author and leave this note. *
-*  - For use in anything commercial, please request my approval.     *
-*  - Share your work and ideas too as much as you can.             *
-*                                                                *
-\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-#ifndef _DIRECT3D10RENDERER_H_
-#define _DIRECT3D10RENDERER_H_
-
+#ifndef _DIRECT3D11RENDERER_H_
+#define _DIRECT3D11RENDERER_H_
 
 #include "../Renderer.h"
 #include <d3d11.h>
@@ -38,8 +16,11 @@
 class Direct3D11Renderer : public Renderer
 {
 public:
+	Direct3D11Renderer();
 	Direct3D11Renderer(ID3D11Device *d3ddev, ID3D11DeviceContext *ctx);
 	~Direct3D11Renderer();
+
+	void Initialize();
 
 	void resetToDefaults();
 	void reset(const uint flags = RESET_ALL);

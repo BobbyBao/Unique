@@ -85,6 +85,20 @@ void BaseApp::initTime(){
 	start = curr = getCurrentTime();
 }
 
+bool BaseApp::load()
+{
+	linearClamp = renderer->addSamplerState(LINEAR, CLAMP, CLAMP, CLAMP);
+	defaultFont = renderer->addFont("Assets/Textures/Fonts/Future.dds", "Assets/Textures/Fonts/Future.font", linearClamp);
+	blendSrcAlpha = renderer->addBlendState(BlendOp::SRC_ALPHA, BlendOp::ONE_MINUS_SRC_ALPHA);
+	noDepthTest  = renderer->addDepthState(false, false);
+	noDepthWrite = renderer->addDepthState(true,  false);
+	cullNone  = renderer->addRasterizerState(CullMode::CULL_NONE);
+	cullBack  = renderer->addRasterizerState(CullMode::CULL_BACK);
+	cullFront = renderer->addRasterizerState(CullMode::CULL_FRONT);
+
+	return true;
+}
+
 void BaseApp::updateTime(){
 	timestamp prev = curr;
 

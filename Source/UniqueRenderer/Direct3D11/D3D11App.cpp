@@ -283,8 +283,7 @@ bool D3D11App::initAPI(const API_Revision api_revision, const DXGI_FORMAT backBu
 		delete renderer;
 		return false;
 	}
-	//antiAlias->selectItem(antiAliasSamples / 2);
-
+	/*
 	linearClamp = renderer->addSamplerState(LINEAR, CLAMP, CLAMP, CLAMP);
 	defaultFont = renderer->addFont("Assets/Textures/Fonts/Future.dds", "Assets/Textures/Fonts/Future.font", linearClamp);
 	blendSrcAlpha = renderer->addBlendState(BlendOp::SRC_ALPHA, BlendOp::ONE_MINUS_SRC_ALPHA);
@@ -293,7 +292,7 @@ bool D3D11App::initAPI(const API_Revision api_revision, const DXGI_FORMAT backBu
 	cullNone  = renderer->addRasterizerState(CullMode::CULL_NONE);
 	cullBack  = renderer->addRasterizerState(CullMode::CULL_BACK);
 	cullFront = renderer->addRasterizerState(CullMode::CULL_FRONT);
-
+	*/
 	return true;
 }
 

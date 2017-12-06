@@ -1,24 +1,3 @@
-
-/* * * * * * * * * * * * * Author's note * * * * * * * * * * * *\
-*   _       _   _       _   _       _   _       _     _ _ _ _   *
-*  |_|     |_| |_|     |_| |_|_   _|_| |_|     |_|  _|_|_|_|_|  *
-*  |_|_ _ _|_| |_|     |_| |_|_|_|_|_| |_|     |_| |_|_ _ _     *
-*  |_|_|_|_|_| |_|     |_| |_| |_| |_| |_|     |_|   |_|_|_|_   *
-*  |_|     |_| |_|_ _ _|_| |_|     |_| |_|_ _ _|_|  _ _ _ _|_|  *
-*  |_|     |_|   |_|_|_|   |_|     |_|   |_|_|_|   |_|_|_|_|    *
-*                                                               *
-*                     http://www.humus.name                     *
-*                                                                *
-* This file is a part of the work done by Humus. You are free to   *
-* use the code in any way you like, modified, unmodified or copied   *
-* into your own work. However, I expect you to respect these points:  *
-*  - If you use this file and its contents unmodified, or use a major *
-*    part of this file, please credit the author and leave this note. *
-*  - For use in anything commercial, please request my approval.     *
-*  - Share your work and ideas too as much as you can.             *
-*                                                                *
-\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 #include "Direct3D11Renderer.h"
 #include "Container/Str.h"
 
@@ -153,19 +132,6 @@ struct RasterizerState
 	ID3D11RasterizerState *rsState;
 };
 
-// Blending constants
-// const int ZERO                = D3D11_BLEND_ZERO;
-// const int ONE                 = D3D11_BLEND_ONE;
-// const int SRC_COLOR           = D3D11_BLEND_SRC_COLOR;
-// const int ONE_MINUS_SRC_COLOR = D3D11_BLEND_INV_SRC_COLOR;
-// const int DST_COLOR           = D3D11_BLEND_DEST_COLOR;
-// const int ONE_MINUS_DST_COLOR = D3D11_BLEND_INV_DEST_COLOR;
-// const int SRC_ALPHA           = D3D11_BLEND_SRC_ALPHA;
-// const int ONE_MINUS_SRC_ALPHA = D3D11_BLEND_INV_SRC_ALPHA;
-// const int DST_ALPHA           = D3D11_BLEND_DEST_ALPHA;
-// const int ONE_MINUS_DST_ALPHA = D3D11_BLEND_INV_DEST_ALPHA;
-// const int SRC_ALPHA_SATURATE  = D3D11_BLEND_SRC_ALPHA_SAT;
-
 const int mapBlendOp[] = {
 	D3D11_BLEND_ZERO, D3D11_BLEND_ONE, D3D11_BLEND_SRC_COLOR,
 	D3D11_BLEND_INV_SRC_COLOR, D3D11_BLEND_DEST_COLOR, D3D11_BLEND_INV_DEST_COLOR,
@@ -173,59 +139,27 @@ const int mapBlendOp[] = {
 	D3D11_BLEND_DEST_ALPHA, D3D11_BLEND_INV_DEST_ALPHA,D3D11_BLEND_SRC_ALPHA_SAT
 };
 
-// const int BM_ADD              = D3D11_BLEND_OP_ADD;
-// const int BM_SUBTRACT         = D3D11_BLEND_OP_SUBTRACT;
-// const int BM_REVERSE_SUBTRACT = D3D11_BLEND_OP_REV_SUBTRACT;
-// const int BM_MIN              = D3D11_BLEND_OP_MIN;
-// const int BM_MAX              = D3D11_BLEND_OP_MAX;
-
 const int mapBlendMode[] = {
 	D3D11_BLEND_OP_ADD, D3D11_BLEND_OP_SUBTRACT, D3D11_BLEND_OP_REV_SUBTRACT,
 	D3D11_BLEND_OP_MIN, D3D11_BLEND_OP_MAX
 };
-
-// Depth-test constants
-// const int NEVER    = D3D11_COMPARISON_NEVER;
-// const int LESS     = D3D11_COMPARISON_LESS;
-// const int EQUAL    = D3D11_COMPARISON_EQUAL;
-// const int LEQUAL   = D3D11_COMPARISON_LESS_EQUAL;
-// const int GREATER  = D3D11_COMPARISON_GREATER;
-// const int NOTEQUAL = D3D11_COMPARISON_NOT_EQUAL;
-// const int GEQUAL   = D3D11_COMPARISON_GREATER_EQUAL;
-// const int ALWAYS   = D3D11_COMPARISON_ALWAYS;
 
 const int mapCompareMode[] = {
 	D3D11_COMPARISON_NEVER, D3D11_COMPARISON_LESS, D3D11_COMPARISON_EQUAL,
 	D3D11_COMPARISON_LESS_EQUAL, D3D11_COMPARISON_GREATER, D3D11_COMPARISON_NOT_EQUAL,
 	D3D11_COMPARISON_GREATER_EQUAL, D3D11_COMPARISON_ALWAYS
 };
-// Stencil-test constants
-// const int KEEP     = D3D11_STENCIL_OP_KEEP;
-// const int SET_ZERO = D3D11_STENCIL_OP_ZERO;
-// const int REPLACE  = D3D11_STENCIL_OP_REPLACE;
-// const int INVERT   = D3D11_STENCIL_OP_INVERT;
-// const int INCR     = D3D11_STENCIL_OP_INCR;
-// const int DECR     = D3D11_STENCIL_OP_DECR;
-// const int INCR_SAT = D3D11_STENCIL_OP_INCR_SAT;
-// const int DECR_SAT = D3D11_STENCIL_OP_DECR_SAT;
+
 const int mapStencilOp[] = {
 	D3D11_STENCIL_OP_KEEP, D3D11_STENCIL_OP_ZERO, D3D11_STENCIL_OP_REPLACE,
 	D3D11_STENCIL_OP_INVERT, D3D11_STENCIL_OP_INCR, D3D11_STENCIL_OP_DECR,
 	D3D11_STENCIL_OP_INCR_SAT, D3D11_STENCIL_OP_DECR_SAT
 };
-// Culling constants
-/*
-const int CULL_NONE  = D3D11_CULL_NONE;
-const int CULL_BACK  = D3D11_CULL_BACK;
-const int CULL_FRONT = D3D11_CULL_FRONT;
-*/
+
 const int mapCullMode[] = {
 	D3D11_CULL_NONE, D3D11_CULL_BACK, D3D11_CULL_FRONT
 };
 
-// Fillmode constants
-//const int SOLID = D3D11_FILL_SOLID;
-//const int WIREFRAME = D3D11_FILL_WIREFRAME;
 const int mapFillMode[] = {
 	D3D11_FILL_SOLID, D3D11_FILL_WIREFRAME
 };
@@ -304,6 +238,11 @@ static DXGI_FORMAT formats[] =
 	DXGI_FORMAT_BC7_UNORM,
 };
 
+
+Direct3D11Renderer::Direct3D11Renderer()
+{
+}
+
 Direct3D11Renderer::Direct3D11Renderer(ID3D11Device *d3ddev, ID3D11DeviceContext *ctx) : Renderer()
 {
 	device = d3ddev;
@@ -341,12 +280,7 @@ Direct3D11Renderer::~Direct3D11Renderer()
 
 	if (eventQuery)
 		eventQuery->Release();
-
-
-/*
-	releaseFrameBufferSurfaces();
-*/
-
+	
 	// Delete shaders
 	for (uint i = 0; i < shaders.size(); i++)
 	{
@@ -395,6 +329,7 @@ Direct3D11Renderer::~Direct3D11Renderer()
 		{
 			delete [] shaders[i].textures[k].name;
 		}
+
 		free(shaders[i].textures);
 
 		for (uint k = 0; k < shaders[i].nSamplers; k++)
@@ -465,6 +400,10 @@ Direct3D11Renderer::~Direct3D11Renderer()
 	}
 
 //	if (rollingVB) rollingVB->Release();
+}
+
+void Direct3D11Renderer::Initialize()
+{
 }
 
 void Direct3D11Renderer::reset(const uint flags)

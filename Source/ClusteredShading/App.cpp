@@ -157,6 +157,9 @@ void App::exitAPI()
 
 bool App::load()
 {
+	if(!BaseApp::load())
+		return false;
+
 	int sampleCount = max(antiAliasSamples, 1);
 
 	char def[256];
