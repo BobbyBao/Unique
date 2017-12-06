@@ -2,5 +2,6 @@
 .vs/
 
 Temp/
+build/
 
 **/.vscode
