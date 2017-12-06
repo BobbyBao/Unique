@@ -2,8 +2,8 @@
 #include <LLGL/LLGL.h>
 #include <LLGL/Utility.h>
 #include <LLGL/GraphicsPipelineFlags.h>
-#include "../Container/Container.h"
-#include "../Serialize/SerializeTraits.h"
+#include "Container/Container.h"
+#include "Serialize/SerializeTraits.h"
 
 namespace Unique
 {

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../../Container/ArrayPtr.h"
-#include "../../Core/Object.h"
 #include "GraphicsBuffer.h"
 #include <LLGL/VertexAttribute.h>
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "../Core/Semaphore.h"
+#include "Core/Semaphore.h"
 #include <vector>
 #include <functional>
 

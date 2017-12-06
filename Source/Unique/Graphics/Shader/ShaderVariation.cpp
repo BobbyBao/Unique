@@ -1,7 +1,7 @@
-#include "Precompiled.h"
+#include "UniquePCH.h"
 #include "ShaderVariation.h"
-#include "../../IO/FileSystem.h"
-#include "../../Resource/ResourceCache.h"
+#include "IO/FileSystem.h"
+#include "Resource/ResourceCache.h"
 #include "Shader.h"
 
 namespace Unique

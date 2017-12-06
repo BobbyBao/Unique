@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{4a6b9a4e-845f-43db-8292-6ead5c7630ce}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Container\Algorithm.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Container\Arrayptr.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Container\Container.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Container\Iterator.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Container\Linkedlist.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Container\Ptr.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Container\RefCounted.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Container\Str.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Container\Stringid.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Attribute.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\AttributeTraits.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Context.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\CoreDefs.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\CoreEvents.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\EnumFlags.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Event.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Object.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Platform.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\ProcessUtils.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Profiler.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Semaphore.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\SpinLock.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\StringUtils.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Thread.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Timer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\TypeInfo.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\WorkQueue.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)DebugNew.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IO\AbstractFile.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IO\File.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IO\FileSystem.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IO\FileWatcher.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IO\IOEvents.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IO\Log.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IO\PackageFile.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Math\AreaAllocator.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Math\BoundingBox.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Math\Color.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Math\Frustum.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Math\MathDefs.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Math\Matrix2.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Math\Matrix3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Math\Matrix3x4.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Math\Matrix4.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Math\Plane.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Math\polyhedron.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Math\Quaternion.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Math\Random.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Math\Ray.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Math\Rect.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Math\Sphere.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Math\Vector2.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Math\Vector3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Math\Vector4.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Precompiled.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Resource\BackgroundLoader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Resource\Image.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Resource\Resource.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Resource\ResourceCache.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Resource\ResourceEvents.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Resource\ResourceImporter.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Resource\ResourceRef.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\BinaryReader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\BinaryWriter.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\hjson\hjson.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\JsonReader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\JsonWriter.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-common.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-expect.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-node.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-platform.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-reader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-writer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\SerializeDefs.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\SerializeTraits.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\SerializeTraitsBasic.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\SerializeTraitsStd.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\TransferBase.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Unique.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Container\RefCounted.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Container\Str.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Container\Stringid.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\Context.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\Event.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\Object.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\ProcessUtils.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\Profiler.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\Semaphore.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\StringUtils.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\Thread.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\Timer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\TypeInfo.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\WorkQueue.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)IO\AbstractFile.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)IO\File.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)IO\FileSystem.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)IO\FileWatcher.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)IO\Log.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)IO\PackageFile.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Math\AreaAllocator.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Math\BoundingBox.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Math\Color.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Math\Frustum.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Math\MathDefs.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Math\Matrix2.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Math\Matrix3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Math\Matrix3x4.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Math\Matrix4.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Math\Plane.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Math\Polyhedron.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Math\Quaternion.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Math\Random.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Math\Ray.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Math\Rect.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Math\Sphere.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Math\Vector2.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Math\Vector3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Math\Vector4.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Precompiled.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Resource\BackgroundLoader.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Resource\Image.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Resource\Resource.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Resource\ResourceCache.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Resource\ResourceImporter.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Resource\ResourceRef.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\hjson\hjson_decode.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\hjson\hjson_encode.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\hjson\hjson_parsenumber.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\hjson\hjson_value.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-common.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-expect.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-node.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-platform.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-reader.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-writer.c" />
+  </ItemGroup>
+</Project>

@@ -8,10 +8,8 @@
 #ifndef LLGL_TUTORIAL_H
 #define LLGL_TUTORIAL_H
 
-#include "../Core/Context.h"
-#include "../Core/Thread.h"
+#include "Core/Context.h"
 #include "../Graphics/Shader/Shader.h"
-#include "../Resource/Image.h"
 #include "../Graphics/Graphics.h"
 #include "../Graphics/Texture.h"
 #include <iostream>

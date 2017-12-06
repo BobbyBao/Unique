@@ -1,9 +1,8 @@
 #include "Precompiled.h"
 #include "../Graphics.h"
 #include "VertexBuffer.h"
-#include "../../Math/MathDefs.h"
+#include "Math/MathDefs.h"
 #include <LLGL/Utility.h>
-#include "../../DebugNew.h"
 
 namespace Unique
 {

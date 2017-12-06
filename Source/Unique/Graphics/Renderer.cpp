@@ -1,7 +1,7 @@
-#include "Precompiled.h"
+#include "UniquePCH.h"
 #include "Renderer.h"
 #include "Graphics/Graphics.h"
-#include "../Core/CoreEvents.h"
+#include "Core/CoreEvents.h"
 
 namespace Unique
 {

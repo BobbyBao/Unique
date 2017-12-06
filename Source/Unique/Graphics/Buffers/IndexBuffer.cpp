@@ -2,9 +2,8 @@
 
 #include "../Graphics.h"
 #include "IndexBuffer.h"
-#include "../../IO/Log.h"
+#include "IO/Log.h"
 #include <LLGL/Utility.h>
-#include "../../DebugNew.h"
 
 namespace Unique
 {

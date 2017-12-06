@@ -22,8 +22,8 @@
 
 #pragma once
 
-#include "../Container/ArrayPtr.h"
-#include "../Core/Object.h"
+#include "Container/ArrayPtr.h"
+#include "Core/Object.h"
 #include "../Graphics/GraphicsDefs.h"
 
 namespace Unique

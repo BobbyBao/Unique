@@ -58,6 +58,7 @@
   </ImportGroup>
   <ImportGroup Label="Shared">
     <Import Project="..\..\Source\Unique\Unique.vcxitems" Label="Shared" />
+    <Import Project="..\..\Source\UniqueBase\UniqueBase.vcxitems" Label="Shared" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -97,7 +98,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;UNIQUE_SHARED_LIB_BUILD;LLGL_DEBUG;LLGL_ENABLE_CHECKED_CAST;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;UNICODE;NOMINMAX;LLGL_ENABLE_DEBUG_LAYER;LLGL_ENABLE_UTILITY;LLGL_GL_ENABLE_VENDOR_EXT;LLGL_GL_ENABLE_EXT_PLACEHOLDERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\GaussianLib\include;..\..\LLGL\include;..\..\External\include;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\GaussianLib\include;..\..\LLGL\include;..\..\External\include;.\;..\..\Source\UniqueBase;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

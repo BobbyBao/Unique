@@ -1,6 +1,6 @@
-#include "Precompiled.h"
+#include "UniquePCH.h"
 #include "Texture.h"
-#include "../Resource/Image.h"
+#include "Resource/Image.h"
 #include <LLGL/Utility.h>
 
 namespace Unique

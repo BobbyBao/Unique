@@ -1,6 +1,6 @@
 #include "Precompiled.h"
 #include "GraphicsContext.h"
-#include "../Core/Timer.h"
+#include "Core/Timer.h"
 
 namespace Unique
 {

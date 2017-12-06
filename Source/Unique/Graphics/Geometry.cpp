@@ -26,10 +26,9 @@
 #include "../Graphics/Graphics.h"
 #include "../Graphics/Buffers/IndexBuffer.h"
 #include "../Graphics/Buffers/VertexBuffer.h"
-#include "../IO/Log.h"
+#include "IO/Log.h"
 //#include "../Math/Ray.h"
 
-#include "../DebugNew.h"
 
 #define MAX_VERTEX_STREAMS 4
 

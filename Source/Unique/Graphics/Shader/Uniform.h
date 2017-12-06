@@ -1,5 +1,5 @@
 #pragma once
-#include "../../Container/StringID.h"
+#include "Container/StringID.h"
 #include "../GraphicsDefs.h"
 #include <LLGL/ShaderUniform.h>
 

@@ -1,13 +1,11 @@
 #include "Precompiled.h"
 #include "Application.h"
-#include "../IO/FileSystem.h"
 #include <iostream>
 #include <fstream>
 #include "../Graphics/Graphics.h"
 #include "../Graphics/Renderer.h"
-#include "../Core/CoreEvents.h"
-#include "../Core/WorkQueue.h"
-#include "../Resource/ResourceCache.h"
+#include "Core/CoreEvents.h"
+#include "Core/WorkQueue.h"
 #include "Graphics/Importers/ShaderImporter.h"
 #include "Graphics/Importers/TextureImporter.h"
 #include "Graphics/Importers/ModelImporter.h"

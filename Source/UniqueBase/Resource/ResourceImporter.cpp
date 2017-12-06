@@ -2,7 +2,6 @@
 #include "ResourceImporter.h"
 #include "ResourceCache.h"
 #include "../io/FileSystem.h"
-#include "../graphics/texture.h"
 
 namespace Unique
 {

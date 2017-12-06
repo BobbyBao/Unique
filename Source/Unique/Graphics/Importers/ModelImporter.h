@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../resource/ResourceImporter.h"
+#include "resource/ResourceImporter.h"
 
 namespace Unique
 {

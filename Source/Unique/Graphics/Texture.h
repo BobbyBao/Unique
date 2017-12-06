@@ -1,5 +1,5 @@
 #pragma once
-#include "../Resource/Resource.h"
+#include "Resource/Resource.h"
 #include "../Graphics/GraphicsDefs.h"
 #include "../Graphics/GPUObject.h"
 #include <LLGL/Texture.h>

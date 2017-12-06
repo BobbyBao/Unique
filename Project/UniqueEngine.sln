@@ -7,11 +7,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Samples", "..\Source\Sample
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Unique", "..\Source\Unique\Unique.vcxitems", "{D565EC23-5A2B-453C-AA4A-AA6E47320E3E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LLGL", "..\build\LLGL.vcxproj", "{F1F7322B-C687-3468-AE90-6002CE558051}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LLGL", "..\Build\LLGL.vcxproj", "{F1F7322B-C687-3468-AE90-6002CE558051}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LLGL_Direct3D11", "..\build\LLGL_Direct3D11.vcxproj", "{7AFB56CC-5318-37D0-B64A-EAE24B388DD2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LLGL_Direct3D11", "..\Build\LLGL_Direct3D11.vcxproj", "{7AFB56CC-5318-37D0-B64A-EAE24B388DD2}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LLGL_OpenGL", "..\build\LLGL_OpenGL.vcxproj", "{3218BFD2-AFD7-3960-B675-F76476214CD4}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LLGL_OpenGL", "..\Build\LLGL_OpenGL.vcxproj", "{3218BFD2-AFD7-3960-B675-F76476214CD4}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Unqiue", "Win64\Unqiue.vcxproj", "{CF662A5E-1678-4FB9-8C32-F740DA4D5DAA}"
 EndProject
@@ -19,9 +19,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniqueStudio", "..\Source\U
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniqueEngine", "..\Source\UniqueEngine\UniqueEngine.csproj", "{991E3FEA-21E5-424C-83EE-B8ADEFE52472}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UniqueBase", "..\Source\UniqueBase\UniqueBase.vcxitems", "{4A6B9A4E-845F-43DB-8292-6EAD5C7630CE}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\Source\UniqueBase\UniqueBase.vcxitems*{4a6b9a4e-845f-43db-8292-6ead5c7630ce}*SharedItemsImports = 9
+		..\Source\UniqueBase\UniqueBase.vcxitems*{8bdd6af5-cb1d-4ad6-a5ce-7ac304b28e77}*SharedItemsImports = 4
 		..\Source\Unique\Unique.vcxitems*{8bdd6af5-cb1d-4ad6-a5ce-7ac304b28e77}*SharedItemsImports = 4
+		..\Source\UniqueBase\UniqueBase.vcxitems*{cf662a5e-1678-4fb9-8c32-f740da4d5daa}*SharedItemsImports = 4
 		..\Source\Unique\Unique.vcxitems*{cf662a5e-1678-4fb9-8c32-f740da4d5daa}*SharedItemsImports = 4
 		..\Source\Unique\Unique.vcxitems*{d565ec23-5a2b-453c-aa4a-aa6e47320e3e}*SharedItemsImports = 9
 	EndGlobalSection

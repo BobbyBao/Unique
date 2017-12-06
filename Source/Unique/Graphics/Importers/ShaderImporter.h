@@ -1,5 +1,5 @@
 #pragma once
-#include "../../resource/ResourceImporter.h"
+#include "Resource/ResourceImporter.h"
 
 namespace Unique
 {

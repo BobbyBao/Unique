@@ -1,6 +1,6 @@
 #pragma once
 #include "GraphicsDefs.h"
-#include "../Core/Object.h"
+#include "Core/Object.h"
 
 namespace Unique
 {
