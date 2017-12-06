@@ -10,7 +10,7 @@
 namespace Unique
 {
 
-	class Attribute
+	class Attribute : public RefCounted
 	{
 	public:
 		Attribute(const String& name, AttributeFlag flag)

@@ -9,9 +9,9 @@
 #    define UNIQUE_SHARED_LIB_USE 0
 #endif // UNIQUE_SHARED_LIB_USE
 
-#if WIN32
+#if _WIN32
 #   define UNIQUE_SYMBOL_EXPORT __declspec(dllexport)
-#   define UNIQUE_SYMBOL_IMPORT __declspec(dllimport)
+#   define UNIQUE_SYMBOL_IMPORT //__declspec(dllimport)
 #else
 #   define UNIQUE_SYMBOL_EXPORT __attribute__((visibility("default")))
 #   define UNIQUE_SYMBOL_IMPORT
@@ -31,6 +31,7 @@
 #   define UNIQUE_C_API UNIQUE_API
 #endif // defined(__cplusplus)
 
+#pragma warning(disable: 4251)
 
 typedef unsigned uint;
 typedef unsigned short ushort;

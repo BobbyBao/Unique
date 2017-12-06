@@ -31,14 +31,23 @@ namespace Unique
 			return false;
 		}
 
-		std::memcpy(data_.data(), data, data_.size());
-		
-		GraphicsContext::AddCommand([=]()
+		if (IsDynamic())
 		{
-			void* buffer = renderer->MapBuffer(*this, LLGL::BufferCPUAccess::WriteOnly);
-			memcpy(buffer, data_.data(), data_.size());
-			renderer->UnmapBuffer(*this);
-		});
+			ByteArray& currentData = GraphicsContext::currentContext_ == 0 ? data_ : data1_;
+			std::memcpy(currentData.data(), data, currentData.size());
+		}
+		else
+		{
+			std::memcpy(data_.data(), data, data_.size());
+
+			GraphicsContext::AddCommand([=]()
+			{
+				void* buffer = renderer->MapBuffer(*this, LLGL::BufferCPUAccess::WriteOnly);
+				memcpy(buffer, data_.data(), data_.size());
+				renderer->UnmapBuffer(*this);
+			});
+		}
+
 
 		return true;
 	}
@@ -69,15 +78,28 @@ namespace Unique
 		if (!count)
 			return true;
 
-		std::memcpy(data_.data() + start * elementSize_, data, count * elementSize_);
-
-		GraphicsContext::AddCommand([=]()
+		if (IsDynamic())
 		{
-			void* buffer = renderer->MapBuffer(*this, LLGL::BufferCPUAccess::WriteOnly);
-			memcpy(buffer, data_.data() + start * elementSize_, count * elementSize_);
-			renderer->UnmapBuffer(*this);
-		});
+			ByteArray& currentData = GraphicsContext::currentContext_ == 0 ? data_ : data1_;
+			std::memcpy(currentData.data() + start * elementSize_, data, count * elementSize_);
+		}
+		else
+		{
+			std::memcpy(data_.data() + start * elementSize_, data, count * elementSize_);
+
+			GraphicsContext::AddCommand([=]()
+			{
+				void* buffer = renderer->MapBuffer(*this, LLGL::BufferCPUAccess::WriteOnly);
+				memcpy(buffer, data_.data() + start * elementSize_, count * elementSize_);
+				renderer->UnmapBuffer(*this);
+			});
+		}
 
 		return true;
+	}
+
+	void GraphicsBuffer::UpdateBuffer()
+	{
+
 	}
 }

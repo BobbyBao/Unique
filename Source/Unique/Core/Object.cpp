@@ -30,7 +30,7 @@ inline void TransferTypeInfo(TransferFunction& transfer, const TypeInfo* typeInf
 	}
 
 	auto& attributes = typeInfo->GetAttributes();
-	for (const UPtr<Attribute>& attri : attributes)
+	for (const SPtr<Attribute>& attri : attributes)
 	{
 		attri->Visit(transfer, obj);
 	}

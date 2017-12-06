@@ -54,7 +54,8 @@ namespace Unique
 			});
 		}
 
-		virtual void Sync() {}
+		//call in render thread
+		virtual void UpdateBuffer() {}
 
 		operator T&() { return *handle_; }
 	protected:

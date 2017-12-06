@@ -7,7 +7,7 @@ namespace Unique
 {
 	using BufferFlags = LLGL::BufferFlags;
 
-	class GraphicsBuffer : public GPUObject<Object, LLGL::Buffer>
+	class UNIQUE_API GraphicsBuffer : public GPUObject<Object, LLGL::Buffer>
 	{
 		uRTTI(GraphicsBuffer, Object)
 	public:
@@ -22,9 +22,12 @@ namespace Unique
 		bool CpuWrite() const { return (flags_ &  BufferFlags::MapWriteAccess) != 0; }
 		bool IsDynamic() const { return (flags_ &  BufferFlags::DynamicUsage) != 0; }
 
+		virtual void UpdateBuffer();
+	protected:
 		uint elementSize_ = 0;
 		uint elementCount_ = 0;
-		ByteArray data_;
+		ByteArray data_; 
+		ByteArray data1_;
 		long flags_ = 0;
 	};
 

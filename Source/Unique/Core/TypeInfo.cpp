@@ -46,7 +46,7 @@ namespace Unique
 
 	void TypeInfo::RegisterAttribute(Attribute* attr)
 	{
-		attributes_.push_back(std::move(UPtr<Attribute>(attr)));
+		attributes_.push_back(SPtr<Attribute>(attr));
 	}
 
 }

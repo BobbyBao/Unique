@@ -72,7 +72,6 @@ bool Geometry::SetNumVertexBuffers(unsigned num)
 
     unsigned oldSize = (unsigned)vertexBuffers_.size();
     vertexBuffers_.resize(num);
-
     return true;
 }
 
@@ -163,6 +162,27 @@ void Geometry::SetLodDistance(float distance)
         distance = 0.0f;
 
     lodDistance_ = distance;
+}
+
+
+bool Geometry::CreateImpl()
+{
+	return true;
+}
+
+void Geometry::Draw(Graphics* graphics)
+{
+	if (indexBuffer_ && indexCount_ > 0)
+	{
+		graphics->SetIndexBuffer(indexBuffer_);
+	//	graphics->SetVertexBuffers(vertexBuffers_);
+	//	graphics->DrawIndexed(primitiveType_, indexStart_, indexCount_, vertexStart_, vertexCount_);
+	}
+	else if (vertexCount_ > 0)
+	{
+	//	graphics->SetVertexBuffers(vertexBuffers_);
+		graphics->Draw(vertexCount_, vertexStart_);
+	}
 }
 
 VertexBuffer* Geometry::GetVertexBuffer(unsigned index) const

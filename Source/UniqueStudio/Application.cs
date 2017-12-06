@@ -12,6 +12,10 @@ namespace UniqueStudio
         public Application()
         {
         }
+        public Application(string[] args)
+        {
+            Unique_Setup(args.Length, args);
+        }
 
         public void Run()
         {

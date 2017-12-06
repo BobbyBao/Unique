@@ -59,7 +59,9 @@ public:
     /// Set the LOD distance.
     void SetLodDistance(float distance);
 
-    /// Return all vertex buffers.
+	void Draw(Graphics* graphics);
+    
+	/// Return all vertex buffers.
     const Vector<SPtr<VertexBuffer> >& GetVertexBuffers() const { return vertexBuffers_; }
 
     /// Return number of vertex buffers.
@@ -99,10 +101,14 @@ public:
 
     /// Return whether has empty draw range.
     bool IsEmpty() const { return indexCount_ == 0 && vertexCount_ == 0; }
-
+protected:
+	bool CreateImpl();
 private:
     /// Vertex buffers.
     Vector<SPtr<VertexBuffer> > vertexBuffers_;
+	
+	LLGL::BufferArray* bufferArray_ = nullptr;
+
     /// Index buffer.
     SPtr<IndexBuffer> indexBuffer_;
     /// Primitive type.

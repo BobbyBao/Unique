@@ -88,19 +88,9 @@ namespace Unique
 		{
 			return nullptr;
 		}
-
-		for (int i = 0; i < texWidth * texHeight; ++i)
-		{
-			dst_mem[i] = /*bx::halfFromFloat*/(dst_mem[i]/* / 65535.0f*/);
-		}
-
+		
 		SPtr<Texture> texture(new Texture());
-		/*
-		const bgfx::Memory* mem = bgfx::makeRef(data.Get(), size);
 
-		texture->create2D((uint16_t)texWidth, (uint16_t)texHeight,
-			bgfx::TextureFormat::R16, data, size);
-		*/
 		return texture;
 	}
 

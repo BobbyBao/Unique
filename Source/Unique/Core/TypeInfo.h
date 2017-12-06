@@ -45,7 +45,7 @@ namespace Unique
 
 		void RegisterAttribute(Attribute* attr);
 
-		const Vector<UPtr<Attribute>>& GetAttributes() const { return attributes_;}
+		const Vector<SPtr<Attribute>>& GetAttributes() const { return attributes_;}
 		
 	private:
 		/// Type.
@@ -55,7 +55,7 @@ namespace Unique
 		/// Base class type info.
 		const TypeInfo* baseTypeInfo_;
 
-		Vector<UPtr<Attribute>> attributes_;
+		Vector<SPtr<Attribute>> attributes_;
 	};
 	
 	/// Define an attribute that points to a memory offset in the object.

@@ -73,7 +73,7 @@ namespace Unique
 			break;
 		}
 
-		String defines = defines_.Replaced(' -D', '_');
+		String defines = defines_.Replaced(" -D", "_");
 
 		String binaryShaderName = Shader::GetShaderPath(graphics.GetRenderID()) + name;
 
@@ -83,6 +83,7 @@ namespace Unique
 		}
 
 		binaryShaderName += extension;
+
 		if (dirty_ || !LoadByteCode(binaryShaderName))
 		{
 			if (!Compile(binaryShaderName))
@@ -133,7 +134,7 @@ namespace Unique
 		if (graphics.IsOpenGL())
 		{
 			ByteArray source = file->ReadAll();
-			if (!handle_->Compile(source.data()))
+			if (!handle_->Compile(std::string(source.data(), source.size())))
 			{
 				UNIQUE_LOGERRORF(handle_->QueryInfoLog().c_str());
 			}
@@ -142,9 +143,7 @@ namespace Unique
 		{
 			LLGL::ShaderDescriptor shaderDesc(shaderStage_.entryPoint_.CString(), shaderStage_.target_.CString(), LLGL::ShaderCompileFlags::Debug);
 
-			std::vector<char> bytes;
-			bytes.resize(file->GetSize());
-			file->Read(bytes.data(), bytes.size());
+			ByteArray bytes = file->ReadAll();
 			if (!handle_->LoadBinary(std::move(bytes), shaderDesc))
 			{
 				UNIQUE_LOGERRORF(handle_->QueryInfoLog().c_str());
