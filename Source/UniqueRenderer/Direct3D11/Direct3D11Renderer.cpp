@@ -325,7 +325,7 @@ Direct3D11Renderer::~Direct3D11Renderer()
 */
 
 	// Delete shaders
-	for (uint i = 0; i < shaders.getCount(); i++)
+	for (uint i = 0; i < shaders.size(); i++)
 	{
 		if (shaders[i].vertexShader  ) shaders[i].vertexShader->Release();
 		if (shaders[i].geometryShader) shaders[i].geometryShader->Release();
@@ -387,56 +387,56 @@ Direct3D11Renderer::~Direct3D11Renderer()
 	}
 
     // Delete vertex formats
-	for (uint i = 0; i < vertexFormats.getCount(); i++)
+	for (uint i = 0; i < vertexFormats.size(); i++)
 	{
 		if (vertexFormats[i].inputLayout)
 			vertexFormats[i].inputLayout->Release();
 	}
 
     // Delete vertex buffers
-	for (uint i = 0; i < vertexBuffers.getCount(); i++)
+	for (uint i = 0; i < vertexBuffers.size(); i++)
 	{
 		if (vertexBuffers[i].vertexBuffer)
 			vertexBuffers[i].vertexBuffer->Release();
 	}
 
 	// Delete index buffers
-	for (uint i = 0; i < indexBuffers.getCount(); i++)
+	for (uint i = 0; i < indexBuffers.size(); i++)
 	{
 		if (indexBuffers[i].indexBuffer)
 			indexBuffers[i].indexBuffer->Release();
 	}
 
 	// Delete samplerstates
-	for (uint i = 0; i < samplerStates.getCount(); i++)
+	for (uint i = 0; i < samplerStates.size(); i++)
 	{
 		if (samplerStates[i].samplerState)
 			samplerStates[i].samplerState->Release();
 	}
 
 	// Delete blendstates
-	for (uint i = 0; i < blendStates.getCount(); i++)
+	for (uint i = 0; i < blendStates.size(); i++)
 	{
 		if (blendStates[i].blendState)
 			blendStates[i].blendState->Release();
 	}
 
 	// Delete depthstates
-	for (uint i = 0; i < depthStates.getCount(); i++)
+	for (uint i = 0; i < depthStates.size(); i++)
 	{
 		if (depthStates[i].dsState)
 			depthStates[i].dsState->Release();
 	}
 
 	// Delete rasterizerstates
-	for (uint i = 0; i < rasterizerStates.getCount(); i++)
+	for (uint i = 0; i < rasterizerStates.size(); i++)
 	{
 		if (rasterizerStates[i].rsState)
 			rasterizerStates[i].rsState->Release();
 	}
 
 	// Delete textures
-	for (uint i = 0; i < textures.getCount(); i++)
+	for (uint i = 0; i < textures.size(); i++)
 	{
 		removeTexture(i);
 	}
@@ -542,7 +542,8 @@ TextureID Direct3D11Renderer::addTexture(ID3D11Resource *resource, uint flags)
 			break;
 	}
 
-	return textures.add(tex);
+	textures.push_back(tex); 
+	return textures.size() - 1;
 }
 
 
@@ -678,8 +679,8 @@ TextureID Direct3D11Renderer::addTexture(Image &img, const SamplerStateID sample
 
 	tex.srvFormat = tex.texFormat;
 	tex.srv = createSRV(tex.texture, tex.srvFormat);
-
-	return textures.add(tex);
+	textures.push_back(tex);
+	return textures.size() - 1;
 }
 
 TextureID Direct3D11Renderer::addRenderTarget(const int width, const int height, const int depth, const int mipMapCount, const int arraySize, const FORMAT format, const int msaaSamples, const SamplerStateID samplerState, uint flags)
@@ -791,7 +792,8 @@ TextureID Direct3D11Renderer::addRenderTarget(const int width, const int height,
 		}
 	}
 
-	return textures.add(tex);
+	textures.push_back(tex);
+	return textures.size() - 1;
 }
 
 TextureID Direct3D11Renderer::addRenderDepth(const int width, const int height, const int arraySize, const FORMAT format, const int msaaSamples, const SamplerStateID samplerState, uint flags)
@@ -877,7 +879,8 @@ TextureID Direct3D11Renderer::addRenderDepth(const int width, const int height, 
 		}
 	}
 
-	return textures.add(tex);
+	textures.push_back(tex);
+	return textures.size() - 1;
 }
 
 bool Direct3D11Renderer::resizeRenderTarget(const TextureID renderTarget, const int width, const int height, const int depth, const int mipMapCount, const int arraySize)
@@ -1283,7 +1286,7 @@ ShaderID Direct3D11Renderer::addShader(const char *vsText, const char *gsText, c
 	cbDesc.CPUAccessFlags = 0;//D3D11_CPU_ACCESS_WRITE;
 	cbDesc.MiscFlags = 0;
 
-	Array <Constant> constants;
+	Vector <Constant> constants;
 
 	for (uint i = 0; i < shader.nVSCBuffers; i++)
 	{
@@ -1310,11 +1313,11 @@ ShaderID Direct3D11Renderer::addShader(const char *vsText, const char *gsText, c
 			constant.gsBuffer = -1;
 			constant.psBuffer = -1;
 			constant.csBuffer = -1;
-			constants.add(constant);
+			constants.push_back(constant);
 		}
 	}
 
-	uint maxConst = constants.getCount();
+	uint maxConst = constants.size();
 	for (uint i = 0; i < shader.nGSCBuffers; i++)
 	{
 		gsRefl->GetConstantBufferByIndex(i)->GetDesc(&sbDesc);
@@ -1352,7 +1355,7 @@ ShaderID Direct3D11Renderer::addShader(const char *vsText, const char *gsText, c
 				constant.gsBuffer = i;
 				constant.psBuffer = -1;
 				constant.csBuffer = -1;
-				constants.add(constant);
+				constants.push_back(constant);
 			}
 			else
 			{
@@ -1362,7 +1365,7 @@ ShaderID Direct3D11Renderer::addShader(const char *vsText, const char *gsText, c
 		}
 	}
 
-	maxConst = constants.getCount();
+	maxConst = constants.size();
 	for (uint i = 0; i < shader.nPSCBuffers; i++)
 	{
 		psRefl->GetConstantBufferByIndex(i)->GetDesc(&sbDesc);
@@ -1400,7 +1403,7 @@ ShaderID Direct3D11Renderer::addShader(const char *vsText, const char *gsText, c
 				constant.gsBuffer = -1;
 				constant.psBuffer = i;
 				constant.csBuffer = -1;
-				constants.add(constant);
+				constants.push_back(constant);
 			}
 			else
 			{
@@ -1443,13 +1446,13 @@ ShaderID Direct3D11Renderer::addShader(const char *vsText, const char *gsText, c
 			constant.gsBuffer = -1;
 			constant.psBuffer = -1;
 			constant.csBuffer = i;
-			constants.add(constant);
+			constants.push_back(constant);
 		}
 	}
 
-	shader.nConstants = constants.getCount();
+	shader.nConstants = constants.size();
 	shader.constants = new Constant[shader.nConstants];
-	memcpy(shader.constants, constants.getArray(), shader.nConstants * sizeof(Constant));
+	memcpy(shader.constants, constants.data(), shader.nConstants * sizeof(Constant));
 	qsort(shader.constants, shader.nConstants, sizeof(Constant), constantComp);
 
 	uint nMaxVSRes = vsRefl? vsDesc.BoundResources : 0;
@@ -1618,8 +1621,8 @@ ShaderID Direct3D11Renderer::addShader(const char *vsText, const char *gsText, c
 	if (gsRefl) gsRefl->Release();
 	if (psRefl) psRefl->Release();
 	if (csRefl) csRefl->Release();
-
-	return shaders.add(shader);
+	shaders.push_back(shader);
+	return shaders.size() - 1;
 }
 
 VertexFormatID Direct3D11Renderer::addVertexFormat(const FormatDesc *formatDesc, const uint nAttribs, const ShaderID shader)
@@ -1675,7 +1678,8 @@ VertexFormatID Direct3D11Renderer::addVertexFormat(const FormatDesc *formatDesc,
 		return VF_NONE;
 	}
 
-	return vertexFormats.add(vf);
+	vertexFormats.push_back(vf);
+	return vertexFormats.size() - 1;
 }
 
 static const D3D11_USAGE usage[] =
@@ -1708,7 +1712,8 @@ VertexBufferID Direct3D11Renderer::addVertexBuffer(const long size, const Buffer
 		return VB_NONE;
 	}
 
-	return vertexBuffers.add(vb);
+	vertexBuffers.push_back(vb);
+	return vertexBuffers.size() - 1;
 }
 
 IndexBufferID Direct3D11Renderer::addIndexBuffer(const uint nIndices, const uint indexSize, const BufferAccess bufferAccess, const void *data)
@@ -1735,7 +1740,8 @@ IndexBufferID Direct3D11Renderer::addIndexBuffer(const uint nIndices, const uint
 		return IB_NONE;
 	}
 
-	return indexBuffers.add(ib);
+	indexBuffers.push_back(ib);
+	return indexBuffers.size() - 1;
 }
 
 IndexBufferID Direct3D11Renderer::addIndexBuffer(ID3D11Buffer* buffer, const uint nIndices, const uint indexSize)
@@ -1745,7 +1751,8 @@ IndexBufferID Direct3D11Renderer::addIndexBuffer(ID3D11Buffer* buffer, const uin
 	ib.nIndices = nIndices;
 	ib.indexBuffer = buffer;
 
-	return indexBuffers.add(ib);
+	indexBuffers.push_back(ib);
+	return indexBuffers.size() - 1;
 }
 
 static const D3D11_FILTER filters[] =
@@ -1802,7 +1809,8 @@ SamplerStateID Direct3D11Renderer::addSamplerState(const Filter filter, const Ad
 		return SS_NONE;
 	}
 
-	return samplerStates.add(samplerState);
+	samplerStates.push_back(samplerState);
+	return samplerStates.size() - 1;
 }
 
 BlendStateID Direct3D11Renderer::addBlendState(const int srcFactorRGB, const int destFactorRGB, const int srcFactorAlpha, const int destFactorAlpha, const int blendModeRGB, const int blendModeAlpha, const int mask, const bool alphaToCoverage)
@@ -1836,7 +1844,8 @@ BlendStateID Direct3D11Renderer::addBlendState(const int srcFactorRGB, const int
 		return BS_NONE;
 	}
 
-	return blendStates.add(blendState);
+	blendStates.push_back(blendState);
+	return blendStates.size() - 1;
 }
 
 DepthStateID Direct3D11Renderer::addDepthState(const bool depthTest, const bool depthWrite, const int depthFunc, const bool stencilTest, const uint8 stencilReadMask, const uint8 stencilWriteMask,
@@ -1867,7 +1876,8 @@ DepthStateID Direct3D11Renderer::addDepthState(const bool depthTest, const bool 
 		return DS_NONE;
 	}
 
-	return depthStates.add(depthState);	
+	depthStates.push_back(depthState);
+	return depthStates.size() - 1;
 }
 
 RasterizerStateID Direct3D11Renderer::addRasterizerState(CullMode cullMode, const int fillMode, const bool multiSample, const bool scissor, const float depthBias, const float slopeDepthBias)
@@ -1892,7 +1902,8 @@ RasterizerStateID Direct3D11Renderer::addRasterizerState(CullMode cullMode, cons
 		return RS_NONE;
 	}
 
-	return rasterizerStates.add(rasterizerState);
+	rasterizerStates.push_back(rasterizerState);
+	return rasterizerStates.size() - 1;
 }
 
 const Sampler *getSampler(const Sampler *samplers, const int count, const char *name)
@@ -2065,13 +2076,13 @@ void Direct3D11Renderer::applyTextures()
 	ID3D11ShaderResourceView *srViews[MAX_TEXTUREUNIT];
 
 	int min, max;
-	if (fillSRV(srViews, min, max, selectedTexturesVS, currentTexturesVS, selectedTextureSlicesVS, currentTextureSlicesVS, textures.getArray()))
+	if (fillSRV(srViews, min, max, selectedTexturesVS, currentTexturesVS, selectedTextureSlicesVS, currentTextureSlicesVS, textures.data()))
 		context->VSSetShaderResources(min, max - min + 1, srViews);
 
-	if (fillSRV(srViews, min, max, selectedTexturesGS, currentTexturesGS, selectedTextureSlicesGS, currentTextureSlicesGS, textures.getArray()))
+	if (fillSRV(srViews, min, max, selectedTexturesGS, currentTexturesGS, selectedTextureSlicesGS, currentTextureSlicesGS, textures.data()))
 		context->GSSetShaderResources(min, max - min + 1, srViews);
 
-	if (fillSRV(srViews, min, max, selectedTexturesPS, currentTexturesPS, selectedTextureSlicesPS, currentTextureSlicesPS, textures.getArray()))
+	if (fillSRV(srViews, min, max, selectedTexturesPS, currentTexturesPS, selectedTextureSlicesPS, currentTextureSlicesPS, textures.data()))
 		context->PSSetShaderResources(min, max - min + 1, srViews);
 }
 
@@ -2134,13 +2145,13 @@ void Direct3D11Renderer::applySamplerStates()
 	ID3D11SamplerState *samplers[MAX_SAMPLERSTATE];
 
 	int min, max;
-	if (fillSS(samplers, min, max, selectedSamplerStatesVS, currentSamplerStatesVS, samplerStates.getArray()))
+	if (fillSS(samplers, min, max, selectedSamplerStatesVS, currentSamplerStatesVS, samplerStates.data()))
 		context->VSSetSamplers(min, max - min + 1, samplers);
 
-	if (fillSS(samplers, min, max, selectedSamplerStatesGS, currentSamplerStatesGS, samplerStates.getArray()))
+	if (fillSS(samplers, min, max, selectedSamplerStatesGS, currentSamplerStatesGS, samplerStates.data()))
 		context->GSSetSamplers(min, max - min + 1, samplers);
 
-	if (fillSS(samplers, min, max, selectedSamplerStatesPS, currentSamplerStatesPS, samplerStates.getArray()))
+	if (fillSS(samplers, min, max, selectedSamplerStatesPS, currentSamplerStatesPS, samplerStates.data()))
 		context->PSSetSamplers(min, max - min + 1, samplers);
 }
 

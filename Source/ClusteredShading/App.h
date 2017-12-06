@@ -21,7 +21,6 @@
 
 #include "../UniqueRenderer/Direct3D11/D3D11App.h"
 #include "../UniqueRenderer/Util/Model.h"
-#include "../UniqueRenderer/Util/BSP.h"
 
 struct Light
 {
@@ -73,6 +72,5 @@ protected:
 
 	Model m_Map;
 	Model m_Sphere;
-	BSP m_BSP;
 
 };

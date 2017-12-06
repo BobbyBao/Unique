@@ -546,7 +546,7 @@ void mpack_write_object_bytes(mpack_writer_t* writer, const char* data, size_t b
  */
 
 /**
- * @name Map and Array Functions
+ * @name Map and Vector Functions
  * @{
  */
 

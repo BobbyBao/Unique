@@ -372,8 +372,8 @@ FontID Renderer::addFont(const char *textureFile, const char *fontFile, const Sa
 
 	if ((font.texture = addTexture(textureFile, false, samplerState)) == TEXTURE_NONE) return FONT_NONE;
 
-
-	return fonts.add(font);
+	fonts.push_back(font); 
+	return fonts.size() - 1;
 }
 
 void Renderer::setShaderConstant1i(const char *name, const int constant){
@@ -435,7 +435,7 @@ float Renderer::getTextWidth(const FontID font, const char *str, int length) con
 	if (font < 0) return 0;
 	if (length < 0) length = (int) strlen(str);
 
-	Character *chars = fonts[font].chars;
+	Character *chars = (Character *)fonts[font].chars;
 
 	float len = 0;
 	for (int i = 0; i < length; i++){

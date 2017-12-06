@@ -7,7 +7,7 @@ enum class AttributeFlag : int
 	FileRead = 2,
 	FileWrite = 4,
 	Default = 7,
-	Array = 8,
+	Vector = 8,
 	Map = 16,
 };
 

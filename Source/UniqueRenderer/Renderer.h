@@ -23,11 +23,14 @@
 #define _RENDERER_H_
 
 #include "Platform.h"
-#include "Util/Array.h"
+#include "Container/Container.h"
 #include "Vector.h"
 #include "Image.h"
+#include "Util/Array.h"
 
 #include <stdio.h>
+
+using namespace Unique;
 
 typedef int TextureID;
 typedef int ShaderID;
@@ -397,8 +400,6 @@ public:
 	virtual void applySamplerStates() = 0;
 	void applyVertexStates();
 
-
-
 	void setShader(const ShaderID shader){
 		selectedShader = shader;
 	}
@@ -469,19 +470,6 @@ public:
 	virtual void changeBlendState(const BlendStateID blendState, const uint sampleMask = ~0) = 0;
 	virtual void changeDepthState(const DepthStateID depthState, const uint stencilRef = 0) = 0;
 	virtual void changeRasterizerState(const RasterizerStateID rasterizerState) = 0;
-/*
-	virtual void changeShaderConstant1i(const char *name, const int constant) = 0;
-	virtual void changeShaderConstant1f(const char *name, const float constant) = 0;
-	virtual void changeShaderConstant2f(const char *name, const vec2 &constant) = 0;
-	virtual void changeShaderConstant3f(const char *name, const vec3 &constant) = 0;
-	virtual void changeShaderConstant4f(const char *name, const vec4 &constant) = 0;
-	virtual void changeShaderConstant3x3f(const char *name, const mat3 &constant) = 0;
-	virtual void changeShaderConstant4x4f(const char *name, const mat4 &constant) = 0;
-	virtual void changeShaderConstantArray1f(const char *name, const float *constant, const uint count) = 0;
-	virtual void changeShaderConstantArray2f(const char *name, const vec2 *constant, const uint count) = 0;
-	virtual void changeShaderConstantArray3f(const char *name, const vec3 *constant, const uint count) = 0;
-	virtual void changeShaderConstantArray4f(const char *name, const vec4 *constant, const uint count) = 0;
-*/
 
 	// Backward compatibility
 	void clear(const bool clearColor, const bool clearDepth, const float *color = NULL, const float depth = 1.0f){

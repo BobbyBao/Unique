@@ -188,7 +188,7 @@ namespace Unique
 	{
 		if (human_)
 		{
-			if (dsl_ && ((metaFlag_ & AttributeFlag::Array) || (metaFlag_ & AttributeFlag::Map)))
+			if (dsl_ && ((metaFlag_ & AttributeFlag::Vector) || (metaFlag_ & AttributeFlag::Map)))
 			{
 				Vector<std::pair<std::string, Hjson::Value>> elements;
 				for (auto& it = hJsonNode_.begin(); it != hJsonNode_.end(); ++it)

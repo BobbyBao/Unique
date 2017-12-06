@@ -89,7 +89,7 @@ public:
 		count = 0;
 	}
 
-	const unsigned int getCount() const { return count; }
+	const unsigned int size() const { return count; }
 
 private:
 	unsigned int addUniqueToNode(KdNode <TYPE> *node, const TYPE *point){

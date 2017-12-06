@@ -41,7 +41,7 @@ namespace Unique
 		{
 			if (SerializeTraits<T>::IsArray())
 			{
-				flag_ |= AttributeFlag::Array;
+				flag_ |= AttributeFlag::Vector;
 			}
 
 			if (SerializeTraits<T>::IsMap())
@@ -108,7 +108,7 @@ namespace Unique
 		{
 			if (SerializeTraits<T>::IsArray())
 			{
-				flag_ |= AttributeFlag::Array;
+				flag_ |= AttributeFlag::Vector;
 			}
 
 			if (SerializeTraits<T>::IsMap())

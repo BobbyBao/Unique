@@ -43,7 +43,7 @@ public:
 		free(list);
 	}
 
-	TYPE *getArray() const { return list; }
+	TYPE * data() const { return list; }
 	TYPE *abandonArray(){
 		TYPE *rList = list;
 		list = NULL;
@@ -51,14 +51,14 @@ public:
 	}
 
 	TYPE &operator [] (const unsigned int index) const { return list[index]; }
-	unsigned int getCount() const { return count; }
+	unsigned int size() const { return count; }
 
 	void setCount(const unsigned int newCount){
 		capacity = count = newCount;
 		list = (TYPE *) realloc(list, capacity * sizeof(TYPE));
 	}
 
-	unsigned int add(const TYPE object){
+	unsigned int push_back(const TYPE object){
 		if (count >= capacity){
 			if (capacity) capacity += capacity; else capacity = 8;
 			list = (TYPE *) realloc(list, capacity * sizeof(TYPE));

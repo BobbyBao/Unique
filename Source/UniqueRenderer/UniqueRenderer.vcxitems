@@ -35,7 +35,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Vector.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Platform.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Renderer.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Util\Array.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Util\Hash.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Util\KdTree.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Util\Model.h" />

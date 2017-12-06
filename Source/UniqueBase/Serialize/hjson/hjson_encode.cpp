@@ -348,7 +348,7 @@ static void _str(Encoder *e, Value value, bool noIndent, std::string separator,
 // String values encode as Hjson strings (quoteless, multiline or
 // JSON).
 //
-// Array and slice values encode as JSON arrays.
+// Vector and slice values encode as JSON arrays.
 //
 // Map values encode as JSON objects. The map's key type must be a
 // string. The map keys are sorted and used as JSON object keys.

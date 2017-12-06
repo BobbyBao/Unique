@@ -24,8 +24,10 @@
 
 #include "Hash.h"
 #include "Math/MathDefs.h"
+#include "Util/Array.h"
 
 using namespace Unique;
+
 
 Model::Model(){
 	vertexFormat = VF_NONE;
@@ -93,7 +95,7 @@ void Model::createSphere(const int subDivLevel){
 
 StreamID Model::findStream(const AttributeType type, const uint index) const {
 	uint count = 0;
-	for (uint i = 0; i < streams.getCount(); i++){
+	for (uint i = 0; i < streams.size(); i++){
 		if (streams[i].type == type){
 			if (count == index) return i;
 			count++;
@@ -103,7 +105,7 @@ StreamID Model::findStream(const AttributeType type, const uint index) const {
 }
 
 void Model::changeAllGeneric(const bool excludeVertex){
-	for (uint i = 0; i < streams.getCount(); i++){
+	for (uint i = 0; i < streams.size(); i++){
 		if (!excludeVertex || streams[i].type != TYPE_VERTEX){
 			streams[i].type = TYPE_GENERIC;
 		}
@@ -119,15 +121,15 @@ BatchID Model::addBatch(const uint startIndex, const uint nIndices){
 //	batch.nVertices = nVertices;
 	batch.startVertex = 0;
 	batch.nVertices = 0;
-
-	return batches.add(batch);
+	batches.push_back(batch);
+	return batches.size() - 1;
 }
 
 bool Model::mergeBatches(const BatchID batch, const BatchID toMerge){
 	if (batches[batch].startIndex + batches[batch].nIndices != batches[toMerge].startIndex) return false;
 
 	batches[batch].nIndices += batches[toMerge].nIndices;
-	batches.orderedRemove(toMerge);
+	batches.erase(batches.begin() + toMerge);
 
 	return true;
 }
@@ -178,29 +180,30 @@ float readFloat(Tokenizer &tok){
 
 struct ObjMaterial {
 	char *name;
-	Array <uint> *indices;
+	Vector <uint> *indices;
 };
 
-uint getObjMaterial(Array <ObjMaterial> &materials, const char *str){
-	for (uint i = 0; i < materials.getCount(); i++){
+uint getObjMaterial(Vector <ObjMaterial> &materials, const char *str){
+	for (uint i = 0; i < materials.size(); i++){
 		if (strcmp(str, materials[i].name) == 0){
 			return i;
 		}
 	}
 	ObjMaterial mat;
 	mat.name = new char[strlen(str) + 1];
-	mat.indices = new Array <uint>();
+	mat.indices = new Vector <uint>();
 	strcpy(mat.name, str);
-	return materials.add(mat);
+	materials.push_back(mat);
+	return materials.size() - 1;
 }
 
-uint *rearrange(Array <ObjMaterial> &materials, const uint *srcIndices, const uint nIndices){
+uint *rearrange(Vector <ObjMaterial> &materials, const uint *srcIndices, const uint nIndices){
 	uint *indices = new uint[nIndices];
 
 	uint currIndex = 0;
-	for (uint i = 0; i < materials.getCount(); i++){
-		Array <uint> *mInds = materials[i].indices;
-		for (uint j = 0; j < mInds->getCount(); j += 2){
+	for (uint i = 0; i < materials.size(); i++){
+		Vector <uint> *mInds = materials[i].indices;
+		for (uint j = 0; j < mInds->size(); j += 2){
 			memcpy(indices + currIndex, srcIndices + (*mInds)[j], (*mInds)[j + 1] * sizeof(uint));
 			currIndex += (*mInds)[j + 1];
 		}
@@ -230,13 +233,13 @@ bool Model::loadObj(const char *fileName){
 	Array <uint> nrmIndices;
 	Array <uint> txcIndices;
 
-	Array <ObjMaterial> materials;
+	Vector <ObjMaterial> materials;
 
 	ObjMaterial mat;
 	mat.name = new char[2];
 	strcpy(mat.name, " ");
-	mat.indices = new Array <uint>();
-	materials.add(mat);
+	mat.indices = new Vector <uint>();
+	materials.push_back(mat);
 	uint currIndex = 0;
 	uint currMaterial = 0;
 
@@ -249,49 +252,49 @@ bool Model::loadObj(const char *fileName){
 			case 'f':
 				lineTok.setString(tok.nextLine());
 
-				vStart = vtxIndices.getCount();
-				nStart = nrmIndices.getCount();
-				tStart = txcIndices.getCount();
+				vStart = vtxIndices.size();
+				nStart = nrmIndices.size();
+				tStart = txcIndices.size();
 				n = 0;
 				while ((str = lineTok.next()) != NULL){
 					if (n > 2){
-						vtxIndices.add(vtxIndices[vStart]);
-						vtxIndices.add(vtxIndices[vtxIndices.getCount() - 2]);
-						if (texCoords.getCount()){
-							txcIndices.add(txcIndices[tStart]);
-							txcIndices.add(txcIndices[txcIndices.getCount() - 2]);
+						vtxIndices.push_back(vtxIndices[vStart]);
+						vtxIndices.push_back(vtxIndices[vtxIndices.size() - 2]);
+						if (texCoords.size()){
+							txcIndices.push_back(txcIndices[tStart]);
+							txcIndices.push_back(txcIndices[txcIndices.size() - 2]);
 						}
-						if (normals.getCount()){
-							nrmIndices.add(nrmIndices[nStart]);
-							nrmIndices.add(nrmIndices[nrmIndices.getCount() - 2]);
+						if (normals.size()){
+							nrmIndices.push_back(nrmIndices[nStart]);
+							nrmIndices.push_back(nrmIndices[nrmIndices.size() - 2]);
 						}
 					}
 
 					int index;
 					if (str[0] == '-')
-						index = vertices.getCount() - atoi(lineTok.next());
+						index = vertices.size() - atoi(lineTok.next());
 					else
 						index = atoi(str) - 1;
-					vtxIndices.add(index);
+					vtxIndices.push_back(index);
 
-					if (texCoords.getCount() || normals.getCount()) lineTok.goToNext();
-					if (texCoords.getCount()){
+					if (texCoords.size() || normals.size()) lineTok.goToNext();
+					if (texCoords.size()){
 						str = lineTok.next();
 						if (str[0] == '-')
-							index = texCoords.getCount() - atoi(lineTok.next());
+							index = texCoords.size() - atoi(lineTok.next());
 						else
 							index = atoi(str) - 1;
-						txcIndices.add(index);
+						txcIndices.push_back(index);
 					}
-					if (normals.getCount()){
+					if (normals.size()){
 						lineTok.goToNext();
 
 						str = lineTok.next();
 						if (str[0] == '-')
-							index = normals.getCount() - atoi(lineTok.next());
+							index = normals.size() - atoi(lineTok.next());
 						else
 							index = atoi(str) - 1;
-						nrmIndices.add(index);
+						nrmIndices.push_back(index);
 					}
 
 					n++;
@@ -304,18 +307,18 @@ bool Model::loadObj(const char *fileName){
 						x = readFloat(tok);
 						y = readFloat(tok);
 						z = readFloat(tok);
-						vertices.add(vec3(x, y, z));
+						vertices.push_back(vec3(x, y, z));
 						break;
 					case 'n':
 						x = readFloat(tok);
 						y = readFloat(tok);
 						z = readFloat(tok);
-						normals.add(vec3(x, y, z));
+						normals.push_back(vec3(x, y, z));
 						break;
 					case 't':
 						x = readFloat(tok);
 						y = readFloat(tok);
-						texCoords.add(vec2(x, y));
+						texCoords.push_back(vec2(x, y));
 						break;
 				}
 				break;
@@ -327,22 +330,22 @@ bool Model::loadObj(const char *fileName){
 						x = readFloat(tok);
 						y = readFloat(tok);
 						z = readFloat(tok);
-						tangents.add(vec3(x, y, z));
+						tangents.push_back(vec3(x, y, z));
 					} else if (stricmp(str, "binormal") == 0){
 						x = readFloat(tok);
 						y = readFloat(tok);
 						z = readFloat(tok);
-						binormals.add(vec3(x, y, z));
+						binormals.push_back(vec3(x, y, z));
 					}
 				} else {
 					tok.goToNextLine();
 				}
 				break;
 			case 'u':
-				if (vtxIndices.getCount()){
-					materials[currMaterial].indices->add(currIndex);
-					materials[currMaterial].indices->add(vtxIndices.getCount() - currIndex);
-					currIndex = vtxIndices.getCount();
+				if (vtxIndices.size()){
+					materials[currMaterial].indices->push_back(currIndex);
+					materials[currMaterial].indices->push_back(vtxIndices.size() - currIndex);
+					currIndex = vtxIndices.size();
 				} else {
 					// Ensure we don't get an empty material set in the beginning
 					delete materials[0].name;
@@ -358,43 +361,43 @@ bool Model::loadObj(const char *fileName){
 		}
 	}
 
-	materials[currMaterial].indices->add(currIndex);
-	materials[currMaterial].indices->add(vtxIndices.getCount() - currIndex);
+	materials[currMaterial].indices->push_back(currIndex);
+	materials[currMaterial].indices->push_back(vtxIndices.size() - currIndex);
 
-	nIndices = vtxIndices.getCount();
+	nIndices = vtxIndices.size();
 
-	addStream(TYPE_VERTEX, 3, vertices.getCount(), (float *) vertices.abandonArray(), rearrange(materials, vtxIndices.getArray(), nIndices), false);
-	if (texCoords.getCount()){
-		ASSERT(txcIndices.getCount() == nIndices);
+	addStream(TYPE_VERTEX, 3, vertices.size(), (float *) vertices.abandonArray(), rearrange(materials, vtxIndices.data(), nIndices), false);
+	if (texCoords.size()){
+		ASSERT(txcIndices.size() == nIndices);
 
-		uint *indices = rearrange(materials, txcIndices.getArray(), nIndices);
+		uint *indices = rearrange(materials, txcIndices.data(), nIndices);
 
-		addStream(TYPE_TEXCOORD, 2, texCoords.getCount(), (float *) texCoords.abandonArray(), indices, false);
-		if (tangents.getCount()){
+		addStream(TYPE_TEXCOORD, 2, texCoords.size(), (float *) texCoords.abandonArray(), indices, false);
+		if (tangents.size()){
 			uint *tIndices = new uint[nIndices];
 			memcpy(tIndices, indices, nIndices * sizeof(uint));
 
-			addStream(TYPE_TEXCOORD, 3, tangents.getCount(), (float *) tangents.abandonArray(), tIndices, false);
+			addStream(TYPE_TEXCOORD, 3, tangents.size(), (float *) tangents.abandonArray(), tIndices, false);
 		}
-		if (binormals.getCount()){
+		if (binormals.size()){
 			uint *bIndices = new uint[nIndices];
 			memcpy(bIndices, indices, nIndices * sizeof(uint));
 
-			addStream(TYPE_TEXCOORD, 3, binormals.getCount(), (float *) binormals.abandonArray(), bIndices, false);
+			addStream(TYPE_TEXCOORD, 3, binormals.size(), (float *) binormals.abandonArray(), bIndices, false);
 		}
 	}
-	if (normals.getCount()){
-		ASSERT(nrmIndices.getCount() == nIndices);
+	if (normals.size()){
+		ASSERT(nrmIndices.size() == nIndices);
 
-		addStream(TYPE_NORMAL, 3, normals.getCount(), (float *) normals.abandonArray(), rearrange(materials, nrmIndices.getArray(), nIndices), false);
+		addStream(TYPE_NORMAL, 3, normals.size(), (float *) normals.abandonArray(), rearrange(materials, nrmIndices.data(), nIndices), false);
 	}
 
 	// Fix batches
 	currIndex = 0;
 	uint startIndex = 0;
-	for (uint i = 0; i < materials.getCount(); i++){
-		Array <uint> *mInds = materials[i].indices;
-		for (uint j = 0; j < mInds->getCount(); j += 2){
+	for (uint i = 0; i < materials.size(); i++){
+		Vector <uint> *mInds = materials[i].indices;
+		for (uint j = 0; j < mInds->size(); j += 2){
 			currIndex += (*mInds)[j + 1];
 		}
 		addBatch(startIndex, currIndex - startIndex);
@@ -407,82 +410,8 @@ bool Model::loadObj(const char *fileName){
 	return true;
 }
 
-bool Model::saveObj(const char *fileName){
-	for (uint i = 0; i < streams.getCount(); i++){
-		optimizeStream(i);
-	}
-
-	StreamID vertexStream = findStream(TYPE_VERTEX);
-	if (vertexStream < 0) return false;
-
-	StreamID normalStream = findStream(TYPE_NORMAL);
-	StreamID texCoordStream = findStream(TYPE_TEXCOORD);
-
-
-	FILE *file = fopen(fileName, "wb");
-	if (file == NULL) return false;
-
-	float *src = streams[vertexStream].vertices;
-	for (uint i = 0; i < streams[vertexStream].nVertices; i++){
-		fprintf(file, "v %g %g %g\n", src[0], src[1], src[2]);
-		src += 3;
-	}
-
-	if (normalStream >= 0){
-		src = streams[normalStream].vertices;
-		for (uint i = 0; i < streams[normalStream].nVertices; i++){
-			fprintf(file, "vn %g %g %g\n", src[0], src[1], src[2]);
-			src += 3;
-		}
-	}
-
-	if (texCoordStream >= 0){
-		src = streams[texCoordStream].vertices;
-		for (uint i = 0; i < streams[texCoordStream].nVertices; i++){
-			fprintf(file, "vt %g %g\n", src[0], src[1]);
-			src += 2;
-		}
-	}
-
-	for (uint batch = 0; batch < batches.getCount(); batch++){
-		fprintf(file, "usemtl mat%d\n", batch);
-		for (uint i = 0; i < batches[batch].nIndices; i += 3){
-			fprintf(file, "f ");
-			uint base = batches[batch].startIndex + i;
-			for (int j = 0; j < 3; j++){
-				fprintf(file, "%d", streams[vertexStream].indices[base + j] + 1);
-				if (normalStream >= 0 || texCoordStream >= 0) fprintf(file, "/");
-				if (texCoordStream >= 0) fprintf(file, "%d", streams[texCoordStream].indices[base + j] + 1);
-				if (normalStream >= 0) fprintf(file, "/%d", streams[normalStream].indices[base + j] + 1);
-				fprintf(file, (j < 2)? " " : "\n");
-			}
-		}
-
-	}
-
-
-	fclose(file);
-
-	return true;
-}
-
-
 bool textureNameAlphabetical(const char ch){
 	return ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch == '_' || ch == '.' || ch == '-');
-}
-
-struct T3dPoly {
-	char *textureName;
-	unsigned long flags;
-	Array <vec3> vertices;
-	vec3 origin;
-	vec3 normal;
-	vec3 sVec;
-	vec3 tVec;
-};
-
-int comparePolys(T3dPoly *const &elem0, T3dPoly *const &elem1){
-	return strcmp(elem0->textureName, elem1->textureName);
 }
 
 uint Model::getVertexSize() const {
@@ -491,7 +420,7 @@ uint Model::getVertexSize() const {
 
 uint Model::getComponentCount() const {
 	uint count = 0;
-	for (uint i = 0; i < streams.getCount(); i++){
+	for (uint i = 0; i < streams.size(); i++){
 		count += streams[i].nComponents;
 	}
 	return count;
@@ -515,8 +444,8 @@ StreamID Model::addStream(const AttributeType type, const int nComponents, const
 	stream.type      = type;
 	stream.nComponents = nComponents;
 	stream.optimized = optimized;
-
-	return streams.add(stream);
+	streams.push_back(stream);
+	return streams.size() - 1;
 }
 
 void Model::removeStream(const StreamID stream){
@@ -524,7 +453,7 @@ void Model::removeStream(const StreamID stream){
 		delete streams[stream].vertices;
 		delete streams[stream].indices;
 
-		streams.orderedRemove(stream);
+		streams.erase(streams.begin() + stream);
 	}
 }
 
@@ -561,7 +490,7 @@ void Model::flipComponents(const StreamID stream, const uint c0, const uint c1){
 }
 
 void Model::reverseWinding(){
-	for (uint j = 0; j < streams.getCount(); j++){
+	for (uint j = 0; j < streams.size(); j++){
 		uint *indices = streams[j].indices;
 		for (uint i = 0; i < nIndices; i += 3){
 			uint temp = indices[i];
@@ -788,8 +717,8 @@ bool Model::addStencilVolume(){
 
 
 	Hash hash(2, nIndices >> 3, nIndices);
-	Array <uint> list;
-	Array <vec3> normList;
+	Vector <uint> list;
+	Vector <vec3> normList;
 
 	uint *newIndices = new uint[nIndices * 6];
 	uint *dest = newIndices;
@@ -823,9 +752,9 @@ bool Model::addStencilVolume(){
 				}
 			} else {
 				// .. otherwise store it for now
-				list.add(i + prev);
-				list.add(i + k);
-				normList.add(normal);
+				list.push_back(i + prev);
+				list.push_back(i + k);
+				normList.push_back(normal);
 			}
 			prev = k;
 		}
@@ -833,7 +762,7 @@ bool Model::addStencilVolume(){
 
 	uint nNewIndices = (uint) (dest - newIndices);
 	
-	for (uint i = 0; i < streams.getCount(); i++){
+	for (uint i = 0; i < streams.size(); i++){
 		streams[i].indices = (uint *) realloc(streams[i].indices, (nIndices + nNewIndices) * sizeof(uint));
 		for (uint k = 0; k < nNewIndices; k++){
 			streams[i].indices[nIndices + k] = streams[i].indices[newIndices[k]];
@@ -870,11 +799,11 @@ void Model::cleanUp(){
 	uint *indices   = streams[vertexStream].indices;
 	uint nVertices  = streams[vertexStream].nVertices;
 
-	Array <Triangle> triangles;
+	Vector <Triangle> triangles;
 
 	uint nAttrib = getComponentCount();
 
-	for (uint n = 0; n < batches.getCount(); n++){
+	for (uint n = 0; n < batches.size(); n++){
 		uint endIndex = batches[n].startIndex + batches[n].nIndices;
 		for (uint i = batches[n].startIndex; i < endIndex; i += 3){
 			Triangle tri;
@@ -885,7 +814,7 @@ void Model::cleanUp(){
 				tri.attributes[j] = new float[nAttrib];
 
 				float *dest = tri.attributes[j];
-				for (uint k = 0; k < streams.getCount(); k++){
+				for (uint k = 0; k < streams.size(); k++){
 					if (signed(k) != vertexStream){
 						int nComp = streams[k].nComponents;
 						memcpy(dest, streams[k].vertices + nComp * streams[k].indices[i + j], nComp * sizeof(float));
@@ -894,11 +823,11 @@ void Model::cleanUp(){
 				}
 			}
 
-			triangles.add(tri);
+			triangles.push_back(tri);
 		}
 	}
 
-	for (uint i = 0; i < triangles.getCount(); i++){
+	for (uint i = 0; i < triangles.size(); i++){
 
 restart:
 
@@ -937,7 +866,7 @@ restart:
 							tri.attributes[prev][x] = ip;
 						}
 
-						triangles.add(tri);
+						triangles.push_back(tri);
 
 
 						goto restart;
@@ -949,18 +878,18 @@ restart:
 		}
 	}
 
-	triangles.sort(compareTriangles);
+	std::sort(triangles.begin(), triangles.end(), compareTriangles);
 
-	nIndices = 3 * triangles.getCount();
+	nIndices = 3 * triangles.size();
 
 	uint currComp = 0;
-	for (uint i = 0; i < streams.getCount(); i++){
+	for (uint i = 0; i < streams.size(); i++){
 		delete streams[i].vertices;
 		delete streams[i].indices;
 
 		if (signed(i) == vertexStream){
 			streams[i].vertices = new float[nIndices * 3];
-			for (uint j = 0; j < triangles.getCount(); j++){
+			for (uint j = 0; j < triangles.size(); j++){
 				for (uint k = 0; k < 3; k++){
 					((vec3 *) streams[i].vertices)[3 * j + k] = triangles[j].pos[k];
 				}
@@ -972,7 +901,7 @@ restart:
 			streams[i].vertices = new float[nIndices * nComp];
 
 			float *dest = streams[i].vertices;
-			for (uint j = 0; j < triangles.getCount(); j++){
+			for (uint j = 0; j < triangles.size(); j++){
 				for (uint k = 0; k < 3; k++){
 					memcpy(dest, triangles[j].attributes[k] + currComp, nComp * sizeof(float));
 					dest += nComp;
@@ -996,8 +925,8 @@ restart:
 	int currBatch = 0;
 	uint i = 0;
 	uint startIndex = 0;
-	while (i < triangles.getCount()){
-		while (i < triangles.getCount() && triangles[i].batch == currBatch){
+	while (i < triangles.size()){
+		while (i < triangles.size() && triangles[i].batch == currBatch){
 			for (int j = 0; j < 3; j++){
 				delete triangles[i].attributes[j];
 			}
@@ -1012,7 +941,7 @@ restart:
 }
 
 void Model::copyVertex(const uint destIndex, const Model &srcModel, const uint srcIndex){
-	for (uint i = 0; i < streams.getCount(); i++){
+	for (uint i = 0; i < streams.size(); i++){
 		int nComp = streams[i].nComponents;
 		float *dest = streams[i].vertices + nComp * streams[i].indices[destIndex];
 		float *src = srcModel.streams[i].vertices + nComp * srcModel.streams[i].indices[srcIndex];
@@ -1022,7 +951,7 @@ void Model::copyVertex(const uint destIndex, const Model &srcModel, const uint s
 }
 
 void Model::interpolateVertex(const uint destIndex, const Model &srcModel, const uint srcIndex0, const uint srcIndex1, const float x){
-	for (uint i = 0; i < streams.getCount(); i++){
+	for (uint i = 0; i < streams.size(); i++){
 		int nComp = streams[i].nComponents;
 		float *dest = streams[i].vertices + nComp * streams[i].indices[destIndex];
 		float *src0 = srcModel.streams[i].vertices + nComp * srcModel.streams[i].indices[srcIndex0];
@@ -1042,7 +971,7 @@ bool Model::split(const vec3 &normal, const float offset, Model *front, Model *b
 	uint *indices = streams[vertexStream].indices;
 
 
-	for (uint i = 0; i < streams.getCount(); i++){
+	for (uint i = 0; i < streams.size(); i++){
 		int nComp = streams[i].nComponents;
 		if (front){
 			front->addStream(streams[i].type, nComp, 0, new float[nComp * 2 * nIndices], NULL, false);
@@ -1060,7 +989,7 @@ bool Model::split(const vec3 &normal, const float offset, Model *front, Model *b
 	uint nBackVertices  = 0;
 	uint batch = 0;
 	for (uint i = 0; i < nIndices; i += 3){
-		while (batch < batches.getCount() && i >= batches[batch].startIndex + batches[batch].nIndices){
+		while (batch < batches.size() && i >= batches[batch].startIndex + batches[batch].nIndices){
 			if (front){
 				front->addBatch(startFrontVertices, nFrontVertices - startFrontVertices);
 				startFrontVertices = nFrontVertices;
@@ -1149,7 +1078,7 @@ bool Model::split(const vec3 &normal, const float offset, Model *front, Model *b
 		}
 	}
 
-	while (batch < batches.getCount()){
+	while (batch < batches.size()){
 		if (front){
 			front->addBatch(startFrontVertices, nFrontVertices - startFrontVertices);
 			startFrontVertices = nFrontVertices;
@@ -1161,7 +1090,7 @@ bool Model::split(const vec3 &normal, const float offset, Model *front, Model *b
 		batch++;
 	}
 
-	for (uint i = 0; i < streams.getCount(); i++){
+	for (uint i = 0; i < streams.size(); i++){
 		if (front) front->streams[i].nVertices = nFrontVertices;
 		if (back) back->streams[i].nVertices = nBackVertices;
 	}
@@ -1173,7 +1102,7 @@ bool Model::split(const vec3 &normal, const float offset, Model *front, Model *b
 
 void Model::clear(){
 	nIndices = 0;
-	for (uint i = 0; i < streams.getCount(); i++){
+	for (uint i = 0; i < streams.size(); i++){
 		delete streams[i].vertices;
 		delete streams[i].indices;
 	}
@@ -1191,7 +1120,7 @@ void Model::clear(){
 }
 
 void Model::optimize(){
-	for (uint i = 0; i < streams.getCount(); i++){
+	for (uint i = 0; i < streams.size(); i++){
 		optimizeStream(i);
 	}
 }
@@ -1220,8 +1149,8 @@ void Model::optimizeStream(const StreamID streamID){
 	}
 
 	delete indexRemap;
-	streams[streamID].nVertices = kdTree.getCount();
-	streams[streamID].vertices = (float *) realloc(vertices, kdTree.getCount() * nComp * sizeof(float));
+	streams[streamID].nVertices = kdTree.size();
+	streams[streamID].vertices = (float *) realloc(vertices, kdTree.size() * nComp * sizeof(float));
 	streams[streamID].optimized = true;
 }
 
@@ -1271,12 +1200,12 @@ uint Model::assemble(const StreamID *aStreams, const uint nStreams, float **dest
 
 	if (separateArrays){
 		for (i = 0; i < nStreams; i++){
-			destVertices[i] = (float *) realloc(destVertices[i], hash.getCount() * streams[aStreams[i]].nComponents * sizeof(float));
+			destVertices[i] = (float *) realloc(destVertices[i], hash.size() * streams[aStreams[i]].nComponents * sizeof(float));
 		}
 	} else {
-		*destVertices = (float *) realloc(*destVertices, hash.getCount() * nComp * sizeof(float));
+		*destVertices = (float *) realloc(*destVertices, hash.size() * nComp * sizeof(float));
 	}
-	return hash.getCount();
+	return hash.size();
 }
 
 void convertToShorts(const uint *src, int nIndices, const uint nVertices){
@@ -1300,12 +1229,12 @@ void convertToShorts(const uint *src, int nIndices, const uint nVertices){
 }
 
 uint Model::makeDrawable(Renderer *renderer, const bool useCache, const ShaderID shader){
-	if (streams.getCount() == 0) return 0;
+	if (streams.size() == 0) return 0;
 
 	int vertexSize = getVertexSize();
 
 	if (useCache && lastVertices){
-		if ((vertexFormat = renderer->addVertexFormat(lastFormat, streams.getCount(), shader)) == VF_NONE) return 0;
+		if ((vertexFormat = renderer->addVertexFormat(lastFormat, streams.size(), shader)) == VF_NONE) return 0;
 		if ((vertexBuffer = renderer->addVertexBuffer(lastVertexCount * vertexSize, STATIC, lastVertices)) == VB_NONE) return 0;
 
 		if (lastVertexCount > 65535){
@@ -1316,18 +1245,18 @@ uint Model::makeDrawable(Renderer *renderer, const bool useCache, const ShaderID
 
 		return lastVertexCount;
 	} else {
-		StreamID *aStreams = new StreamID[streams.getCount()];
+		StreamID *aStreams = new StreamID[streams.size()];
 
-		for (uint i = 0; i < streams.getCount(); i++){
+		for (uint i = 0; i < streams.size(); i++){
 			aStreams[i] = i;
 		}
 		float *vertices;
 		uint *indices;
 
-		uint nVertices = assemble(aStreams, streams.getCount(), &vertices, &indices, false);
+		uint nVertices = assemble(aStreams, streams.size(), &vertices, &indices, false);
 
 		// Compute ranges for batches
-		for (uint j = 0; j < batches.getCount(); j++){
+		for (uint j = 0; j < batches.size(); j++){
 			uint minVertex = 0xFFFFFFFF;
 			uint maxVertex = 0;
 
@@ -1348,15 +1277,15 @@ uint Model::makeDrawable(Renderer *renderer, const bool useCache, const ShaderID
 			}
 		}
 
-		FormatDesc *format = new FormatDesc[streams.getCount()];
-		for (uint i = 0; i < streams.getCount(); i++){
+		FormatDesc *format = new FormatDesc[streams.size()];
+		for (uint i = 0; i < streams.size(); i++){
 			format[i].stream = 0;
 			format[i].type   = streams[i].type;
 			format[i].format = FORMAT_FLOAT;
 			format[i].size   = streams[i].nComponents;
 		}
 
-		if ((vertexFormat = renderer->addVertexFormat(format, streams.getCount(), shader)) == VF_NONE) return 0;
+		if ((vertexFormat = renderer->addVertexFormat(format, streams.size(), shader)) == VF_NONE) return 0;
 		if ((vertexBuffer = renderer->addVertexBuffer(nVertices * vertexSize, STATIC, vertices)) == VB_NONE) return 0;
 
 		if (nVertices > 65535){

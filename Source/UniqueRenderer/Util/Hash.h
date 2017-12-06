@@ -104,7 +104,7 @@ public:
 		return false;
 	}
 
-	unsigned int getCount() const { return count; }
+	unsigned int size() const { return count; }
 
 protected:
 	unsigned int nDim;

@@ -57,21 +57,20 @@ public:
 
 	StreamID findStream(const AttributeType type, const uint index = 0) const;
 	const Stream &getStream(const StreamID stream) const { return streams[stream]; }
-	uint getStreamCount() const { return streams.getCount(); }
+	uint getStreamCount() const { return streams.size(); }
 
 	void changeAllGeneric(const bool excludeVertex = false);
 	void changeStreamType(const StreamID stream, const AttributeType type){ streams[stream].type = type; }
 
 	BatchID addBatch(const uint startIndex, const uint nIndices);
 	const Batch &getBatch(const BatchID batch) const { return batches[batch]; }
-	uint getBatchCount() const { return batches.getCount(); }
+	uint getBatchCount() const { return batches.size(); }
 	bool mergeBatches(const BatchID batch, const BatchID toMerge);
 	void removeAllBatches(){ batches.clear(); }
 
 	void getBoundingBox(const StreamID stream, float *minCoord, float *maxCoord) const;
 
 	bool loadObj(const char *fileName);
-	bool saveObj(const char *fileName);
 
 	uint getVertexSize() const;
 	uint getComponentCount() const;
@@ -122,8 +121,8 @@ protected:
 	VertexBufferID vertexBuffer;
 	IndexBufferID indexBuffer;
 	
-	Array <Stream> streams;
-	Array <Batch> batches;
+	Vector <Stream> streams;
+	Vector <Batch> batches;
 
 	// Cached
 	uint lastVertexCount;

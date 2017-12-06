@@ -23,7 +23,9 @@
 #define _TOKENIZER_H_
 
 #include "../Platform.h"
-#include "Array.h"
+#include "Container/Container.h"
+
+using namespace Unique;
 
 typedef bool (*BOOLFUNC)(const char ch);
 
@@ -58,7 +60,7 @@ private:
 	unsigned int capacity;
 
 	unsigned int currentBuffer;
-	Array <TokBuffer> buffers;
+	Vector <TokBuffer> buffers;
 
 	char *getBuffer(unsigned int size);
 };

@@ -20,6 +20,8 @@
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #include "App.h"
+#include "Math/MathDefs.h"
+using namespace Unique;
 
 const uint CLUSTER_X = 32;
 const uint CLUSTER_Y = 8;
@@ -47,15 +49,6 @@ bool App::onKey(const uint key, const bool pressed)
 void App::moveCamera(const float3 &dir)
 {
 	float3 newPos = camPos + dir * (speed * frameTime);
-
-	float3 point;
-	const BTri *tri;
-	if (m_BSP.intersects(camPos, newPos, &point, &tri))
-	{
-		newPos = point + tri->plane.xyz();
-	}
-	m_BSP.pushSphere(newPos, 35);
-
 	camPos = newPos;
 }
 
@@ -106,16 +99,6 @@ bool App::init()
 	}
 	m_AABBMin = aabb_min;
 	m_AABBMax = aabb_max + 1.0f; // Tiny nudge factor for walls and ceiling exactly parallel with AABBMax that'd otherwise fall outside of AABB
-
-	for (uint i = 0; i < nIndices; i += 3)
-	{
-		float3 v0 = src[inds[i]];
-		float3 v1 = src[inds[i + 1]];
-		float3 v2 = src[inds[i + 2]];
-
-		m_BSP.addTriangle(v0, v1, v2);
-	}
-	m_BSP.build();
 
 	m_Map.computeTangentSpace(true);
 
@@ -332,19 +315,19 @@ void App::clusteredLightAssignment()
 		const float3 p = (light.Position - m_AABBMin);
 		const float3 p_min = (p - light.Radius) * scale;
 		const float3 p_max = (p + light.Radius) * scale;
-
+	
 		// Cluster for the center of the light
-		const int px = (int) floorf(p.x * scale.x);
-		const int py = (int) floorf(p.y * scale.y);
-		const int pz = (int) floorf(p.z * scale.z);
+		const int px = (int) Floor(p.x * scale.x);
+		const int py = (int) Floor(p.y * scale.y);
+		const int pz = (int) Floor(p.z * scale.z);
 
 		// Cluster bounds for the light
-		const int x0 = max((int) floorf(p_min.x), 0);
-		const int x1 = min((int) ceilf(p_max.x), CLUSTER_X);
-		const int y0 = max((int) floorf(p_min.y), 0);
-		const int y1 = min((int) ceilf(p_max.y), CLUSTER_Y);
-		const int z0 = max((int) floorf(p_min.z), 0);
-		const int z1 = min((int) ceilf(p_max.z), CLUSTER_Z);
+		const int x0 = Max((int) Floor(p_min.x), 0);
+		const int x1 = Min((int) Ceil(p_max.x), CLUSTER_X);
+		const int y0 = Max((int) Floor(p_min.y), 0);
+		const int y1 = Min((int) Ceil(p_max.y), CLUSTER_Y);
+		const int z0 = Max((int) Floor(p_min.z), 0);
+		const int z1 = Min((int) Ceil(p_max.z), CLUSTER_Z);
 
 		const float radius_sqr = light.Radius * light.Radius;
 		const uint32 mask = (1 << i);
