@@ -33,36 +33,9 @@ namespace Unique
 				"PATCHES_17", "PATCHES_18", "PATCHES_19", "PATCHES_20", "PATCHES_21", "PATCHES_22", "PATCHES_23", "PATCHES_24",
 				"PATCHES_25", "PATCHES_26", "PATCHES_27", "PATCHES_28", "PATCHES_29", "PATCHES_30", "PATCHES_31", "PATCHES_32")
 
-#if false
-	using ShaderStageFlags = LLGL::ShaderStageFlags;
-	using ClearFlags = LLGL::ClearFlags;
+	uEnumTraits(ComparisonFunction, "UNKNOWN", "NEVER", "LESS", "EQUAL", 
+		"LESS_EQUAL", "GREATER", "NOT_EQUAL", "GREATER_EQUAL", "ALWAYS")
 
-	using Window = LLGL::Window;
-	using Viewport = LLGL::Viewport;
-	using Scissor = LLGL::Scissor;
-	using RenderTarget = LLGL::RenderTarget;
+	//uClassTraits(DepthState, "TestEnabled", self.testEnabled, "WriteEnabled", self.writeEnabled, "CompareOp", self.compareOp)
 
-	using CompareOp = LLGL::CompareOp;
-	using DepthState = LLGL::DepthDescriptor;
-	using StencilState = LLGL::StencilDescriptor;
-	using RasterizerState = LLGL::RasterizerDescriptor;
-	using BlendState = LLGL::BlendDescriptor;
-
-	using GraphicsPipelineDescriptor = LLGL::GraphicsPipelineDescriptor;
-
-	using GraphicsPipeline = LLGL::GraphicsPipeline;
-	using ComputePipeline = LLGL::ComputePipeline;
-
-	using VertexFormat = LLGL::VertexFormat;
-	using StreamOutputFormat = LLGL::StreamOutputFormat;
-	using ShaderType = LLGL::ShaderType;
-	using ShaderProgram = LLGL::ShaderProgram;
-	using PrimitiveType = LLGL::PrimitiveTopology;
-
-	using UniformType = LLGL::UniformType;
-
-	uEnumTraits(CompareOp, "Never", "Less", "Equal", "LessEqual", "Greater", "NotEqual", "GreaterEqual", "Ever")
-	uClassTraits(DepthState, "TestEnabled", self.testEnabled, "WriteEnabled", self.writeEnabled, "CompareOp", self.compareOp)
-
-#endif
 }

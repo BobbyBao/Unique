@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Samples", "..\Source\Samples\Samples.vcxproj", "{8BDD6AF5-CB1D-4AD6-A5CE-7AC304B28E77}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Unique", "..\Source\Unique\Unique.vcxitems", "{D565EC23-5A2B-453C-AA4A-AA6E47320E3E}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Unqiue", "Win64\Unqiue.vcxproj", "{CF662A5E-1678-4FB9-8C32-F740DA4D5DAA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniqueStudio", "..\Source\UniqueStudio\UniqueStudio.csproj", "{C871687B-77AA-435C-AA8C-2761540A336F}"
@@ -45,11 +41,7 @@ Global
 		..\Source\UniqueEngine\UniqueEngine.vcxitems*{1f984cb6-33d2-4f90-9e07-1dd5c0b83d8c}*SharedItemsImports = 4
 		..\Source\UniqueEngine\UniqueEngine.vcxitems*{4a515684-0697-4834-9d80-8deeec14aeb7}*SharedItemsImports = 9
 		..\Source\UniqueBase\UniqueBase.vcxitems*{4a6b9a4e-845f-43db-8292-6ead5c7630ce}*SharedItemsImports = 9
-		..\Source\UniqueBase\UniqueBase.vcxitems*{8bdd6af5-cb1d-4ad6-a5ce-7ac304b28e77}*SharedItemsImports = 4
-		..\Source\Unique\Unique.vcxitems*{8bdd6af5-cb1d-4ad6-a5ce-7ac304b28e77}*SharedItemsImports = 4
 		..\Source\UniqueBase\UniqueBase.vcxitems*{cf662a5e-1678-4fb9-8c32-f740da4d5daa}*SharedItemsImports = 4
-		..\Source\Unique\Unique.vcxitems*{cf662a5e-1678-4fb9-8c32-f740da4d5daa}*SharedItemsImports = 4
-		..\Source\Unique\Unique.vcxitems*{d565ec23-5a2b-453c-aa4a-aa6e47320e3e}*SharedItemsImports = 9
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,22 +58,6 @@ Global
 		RelWithDebInfo|x86 = RelWithDebInfo|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8BDD6AF5-CB1D-4AD6-A5CE-7AC304B28E77}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{8BDD6AF5-CB1D-4AD6-A5CE-7AC304B28E77}.Debug|x64.ActiveCfg = Debug|x64
-		{8BDD6AF5-CB1D-4AD6-A5CE-7AC304B28E77}.Debug|x64.Build.0 = Debug|x64
-		{8BDD6AF5-CB1D-4AD6-A5CE-7AC304B28E77}.Debug|x86.ActiveCfg = Debug|x64
-		{8BDD6AF5-CB1D-4AD6-A5CE-7AC304B28E77}.MinSizeRel|Any CPU.ActiveCfg = MinSizeRel|x64
-		{8BDD6AF5-CB1D-4AD6-A5CE-7AC304B28E77}.MinSizeRel|x64.ActiveCfg = MinSizeRel|x64
-		{8BDD6AF5-CB1D-4AD6-A5CE-7AC304B28E77}.MinSizeRel|x64.Build.0 = MinSizeRel|x64
-		{8BDD6AF5-CB1D-4AD6-A5CE-7AC304B28E77}.MinSizeRel|x86.ActiveCfg = MinSizeRel|x64
-		{8BDD6AF5-CB1D-4AD6-A5CE-7AC304B28E77}.Release|Any CPU.ActiveCfg = Release|x64
-		{8BDD6AF5-CB1D-4AD6-A5CE-7AC304B28E77}.Release|x64.ActiveCfg = Release|x64
-		{8BDD6AF5-CB1D-4AD6-A5CE-7AC304B28E77}.Release|x64.Build.0 = Release|x64
-		{8BDD6AF5-CB1D-4AD6-A5CE-7AC304B28E77}.Release|x86.ActiveCfg = Release|x64
-		{8BDD6AF5-CB1D-4AD6-A5CE-7AC304B28E77}.RelWithDebInfo|Any CPU.ActiveCfg = RelWithDebInfo|x64
-		{8BDD6AF5-CB1D-4AD6-A5CE-7AC304B28E77}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|x64
-		{8BDD6AF5-CB1D-4AD6-A5CE-7AC304B28E77}.RelWithDebInfo|x64.Build.0 = RelWithDebInfo|x64
-		{8BDD6AF5-CB1D-4AD6-A5CE-7AC304B28E77}.RelWithDebInfo|x86.ActiveCfg = RelWithDebInfo|x64
 		{CF662A5E-1678-4FB9-8C32-F740DA4D5DAA}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{CF662A5E-1678-4FB9-8C32-F740DA4D5DAA}.Debug|x64.ActiveCfg = Debug|x64
 		{CF662A5E-1678-4FB9-8C32-F740DA4D5DAA}.Debug|x64.Build.0 = Debug|x64
