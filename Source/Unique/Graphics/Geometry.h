@@ -25,6 +25,8 @@
 #include "Container/ArrayPtr.h"
 #include "Core/Object.h"
 #include "../Graphics/GraphicsDefs.h"
+#include "../Graphics/GPUObject.h"
+#include <LLGL/BufferArray.h>
 
 namespace Unique
 {
@@ -33,9 +35,10 @@ class IndexBuffer;
 class Ray;
 class Graphics;
 class VertexBuffer;
+class ShaderInstance;
 
 /// Defines one or more vertex buffers, an index buffer and a draw range.
-class UNIQUE_API Geometry : public Object
+class UNIQUE_API Geometry : public GPUObject<Object, LLGL::BufferArray>
 {
     uRTTI(Geometry, Object)
 
@@ -59,7 +62,7 @@ public:
     /// Set the LOD distance.
     void SetLodDistance(float distance);
 
-	void Draw(Graphics* graphics);
+	void Draw(Graphics* graphics, ShaderInstance* shader);
     
 	/// Return all vertex buffers.
     const Vector<SPtr<VertexBuffer> >& GetVertexBuffers() const { return vertexBuffers_; }
@@ -103,12 +106,10 @@ public:
     bool IsEmpty() const { return indexCount_ == 0 && vertexCount_ == 0; }
 protected:
 	bool CreateImpl();
+
 private:
     /// Vertex buffers.
     Vector<SPtr<VertexBuffer> > vertexBuffers_;
-	
-	LLGL::BufferArray* bufferArray_ = nullptr;
-
     /// Index buffer.
     SPtr<IndexBuffer> indexBuffer_;
     /// Primitive type.

@@ -58,6 +58,8 @@ namespace Unique
 		virtual void UpdateBuffer() {}
 
 		operator T&() { return *handle_; }
+
+		T* GetHandle() const { return handle_; }
 	protected:
 		virtual bool CreateImpl()
 		{

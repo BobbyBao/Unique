@@ -126,6 +126,7 @@ namespace Unique
 		geometry_ = new Geometry();
 		geometry_->SetNumVertexBuffers(1);
 		geometry_->SetVertexBuffer(0, vertexBuffer);
+		geometry_->SetDrawRange(PrimitiveType::TriangleList, 0, 0, 0, 3);
 		/*
 		BinaryWriter ser;
 		ser.Save("TestGeo.bin", geometry_);
@@ -140,19 +141,11 @@ namespace Unique
 		// Clear color buffer
 		graphics.Clear(ClearFlags::Color);
 
-
 		for (auto& batch : batches_[GraphicsContext::GetRenderContext()])
 		{
-			graphics.SetVertexBuffer(batch.geometry_->GetVertexBuffer(0));
-
-			auto pipeline = shaderInst_->GetPipeline(batch.geometry_->GetVertexBuffer(0)->GetVertexFormat());
-			graphics.SetGraphicsPipeline(pipeline);
-
 			// Set texture and sampler state on slot index 0
 			graphics.SetTexture(colorMap, 0);
-
-			// Draw fullscreen triangle
-			graphics.Draw(3, 0);
+			batch.geometry_->Draw(&graphics, shaderInst_);
 		}
 
 

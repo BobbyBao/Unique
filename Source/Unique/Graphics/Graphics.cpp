@@ -240,6 +240,11 @@ namespace Unique
 		commands->SetVertexBuffer(*buffer);
 	}
 
+	void Graphics::SetVertexBuffers(BufferArray* buffers)
+	{
+		commands->SetVertexBufferArray(*buffers);
+	}
+
 	void Graphics::SetIndexBuffer(IndexBuffer* buffer)
 	{
 		commands->SetIndexBuffer(*buffer);
@@ -256,14 +261,14 @@ namespace Unique
 		commands->Draw(numVertices, firstVertex);
 	}
 
-	void Graphics::DrawIndexed(unsigned int numVertices, unsigned int firstIndex)
+	void Graphics::DrawIndexed(unsigned int numIndexes, unsigned int firstIndex)
 	{
-		commands->DrawIndexed(numVertices, firstIndex);
+		commands->DrawIndexed(numIndexes, firstIndex);
 	}
 
-	void Graphics::DrawIndexed(unsigned int numVertices, unsigned int firstIndex, int vertexOffset)
+	void Graphics::DrawIndexed(unsigned int numIndexes, unsigned int firstIndex, int vertexOffset)
 	{
-		commands->DrawIndexed(numVertices, firstIndex, vertexOffset);
+		commands->DrawIndexed(numIndexes, firstIndex, vertexOffset);
 	}
 
 	void Graphics::DrawInstanced(unsigned int numVertices, unsigned int firstVertex, unsigned int numInstances)
@@ -276,9 +281,9 @@ namespace Unique
 		commands->DrawInstanced(numVertices, firstVertex, numInstances, instanceOffset);
 	}
 
-	void Graphics::DrawIndexedInstanced(unsigned int numVertices, unsigned int numInstances, unsigned int firstIndex)
+	void Graphics::DrawIndexedInstanced(unsigned int numVerticesPerInstance, unsigned int numInstances, unsigned int firstIndex)
 	{
-		commands->DrawInstanced(numVertices, numInstances, firstIndex);
+		commands->DrawIndexedInstanced(numVerticesPerInstance, numInstances, firstIndex);
 	}
 
 	void Graphics::DrawIndexedInstanced(unsigned int numVertices, unsigned int numInstances, unsigned int firstIndex, int vertexOffset)
@@ -295,7 +300,6 @@ namespace Unique
 	{
 		commands->Dispatch(groupSizeX, groupSizeY, groupSizeZ);
 	}
-
 
 	void Graphics::Close()
 	{

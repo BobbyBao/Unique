@@ -26,11 +26,12 @@
 #include "../Graphics/Graphics.h"
 #include "../Graphics/Buffers/IndexBuffer.h"
 #include "../Graphics/Buffers/VertexBuffer.h"
+#include "../Graphics/Shader/Shader.h"
 #include "IO/Log.h"
 //#include "../Math/Ray.h"
 
 
-#define MAX_VERTEX_STREAMS 4
+#define MAX_VERTEX_STREAMS 8
 
 namespace Unique
 {
@@ -82,7 +83,26 @@ bool Geometry::SetVertexBuffer(unsigned index, VertexBuffer* buffer)
         return false;
     }
 
-    vertexBuffers_[index] = buffer;
+	if (vertexBuffers_[index] != buffer)
+	{
+		vertexBuffers_[index] = buffer;
+
+		bool full = true;
+		for (auto& vb : vertexBuffers_)
+		{
+			if (vb == nullptr)
+			{
+				full = false;
+			}
+		}
+
+		if (full)
+		{
+			Create();
+		}
+
+	}
+
     return true;
 }
 
@@ -166,20 +186,32 @@ void Geometry::SetLodDistance(float distance)
 
 bool Geometry::CreateImpl()
 {
+	ReleaseImpl();
+
+	LLGL::Buffer* buffers[MAX_VERTEX_STREAMS];
+	for (int i = 0; i < vertexBuffers_.size(); i++)
+	{
+		buffers[i] = vertexBuffers_[i]->GetHandle();
+	}
+
+	handle_ = renderer->CreateBufferArray(vertexBuffers_.size(), buffers);
 	return true;
 }
 
-void Geometry::Draw(Graphics* graphics)
+void Geometry::Draw(Graphics* graphics, ShaderInstance* shader)
 {
+	GraphicsPipeline* pipeline = shader->GetPipeline(vertexBuffers_[0]->GetVertexFormat());
 	if (indexBuffer_ && indexCount_ > 0)
 	{
+		graphics->SetVertexBuffers(handle_);
 		graphics->SetIndexBuffer(indexBuffer_);
-	//	graphics->SetVertexBuffers(vertexBuffers_);
-	//	graphics->DrawIndexed(primitiveType_, indexStart_, indexCount_, vertexStart_, vertexCount_);
+		graphics->SetGraphicsPipeline(pipeline);
+		graphics->DrawIndexed(indexCount_, indexStart_, vertexStart_);
 	}
 	else if (vertexCount_ > 0)
 	{
-	//	graphics->SetVertexBuffers(vertexBuffers_);
+		graphics->SetVertexBuffers(handle_);
+		graphics->SetGraphicsPipeline(pipeline);
 		graphics->Draw(vertexCount_, vertexStart_);
 	}
 }

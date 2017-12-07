@@ -9,6 +9,7 @@ namespace Unique
 	class Texture;
 
 	using RendererID = LLGL::RendererID;
+	using BufferArray = LLGL::BufferArray;
 
 
 	class Graphics : public Object
@@ -56,12 +57,13 @@ namespace Unique
 		void SetGraphicsPipeline(GraphicsPipeline* graphicsPipeline);
         void SetComputePipeline(ComputePipeline* computePipeline);
 		void SetVertexBuffer(VertexBuffer* buffer);
+		void SetVertexBuffers(BufferArray* buffers);
 		void SetIndexBuffer(IndexBuffer* buffer);
 		void SetTexture(Texture* texture, uint slot, long shaderStageFlags = ShaderStageFlags::AllStages);
 
         void Draw(unsigned int numVertices, unsigned int firstVertex);
-        void DrawIndexed(unsigned int numVertices, unsigned int firstIndex);
-        void DrawIndexed(unsigned int numVertices, unsigned int firstIndex, int vertexOffset);
+        void DrawIndexed(unsigned int numIndexes, unsigned int firstIndex);
+        void DrawIndexed(unsigned int numIndexes, unsigned int firstIndex, int vertexOffset);
         void DrawInstanced(unsigned int numVertices, unsigned int firstVertex, unsigned int numInstances);
         void DrawInstanced(unsigned int numVertices, unsigned int firstVertex, unsigned int numInstances, unsigned int instanceOffset);
         void DrawIndexedInstanced(unsigned int numVertices, unsigned int numInstances, unsigned int firstIndex);
