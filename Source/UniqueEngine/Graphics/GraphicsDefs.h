@@ -9,17 +9,6 @@ using namespace Diligent;
 
 namespace Unique
 {
-	
-	enum class RendererID
-	{
-		Direct3D11,
-		Direct3D12,
-		OpenGL,
-		OpenGLES,
-		Vulkan,
-		Metal
-	};
-
 	using ValueType = VALUE_TYPE;
 	using BindFlags = BIND_FLAGS;
 	using PrimitiveTopology = PRIMITIVE_TOPOLOGY;

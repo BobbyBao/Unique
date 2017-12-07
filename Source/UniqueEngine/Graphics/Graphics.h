@@ -12,8 +12,6 @@ namespace Unique
 	class IndexBuffer;
 	class Texture;
 
-
-
 	class Graphics : public Object
 	{
 		uRTTI(Graphics, Object)
@@ -24,7 +22,7 @@ namespace Unique
 		bool Initialize(const std::string& rendererModule, const IntVector2& size);
 		void Resize(const IntVector2& size);
 
-		RendererID GetRenderID() const;
+		DeviceType GetDeviceType() const;
 		void SetDebug(bool val);
 		const IntVector2& GetResolution() const;
 
@@ -80,7 +78,7 @@ namespace Unique
 		RefCntAutoPtr<ISwapChain> pSwapChain;
 
 		IntVector2 resolution_;
-		RendererID rendererID_;
+		DeviceType deviceType_;
 		bool debugger_ = false;
 
 		bool vsync_ = false;

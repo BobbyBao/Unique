@@ -26,57 +26,7 @@ namespace Unique
 
 	bool Graphics::Initialize(const std::string& rendererModule, const IntVector2& size)
 	{
-		/*
-		// Create render system
-		renderer = LLGL::RenderSystem::Load
-		(
-			rendererModule,
-			(debugger_ ? profilerObj_.get() : nullptr),
-			(debugger_ ? debuggerObj_.get() : nullptr)
-		);
 
-		// Create render context
-		LLGL::RenderContextDescriptor contextDesc;
-		{
-			contextDesc.videoMode.resolution = (LLGL::Size&)size;
-			contextDesc.vsync.enabled = vsync_;
-			contextDesc.multiSampling.enabled = (multiSampling_ > 1);
-			contextDesc.multiSampling.samples = multiSampling_;
-
-#if 0
-			contextDesc.profileOpenGL.extProfile = true;
-			contextDesc.profileOpenGL.coreProfile = true;
-			contextDesc.profileOpenGL.version = LLGL::OpenGLVersion::OpenGL_3_3;
-#endif
-
-#ifdef __linux__
-			contextDesc.profileOpenGL.extProfile = true;
-			contextDesc.profileOpenGL.coreProfile = true;
-			contextDesc.profileOpenGL.version = LLGL::OpenGLVersion::OpenGL_3_3;
-#endif
-		}
-
-		renderContext = renderer->CreateRenderContext(contextDesc);
-
-		// Create command buffer
-		commands = renderer->CreateCommandBuffer();
-
-		const LLGL::ColorRGBAf defaultClearColor{ 0.1f, 0.1f, 0.4f };
-
-		// Initialize command buffer
-		commands->SetClearColor(defaultClearColor);
-		commands->SetRenderTarget(*renderContext);
-		commands->SetViewport({ 0.0f, 0.0f, static_cast<float>(size.x_), static_cast<float>(size.y_) });
-		commands->SetScissor({ 0, 0, size.x_, size.y_ });
-
-		// Print renderer information
-		const auto& info = renderer->GetRendererInfo();
-
-		std::cout << "renderer information:" << std::endl;
-		std::cout << "  renderer:         " << info.rendererName << std::endl;
-		std::cout << "  device:           " << info.deviceName << std::endl;
-		std::cout << "  vendor:           " << info.vendorName << std::endl;
-		std::cout << "  shading language: " << info.shadingLanguageName << std::endl;*/
 
 		GraphicsContext::FrameNoRenderWait();
 
@@ -112,9 +62,9 @@ namespace Unique
 
 	}
 
-	RendererID Graphics::GetRenderID() const
+	DeviceType Graphics::GetDeviceType() const
 	{
-		return rendererID_;
+		return deviceType_;
 	}
 
 	void Graphics::SetDebug(bool val)
@@ -129,12 +79,12 @@ namespace Unique
 
 	bool Graphics::IsDirect3D() const
 	{
-		return (rendererID_ == RendererID::Direct3D11 || rendererID_ == RendererID::Direct3D12);
+		return (deviceType_ == DeviceType::D3D11 || deviceType_ == DeviceType::D3D12);
 	}
 
 	bool Graphics::IsOpenGL() const
 	{
-		return (rendererID_ == RendererID::OpenGL || rendererID_ == RendererID::OpenGLES);
+		return (deviceType_ == DeviceType::OpenGL || deviceType_ == DeviceType::OpenGLES);
 	}
 	
 	void Graphics::BeginFrame()

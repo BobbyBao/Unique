@@ -77,7 +77,7 @@ namespace Unique
 
 		String defines = defines_.Replaced(" -D", "_");
 
-		String binaryShaderName = Shader::GetShaderPath(graphics.GetRenderID()) + name;
+		String binaryShaderName = Shader::GetShaderPath(graphics.GetDeviceType()) + name;
 
 		if (!defines.Empty())
 		{
@@ -90,7 +90,7 @@ namespace Unique
 		{
 			if (!Compile(binaryShaderName))
 			{
-				if (LoadByteCode(Shader::GetShaderPath(graphics.GetRenderID()) + name + extension))
+				if (LoadByteCode(Shader::GetShaderPath(graphics.GetDeviceType()) + name + extension))
 				{
 					UNIQUE_LOGWARNING("==============================Load shader failed, name : " + binaryShaderName);
 				}

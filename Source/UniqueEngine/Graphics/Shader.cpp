@@ -212,27 +212,23 @@ namespace Unique
 		return defs.Split(' ');
 	}
 
-	String Shader::GetShaderPath(RendererID renderID)
+	String Shader::GetShaderPath(DeviceType renderID)
 	{
 		switch (renderID)
 		{
-		//case RendererID::Direct3D9:
-		//case RendererID::Direct3D10:
-		case RendererID::Direct3D11:
-		case RendererID::Direct3D12:
+		case DeviceType::D3D11:
+		case DeviceType::D3D12:
 			return "Shaders/HLSL/";
 			
-		case RendererID::OpenGL:
+		case DeviceType::OpenGL:
 			return "Shaders/GLSL/";
-		case RendererID::OpenGLES:
-		//case RendererID::OpenGLES2:
-		//case RendererID::OpenGLES3:
+		case DeviceType::OpenGLES:
 			return "Shaders/ESSL/";
 
-		case RendererID::Vulkan:
-			return "Shaders/VKSL/";
-		case RendererID::Metal:
-			return "Shaders/metal/";
+		//case DeviceType::Vulkan:
+		//	return "Shaders/VKSL/";
+		//case DeviceType::Metal:
+		//	return "Shaders/metal/";
 		default:
 			break;
 		}

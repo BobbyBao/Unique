@@ -73,7 +73,7 @@ namespace Unique
 
 		static Vector<String> SplitDef(const String& defs);
 
-		static String GetShaderPath(RendererID renderID);
+		static String GetShaderPath(DeviceType renderID);
 	private:
 		String shaderName_;
 		Vector<SPtr<Pass>> passes_;
