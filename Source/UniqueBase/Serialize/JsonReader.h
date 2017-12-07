@@ -329,7 +329,7 @@ namespace Unique
 
 			Hjson::Value parentNode = hJsonNode_;
 
-			for (SizeType i = 0; i < parentNode.size(); ++i)
+			for (size_t i = 0; i < parentNode.size(); ++i)
 			{
 				auto& child = parentNode[i];
 				hJsonNode_ = child;
@@ -353,7 +353,7 @@ namespace Unique
 
 			Value* parentNode = currentNode_;
 
-			for (SizeType i = 0; i < parentNode->Size(); ++i)
+			for (rapidjson::SizeType i = 0; i < parentNode->Size(); ++i)
 			{
 				auto& child = (*parentNode)[i];
 				currentNode_ = &child;
@@ -387,7 +387,7 @@ namespace Unique
 			}
 
 			Hjson::Value parentNode = hJsonNode_;
-			for (SizeType i = 0; i < parentNode.size(); ++i)
+			for (size_t i = 0; i < parentNode.size(); ++i)
 			{
 				auto& child = parentNode[i];
 				hJsonNode_ = child;
@@ -402,7 +402,7 @@ namespace Unique
 		{
 			Value* parentNode = currentNode_;
 
-			for (SizeType i = 0; i < parentNode->Size(); ++i)
+			for (rapidjson::SizeType i = 0; i < parentNode->Size(); ++i)
 			{
 				auto& child = (*parentNode)[i];
 				currentNode_ = &child;
@@ -431,7 +431,7 @@ namespace Unique
 			}
 
 			Hjson::Value parentNode = hJsonNode_;
-			for (SizeType i = 0; i < parentNode.size(); ++i)
+			for (size_t i = 0; i < parentNode.size(); ++i)
 			{
 				auto& child = parentNode[i];
 				hJsonNode_ = child;
@@ -452,7 +452,7 @@ namespace Unique
 
 			Value* parentNode = currentNode_;
 
-			for (SizeType i = 0; i < parentNode->Size(); ++i)
+			for (rapidjson::SizeType i = 0; i < parentNode->Size(); ++i)
 			{
 				auto& child = parentNode->operator[][i];
 				currentNode_ = child;

@@ -14,13 +14,11 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Drawable.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Importers\ModelImporter.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Shader\ShaderVariation.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\GraphicsContext.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Importers\TextureImporter.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)UniquePCH.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Scene\Component.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Engine\Application.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Geometry.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Buffers\GraphicsBuffer.cpp" />
@@ -29,8 +27,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\GPUObject.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Graphics.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\GraphicsDefs.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Material.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Model.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Renderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Shader\Shader.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Texture.cpp" />
@@ -40,13 +36,11 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Importers\ShaderImporter.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Drawable.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Shader\ShaderVariation.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Importers\ModelImporter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\GraphicsContext.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Importers\TextureImporter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)UniquePCH.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Scene\Component.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Engine\Application.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Geometry.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Buffers\GraphicsBuffer.h" />
@@ -55,8 +49,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\GPUObject.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Graphics.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\GraphicsDefs.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Material.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Model.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Renderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Shader\Shader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Texture.h" />

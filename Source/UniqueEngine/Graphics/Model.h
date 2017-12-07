@@ -13,8 +13,8 @@ namespace Unique
 		Model();
 		~Model();
 
-		Vector<SPtr<VertexBuffer>> vertexBuffers_;
-		SPtr<IndexBuffer> indexBuffer_;
+		//Vector<SPtr<VertexBuffer>> vertexBuffers_;
+		//SPtr<IndexBuffer> indexBuffer_;
 
 	};
 

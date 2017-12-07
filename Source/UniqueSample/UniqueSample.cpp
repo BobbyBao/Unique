@@ -1,7 +1,3 @@
-// UniqueSample.cpp: 定义控制台应用程序的入口点。
-//
-
-#include "stdafx.h"
 #include <SDL/SDL.h>
 #include <SDL/SDL_syswm.h>
 #include <memory>
@@ -13,7 +9,7 @@
 #include "DeviceContext.h"
 #include "SwapChain.h"
 
-//#include <RenderDeviceFactoryD3D11.h>
+#include <RenderDeviceFactoryD3D11.h>
 //#include <RenderDeviceFactoryD3D12.h>
 #include <RenderDeviceFactoryOpenGL.h>
 
@@ -27,7 +23,6 @@ void InitDevice(HWND hWnd, IRenderDevice **ppRenderDevice, IDeviceContext **ppIm
 	SCDesc.SamplesCount = 1;
 	switch (DevType)
 	{
-#if false
 	case DeviceType::D3D11:
 	{
 		EngineD3D11Attribs DeviceAttribs;
@@ -44,7 +39,8 @@ void InitDevice(HWND hWnd, IRenderDevice **ppRenderDevice, IDeviceContext **ppIm
 		pFactoryD3D11->CreateSwapChainD3D11(*ppRenderDevice, *ppImmediateContext, SCDesc, hWnd, ppSwapChain);
 	}
 	break;
-
+	
+#if false
 	case DeviceType::D3D12:
 	{
 #ifdef ENGINE_DLL
@@ -85,6 +81,7 @@ void InitDevice(HWND hWnd, IRenderDevice **ppRenderDevice, IDeviceContext **ppIm
 		break;
 	}
 }
+
 int done = 0;
 void
 loop()
@@ -167,6 +164,7 @@ main(int argc, char *argv[])
 	RefCntAutoPtr<IDeviceContext> pDeviceContext;
 	Diligent::RefCntAutoPtr<ISwapChain> pSwapChain;
 	DeviceType DevType = DeviceType::OpenGL;
+	DevType = DeviceType::D3D11;
 	InitDevice(GetWindowHandle(window), &pRenderDevice, &pDeviceContext, &pSwapChain, DevType);
 	g_pSwapChain = pSwapChain;
 #ifdef __EMSCRIPTEN__

@@ -23,7 +23,7 @@
     <ProjectGuid>{1F984CB6-33D2-4F90-9E07-1DD5C0B83D8C}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>UniqueSample</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.10240.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -56,6 +56,8 @@
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Label="Shared">
+    <Import Project="..\UniqueBase\UniqueBase.vcxitems" Label="Shared" />
+    <Import Project="..\UniqueEngine\UniqueEngine.vcxitems" Label="Shared" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -86,19 +88,19 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;PLATFORM_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;PLATFORM_WIN32;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../External/Include;../../DiligentCore/Common/include;../../DiligentCore/Common/interface;../../DiligentCore/Graphics/GraphicsEngine/include;../../DiligentCore/Graphics/GraphicsEngine/interface;../../DiligentCore/Platforms/Basic/include;../../DiligentCore/Platforms/interface;../../DiligentCore/Graphics/GraphicsEngineD3D11/include;../../DiligentCore/Graphics/GraphicsEngineD3D11/interface;../../DiligentCore/Graphics/GraphicsEngineD3D12/include;../../DiligentCore/Graphics/GraphicsEngineD3D12/interface;../../DiligentCore/Graphics/GraphicsEngineOpenGL/include;../../DiligentCore/Graphics/GraphicsEngineOpenGL/interface;../../DiligentCore/Graphics/HLSL2GLSLConverterLib/interface;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\External\include;.\;..\UniqueBase;../../External/Include;../../DiligentCore/Common/include;../../DiligentCore/Common/interface;../../DiligentCore/Graphics/GraphicsEngine/include;../../DiligentCore/Graphics/GraphicsEngine/interface;../../DiligentCore/Platforms/Basic/include;../../DiligentCore/Platforms/interface;../../DiligentCore/Graphics/GraphicsEngineD3D11/include;../../DiligentCore/Graphics/GraphicsEngineD3D11/interface;../../DiligentCore/Graphics/GraphicsEngineD3D12/include;../../DiligentCore/Graphics/GraphicsEngineD3D12/interface;../../DiligentCore/Graphics/GraphicsEngineOpenGL/include;../../DiligentCore/Graphics/GraphicsEngineOpenGL/interface;../../DiligentCore/Graphics/HLSL2GLSLConverterLib/interface;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>../../External/Lib/x64</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;SDL2.lib;SDL2main.lib;opengl32.lib;d3d11.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -152,16 +154,6 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="UniqueSample.cpp" />
   </ItemGroup>
   <ItemGroup>

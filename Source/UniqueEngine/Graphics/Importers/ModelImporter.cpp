@@ -1,10 +1,10 @@
 #include "Precompiled.h"
 #include "ModelImporter.h"
-//#include "../Model.h"
+#include "../Model.h"
 
 namespace Unique
 {
-	ModelImporter::ModelImporter() : ResourceImporter("Model")
+	ModelImporter::ModelImporter() : ResourceImporter(Model::GetTypeStatic())
 	{
 	}
 
@@ -13,7 +13,7 @@ namespace Unique
 	}
 
 	SPtr<Resource> ModelImporter::Import(const String& path)
-	{/*
+	{
 		SPtr<Model> model;
 		SPtr<File> file = cache.GetFile(path);
 		if (file)
@@ -21,7 +21,6 @@ namespace Unique
 			return nullptr;
 		}
 
-		return model;*/
-		return nullptr;
+		return model;
 	}
 }
