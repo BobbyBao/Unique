@@ -1,7 +1,7 @@
 #pragma once
 #include "resource/Resource.h"
-#include "../GraphicsDefs.h"
-#include "../GPUObject.h"
+#include "GraphicsDefs.h"
+#include "GPUObject.h"
 #include <Shader.h>
 #include <PipelineState.h>
 
@@ -67,10 +67,8 @@ namespace Unique
 		unsigned mask_ = 0;
 		bool dirty_ = false;
 	};
-
-	class ShaderProgram{};
-
-	class ShaderInstance : public GPUObject<RefCounted, ShaderProgram>
+	
+	class ShaderInstance : public GPUObject<RefCounted, IPipelineState>
 	{
 	public:
 		ShaderInstance(Shader& shader, Pass& shaderPass, unsigned defs);
@@ -82,7 +80,6 @@ namespace Unique
 
 		Vector<SPtr<ShaderVariation>>	shaders;
 		bool dirty_ = true;
-		IPipelineState*			pipeline_ = nullptr;
 
 	};
 }

@@ -1,6 +1,6 @@
 #pragma once
 #include "Resource/Resource.h"
-#include "../GraphicsDefs.h"
+#include "GraphicsDefs.h"
 #include "ShaderVariation.h"
 #include <DepthStencilState.h>
 #include <BlendState.h>
@@ -9,6 +9,9 @@
 namespace Unique
 {
 	class Shader;
+
+	using BlendFactor = BLEND_FACTOR;
+	using BlendOperation = BLEND_OPERATION;
 
 	class Pass : public Object
 	{

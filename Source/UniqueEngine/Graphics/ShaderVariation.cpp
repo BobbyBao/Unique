@@ -3,7 +3,7 @@
 #include "IO/FileSystem.h"
 #include "Resource/ResourceCache.h"
 #include "Shader.h"
-#include "../Graphics.h"
+#include "Graphics.h"
 
 namespace Unique
 {
@@ -306,7 +306,7 @@ namespace Unique
 			pipeline_ = renderer->CreateGraphicsPipeline(pipelineDesc);
 		}
 		*/
-		return pipeline_;
+		return handle_;
 	}
 
 	void ShaderInstance::Reload()

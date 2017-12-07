@@ -19,8 +19,23 @@ namespace Unique
 		Vulkan,
 		Metal
 	};
-	
+
+	using ValueType = VALUE_TYPE;
+	using BindFlags = BIND_FLAGS;
 	using PrimitiveTopology = PRIMITIVE_TOPOLOGY;
+	using Usage = USAGE;
+	using CPUAccessFlag = CPU_ACCESS_FLAG;
+	using MapType = MAP_TYPE;
+	using MapFlags = MAP_FLAGS;
+
+	using TextureFormat = TEXTURE_FORMAT;
+	using FilterType = FILTER_TYPE;
+	using TextureAddressMode = TEXTURE_ADDRESS_MODE;
+	using ComparisonFunction = COMPARISON_FUNCTION;
+	using ComponentType = COMPONENT_TYPE;
+
+	uEnumTraits(ValueType,
+				"UNDEFINED", "INT8", "INT16", "INT32", "UINT8", "UINT16", "UINT32", "FLOAT16", "FLOAT32")
 	
 	uEnumTraits(PrimitiveTopology,
 				"UNDEFINED", "TRIANGLE_LIST", "TRIANGLE_STRIP", "POINT_LIST", "LINE_LIST", 
@@ -57,13 +72,8 @@ namespace Unique
 
 	using UniformType = LLGL::UniformType;
 
-	uEnumTraits(ShaderType, "VertexShader", "HullShader", "DomainShader", "GeometryShader",	"FragmentShader", "ComputeShader")
 	uEnumTraits(CompareOp, "Never", "Less", "Equal", "LessEqual", "Greater", "NotEqual", "GreaterEqual", "Ever")
 	uClassTraits(DepthState, "TestEnabled", self.testEnabled, "WriteEnabled", self.writeEnabled, "CompareOp", self.compareOp)
-
-	uEnumTraits(UniformType, "Float", "Float2", "Float3", "Float4", 
-							 "Double", "Double2", "Double3", "Double4",
-							 "Int", "Int2", "Int3", "Int4", )
 
 #endif
 }

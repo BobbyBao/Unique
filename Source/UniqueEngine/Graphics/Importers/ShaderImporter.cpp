@@ -1,6 +1,6 @@
 #include "Precompiled.h"
 #include "ShaderImporter.h"
-#include "../Shader/Shader.h"
+#include "../Shader.h"
 
 
 namespace Unique

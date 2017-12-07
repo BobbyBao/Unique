@@ -26,7 +26,7 @@
 #include "../Graphics/Graphics.h"
 #include "../Graphics/Buffers/IndexBuffer.h"
 #include "../Graphics/Buffers/VertexBuffer.h"
-#include "../Graphics/Shader/Shader.h"
+#include "../Graphics/Shader.h"
 #include "IO/Log.h"
 //#include "../Math/Ray.h"
 
