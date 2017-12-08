@@ -11,7 +11,8 @@ namespace Unique
 		Application();
 		virtual ~Application();
 
-		void SetTitle(const std::wstring& title);
+		void SetDeviceType(DeviceType deviceType) { deviceType_ = deviceType; }
+		void SetTitle(const String& title);
 		void SetResolution(const IntVector2& res);
 
 		void Run();
@@ -24,14 +25,16 @@ namespace Unique
 		virtual void OnPreRender();
 		virtual void OnPostRender();
 
-		std::wstring					title_;
-		IntVector2						resolution_;
-		uint							multiSampling_ = 8;
-		bool							vsync_ = true;
-		bool							debugger = true;
-		bool                            loadingDone_ = false;
-		UPtr<Context>					context_;
-		static bool						quit_;
+		DeviceType		deviceType_;
+		String			title_;
+		IntVector2		resolution_;
+		uint			multiSampling_ = 8;
+		bool			vsync_ = true;
+		bool			debugger = true;
+		bool            loadingDone_ = false;
+		UPtr<Context>	context_;
+
+		static bool				quit_;
 
 		friend class ResizeEventHandler;
 

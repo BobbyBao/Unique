@@ -1,6 +1,4 @@
 #include "UniquePCH.h"
-#include <SDL/SDL.h>
-#include <SDL/SDL_syswm.h>
 #include <memory>
 #include <iomanip>
 #include "UniqueSample.h"
@@ -51,6 +49,7 @@ namespace Unique
 		m_Animate = false;                       // enable animation
 		m_AnimationSpeed = 0.2f;               // animation speed
 
+		SetDeviceType(DeviceType::D3D11);
 	}
 
 	UniqueSample::~UniqueSample()
@@ -76,14 +75,7 @@ namespace Unique
 		{
 			ShaderCreationAttribs Attrs;
 			Attrs.Desc.Name = "MainVS";
-			//if (graphics.IsDirect3D())
-			{
-				Attrs.FilePath = "MainVS_DX.hlsl";
-			}
-			//else
-			{
-			//	Attrs.FilePath = "MainVS_GL.glsl";
-			}
+			Attrs.FilePath = "MainVS_DX.hlsl";
 			//Attrs.SearchDirectories = "shaders;shaders\\inc;";
 			Attrs.EntryPoint = "main";
 			Attrs.Desc.ShaderType = SHADER_TYPE_VERTEX;
@@ -96,14 +88,7 @@ namespace Unique
 		{
 			ShaderCreationAttribs Attrs;
 			Attrs.Desc.Name = "MainPS";
-			//if (graphics.IsDirect3D())
-			{
-				Attrs.FilePath = "MainPS_DX.hlsl";
-			}
-			//else
-			{
-			//	Attrs.FilePath = "MainPS_GL.glsl";
-			}
+			Attrs.FilePath = "MainPS_DX.hlsl";
 			//Attrs.SearchDirectories = "shaders;shaders\\inc;";
 			Attrs.EntryPoint = "main";
 			Attrs.Desc.ShaderType = SHADER_TYPE_PIXEL;
@@ -149,7 +134,6 @@ namespace Unique
 			//RSDesc.MultisampleEnable = false; // do not allow msaa (fonts would be degraded)
 			RasterizerDesc.AntialiasedLineEnable = False;
 
-
 			InputLayoutDesc &Layout = PSODesc.GraphicsPipeline.InputLayout;
 			LayoutElement TextLayoutElems[] =
 			{
@@ -172,6 +156,7 @@ namespace Unique
 		ResourceMappingEntry entries[] =
 		{
 			{"Constants", m_pConstantBuffer },
+
 			ResourceMappingEntry()
 		};
 		
@@ -179,14 +164,8 @@ namespace Unique
 		rmd.pEntries = entries;
 
 		renderDevice->CreateResourceMapping(rmd, &resourceMapping_);
-		//vs_->BindResources(resourceMapping_, );
-		//BIND_SHADER_RESOURCES_FLAGS
-		
 		pipelineState_->BindShaderResources(resourceMapping_, BIND_SHADER_RESOURCES_ALL_RESOLVED);
-		
-		
-		
-		
+	
 		// Init model rotation
 		float3 axis(-1, 1, 0);
 		m_SpongeRotation = RotationFromAxisAngle(axis, M_PI / 4);
@@ -194,7 +173,6 @@ namespace Unique
 
 	void UniqueSample::Terminate()
 	{
-
 	}
 	
 	void UniqueSample::OnPreRender()
@@ -214,11 +192,11 @@ namespace Unique
 
 		SetShaderConstants(world, view, proj);
 	
-		deviceContext->SetPipelineState(pipelineState_);
-		pSRB_->BindResources(SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, resourceMapping_, BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED);
-		deviceContext->CommitShaderResources(pSRB_, COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
+// 		deviceContext->SetPipelineState(pipelineState_);
+// 		pSRB_->BindResources(SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, resourceMapping_, BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED);
+// 		deviceContext->CommitShaderResources(pSRB_, COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
 
-		geometry_->Draw(pipelineState_);
+		geometry_->Draw(pipelineState_, pSRB_, resourceMapping_);
 	}
 	
 	void UniqueSample::OnPostRender()
@@ -243,27 +221,10 @@ namespace Unique
 		bool aoEdges[12] = { false, false, false, false, false, false, false, false, false, false, false, false };
 		unsigned int faceColors[6] = { COLORS[0], COLORS[0], COLORS[0], COLORS[0], COLORS[0], COLORS[0] };
 		FillSpongeBuffers(0, levelMax, vertices, indices, float3(), aoEnabled, aoEdges, faceColors);
-		/*
-		BufferDesc BuffDesc;
-		BuffDesc.BindFlags = BIND_VERTEX_BUFFER;
-		BuffDesc.Usage = USAGE_STATIC;
-		BuffDesc.uiSizeInBytes = (Uint32)vertices.size() * sizeof(Vertex);
-		BufferData BuffData;
-		BuffData.pData = vertices.data();
-		BuffData.DataSize = BuffDesc.uiSizeInBytes;*/
+
 
 		SPtr<VertexBuffer> pVertexBuffer(new VertexBuffer());
 		pVertexBuffer->Create(vertices.size(), sizeof(Vertex), USAGE_STATIC, vertices.data());
-
-
-		// Create index buffer
-// 		BuffDesc.uiSizeInBytes = (Uint32)indices.size() * sizeof(unsigned int);
-// 		BuffDesc.BindFlags = BIND_INDEX_BUFFER;
-// 		BuffData.pData = &indices[0];
-// 		BuffData.DataSize = BuffDesc.uiSizeInBytes;
-
-// 		RefCntAutoPtr<IBuffer> pIndexBuffer;
-// 		renderDevice->CreateBuffer(BuffDesc, BuffData, &pIndexBuffer);
 
 		SPtr<IndexBuffer> pIndexBuffer(new IndexBuffer());
 		pIndexBuffer->Create(indices.size(), sizeof(unsigned int), USAGE_STATIC, indices.data());

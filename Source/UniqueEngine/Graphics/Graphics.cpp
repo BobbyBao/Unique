@@ -1,10 +1,9 @@
 #include "Precompiled.h"
+#include <SDL/SDL.h>
 #include "Graphics.h"
 #include "Texture.h"
 #include "GraphicsBuffer.h"
-#include "GraphicsContext.h"
 #include <iostream>
-#include <SDL/SDL.h>
 
 namespace Unique
 {
@@ -15,6 +14,9 @@ namespace Unique
 	
 	IRenderDevice* renderDevice = nullptr;
 	IDeviceContext* deviceContext = nullptr;
+
+	int Graphics::currentContext_ = 0;
+	CommandQueue Graphics::comands_;
 
 	extern void InitDevice(SDL_Window* window, IRenderDevice **ppRenderDevice, IDeviceContext **ppImmediateContext, ISwapChain **ppSwapChain, DeviceType DevType);
 	
@@ -48,7 +50,7 @@ namespace Unique
 		renderDevice = renderDevice_;
 		deviceContext = deviceContext_;
 
-		GraphicsContext::FrameNoRenderWait();
+		FrameNoRenderWait();
 
 		return true;
 	}
@@ -63,7 +65,7 @@ namespace Unique
 
 		if (Thread::IsMainThread())
 		{
-			GraphicsContext::AddCommand(fn);
+			Graphics::AddCommand(fn);
 		}
 		else
 		{
@@ -97,32 +99,123 @@ namespace Unique
 		return (deviceType_ == DeviceType::OpenGL || deviceType_ == DeviceType::OpenGLES);
 	}
 	
+
 	void Graphics::BeginFrame()
 	{
-		GraphicsContext::BeginFrame();
 	}
 
 	void Graphics::EndFrame()
 	{
-		GraphicsContext::EndFrame();
+		RenderSemWait();
+
+		FrameNoRenderWait();
 	}
 
 	void Graphics::BeginRender()
 	{
-		GraphicsContext::BeginRender();
 	}
 
 	void Graphics::EndRender()
 	{
 		swapChain_->Present();
 
-		GraphicsContext::EndRender();
+		if (MainSemWait())
+		{
+			{
+				UNIQUE_PROFILE(ExecCommands);
+				ExecuteCommands(comands_);
+			}
+
+			SwapContext();
+
+			RenderSemPost();
+
+		}
 	}
 
 	void Graphics::Close()
 	{
-		GraphicsContext::Stop();
+		MainSemWait();
+		//FrameNoRenderWait();
+		RenderSemPost();
 	}
 
+	void Graphics::AddCommand(std::function<void()> cmd)
+	{
+		assert(Context::IsMainThread());
+		comands_.push_back(cmd);
+	}
+
+	void Graphics::ExecuteCommands(CommandQueue& cmds)
+	{
+		if (!cmds.empty())
+		{
+			for (auto& fn : cmds)
+			{
+				fn();
+			}
+
+			cmds.clear();
+		}
+	}
+
+	
+	void Graphics::SwapContext()
+	{
+		currentContext_ = 1 - currentContext_;
+	}
+
+	void Graphics::FrameNoRenderWait()
+	{
+		// release render thread
+		MainSemPost();
+	}
+
+	void Graphics::MainSemPost()
+	{
+		if (!singleThreaded_)
+		{
+			mainSem_.post();
+		}
+	}
+
+	bool Graphics::MainSemWait(int _msecs)
+	{
+		if (singleThreaded_)
+		{
+			return true;
+		}
+
+		UNIQUE_PROFILE(MainThreadWait);
+		HiresTimer timer;
+		bool ok = mainSem_.wait(_msecs);
+		if (ok)
+		{
+			waitSubmit_ = timer.GetUSec(false);
+			return true;
+		}
+
+		return false;
+	}
+
+	void Graphics::RenderSemPost()
+	{
+		if (!singleThreaded_)
+		{
+			renderSem_.post();
+		}
+	}
+
+	void Graphics::RenderSemWait()
+	{
+		if (!singleThreaded_)
+		{
+			UNIQUE_PROFILE(RenderThreadWait);
+			HiresTimer timer;
+			bool ok = renderSem_.wait();
+			assert(ok);
+			waitRender_ = timer.GetUSec(false);
+		}
+	}
 }
 

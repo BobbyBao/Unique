@@ -91,7 +91,7 @@ namespace Unique
 		drawAttribs_.IndexType = buffer->GetStride() == 4 ? ValueType::VT_UINT32: ValueType::VT_UINT16;
 	}
 
-	bool Geometry::SetDrawRange(PrimitiveTopology type, unsigned indexStart, unsigned indexCount, bool getUsedVertexRange)
+	bool Geometry::SetDrawRange(PrimitiveTopology type, unsigned indexStart, unsigned indexCount)
 	{
 		if (!indexBuffer_)
 		{
@@ -114,9 +114,6 @@ namespace Unique
 		{
 			vertexStart_ = 0;
 			vertexCount_ = vertexBuffers_[0] ? vertexBuffers_[0]->GetCount() : 0;
-
-			if (getUsedVertexRange && indexBuffer_)
-				indexBuffer_->GetUsedVertexRange(indexStart_, indexCount_, vertexStart_, vertexCount_);
 		}
 		else
 		{
@@ -127,13 +124,13 @@ namespace Unique
 		return true;
 	}
 
-	bool Geometry::SetDrawRange(PrimitiveTopology type, unsigned indexStart, unsigned indexCount, unsigned minVertex, unsigned vertexCount,
-		bool checkIllegal)
+	bool Geometry::SetDrawRange(PrimitiveTopology type, unsigned indexStart, unsigned indexCount, 
+		unsigned minVertex,	unsigned vertexCount)
 	{
 		if (indexBuffer_)
 		{
 			// We can allow setting an illegal draw range now if the caller guarantees to resize / fill the buffer later
-			if (checkIllegal && indexStart + indexCount > indexBuffer_->GetCount())
+			if (indexStart + indexCount > indexBuffer_->GetCount())
 			{
 				UNIQUE_LOGERROR("Illegal draw range " + String(indexStart) + " to " + String(indexStart + indexCount - 1) +
 						 ", index buffer has " + String(indexBuffer_->GetCount()) + " indices");
@@ -151,7 +148,6 @@ namespace Unique
 		indexCount_ = indexCount;
 		vertexStart_ = minVertex;
 		vertexCount_ = vertexCount;
-
 		return true;
 	}
 
@@ -163,7 +159,7 @@ namespace Unique
 		lodDistance_ = distance;
 	}
 
-	void Geometry::Draw(IPipelineState* pipeline)
+	void Geometry::Draw(IPipelineState* pipeline, IShaderResourceBinding* pSRB, IResourceMapping* pRM)
 	{
 		IBuffer *buffer[8] = { nullptr };
 		Uint32 offsets[8] = { 0 };
@@ -188,6 +184,9 @@ namespace Unique
 			drawAttribs_.NumVertices = vertexCount_;
 		}
 
+		deviceContext->SetPipelineState(pipeline);
+		pSRB->BindResources(SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, pRM, BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED);
+		deviceContext->CommitShaderResources(pSRB, COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
 
 		deviceContext->Draw(drawAttribs_);
 	}

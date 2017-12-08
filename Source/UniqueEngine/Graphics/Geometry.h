@@ -54,14 +54,13 @@ public:
     /// Set the index buffer.
     void SetIndexBuffer(IndexBuffer* buffer);
     /// Set the draw range.
-    bool SetDrawRange(PrimitiveTopology type, unsigned indexStart, unsigned indexCount, bool getUsedVertexRange = true);
+    bool SetDrawRange(PrimitiveTopology type, unsigned indexStart, unsigned indexCount);
     /// Set the draw range.
-    bool SetDrawRange(PrimitiveTopology type, unsigned indexStart, unsigned indexCount, unsigned vertexStart, unsigned vertexCount,
-        bool checkIllegal = true);
+    bool SetDrawRange(PrimitiveTopology type, unsigned indexStart, unsigned indexCount, unsigned vertexStart, unsigned vertexCount);
     /// Set the LOD distance.
     void SetLodDistance(float distance);
 
-	void Draw(IPipelineState* pipeline);
+	void Draw(IPipelineState* pipeline, IShaderResourceBinding* pSRB, IResourceMapping* pRM);
     
 	/// Return all vertex buffers.
     const Vector<SPtr<VertexBuffer> >& GetVertexBuffers() const { return vertexBuffers_; }

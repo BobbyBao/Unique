@@ -1,6 +1,6 @@
+#include <SDL/SDL.h>
 #include "UniquePCH.h"
 #include "Application.h"
-#include <SDL/SDL.h>
 #include "Input.h"
 #include "../Graphics/Graphics.h"
 #include "../Graphics/Renderer.h"
@@ -16,8 +16,9 @@ namespace Unique
 	Vector<String> Application::argv_;
 	bool Application::quit_ = false;
 	Application::Application() :
-		resolution_ { 800, 600 },
-		context_(new Context())
+		context_(new Context()),
+		resolution_(800, 600),
+		deviceType_(DeviceType::OpenGL)
 	{
 		context_->RegisterSubsystem<WorkQueue>();
 		context_->RegisterSubsystem<Profiler>();
@@ -27,9 +28,7 @@ namespace Unique
 		log.Open("Unique.log");
 
 		context_->RegisterSubsystem<Graphics>();
-
 		context_->RegisterSubsystem<ResourceCache>();
-	
 		context_->RegisterSubsystem<Renderer>();
 		context_->RegisterSubsystem<Input>();
 
@@ -45,7 +44,8 @@ namespace Unique
 		SDL_LogSetPriority(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO);
 
 		/* Initialize SDL */
-		if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+		if (SDL_Init(SDL_INIT_VIDEO) < 0)
+		{
 			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't initialize SDL: %s\n", SDL_GetError());
 			return;
 		}
@@ -61,7 +61,7 @@ namespace Unique
 		cache.RegisterImporter(new ModelImporter());
 
 		Graphics& graphics = Subsystem<Graphics>();
-		graphics.Initialize(resolution_, DeviceType::OpenGL);
+		graphics.Initialize(resolution_, deviceType_);
 		
 		loadingDone_ = true;
 	}
@@ -75,7 +75,7 @@ namespace Unique
 		quit_ = true;
 	}
 
-	void Application::SetTitle(const std::wstring& title) 
+	void Application::SetTitle(const String& title) 
 	{
 		title_ = title;
 	}
@@ -119,6 +119,7 @@ namespace Unique
 		Terminate();
 
 		SDL_Quit();
+
 		context_ = nullptr;
 	}
 

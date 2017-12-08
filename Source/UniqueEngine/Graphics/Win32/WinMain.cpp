@@ -42,8 +42,8 @@ namespace Unique
 		case DeviceType::D3D11:
 		{
 			EngineD3D11Attribs DeviceAttribs;
-			DeviceAttribs.DebugFlags = (Uint32)EngineD3D11DebugFlags::VerifyCommittedShaderResources |
-				(Uint32)EngineD3D11DebugFlags::VerifyCommittedResourceRelevance;
+			DeviceAttribs.DebugFlags = (unsigned)EngineD3D11DebugFlags::VerifyCommittedShaderResources |
+				(unsigned)EngineD3D11DebugFlags::VerifyCommittedResourceRelevance;
 
 #ifdef ENGINE_DLL
 			GetEngineFactoryD3D11Type GetEngineFactoryD3D11 = nullptr;

@@ -7,7 +7,25 @@ namespace Unique
 	uObject(GraphicsBuffer)
 	{
 	}
-	
+
+	uObject(VertexBuffer)
+	{
+		uFactory("Graphics")
+			uAttribute("Data", data_)
+	}
+
+	uObject(IndexBuffer)
+	{
+		uFactory("Graphics")
+			uAttribute("Data", data_)
+	}
+
+	uObject(ConsterBuffer)
+	{
+		uFactory("Graphics")
+			uAttribute("Data", data_)
+	}
+
 	GraphicsBuffer::GraphicsBuffer(uint flags)
 	{
 		desc_.BindFlags = flags;
@@ -60,7 +78,7 @@ namespace Unique
 
 		if (IsDynamic())
 		{
-			ByteArray& currentData = GraphicsContext::currentContext_ == 0 ? data_ : data1_;
+			ByteArray& currentData = Graphics::currentContext_ == 0 ? data_ : data1_;
 			std::memcpy(currentData.data(), data, currentData.size());
 		}
 		else
@@ -107,7 +125,7 @@ namespace Unique
 
 		if (IsDynamic())
 		{
-			ByteArray& currentData = GraphicsContext::currentContext_ == 0 ? data_ : data1_;
+			ByteArray& currentData = Graphics::currentContext_ == 0 ? data_ : data1_;
 			std::memcpy(currentData.data() + start * GetStride(), data, count * GetStride());
 		}
 		else
@@ -127,73 +145,6 @@ namespace Unique
 
 	void GraphicsBuffer::UpdateBuffer()
 	{
-	}
-
-	uObject(VertexBuffer)
-	{
-		uFactory("Graphics")
-			//	uAttribute("VertexFormat", vertexFormat_)
-			uAttribute("Data", data_)
-	}
-
-	VertexBuffer::VertexBuffer() : GraphicsBuffer(BIND_VERTEX_BUFFER)
-	{
-	}
-
-	uObject(IndexBuffer)
-	{
-		uFactory("Graphics")
-			uAttribute("Data", data_)
-	}
-
-	IndexBuffer::IndexBuffer() : GraphicsBuffer(BIND_INDEX_BUFFER)
-	{
-	}
-
-	bool IndexBuffer::GetUsedVertexRange(unsigned start, unsigned count, unsigned& minVertex, unsigned& vertexCount)
-	{
-		if (data_.empty())
-		{
-			UNIQUE_LOGERROR("Used vertex range can only be queried from an index buffer with shadow data");
-			return false;
-		}
-
-		if (start + count > GetCount())
-		{
-			UNIQUE_LOGERROR("Illegal index range for querying used vertices");
-			return false;
-		}
-
-		minVertex = M_MAX_UNSIGNED;
-		unsigned maxVertex = 0;
-
-		if (GetStride() == sizeof(unsigned))
-		{
-			unsigned* indices = (unsigned*)data_.data() + start;
-
-			for (unsigned i = 0; i < count; ++i)
-			{
-				if (indices[i] < minVertex)
-					minVertex = indices[i];
-				if (indices[i] > maxVertex)
-					maxVertex = indices[i];
-			}
-		}
-		else
-		{
-			unsigned short* indices = (unsigned short*)data_.data() + start;
-
-			for (unsigned i = 0; i < count; ++i)
-			{
-				if (indices[i] < minVertex)
-					minVertex = indices[i];
-				if (indices[i] > maxVertex)
-					maxVertex = indices[i];
-			}
-		}
-
-		vertexCount = maxVertex - minVertex + 1;
-		return true;
 	}
 
 }

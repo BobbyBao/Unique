@@ -1,6 +1,5 @@
-#include "UniquePCH.h"
-#include "Input.h"
 #include <SDL/SDL.h>
+#include "Input.h"
 
 namespace Unique
 {

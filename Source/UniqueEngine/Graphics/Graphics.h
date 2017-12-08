@@ -1,6 +1,7 @@
 #pragma once
 #include "GraphicsDefs.h"
 #include "Core/Object.h"
+#include "Core/Semaphore.h"
 #include <RefCntAutoPtr.h>
 #include <RenderDevice.h>
 #include <SwapChain.h>
@@ -11,6 +12,8 @@ namespace Unique
 	class VertexBuffer;
 	class IndexBuffer;
 	class Texture;
+
+	using CommandQueue = Vector<std::function<void()> > ;
 
 	class Graphics : public Object
 	{
@@ -35,6 +38,7 @@ namespace Unique
 		bool IsDirect3D() const;
 		bool IsOpenGL() const;
 
+
 		//***MainThread***
 		void BeginFrame();
 		void EndFrame();
@@ -44,6 +48,10 @@ namespace Unique
 		void BeginRender();
 		void EndRender();
 		void Close();
+
+		static int currentContext_;
+		inline static int GetRenderContext() { return 1 - currentContext_; }
+		static void AddCommand(std::function<void()> cmd);
 	protected:
 		RefCntAutoPtr<IRenderDevice> renderDevice_;
 		RefCntAutoPtr<IDeviceContext> deviceContext_;
@@ -56,10 +64,28 @@ namespace Unique
 		bool vsync_ = false;
 
 		int multiSampling_ = 4;
-
-
 		bool exit_ = false;
 
+	protected:
+		void ExecuteCommands(CommandQueue& cmds);
+		void FrameNoRenderWait();
+		void MainSemPost();
+		bool MainSemWait(int _msecs = -1);
+		void SwapContext();
+		void RenderSemPost();
+		void RenderSemWait();
+
+		bool singleThreaded_ = false;
+
+		Semaphore renderSem_;
+
+		Semaphore mainSem_;
+
+		long long waitSubmit_ = 0;
+
+		long long waitRender_ = 0;
+
+		static CommandQueue comands_;;
 	};
 	
 	extern IRenderDevice* renderDevice;
