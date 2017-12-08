@@ -33,16 +33,14 @@ namespace Unique
 		BlendStateDesc			blendState_;
 		DepthStencilStateDesc	depthState_;
 		RasterizerStateDesc		rasterizerState_;
-				
+		Vector<LayoutElement>	inputLayout_;
+
 		ShaderStage				vertexShader_;
 		ShaderStage				pixelShader_;
 		ShaderStage				computeShader_;
-
-		String					source_;
-
+		
 		Vector<String>			allDefs_;
 		uint					allMask_ = 0;
-
 		HashMap<uint, SPtr<ShaderInstance>> cachedPass_;
 
 		friend class Shader;

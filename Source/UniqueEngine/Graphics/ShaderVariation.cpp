@@ -40,17 +40,7 @@ namespace Unique
 		renderDevice->CreateShader(creationAttribs, &handle_);
 
 		if (graphics.IsDirect3D())
-		{/*
-			// Compile shader
-			LLGL::ShaderDescriptor shaderDesc(shaderStage_.entryPoint_.CString(),
-				shaderStage_.target_.CString(), LLGL::ShaderCompileFlags::Debug);
-
-			if (!handle_->Compile(shaderPass_.source_.CString(), shaderDesc))
-			{
-				UNIQUE_LOGERRORF(handle_->QueryInfoLog().c_str());
-				return false;
-			}*/
-
+		{
 			return true;
 		}
 
@@ -86,11 +76,11 @@ namespace Unique
 
 		binaryShaderName += extension;
 
-		if (dirty_ || !LoadByteCode(binaryShaderName))
+		if (dirty_ || !LoadConvertedCode(binaryShaderName))
 		{
-			if (!Compile(binaryShaderName))
+			if (!Convert(binaryShaderName))
 			{
-				if (LoadByteCode(Shader::GetShaderPath(graphics.GetDeviceType()) + name + extension))
+				if (LoadConvertedCode(Shader::GetShaderPath(graphics.GetDeviceType()) + name + extension))
 				{
 					UNIQUE_LOGWARNING("==============================Load shader failed, name : " + binaryShaderName);
 				}
@@ -102,7 +92,7 @@ namespace Unique
 			}
 			else
 			{
-				if (!LoadByteCode(binaryShaderName))
+				if (!LoadConvertedCode(binaryShaderName))
 				{
 					UNIQUE_LOGERROR("Load shader failed, name : " + binaryShaderName);
 				}
@@ -117,7 +107,7 @@ namespace Unique
 		CreateImpl();
 	}
 	
-	bool ShaderVariation::LoadByteCode(const String& binaryShaderName)
+	bool ShaderVariation::LoadConvertedCode(const String& binaryShaderName)
 	{
 		auto& cache = Subsystem<ResourceCache>();
 		if (!cache.Exists(binaryShaderName))
@@ -131,40 +121,15 @@ namespace Unique
 		}
 
 		auto& graphics = Subsystem<Graphics>();
-	/*
-		// Compile shader
-		if (graphics.IsOpenGL())
-		{
-			ByteArray source = file->ReadAll();
-			if (!handle_->Compile(std::string(source.data(), source.size())))
-			{
-				UNIQUE_LOGERRORF(handle_->QueryInfoLog().c_str());
-			}
-		}
-		else
-		{
-			LLGL::ShaderDescriptor shaderDesc(shaderStage_.entryPoint_.CString(), shaderStage_.target_.CString(), LLGL::ShaderCompileFlags::Debug);
 
-			ByteArray bytes = file->ReadAll();
-			if (!handle_->LoadBinary(std::move(bytes), shaderDesc))
-			{
-				UNIQUE_LOGERRORF(handle_->QueryInfoLog().c_str());
-			}
-		}
-		*/
 		return true;
 	}
 
-	bool ShaderVariation::Compile(const String& binaryShaderName)
+	bool ShaderVariation::Convert(const String& binaryShaderName)
 	{
 		auto& graphics = GetSubsystem<Graphics>();
 
-		const String& sourceCode = shaderPass_.source_;
-		if (graphics.IsDirect3D())
-		{
-			//to do compile hlsl to binary code
-			return true;
-		}
+		const String& sourceFile = shaderStage_.source_;
 		/*
 		String args;
 		unsigned renderType = graphics.GetRenderID();

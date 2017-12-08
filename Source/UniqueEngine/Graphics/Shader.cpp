@@ -3,17 +3,100 @@
 #include "Graphics/Graphics.h"
 
 namespace Unique
-{
+{	
+	uClassTraits
+	(
+		StencilOpDesc, 
+		"StencilFailOp", self.StencilFailOp, 
+		"StencilDepthFailOp", self.StencilDepthFailOp, 
+		"StencilPassOp", self.StencilPassOp,
+		"StencilFunc", self.StencilFunc
+	)
+	
+	uClassTraits
+	(
+		DepthStencilStateDesc, 
+		"DepthEnable", self.DepthEnable, 
+		"DepthWriteEnable", self.DepthWriteEnable, 
+		"ComparisonFunction", self.DepthFunc,
+		"StencilEnable", self.StencilEnable, 
+		"StencilReadMask", self.StencilReadMask,
+		"StencilWriteMask", self.StencilWriteMask,
+		"FrontFace", self.FrontFace,
+		"BackFace", self.BackFace
+	)
+
+	uClassTraits
+	(
+		RasterizerStateDesc, 
+		"FillMode", self.FillMode, 
+		"CullMode", self.CullMode, 
+		"FrontCounterClockwise", self.FrontCounterClockwise,
+		"DepthBias", self.DepthBias, 
+		"DepthBiasClamp", self.DepthBiasClamp,
+		"SlopeScaledDepthBias", self.SlopeScaledDepthBias,
+		"DepthClipEnable", self.DepthClipEnable,
+		"ScissorEnable", self.ScissorEnable,
+		"AntialiasedLineEnable", self.AntialiasedLineEnable
+	)
+
+	uClassTraits
+	(
+		RenderTargetBlendDesc, 
+		"BlendEnable", self.BlendEnable, 
+		"LogicOperationEnable", self.LogicOperationEnable, 
+		"SrcBlend", self.SrcBlend,
+		"DestBlend", self.DestBlend, 
+		"BlendOp", self.BlendOp,
+		"SrcBlendAlpha", self.SrcBlendAlpha,
+		"DestBlendAlpha", self.DestBlendAlpha,
+		"BlendOpAlpha", self.BlendOpAlpha,
+		"LogicOp", self.LogicOp,
+		"RenderTargetWriteMask", self.RenderTargetWriteMask
+	)
+		
+	uClassTraits
+	(
+		BlendStateDesc, 
+		"AlphaToCoverageEnable", self.AlphaToCoverageEnable, 
+		"IndependentBlendEnable", self.IndependentBlendEnable,
+		"RenderTargets[0]", self.RenderTargets[0],
+		"RenderTargets[1]", self.RenderTargets[1],
+		"RenderTargets[2]", self.RenderTargets[2],
+		"RenderTargets[3]", self.RenderTargets[3],
+		"RenderTargets[4]", self.RenderTargets[4],
+		"RenderTargets[5]", self.RenderTargets[5],
+		"RenderTargets[6]", self.RenderTargets[6],
+		"RenderTargets[7]", self.RenderTargets[7]
+	)
+	
+	uEnumTraits(LayoutElement::FREQUENCY, "UNDEFINED", "PER_VERTEX", "PER_INSTANCE")
+		
+	uClassTraits
+	(
+		LayoutElement, 
+		"InputIndex", self.InputIndex, 
+		"BufferSlot", self.BufferSlot,
+		"NumComponents", self.NumComponents,
+		"ValueType", self.ValueType,
+		"IsNormalized", self.IsNormalized,
+		"RelativeOffset", self.RelativeOffset,
+		"Frequency", self.Frequency,
+		"InstanceDataStepRate", self.InstanceDataStepRate
+	)
+
 	uObject(Pass)
 	{
 		uFactory("Graphics")
 		uAttribute("Name", name_)
-		//uAttribute("DepthState", depthState_)
+		uAttribute("DepthState", depthState_)
+		uAttribute("RasterizerState", rasterizerState_)
+		uAttribute("BlendStateDesc", blendState_)
+		uAttribute("InputLayout", inputLayout_)
 		uAttribute("ShaderDefines", allDefs_)
 		uAttribute("VertexShader", vertexShader_)
 		uAttribute("PixelShader", pixelShader_)
 		uAttribute("ComputeShader", computeShader_)
-		uAttribute("Source", source_)
 	}
 
 	uObject(Shader)

@@ -38,12 +38,13 @@ namespace Unique
 			return !entryPoint_.Empty();
 		}
 
-		uClass("EntryPoint", entryPoint_, "Target", target_, "Defines", defines_);
+		uClass("EntryPoint", entryPoint_, "Target", target_, "Defines", defines_, "Source", source_);
 
 		ShaderType	shaderType_;
 		String		entryPoint_;
 		String		target_;
 		String		defines_;
+		String		source_;
 		uint		mask_;
 	};
 
@@ -54,8 +55,8 @@ namespace Unique
 		bool CreateImpl();
 
 		void Reload();
-		bool LoadByteCode(const String & binaryShaderName);
-		bool Compile(const String& binaryShaderName);
+		bool LoadConvertedCode(const String & binaryShaderName);
+		bool Convert(const String& binaryShaderName);
 
 	private:
 		Shader& owner_;

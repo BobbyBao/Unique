@@ -91,7 +91,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;PLATFORM_WIN32;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;PLATFORM_WIN32;ENGINE_DLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\..\External\include;.\;..\UniqueBase;../../External/Include;../../DiligentCore/Common/include;../../DiligentCore/Common/interface;../../DiligentCore/Graphics/GraphicsEngine/include;../../DiligentCore/Graphics/GraphicsEngine/interface;../../DiligentCore/Platforms/Basic/include;../../DiligentCore/Platforms/interface;../../DiligentCore/Graphics/GraphicsEngineD3D11/include;../../DiligentCore/Graphics/GraphicsEngineD3D11/interface;../../DiligentCore/Graphics/GraphicsEngineD3D12/include;../../DiligentCore/Graphics/GraphicsEngineD3D12/interface;../../DiligentCore/Graphics/GraphicsEngineOpenGL/include;../../DiligentCore/Graphics/GraphicsEngineOpenGL/interface;../../DiligentCore/Graphics/HLSL2GLSLConverterLib/interface;../../DiligentCore/Graphics/GraphicsTools/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -160,14 +160,8 @@
     <ProjectReference Include="..\..\Build\External\glew\glew-static.vcxproj">
       <Project>{5e5f5050-85e9-3aa9-8136-ace27f710cf6}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\Build\Graphics\GraphicsEngineD3D11\GraphicsEngineD3D11-static.vcxproj">
-      <Project>{c3770c17-3222-3dae-bb1e-9b84a4ac9428}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\Build\Graphics\GraphicsEngineD3DBase\GraphicsEngineD3DBase.vcxproj">
       <Project>{5b0677d4-e2bb-389d-aea0-d3bc5e895dd2}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Build\Graphics\GraphicsEngineOpenGL\GraphicsEngineOpenGL-static.vcxproj">
-      <Project>{bca676fa-2e8f-378a-b55a-8de49515942e}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\Build\Graphics\GraphicsEngine\GraphicsEngine.vcxproj">
       <Project>{01d3328f-f74a-30b9-bc7f-989b7fdc0418}</Project>

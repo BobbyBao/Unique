@@ -49,7 +49,7 @@ namespace Unique
 		m_Animate = false;                       // enable animation
 		m_AnimationSpeed = 0.2f;               // animation speed
 
-		SetDeviceType(DeviceType::OpenGL);
+		SetDeviceType(DeviceType::D3D11);
 	}
 
 	UniqueSample::~UniqueSample()
@@ -79,6 +79,7 @@ namespace Unique
 			Attrs.EntryPoint = "main";
 			Attrs.Desc.ShaderType = SHADER_TYPE_VERTEX;
 			Attrs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+			Attrs.Desc.TargetProfile = SHADER_PROFILE_DX_4_0;
 			BasicShaderSourceStreamFactory BasicSSSFactory("assets\\shaders;assets\\shaders\\inc;");
 			Attrs.pShaderSourceStreamFactory = &BasicSSSFactory;
 			renderDevice->CreateShader(Attrs, &vs_);
@@ -90,7 +91,8 @@ namespace Unique
 			Attrs.FilePath = "MainPS_DX.hlsl";
 			Attrs.EntryPoint = "main";
 			Attrs.Desc.ShaderType = SHADER_TYPE_PIXEL;
-			Attrs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+			Attrs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL; 
+			Attrs.Desc.TargetProfile = SHADER_PROFILE_DX_4_0;
 			BasicShaderSourceStreamFactory BasicSSSFactory("assets\\shaders;assets\\shaders\\inc;");
 			Attrs.pShaderSourceStreamFactory = &BasicSSSFactory;
 			renderDevice->CreateShader(Attrs, &ps_);

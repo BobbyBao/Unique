@@ -1,9 +1,3 @@
-[submodule "LLGL"]
-	path = LLGL
-	url = https://github.com/BobbyBao/LLGL.git
-[submodule "GaussianLib"]
-	path = GaussianLib
-	url = https://github.com/BobbyBao/GaussianLib.git
 [submodule "DiligentCore"]
 	path = DiligentCore
 	url = https://github.com/DiligentGraphics/DiligentCore.git

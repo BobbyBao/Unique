@@ -86,8 +86,8 @@ namespace Unique
 			return 0;
 		}
 
-		template<class TransferFunction, int count> inline
-			static void TransferEnum(value_type& data, const char*(&enumNames)[count], TransferFunction& transfer)
+		template<class TransferFunction, int count>
+		inline static void TransferEnum(value_type& data, const char*(&enumNames)[count], TransferFunction& transfer)
 		{
 			if (transfer.IsReading())
 			{
@@ -102,8 +102,75 @@ namespace Unique
 		}
 
 	};
+	
+	template<class T>
+	class SerializeTraitsFlags : public SerializeTraitsBase<T>
+	{
+	public:
 
+		struct FlagPair
+		{
+			long enumValue;
+			const char* enumName;
+		};
+
+		template<class TransferFunction>
+		inline static void TransferFlags(value_type& data, Map<const char*, long> flags, TransferFunction& transfer)
+		{
+			Unique::String str;
+			if (transfer.IsReading())
+			{
+				transfer.TransferPrimitive(str);
+				Vector<String> strs = str.Split("|");
+				for(auto& s : strs)
+				{
+					auto it = flags.find(s);
+					if(it != flags.end())
+					{
+						data |= it.second;
+					}
+				}
+			//	data = (value_type)GetEnum(enumNames, count, str);
+			}
+			else
+			{
+				int i = 0;
+				for(auto it : flags)
+				{
+					if(data & it.second)
+					{
+						if(i != 0)
+						{
+							str.Append('|');
+						}
+						str.Append(it.first);
+						i++;
+					}
+				}
+
+				transfer.TransferPrimitive(str);
+			}
+		}
+
+	};
 }
+
+#define uFlagsTraits(CLASS, ...)\
+template<>\
+class SerializeTraits<CLASS> : public SerializeTraitsFlags<CLASS>\
+{\
+public:\
+	typedef CLASS value_type; \
+	template<class TransferFunction>\
+	inline static void Transfer(value_type& data, TransferFunction& transfer)\
+	{\
+		static Map<long, const char*> flags = \
+		{\
+			__VA_ARGS__\
+		};\
+		TransferFlags<TransferFunction>(data, flags, transfer); \
+	}\
+};
 
 #define uEnumTraits(CLASS, ...)\
 template<>\
