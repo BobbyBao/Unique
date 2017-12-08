@@ -86,7 +86,9 @@ namespace Unique
 
 	void Geometry::SetIndexBuffer(IndexBuffer* buffer)
 	{
-		indexBuffer_ = buffer;
+		indexBuffer_ = buffer; 
+		drawAttribs_.IsIndexed = (indexBuffer_ != nullptr);
+		drawAttribs_.IndexType = buffer->GetStride() == 4 ? ValueType::VT_UINT32: ValueType::VT_UINT16;
 	}
 
 	bool Geometry::SetDrawRange(PrimitiveTopology type, unsigned indexStart, unsigned indexCount, bool getUsedVertexRange)
@@ -161,22 +163,33 @@ namespace Unique
 		lodDistance_ = distance;
 	}
 
-	void Geometry::Draw(Graphics* graphics, ShaderInstance* shader)
-	{/*
-		GraphicsPipeline* pipeline = shader->GetPipeline(vertexBuffers_[0]->GetVertexFormat());
+	void Geometry::Draw(IPipelineState* pipeline)
+	{
+		IBuffer *buffer[8] = { nullptr };
+		Uint32 offsets[8] = { 0 };
+		Uint32 strides[8] = { 0 };
+		Uint32 offset = 0;
+		for (size_t i = 0; i < vertexBuffers_.size(); i++)
+		{
+			buffer[i] = vertexBuffers_[i]->GetHandle();
+			offsets[i] = offset;
+			strides[i] = vertexBuffers_[i]->GetStride();
+		}
+
+		deviceContext->SetVertexBuffers(0, vertexBuffers_.size(), buffer, strides, offsets, SET_VERTEX_BUFFERS_FLAG_RESET);
+
 		if (indexBuffer_ && indexCount_ > 0)
 		{
-			graphics->SetVertexBuffers(handle_);
-			graphics->SetIndexBuffer(indexBuffer_);
-			graphics->SetGraphicsPipeline(pipeline);
-			graphics->DrawIndexed(indexCount_, indexStart_, vertexStart_);
+			deviceContext->SetIndexBuffer(indexBuffer_->GetHandle(), 0);
+			drawAttribs_.NumIndices = indexCount_;
 		}
 		else if (vertexCount_ > 0)
 		{
-			graphics->SetVertexBuffers(handle_);
-			graphics->SetGraphicsPipeline(pipeline);
-			graphics->Draw(vertexCount_, vertexStart_);
-		}*/
+			drawAttribs_.NumVertices = vertexCount_;
+		}
+
+
+		deviceContext->Draw(drawAttribs_);
 	}
 
 	VertexBuffer* Geometry::GetVertexBuffer(unsigned index) const

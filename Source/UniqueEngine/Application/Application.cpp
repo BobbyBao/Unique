@@ -61,9 +61,8 @@ namespace Unique
 		cache.RegisterImporter(new ModelImporter());
 
 		Graphics& graphics = Subsystem<Graphics>();
-		graphics.Initialize(resolution_);
+		graphics.Initialize(resolution_, DeviceType::OpenGL);
 		
-		// Store information that loading is done
 		loadingDone_ = true;
 	}
 
@@ -109,9 +108,9 @@ namespace Unique
 		}
 
 #ifdef __EMSCRIPTEN__
-		if (done) {
-			emscripten_cancel_main_loop();
-		}
+		
+		emscripten_cancel_main_loop();
+		
 #endif
 		renderer.Stop();
 

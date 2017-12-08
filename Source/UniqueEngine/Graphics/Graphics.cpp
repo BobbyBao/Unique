@@ -28,6 +28,9 @@ namespace Unique
 
 	bool Graphics::Initialize(const IntVector2& size, DeviceType deviceType)
 	{
+		resolution_ = size;
+		deviceType_ = deviceType;
+
 		SDL_Window *window = SDL_CreateWindow("Unique Test",
 			SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,	size.x_, size.y_, 0);
 		
@@ -40,7 +43,10 @@ namespace Unique
 			return false;
 		}
 
-		InitDevice(window, &pRenderDevice, &pDeviceContext, &pSwapChain, deviceType);
+		InitDevice(window, &renderDevice_, &deviceContext_, &swapChain_, deviceType);
+		
+		renderDevice = renderDevice_;
+		deviceContext = deviceContext_;
 
 		GraphicsContext::FrameNoRenderWait();
 
@@ -51,7 +57,8 @@ namespace Unique
 	{
 		auto fn = [=]()
 		{
-			pSwapChain->Resize(size.x_, size.y_);
+			resolution_ = size;
+			swapChain_->Resize(size.x_, size.y_);
 		};
 
 		if (Thread::IsMainThread())
@@ -107,112 +114,9 @@ namespace Unique
 
 	void Graphics::EndRender()
 	{
-		pSwapChain->Present();
+		swapChain_->Present();
 
 		GraphicsContext::EndRender();
-	}
-
-	void Graphics::Clear(uint flags)
-	{
-	//	commands->Clear(flags);
-	}
-	/*
-	void Graphics::SetRenderTarget(RenderTarget* renderTarget)
-	{
-		if (renderTarget)
-		{
-			commands->SetRenderTarget(*renderTarget);
-		}
-		else
-		{
-			commands->SetRenderTarget(*renderContext);
-		}
-	}
-
-	void Graphics::SetViewport(const Viewport& viewport)
-	{
-		commands->SetViewport(viewport);
-	}
-
-	void Graphics::SetScissor(const Scissor& scissor)
-	{
-		commands->SetScissor(scissor);
-	}
-
-	void Graphics::SetGraphicsPipeline(GraphicsPipeline* graphicsPipeline)
-	{
-		commands->SetGraphicsPipeline(*graphicsPipeline);
-	}
-
-	void Graphics::SetComputePipeline(ComputePipeline* computePipeline)
-	{
-		commands->SetComputePipeline(*computePipeline);
-	}
-
-	void Graphics::SetVertexBuffer(VertexBuffer* buffer)
-	{
-		commands->SetVertexBuffer(*buffer);
-	}
-
-	void Graphics::SetVertexBuffers(BufferArray* buffers)
-	{
-		commands->SetVertexBufferArray(*buffers);
-	}
-
-	void Graphics::SetIndexBuffer(IndexBuffer* buffer)
-	{
-		commands->SetIndexBuffer(*buffer);
-	}
-
-	void Graphics::SetTexture(Texture* texture, uint slot, long shaderStageFlags)
-	{
-	//	commands->SetTexture(*texture, slot, shaderStageFlags);
-	//	commands->SetSampler(texture->sampler(), slot);
-	}*/
-
-	void Graphics::Draw(unsigned int numVertices, unsigned int firstVertex)
-	{
-	//	commands->Draw(numVertices, firstVertex);
-	}
-
-	void Graphics::DrawIndexed(unsigned int numIndexes, unsigned int firstIndex)
-	{
-	//	commands->DrawIndexed(numIndexes, firstIndex);
-	}
-
-	void Graphics::DrawIndexed(unsigned int numIndexes, unsigned int firstIndex, int vertexOffset)
-	{
-	//	commands->DrawIndexed(numIndexes, firstIndex, vertexOffset);
-	}
-
-	void Graphics::DrawInstanced(unsigned int numVertices, unsigned int firstVertex, unsigned int numInstances)
-	{
-	//	commands->DrawInstanced(numVertices, firstVertex, numInstances);
-	}
-
-	void Graphics::DrawInstanced(unsigned int numVertices, unsigned int firstVertex, unsigned int numInstances, unsigned int instanceOffset)
-	{
-	//	commands->DrawInstanced(numVertices, firstVertex, numInstances, instanceOffset);
-	}
-
-	void Graphics::DrawIndexedInstanced(unsigned int numVerticesPerInstance, unsigned int numInstances, unsigned int firstIndex)
-	{
-	//	commands->DrawIndexedInstanced(numVerticesPerInstance, numInstances, firstIndex);
-	}
-
-	void Graphics::DrawIndexedInstanced(unsigned int numVertices, unsigned int numInstances, unsigned int firstIndex, int vertexOffset)
-	{
-	//	commands->DrawIndexedInstanced(numVertices, numInstances, firstIndex, vertexOffset);
-	}
-
-	void Graphics::DrawIndexedInstanced(unsigned int numVertices, unsigned int numInstances, unsigned int firstIndex, int vertexOffset, unsigned int instanceOffset)
-	{
-	//	commands->DrawIndexedInstanced(numVertices, numInstances, firstIndex, vertexOffset, instanceOffset);
-	}
-
-	void Graphics::Dispatch(unsigned int groupSizeX, unsigned int groupSizeY, unsigned int groupSizeZ)
-	{
-	//	commands->Dispatch(groupSizeX, groupSizeY, groupSizeZ);
 	}
 
 	void Graphics::Close()
