@@ -49,7 +49,7 @@ namespace Unique
 		m_Animate = false;                       // enable animation
 		m_AnimationSpeed = 0.2f;               // animation speed
 
-		SetDeviceType(DeviceType::D3D11);
+		SetDeviceType(DeviceType::OpenGL);
 	}
 
 	UniqueSample::~UniqueSample()
@@ -76,7 +76,6 @@ namespace Unique
 			ShaderCreationAttribs Attrs;
 			Attrs.Desc.Name = "MainVS";
 			Attrs.FilePath = "MainVS_DX.hlsl";
-			//Attrs.SearchDirectories = "shaders;shaders\\inc;";
 			Attrs.EntryPoint = "main";
 			Attrs.Desc.ShaderType = SHADER_TYPE_VERTEX;
 			Attrs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
@@ -89,7 +88,6 @@ namespace Unique
 			ShaderCreationAttribs Attrs;
 			Attrs.Desc.Name = "MainPS";
 			Attrs.FilePath = "MainPS_DX.hlsl";
-			//Attrs.SearchDirectories = "shaders;shaders\\inc;";
 			Attrs.EntryPoint = "main";
 			Attrs.Desc.ShaderType = SHADER_TYPE_PIXEL;
 			Attrs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
@@ -129,7 +127,7 @@ namespace Unique
 			RasterizerStateDesc &RasterizerDesc = PSODesc.GraphicsPipeline.RasterizerDesc;
 			RasterizerDesc.FillMode = FILL_MODE_SOLID;
 			RasterizerDesc.CullMode = CULL_MODE_NONE;
-			RasterizerDesc.FrontCounterClockwise = True;
+			//RasterizerDesc.FrontCounterClockwise = True;
 			RasterizerDesc.ScissorEnable = True;
 			//RSDesc.MultisampleEnable = false; // do not allow msaa (fonts would be degraded)
 			RasterizerDesc.AntialiasedLineEnable = False;
@@ -165,7 +163,8 @@ namespace Unique
 
 		renderDevice->CreateResourceMapping(rmd, &resourceMapping_);
 		pipelineState_->BindShaderResources(resourceMapping_, BIND_SHADER_RESOURCES_ALL_RESOLVED);
-	
+		//vs_->BindResources(resourceMapping_, 0/*BIND_SHADER_RESOURCES_ALL_RESOLVED*/);
+		//ps_->BindResources(resourceMapping_, 0/*BIND_SHADER_RESOURCES_ALL_RESOLVED*/);
 		// Init model rotation
 		float3 axis(-1, 1, 0);
 		m_SpongeRotation = RotationFromAxisAngle(axis, M_PI / 4);
@@ -177,6 +176,22 @@ namespace Unique
 	
 	void UniqueSample::OnPreRender()
 	{
+		float dt = (float)0.05f;
+		if (m_Animate && dt > 0 && dt < 0.2f)
+		{
+			float3 axis;
+			float angle = 0;
+			AxisAngleFromRotation(axis, angle, m_SpongeRotation);
+			if (length(axis) < 1.0e-6f)
+				axis[1] = 1;
+			angle += m_AnimationSpeed * dt;
+			if (angle >= 2.0f*M_PI)
+				angle -= 2.0f*M_PI;
+			else if (angle <= 0)
+				angle += 2.0f*M_PI;
+			m_SpongeRotation = RotationFromAxisAngle(axis, angle);
+		}
+
 		auto& graphics = GetSubsystem<Graphics>();
 		// Clear the back buffer 
 		deviceContext->ClearRenderTarget(nullptr, m_BackgroundColor);
@@ -192,11 +207,12 @@ namespace Unique
 
 		SetShaderConstants(world, view, proj);
 	
-// 		deviceContext->SetPipelineState(pipelineState_);
-// 		pSRB_->BindResources(SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, resourceMapping_, BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED);
-// 		deviceContext->CommitShaderResources(pSRB_, COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
+		deviceContext->SetPipelineState(pipelineState_);
+		pSRB_->BindResources(SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, resourceMapping_,
+			BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED| BIND_SHADER_RESOURCES_ALL_RESOLVED);
+		deviceContext->CommitShaderResources(pSRB_, COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
 
-		geometry_->Draw(pipelineState_, pSRB_, resourceMapping_);
+		geometry_->Draw(pipelineState_);
 	}
 	
 	void UniqueSample::OnPostRender()

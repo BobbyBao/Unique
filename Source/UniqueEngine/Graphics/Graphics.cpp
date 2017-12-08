@@ -34,7 +34,7 @@ namespace Unique
 		deviceType_ = deviceType;
 
 		SDL_Window *window = SDL_CreateWindow("Unique Test",
-			SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,	size.x_, size.y_, 0);
+			SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,	size.x_, size.y_, SDL_WINDOW_RESIZABLE);
 		
 		if (!window) 
 		{
@@ -61,6 +61,7 @@ namespace Unique
 		{
 			resolution_ = size;
 			swapChain_->Resize(size.x_, size.y_);
+			deviceContext_->Flush();
 		};
 
 		if (Thread::IsMainThread())

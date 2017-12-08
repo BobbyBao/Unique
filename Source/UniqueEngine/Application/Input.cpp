@@ -29,6 +29,23 @@ namespace Unique
 				break;
 			case SDL_MOUSEBUTTONDOWN:
 				break;
+			case SDL_WINDOWEVENT:
+				switch (event.window.event)
+				{
+				case SDL_WINDOWEVENT_RESIZED:
+					SDL_Log("Window %d resized to %dx%d",
+						event.window.windowID, event.window.data1,
+						event.window.data2);
+
+					//GetSubsystem<Graphics>().Resize(IntVector2(event.window.data1, event.window.data2));
+					break;
+
+				default:
+					//SDL_Log("Window %d event %d",
+					//	event.window.windowID, event.window.event);
+					break;
+				}
+				break;
 			case SDL_QUIT:
 				return false;
 				break;

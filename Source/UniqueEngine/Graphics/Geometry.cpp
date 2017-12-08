@@ -159,7 +159,7 @@ namespace Unique
 		lodDistance_ = distance;
 	}
 
-	void Geometry::Draw(IPipelineState* pipeline, IShaderResourceBinding* pSRB, IResourceMapping* pRM)
+	void Geometry::Draw(IPipelineState* pipeline)
 	{
 		IBuffer *buffer[8] = { nullptr };
 		Uint32 offsets[8] = { 0 };
@@ -183,10 +183,6 @@ namespace Unique
 		{
 			drawAttribs_.NumVertices = vertexCount_;
 		}
-
-		deviceContext->SetPipelineState(pipeline);
-		pSRB->BindResources(SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, pRM, BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED);
-		deviceContext->CommitShaderResources(pSRB, COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
 
 		deviceContext->Draw(drawAttribs_);
 	}
