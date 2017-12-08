@@ -26,7 +26,6 @@
 #include "Core/Object.h"
 #include "../Graphics/GraphicsDefs.h"
 #include "../Graphics/GPUObject.h"
-#include <LLGL/BufferArray.h>
 
 namespace Unique
 {
@@ -38,7 +37,7 @@ class VertexBuffer;
 class ShaderInstance;
 
 /// Defines one or more vertex buffers, an index buffer and a draw range.
-class UNIQUE_API Geometry : public GPUObject<Object, LLGL::BufferArray>
+class UNIQUE_API Geometry : public Object
 {
     uRTTI(Geometry, Object)
 
@@ -77,7 +76,7 @@ public:
     IndexBuffer* GetIndexBuffer() const { return indexBuffer_; }
 
     /// Return primitive type.
-    PrimitiveTopology GetPrimitiveType() const { return primitiveType_; }
+    PrimitiveTopology GetPrimitiveType() const { return drawAttribs_.Topology; }
 
     /// Return start index.
     unsigned GetIndexStart() const { return indexStart_; }
@@ -104,16 +103,15 @@ public:
 
     /// Return whether has empty draw range.
     bool IsEmpty() const { return indexCount_ == 0 && vertexCount_ == 0; }
-protected:
-	bool CreateImpl();
 
 private:
     /// Vertex buffers.
     Vector<SPtr<VertexBuffer> > vertexBuffers_;
     /// Index buffer.
-    SPtr<IndexBuffer> indexBuffer_;
-    /// Primitive type.
-    PrimitiveTopology primitiveType_;
+	SPtr<IndexBuffer> indexBuffer_;
+
+	DrawAttribs drawAttribs_;
+
     /// Start index.
     unsigned indexStart_;
     /// Number of indices.
@@ -124,7 +122,6 @@ private:
     unsigned vertexCount_;
     /// LOD distance.
     float lodDistance_;
-
 };
 
 }

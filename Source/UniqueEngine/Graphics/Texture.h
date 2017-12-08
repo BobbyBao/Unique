@@ -2,13 +2,13 @@
 #include "Resource/Resource.h"
 #include "../Graphics/GraphicsDefs.h"
 #include "../Graphics/GPUObject.h"
-#include <LLGL/Texture.h>
+
 
 namespace Unique
 {
 	class Image;
 
-	class Texture : public GPUObject<Resource, LLGL::Texture>
+	class Texture : public GPUObject<Resource, ITexture>
 	{
 		uRTTI(Texture, Resource)
 	public:
@@ -22,8 +22,7 @@ namespace Unique
 		// Load image from file, create texture, upload image into texture, and generate MIP-maps.
 		static SPtr<Texture> Load(const String& filename);
 	protected:
-		LLGL::TextureDescriptor textureDesc_;
-
+		TextureDesc desc_;
 	};
 
 

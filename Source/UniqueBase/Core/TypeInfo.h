@@ -28,12 +28,19 @@ namespace Unique
 		const StringID& GetType() const { return type_; }
 		/// Return base type info.
 		const TypeInfo* GetBaseTypeInfo() const { return baseTypeInfo_; }
-
+		/*
 		template<class C, class T>
 		void RegisterAttribute(const char* name, T C::* m, AttributeFlag flag = AttributeFlag::Default)
 		{
 			RegisterAttribute(
 				new Unique::TAttribute<T>(name, OffsetOf(m), flag));
+		}*/
+
+		template<class T>
+		void RegisterAttribute(const char* name, size_t offset, AttributeFlag flag = AttributeFlag::Default)
+		{
+			RegisterAttribute(
+				new Unique::TAttribute<T>(name, offset, flag));
 		}
 
 		template<typename GET, typename SET>
@@ -59,8 +66,11 @@ namespace Unique
 	};
 	
 	/// Define an attribute that points to a memory offset in the object.
+//#define uAttribute(name, variable, ...)\
+//	ClassName::GetTypeInfoStatic()->RegisterAttribute(name, &ClassName::variable, ##__VA_ARGS__);
+	
 #define uAttribute(name, variable, ...)\
-	ClassName::GetTypeInfoStatic()->RegisterAttribute(name, &ClassName::variable, ##__VA_ARGS__);
+	ClassName::GetTypeInfoStatic()->RegisterAttribute<decltype(((ClassName*)0)->variable)>(name, offsetof(ClassName, variable), ##__VA_ARGS__);
 
 	/// Define an attribute that uses get and set functions.
 //#define uAccessor(name, getFunction, setFunction, typeName, mode)\

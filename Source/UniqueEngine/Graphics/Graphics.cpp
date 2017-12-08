@@ -1,10 +1,10 @@
 #include "Precompiled.h"
 #include "Graphics.h"
 #include "Texture.h"
-#include "Buffers/VertexBuffer.h"
-#include "Buffers/IndexBuffer.h"
+#include "GraphicsBuffer.h"
 #include "GraphicsContext.h"
 #include <iostream>
+#include <SDL/SDL.h>
 
 namespace Unique
 {
@@ -16,6 +16,8 @@ namespace Unique
 	IRenderDevice* renderDevice = nullptr;
 	IDeviceContext* deviceContext = nullptr;
 
+	extern void InitDevice(SDL_Window* window, IRenderDevice **ppRenderDevice, IDeviceContext **ppImmediateContext, ISwapChain **ppSwapChain, DeviceType DevType);
+	
 	Graphics::Graphics()
 	{
 	}
@@ -24,9 +26,21 @@ namespace Unique
 	{
 	}
 
-	bool Graphics::Initialize(const std::string& rendererModule, const IntVector2& size)
+	bool Graphics::Initialize(const IntVector2& size, DeviceType deviceType)
 	{
+		SDL_Window *window = SDL_CreateWindow("Unique Test",
+			SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,	size.x_, size.y_, 0);
+		
+		if (!window) 
+		{
+			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't create window: %s\n",
+				SDL_GetError());
 
+			SDL_Quit();
+			return false;
+		}
+
+		InitDevice(window, &pRenderDevice, &pDeviceContext, &pSwapChain, deviceType);
 
 		GraphicsContext::FrameNoRenderWait();
 
@@ -36,19 +50,8 @@ namespace Unique
 	void Graphics::Resize(const IntVector2& size)
 	{
 		auto fn = [=]()
-		{/*
-			auto videoMode = renderContext->GetVideoMode();
-
-			// Update video mode
-			videoMode.resolution = (LLGL::Size&)size;
-			renderContext->SetVideoMode(videoMode);
-
-			SetRenderTarget(nullptr);
-
-			SetViewport(Viewport(0, 0, (float)size.x_, (float)size.y_));
-
-			// Update scissor
-			SetScissor({ 0, 0, videoMode.resolution.x, videoMode.resolution.y });*/
+		{
+			pSwapChain->Resize(size.x_, size.y_);
 		};
 
 		if (Thread::IsMainThread())
@@ -104,8 +107,8 @@ namespace Unique
 
 	void Graphics::EndRender()
 	{
-	//	renderContext->Present();
-		
+		pSwapChain->Present();
+
 		GraphicsContext::EndRender();
 	}
 

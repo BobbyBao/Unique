@@ -19,7 +19,7 @@ namespace Unique
 		Graphics();
 		~Graphics();
 		
-		bool Initialize(const std::string& rendererModule, const IntVector2& size);
+		bool Initialize(const IntVector2& size, DeviceType deviceType = DeviceType::D3D11);
 		void Resize(const IntVector2& size);
 
 		DeviceType GetDeviceType() const;

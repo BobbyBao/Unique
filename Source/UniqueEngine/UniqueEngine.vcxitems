@@ -14,11 +14,8 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Application.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Buffers\GraphicsBuffer.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Buffers\IndexBuffer.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Buffers\StorageBuffer.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Buffers\VertexBuffer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Application\Application.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\GraphicsBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Drawable.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Geometry.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\GPUObject.h" />
@@ -35,15 +32,14 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\ShaderVariation.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Texture.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\View.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Application\Input.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Scene\Component.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)UniquePCH.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)Application.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Buffers\GraphicsBuffer.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Buffers\IndexBuffer.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Buffers\StorageBuffer.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Buffers\VertexBuffer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Application\Application.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Win32\WinMain.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\GraphicsBuffer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Drawable.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Geometry.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\GPUObject.cpp" />
@@ -60,6 +56,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\ShaderVariation.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Texture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\View.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Application\Input.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Scene\Component.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)UniquePCH.cpp" />
   </ItemGroup>

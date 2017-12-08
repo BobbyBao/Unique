@@ -69,7 +69,7 @@ namespace Unique
 		{
 			if (handle_ != nullptr)
 			{
-			//	renderer->Release(*handle_);
+				handle_->Release();
 				handle_ = nullptr;
 			}
 		}
