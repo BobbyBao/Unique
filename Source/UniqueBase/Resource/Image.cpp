@@ -33,9 +33,7 @@ namespace Unique
 		}
 			
 		data_ = stbi_load_from_memory(data.Get(), size, &width, &height, &components, reqComponents);
-		imageDesc_.buffer = data_;	
-		imageDesc_.format = (components == 4 ? LLGL::ImageFormat::RGBA : LLGL::ImageFormat::RGB);
-		imageDesc_.dataType = LLGL::DataType::UInt8;
+		
 		return data_ != nullptr;
 	}
 

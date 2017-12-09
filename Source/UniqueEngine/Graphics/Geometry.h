@@ -34,7 +34,7 @@ class IndexBuffer;
 class Ray;
 class Graphics;
 class VertexBuffer;
-class ShaderInstance;
+class PipelineState;
 
 /// Defines one or more vertex buffers, an index buffer and a draw range.
 class UNIQUE_API Geometry : public Object

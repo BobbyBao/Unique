@@ -22,26 +22,36 @@ namespace Unique
 			{
 				if (defines_.Length() > 0)
 				{
-					defines_.Append(" -D");
+					defines_.Append(";");
 				}
 
 				String& def = shaderPass_.allDefs_[i];
 				defines_.Append(def);
 			}
 		}
+
+	//	ShaderMacroHelper
 		
 	}
 	
 	bool ShaderVariation::CreateImpl() 
 	{
+		ShaderCreationAttribs Attrs;
+		//Attrs.Desc.Name = "MainVS";
+		Attrs.FilePath = shaderStage_.source_;
+		Attrs.EntryPoint = shaderStage_.entryPoint_;
+		Attrs.Desc.ShaderType = shaderStage_.shaderType_;
+		Attrs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+		Attrs.Desc.TargetProfile = SHADER_PROFILE_DX_4_0;
+		renderDevice->CreateShader(Attrs, &handle_);
+
+		return handle_ != nullptr;
+
+		// to do :
 		auto& graphics = Subsystem<Graphics>();
-
-		ShaderCreationAttribs creationAttribs;
-		renderDevice->CreateShader(creationAttribs, &handle_);
-
 		if (graphics.IsDirect3D())
 		{
-			return true;
+			return handle_ != nullptr;
 		}
 
 		String name = GetFileName(owner_.GetName());
@@ -65,8 +75,7 @@ namespace Unique
 			break;
 		}
 
-		String defines = defines_.Replaced(" -D", "_");
-
+		String& defines = defines_;
 		String binaryShaderName = Shader::GetShaderPath(graphics.GetDeviceType()) + name;
 
 		if (!defines.Empty())
@@ -98,6 +107,7 @@ namespace Unique
 				}
 			}
 		}
+
 		return true;
 	}
 
@@ -121,7 +131,7 @@ namespace Unique
 		}
 
 		auto& graphics = Subsystem<Graphics>();
-
+		//to do:
 		return true;
 	}
 
@@ -197,40 +207,21 @@ namespace Unique
 		return true;
 	}
 
-	ShaderInstance::ShaderInstance(Shader& shader, Pass& shaderPass, unsigned defs)
+	PipelineState::PipelineState(Shader& shader, Pass& shaderPass, unsigned defs) : shaderPass_(shaderPass)
 	{
-		if(shaderPass.vertexShader_)
+		for(int i = 0; i < 6; i++)
 		{
-			SPtr<ShaderVariation> sv(new ShaderVariation(shader, shaderPass.vertexShader_, shaderPass, defs));
-			shaders.push_back(sv);
-		}
-
-		if (shaderPass.pixelShader_)
-		{
-			SPtr<ShaderVariation> sv(new ShaderVariation(shader, shaderPass.pixelShader_, shaderPass, defs));
-			shaders.push_back(sv);
-		}
-
-		if (shaderPass.computeShader_)
-		{
-			SPtr<ShaderVariation> sv(new ShaderVariation(shader, shaderPass.computeShader_, shaderPass, defs));
-			shaders.push_back(sv);
+			if (shaderPass.shaderStage_[i])
+			{
+				SPtr<ShaderVariation> sv(new ShaderVariation(shader, shaderPass.shaderStage_[i], shaderPass, defs));
+				shaders.push_back(sv);
+			}
 		}
 
 	}
 	
-	bool ShaderInstance::CreateImpl()
+	bool PipelineState::CreateImpl()
 	{
-		/*
-		if (!handle_)
-		{
-			handle_ = renderer->CreateShaderProgram();
-		}
-		else
-		{
-			handle_->DetachAll();
-		}
-
 		for (auto& shader : shaders)
 		{
 			if (!shader->CreateImpl())
@@ -238,14 +229,33 @@ namespace Unique
 				return false;
 			}
 
-			handle_->AttachShader(*shader);
-		}*/
+		}
 
+		PipelineStateDesc PSODesc;
+		PSODesc.IsComputePipeline = false;
+		PSODesc.GraphicsPipeline.NumRenderTargets = 1;
+		PSODesc.GraphicsPipeline.RTVFormats[0] = TEX_FORMAT_RGBA8_UNORM_SRGB;
+		PSODesc.GraphicsPipeline.DSVFormat = TEX_FORMAT_D32_FLOAT;
+
+		PSODesc.GraphicsPipeline.DepthStencilDesc = shaderPass_.depthState_;
+		PSODesc.GraphicsPipeline.RasterizerDesc = shaderPass_.rasterizerState_;
+		PSODesc.GraphicsPipeline.BlendDesc = shaderPass_.blendState_;
+
+		PSODesc.GraphicsPipeline.InputLayout.LayoutElements = shaderPass_.inputLayout_.data();
+		PSODesc.GraphicsPipeline.InputLayout.NumElements = (uint)shaderPass_.inputLayout_.size();
+
+		PSODesc.GraphicsPipeline.PrimitiveTopologyType = PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		
+		//PSODesc.GraphicsPipeline.pVS = vs_;
+		//PSODesc.GraphicsPipeline.pPS = ps_;
+
+		renderDevice->CreatePipelineState(PSODesc, &handle_);
+		handle_->CreateShaderResourceBinding(&pSRB_);
 		dirty_ = false;
 		return true;
 	}
 
-	IPipelineState* ShaderInstance::GetPipeline(/*const VertexFormat& vertexFormat*/)
+	IPipelineState* PipelineState::GetPipeline()
 	{
 		if (dirty_ || !IsValid())
 		{
@@ -254,27 +264,11 @@ namespace Unique
 				return nullptr;
 			}
 		} 
-		/*
-		if (!vertexFormat.attributes.empty())
-			handle_->BuildInputLayout(vertexFormat);
 
-		if (!handle_->LinkShaders())
-			UNIQUE_LOGERRORF(handle_->QueryInfoLog().c_str());
-
-		if (!pipeline_)
-		{
-			LLGL::GraphicsPipelineDescriptor pipelineDesc;
-			{
-				pipelineDesc.shaderProgram = handle_;
-			}
-
-			pipeline_ = renderer->CreateGraphicsPipeline(pipelineDesc);
-		}
-		*/
 		return handle_;
 	}
 
-	void ShaderInstance::Reload()
+	void PipelineState::Reload()
 	{
 		dirty_ = true;
 

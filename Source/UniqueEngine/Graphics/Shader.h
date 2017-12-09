@@ -13,39 +13,35 @@ namespace Unique
 	using BlendFactor = BLEND_FACTOR;
 	using BlendOperation = BLEND_OPERATION;
 
-	class Pass : public Object
+	class Pass
 	{
-		uRTTI(Pass, Object)
 	public:
-		Pass();
+		Pass(const String& name = "");
 		~Pass();
 
 		uint GetMask(Shader* shader, const String& defs);
 
-		ShaderInstance* GetInstance(Shader* shader, const String & defs);
+		PipelineState* GetInstance(Shader* shader, const String & defs);
 
-		ShaderInstance* GetInstance(Shader* shader, unsigned defMask);
+		PipelineState* GetInstance(Shader* shader, unsigned defMask);
 
 		bool Prepare();
-	private:
-		StringID				name_;
 
+		StringID				name_;
 		BlendStateDesc			blendState_;
 		DepthStencilStateDesc	depthState_;
 		RasterizerStateDesc		rasterizerState_;
 		Vector<LayoutElement>	inputLayout_;
-
-		ShaderStage				vertexShader_;
-		ShaderStage				pixelShader_;
-		ShaderStage				computeShader_;
+		ShaderStage				shaderStage_[6];
+	private:
 		
 		Vector<String>			allDefs_;
 		uint					allMask_ = 0;
-		HashMap<uint, SPtr<ShaderInstance>> cachedPass_;
+		HashMap<uint, SPtr<PipelineState>> cachedPass_;
 
 		friend class Shader;
 		friend class ShaderVariation;
-		friend class ShaderInstance;
+		friend class PipelineState;
 	};
 
 	class Shader : public Resource
@@ -59,22 +55,21 @@ namespace Unique
 		
 		virtual bool Create();
 
-		Pass* AddPass(Pass* pass = nullptr);
-
+		Pass* AddPass(const String& name);
 		Pass* GetShaderPass(const StringID & pass);
 
 		uint GetMask(const StringID& passName, const String & defs);
 
-		ShaderInstance* GetInstance(const StringID& passName, uint defMask);
+		PipelineState* GetPipeline(const StringID& passName, uint defMask);
 
-		ShaderInstance* GetInstance(const StringID& passName, const String & defs);
+		PipelineState* GetPipeline(const StringID& passName, const String & defs);
 
 		static Vector<String> SplitDef(const String& defs);
 
 		static String GetShaderPath(DeviceType renderID);
 	private:
 		String shaderName_;
-		Vector<SPtr<Pass>> passes_;
+		Vector<Pass> passes_;
 	};
 
 }

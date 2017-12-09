@@ -10,61 +10,45 @@ Shader("Default"):
 			CompareOp: Less
 		}
 		
-		ShaderDefines: ""
+		InputLayout:
+		[
+			{
+				InputIndex:0
+				NumComponents:3
+				ValueType:FLOAT32
+				IsNormalized:false
+			}
+			{
+				InputIndex:1
+				NumComponents:3
+				ValueType:FLOAT32
+				IsNormalized:false
+			}
+			{
+				InputIndex:2
+				NumComponents:4
+				ValueType:UINT8
+				IsNormalized:true
+			}
+		]
 		
 		VertexShader:
 		{ 
 			EntryPoint: "VS" 
-			Target: "vs_4_0"
+			ShaderProfile: "DX_4_0"
+			Defines: ""
+			Source: "Default.hlsl"
 		}
 		
 		PixelShader:
 		{
 			EntryPoint: "PS"
-			Target: "ps_4_0"
+			ShaderProfile: "DX_4_0"
+			Defines: ""
+			Source: "Default.hlsl"
 		}
 		
-		Source:	'''
-
-
-		// HLSL texturing shader
-
-		Texture2D colorMap : register(t0);
-		SamplerState samplerState : register(s0);
-
-		struct InputVS
-		{
-			float2 position : POSITION;
-			float2 texCoord : TEXCOORD;
-		};
-
-		struct OutputVS
-		{
-			float4 position : SV_Position;
-			float2 texCoord : TEXCOORD;
-		};
-
-
-		// VERTEX SHADER
-
-		OutputVS VS(InputVS inp)
-		{
-			OutputVS outp;
-			outp.position = float4(inp.position, 0, 1);
-			outp.texCoord = inp.texCoord;
-			return outp;
-		}
-
-
-		// PIXEL SHADER
-
-		float4 PS(OutputVS inp) : SV_Target
-		{
-			return colorMap.Sample(samplerState, inp.texCoord);
-		}
-
-
-		'''
 	}
+   
 
 }

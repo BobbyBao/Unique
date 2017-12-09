@@ -1,6 +1,5 @@
 #pragma once
 #include "../Resource/Resource.h"
-#include <LLGL/Image.h>
 
 namespace Unique
 {
@@ -15,8 +14,6 @@ namespace Unique
 
 		static SPtr<Image> LoadImage(const char* filename);
 		
-		const LLGL::ImageDescriptor& GetDesc() const { return imageDesc_; }
-		
 		int width = 0;
 		int height = 0;
 	protected:
@@ -24,7 +21,6 @@ namespace Unique
 
 		int components = 0;
 		int reqComponents = 0;
-		LLGL::ImageDescriptor imageDesc_;
 	};
 
 	class ImageImporter : public ResourceImporter

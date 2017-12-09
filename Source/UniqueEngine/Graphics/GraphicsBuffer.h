@@ -15,13 +15,13 @@ namespace Unique
 		template<class T>
 		bool Create(const Vector<T>& data, Usage usage = Usage::USAGE_STATIC)
 		{
-			return Create(data.size(), sizeof(T), usage);
+			return Create(data.size(), sizeof(T), usage, (void*)data.data());
 		}
 
 		template<class T>
 		bool Create(const T& data, Usage usage = Usage::USAGE_STATIC)
 		{
-			return Create(1, sizeof(T), usage);
+			return Create(1, sizeof(T), usage, (void*)&data);
 		}
 
 		/// Set size, vertex elements and dynamic mode. Previous data will be lost.

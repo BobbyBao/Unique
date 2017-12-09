@@ -5,14 +5,14 @@ namespace Unique
 {
 	class Geometry;
 	class Material;
-	class ShaderInstance;
+	class PipelineState;
 
 	class Batch
 	{
 	public:
 		Geometry* geometry_;
 		Material* material_;
-		ShaderInstance*  shaderInstance_;
+		PipelineState*  shaderInstance_;
 		void* worldTransform;
 
 		void Draw();

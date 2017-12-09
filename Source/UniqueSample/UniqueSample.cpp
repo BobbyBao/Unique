@@ -6,7 +6,7 @@
 #include "Graphics/Geometry.h"
 #include "Graphics/GraphicsBuffer.h"
 #include <BasicShaderSourceStreamFactory.h>
-
+#include "Graphics/Shader.h"
 
 UNIQUE_IMPLEMENT_MAIN(Unique::UniqueSample)
 
@@ -61,6 +61,30 @@ namespace Unique
 		Application::Initialize();
 
 		CreateResource();
+
+		SPtr<Shader> shader(new Shader());
+		JsonReader jsonReader;
+		jsonReader.Load("Shaders/Test.shader", shader, true, true);
+
+		JsonWriter jsonWriter;
+		jsonWriter.Save("test2.json", shader);
+		
+		/*
+		{
+			shader->SetName("test_shader");
+			Pass* pass = shader->AddPass("Test");
+			pass->shaderStage_[0] = { ShaderType::SHADER_TYPE_VERTEX, "Assets/shader.hlsl", "VS", "vs_5_0" };
+			pass->shaderStage_[1] = { ShaderType::SHADER_TYPE_PIXEL, "Assets/shader.hlsl", "PS", "ps_5_0" };
+
+			JsonWriter jsonWriter;
+			jsonWriter.Save("test.json", shader);
+
+			SPtr<Shader> s(new Shader());
+			JsonReader jsonReader;
+			jsonReader.Load("test.json", s);
+
+			jsonWriter.Save("test1.json", s);
+		}*/
 	}
 
 	void UniqueSample::Terminate()
@@ -94,12 +118,12 @@ namespace Unique
 	{
 		{
 			ShaderCreationAttribs Attrs;
-			Attrs.Desc.Name = "MainVS";
+			//Attrs.Desc.Name = "MainVS";
 			Attrs.FilePath = "MainVS_DX.hlsl";
-			Attrs.EntryPoint = "main";
+			//Attrs.EntryPoint = "main";
 			Attrs.Desc.ShaderType = SHADER_TYPE_VERTEX;
 			Attrs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-			Attrs.Desc.TargetProfile = SHADER_PROFILE_DX_4_0;
+			//Attrs.Desc.TargetProfile = SHADER_PROFILE_DX_4_0;
 			BasicShaderSourceStreamFactory BasicSSSFactory("assets\\shaders;assets\\shaders\\inc;");
 			Attrs.pShaderSourceStreamFactory = &BasicSSSFactory;
 			renderDevice->CreateShader(Attrs, &vs_);
@@ -107,12 +131,12 @@ namespace Unique
 
 		{
 			ShaderCreationAttribs Attrs;
-			Attrs.Desc.Name = "MainPS";
+			//Attrs.Desc.Name = "MainPS";
 			Attrs.FilePath = "MainPS_DX.hlsl";
-			Attrs.EntryPoint = "main";
+			//Attrs.EntryPoint = "main";
 			Attrs.Desc.ShaderType = SHADER_TYPE_PIXEL;
 			Attrs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-			Attrs.Desc.TargetProfile = SHADER_PROFILE_DX_4_0;
+			//Attrs.Desc.TargetProfile = SHADER_PROFILE_DX_4_0;
 			BasicShaderSourceStreamFactory BasicSSSFactory("assets\\shaders;assets\\shaders\\inc;");
 			Attrs.pShaderSourceStreamFactory = &BasicSSSFactory;
 			renderDevice->CreateShader(Attrs, &ps_);
@@ -185,8 +209,6 @@ namespace Unique
 
 		renderDevice->CreateResourceMapping(rmd, &resourceMapping_);
 		pipelineState_->BindShaderResources(resourceMapping_, BIND_SHADER_RESOURCES_ALL_RESOLVED);
-		//vs_->BindResources(resourceMapping_, 0/*BIND_SHADER_RESOURCES_ALL_RESOLVED*/);
-		//ps_->BindResources(resourceMapping_, 0/*BIND_SHADER_RESOURCES_ALL_RESOLVED*/);
 
 	}
 	
@@ -197,14 +219,6 @@ namespace Unique
 	void FillSpongeBuffers(int level, int levelMax, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices,
 		const float3& center, bool aoEnabled, const bool aoEdges[12], const unsigned int faceColors[6]);
 	
-#if USE_GEO
-	SPtr<VertexBuffer> pVertexBuffer(new VertexBuffer());
-	SPtr<IndexBuffer> pIndexBuffer(new IndexBuffer());
-#else
-	RefCntAutoPtr<IBuffer> pVertexBuffer;
-	RefCntAutoPtr<IBuffer> pIndexBuffer;
-#endif
-	unsigned int SpongeIndicesCount;
 	// Build sponge vertex and index buffers 
 	void UniqueSample::BuildSponge(int levelMax, bool aoEnabled)
 	{
@@ -217,43 +231,18 @@ namespace Unique
 		unsigned int faceColors[6] = { COLORS[0], COLORS[0], COLORS[0], COLORS[0], COLORS[0], COLORS[0] };
 		FillSpongeBuffers(0, levelMax, vertices, indices, float3(), aoEnabled, aoEdges, faceColors);
 
-		SpongeIndicesCount = (unsigned int)indices.size();
+		SPtr<VertexBuffer> pVertexBuffer(new VertexBuffer());
+		pVertexBuffer->Create(vertices);
 
-#if USE_GEO
-		pVertexBuffer->Create(vertices.size(), sizeof(Vertex), USAGE_STATIC, vertices.data());
-
-		pIndexBuffer->Create(indices.size(), sizeof(unsigned int), USAGE_STATIC, indices.data());
+		SPtr<IndexBuffer> pIndexBuffer(new IndexBuffer());
+		pIndexBuffer->Create(indices);
 
 		geometry_ = new Geometry();
 		geometry_->SetNumVertexBuffers(1);
 		geometry_->SetVertexBuffer(0, pVertexBuffer);
 		geometry_->SetIndexBuffer(pIndexBuffer);
-
-		geometry_->SetDrawRange(PrimitiveTopology::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
-			0, SpongeIndicesCount);
-#else
-
-		BufferDesc BuffDesc;
-		BuffDesc.BindFlags = BIND_VERTEX_BUFFER;
-		BuffDesc.Usage = USAGE_STATIC;
-		BuffDesc.uiSizeInBytes = (Uint32)vertices.size() * sizeof(Vertex);
-		BufferData BuffData;
-		BuffData.pData = vertices.data();
-		BuffData.DataSize = BuffDesc.uiSizeInBytes;
-
-		renderDevice->CreateBuffer(BuffDesc, BuffData, &pVertexBuffer);
-
-		// Create index buffer
-		BuffDesc.uiSizeInBytes = (Uint32)indices.size() * sizeof(unsigned int);
-		BuffDesc.BindFlags = BIND_INDEX_BUFFER;
-		BuffData.pData = &indices[0];
-		BuffData.DataSize = BuffDesc.uiSizeInBytes;
-
-		renderDevice->CreateBuffer(BuffDesc, BuffData, &pIndexBuffer);
-#endif
-
-
-
+		geometry_->SetDrawRange(PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, 
+			0, (unsigned int)indices.size());
 	}
 
 	// Copy world/view/proj matrices and light parameters to shader constants
@@ -449,14 +438,14 @@ namespace Unique
 			m_SpongeRotation = RotationFromAxisAngle(axis, angle);
 		}
 
-		//auto& graphics = GetSubsystem<Graphics>();
+		auto& graphics = GetSubsystem<Graphics>();
 		// Clear the back buffer 
 		deviceContext->ClearRenderTarget(nullptr, m_BackgroundColor);
 		deviceContext->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f);
 
 		// Set world/view/proj matrices and global shader constants
-		float aspectRatio = resolution_.x_ / (float)resolution_.y_;
-		float4x4 proj = Projection(M_PI / 4, aspectRatio, 0.1f, 100.0f, deviceType_ == DeviceType::D3D11|| deviceType_ == DeviceType::D3D12);
+		float aspectRatio = graphics.GetAspectRatio();
+		float4x4 proj = Projection(M_PI / 4, aspectRatio, 0.1f, 100.0f, graphics.IsDirect3D());
 		float dist = m_CamDistance + 0.4f;
 		float3 camPosInv(dist * 0.3f, dist * 0.0f, dist * 2.0f);
 		float4x4 view = translationMatrix(camPosInv);
@@ -468,27 +457,9 @@ namespace Unique
 		pSRB_->BindResources(SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, resourceMapping_,
 			BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED | BIND_SHADER_RESOURCES_ALL_RESOLVED);
 		deviceContext->CommitShaderResources(pSRB_, COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
-
-#if USE_GEO
-
+		
 		geometry_->Draw(pipelineState_);
 
-#else
-
-		DrawAttribs DrawAttrs;
-		DrawAttrs.Topology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-		DrawAttrs.IsIndexed = true;
-		DrawAttrs.IndexType = VT_UINT32;
-		DrawAttrs.NumIndices = SpongeIndicesCount;
-
-		IBuffer *buffer[1] = { pVertexBuffer };
-		Uint32 offsets[1] = { 0 };
-		Uint32 strides[1] = { sizeof(Vertex) };
-
-		deviceContext->SetVertexBuffers(0, 1, buffer, strides, offsets, SET_VERTEX_BUFFERS_FLAG_RESET);
-		deviceContext->SetIndexBuffer(pIndexBuffer, 0);
-		deviceContext->Draw(DrawAttrs);
-#endif
 	}
 
 	void UniqueSample::OnPostRender()

@@ -85,32 +85,36 @@ namespace Unique
 		"InstanceDataStepRate", self.InstanceDataStepRate
 	)
 
-	uObject(Pass)
-	{
-		uFactory("Graphics")
-		uAttribute("Name", name_)
-		uAttribute("DepthState", depthState_)
-		uAttribute("RasterizerState", rasterizerState_)
-		uAttribute("BlendStateDesc", blendState_)
-		uAttribute("InputLayout", inputLayout_)
-		uAttribute("ShaderDefines", allDefs_)
-		uAttribute("VertexShader", vertexShader_)
-		uAttribute("PixelShader", pixelShader_)
-		uAttribute("ComputeShader", computeShader_)
-	}
+	uClassTraits
+	(
+		Pass,
+		"Name", self.name_,
+		"DepthState", self.depthState_,
+		"RasterizerState", self.rasterizerState_,
+		"BlendStateDesc", self.blendState_,
+		"InputLayout", self.inputLayout_,
+		//"ShaderDefines", self.allDefs_,
+		"VertexShader", self.shaderStage_[0],
+		"PixelShader", self.shaderStage_[1],
+		"GeometryShader", self.shaderStage_[2],
+		"HullShader", self.shaderStage_[3],
+		"DomainShader", self.shaderStage_[4],
+		"ComputeShader", self.shaderStage_[5]
+	)
 
 	uObject(Shader)
 	{
 		uFactory("Graphics")
-		uAttribute("ShaderName", shaderName_)
+		uAttribute("Name", shaderName_)
 		uAttribute("Pass", passes_)	
 	}
 
-	Pass::Pass() : 
-		vertexShader_(ShaderType::SHADER_TYPE_VERTEX),
-		pixelShader_(ShaderType::SHADER_TYPE_PIXEL),
-		computeShader_(ShaderType::SHADER_TYPE_COMPUTE)
+	Pass::Pass(const String& name) : name_(name)
 	{
+		for (int i = 0; i < 6; i++)
+		{
+			shaderStage_[i].shaderType_ = (ShaderType)(i + 1);
+		}
 	}
 
 	Pass::~Pass()
@@ -131,14 +135,14 @@ namespace Unique
 		return mask;
 	}
 
-	ShaderInstance* Pass::GetInstance(Shader* shader, const String& defs)
+	PipelineState* Pass::GetInstance(Shader* shader, const String& defs)
 	{
 		unsigned defMask = GetMask(shader, defs);
 
 		return GetInstance(shader, defMask);
 	}
 
-	ShaderInstance* Pass::GetInstance(Shader* shader, unsigned defMask)
+	PipelineState* Pass::GetInstance(Shader* shader, unsigned defMask)
 	{
 		defMask &= allMask_;
 
@@ -148,7 +152,7 @@ namespace Unique
 			return it->second;
 		}
 
-		SPtr<ShaderInstance> inst(new ShaderInstance(*shader, *this, defMask));
+		SPtr<PipelineState> inst(new PipelineState(*shader, *this, defMask));
 		cachedPass_[defMask] = inst;
 		return inst;
 		
@@ -156,21 +160,24 @@ namespace Unique
 
 	bool Pass::Prepare()
 	{
-		if (!computeShader_)
+		auto& computeShader = shaderStage_[5];
+		if (computeShader)
 		{
-			allDefs_ = Shader::SplitDef(computeShader_.defines_);
+			allDefs_ = Shader::SplitDef(computeShader.defines_);
 
 			if (allDefs_.size() > 0)
 			{
 				std::sort(allDefs_.begin(), allDefs_.end());
 				allMask_ = (unsigned)(1 << (allDefs_.size() + 1)) - 1;
-				computeShader_.mask_ = allMask_;
+				computeShader.mask_ = allMask_;
 			}
 		}
 		else
 		{
-			Vector<String> psDefs = Shader::SplitDef(pixelShader_.defines_);
-			Vector<String> vsDefs = Shader::SplitDef(vertexShader_.defines_);
+			auto& vertexShader = shaderStage_[0];
+			auto& pixelShader = shaderStage_[1];
+			Vector<String> psDefs = Shader::SplitDef(pixelShader.defines_);
+			Vector<String> vsDefs = Shader::SplitDef(vertexShader.defines_);
 			allDefs_ = psDefs;
 
 			for (auto& s : vsDefs)
@@ -190,12 +197,12 @@ namespace Unique
 				{
 					if (Find(vsDefs, allDefs_[i]) != vsDefs.end())
 					{
-						pixelShader_.mask_ |= (unsigned)(1 << i);
+						pixelShader.mask_ |= (unsigned)(1 << i);
 					}
 
 					if (Find(psDefs, allDefs_[i]) != psDefs.end())
 					{
-						pixelShader_.mask_ |= (unsigned)(1 << i);
+						pixelShader.mask_ |= (unsigned)(1 << i);
 					}
 				}
 			}
@@ -207,6 +214,7 @@ namespace Unique
 
 	Shader::Shader()
 	{
+		passes_.reserve(16);
 	}
 
 	Shader::~Shader()
@@ -217,7 +225,7 @@ namespace Unique
 	{
 		for (auto& pass : passes_)
 		{
-			pass->Prepare();
+			pass.Prepare();
 		}
 
 		return true;
@@ -228,24 +236,19 @@ namespace Unique
 		return true;
 	}
 
-	Pass* Shader::AddPass(Pass* pass)
+	Pass* Shader::AddPass(const String& name)
 	{
-		if (!pass)
-		{
-			pass = new Pass();
-		}
-
-		passes_.emplace_back(pass);
-		return pass;
+		passes_.emplace_back(name);
+		return &(passes_.back());
 	}
 
 	Pass* Shader::GetShaderPass(const StringID & passName)
 	{
 		for (auto& p : passes_)
 		{
-			if (p->name_ == passName)
+			if (p.name_ == passName)
 			{
-				return p;
+				return &p;
 			}
 		}
 
@@ -263,7 +266,7 @@ namespace Unique
 		return pass->GetMask(this, defs);
 	}
 
-	ShaderInstance* Shader::GetInstance(const StringID& passName, uint defMask)
+	PipelineState* Shader::GetPipeline(const StringID& passName, uint defMask)
 	{
 		Pass* pass = GetShaderPass(passName);
 		if (pass == nullptr)
@@ -274,7 +277,7 @@ namespace Unique
 		return pass->GetInstance(this, defMask);
 	}
 
-	ShaderInstance* Shader::GetInstance(const StringID& passName, const String& defs)
+	PipelineState* Shader::GetPipeline(const StringID& passName, const String& defs)
 	{
 		Pass* pass = GetShaderPass(passName);
 		if (pass == nullptr)

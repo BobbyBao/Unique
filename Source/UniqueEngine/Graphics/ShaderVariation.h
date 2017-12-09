@@ -2,16 +2,20 @@
 #include "resource/Resource.h"
 #include "GraphicsDefs.h"
 #include "GPUObject.h"
+#include <RefCntAutoPtr.h>
 #include <Shader.h>
 #include <PipelineState.h>
+#include <ShaderResourceBinding.h>
 
 namespace Unique
 {
-	
 	using ShaderType = SHADER_TYPE;
+	using ShaderProfile = SHADER_PROFILE;
 
 	class Shader;
 	class Pass;
+
+	uEnumTraits(ShaderProfile, "DEFAULT", "DX_4_0", "DX_5_0", "DX_5_1", "GL_4_2")
 
 	struct ShaderStage
 	{
@@ -26,23 +30,23 @@ namespace Unique
 		}
 
 		ShaderStage(
-			ShaderType type, const String& filename, const String& entryPoint, const String& target) :
+			ShaderType type, const String& filename, const String& entryPoint, const ShaderProfile& target) :
 			shaderType_{ type },
 			entryPoint_{ entryPoint },
-			target_{ target }
+			shaderProfile_{ target }
 		{
 		}
 
 		operator bool()
 		{
-			return !entryPoint_.Empty();
+			return !source_.Empty();
 		}
 
-		uClass("EntryPoint", entryPoint_, "Target", target_, "Defines", defines_, "Source", source_);
+		uClass("EntryPoint", entryPoint_, "ShaderProfile", shaderProfile_, "Defines", defines_, "Source", source_);
 
 		ShaderType	shaderType_;
 		String		entryPoint_;
-		String		target_;
+		ShaderProfile shaderProfile_;
 		String		defines_;
 		String		source_;
 		uint		mask_;
@@ -69,17 +73,19 @@ namespace Unique
 		bool dirty_ = false;
 	};
 	
-	class ShaderInstance : public GPUObject<RefCounted, IPipelineState>
+	class PipelineState : public GPUObject<RefCounted, IPipelineState>
 	{
 	public:
-		ShaderInstance(Shader& shader, Pass& shaderPass, unsigned defs);
+		PipelineState(Shader& shader, Pass& shaderPass, unsigned defs);
 
 		bool CreateImpl();
 		void Reload();
 
-		IPipelineState* GetPipeline(/*const VertexFormat& vertexFormat*/);
-
-		Vector<SPtr<ShaderVariation>>	shaders;
+		IPipelineState* GetPipeline();
+	private:
+		Pass& shaderPass_;
+		Vector<SPtr<ShaderVariation>> shaders;
+		RefCntAutoPtr<IShaderResourceBinding> pSRB_;
 		bool dirty_ = true;
 
 	};
