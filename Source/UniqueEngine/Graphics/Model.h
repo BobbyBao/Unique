@@ -25,7 +25,7 @@
 #include "Container/ArrayPtr.h"
 #include "Container/Ptr.h"
 #include "../Graphics/GraphicsDefs.h"
-//#include "../Graphics/Skeleton.h"
+#include "../Graphics/Skeleton.h"
 #include "Math/BoundingBox.h"
 #include "Resource/Resource.h"
 
@@ -115,9 +115,9 @@ public:
     /// Destruct.
     virtual ~Model();
     /// Load resource from stream. May be called from a worker thread. Return true if successful.
-    //virtual bool BeginLoad(File& source);
+    virtual bool BeginLoad(File& source);
     /// Finish resource loading. Always called from the main thread. Return true if successful.
-    //virtual bool EndLoad();
+    virtual bool EndLoad();
 
     /// Set local-space bounding box.
     void SetBoundingBox(const BoundingBox& box);
@@ -135,7 +135,7 @@ public:
     /// Set geometry center.
     bool SetGeometryCenter(unsigned index, const Vector3& center);
     /// Set skeleton.
-    //void SetSkeleton(const Skeleton& skeleton);
+    void SetSkeleton(const Skeleton& skeleton);
     /// Set bone mappings when model has more bones than the skinning shader can handle.
     void SetGeometryBoneMappings(const Vector<PODVector<unsigned> >& mappings);
     /// Set vertex morphs.
@@ -147,7 +147,7 @@ public:
     const BoundingBox& GetBoundingBox() const { return boundingBox_; }
 
     /// Return skeleton.
-    //Skeleton& GetSkeleton() { return skeleton_; }
+    Skeleton& GetSkeleton() { return skeleton_; }
 
     /// Return vertex buffers.
     const Vector<SPtr<VertexBuffer> >& GetVertexBuffers() const { return vertexBuffers_; }
@@ -200,7 +200,7 @@ private:
     /// Bounding box.
     BoundingBox boundingBox_;
     /// Skeleton.
-    //Skeleton skeleton_;
+    Skeleton skeleton_;
     /// Vertex buffers.
     Vector<SPtr<VertexBuffer> > vertexBuffers_;
     /// Index buffers.

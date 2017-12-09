@@ -21,73 +21,38 @@
 //
 
 #pragma once
-#include "../Unique.h"
-#include <algorithm>
+
+#include "Container/Ptr.h"
 
 namespace Unique
 {
-class String;
-class VectorBase;
 
-/// Swap two values.
-template <class T> inline void Swap(T& first, T& second)
+class Component;
+class Node;
+
+/// Utility class that resolves node & component IDs after a scene or partial scene load.
+class UNIQUE_API SceneResolver
 {
-    T temp = first;
-    first = second;
-    second = temp;
-}
+public:
+    /// Construct.
+    SceneResolver();
+    /// Destruct.
+    ~SceneResolver();
 
-template<class C, class V>
-typename C::iterator Find(C& c, const V& value)
-{
-	return std::find(c.begin(), c.end(), value);
-}
+    /// Reset. Clear all remembered nodes and components.
+    void Reset();
+    /// Remember a created node.
+    void AddNode(unsigned oldID, Node* node);
+    /// Remember a created component.
+    void AddComponent(unsigned oldID, Component* component);
+    /// Resolve component and node ID attributes and reset.
+    void Resolve();
 
-template<class C, class V>
-bool Contains(C& c, const V& value)
-{
-	return std::find(c.begin(), c.end(), value) != c.end();
-}
-
-template<class C, class V>
-bool Remove(C& c, const V& value)
-{
-	auto i = Find(c, value);
-	if (i != c.end())
-	{
-		c.erase(i);
-		return true;
-	}
-	else
-		return false;
-}
-
-template<class C, class V>
-bool RemoveAll(C& c, const V& value)
-{
-	auto first = c.begin();
-	auto last = c.end();
-	auto result = first;
-	while (first != last) {
-		if (!(*first == val)) {
-			*result = move(*first);
-			++result;
-		}
-		++first;
-	}
-	return result;
-
-}
-
-template<class T>
-void RemoveSwap(std::vector<T>& c, const T& value)
-{
-	auto it = std::find(c.begin(), c.end(), value);
-	if (it != c.end())
-	{
-		*it = c.back();
-		c.pop_back();
-	}
-}
+private:
+    /// Nodes.
+    HashMap<unsigned, WPtr<Node> > nodes_;
+    /// Components.
+    HashMap<unsigned, WPtr<Component> > components_;
+};
 
 }

@@ -75,6 +75,12 @@ public:
 	}
 
 	template<class T, class E>
+	void SubscribeToEvent(Object* sender, void(T::*f)(StringID, const E&))
+	{
+		SubscribeToEvent(sender, E::Type(), new TEventHandler<T, E>((T*)this, f));
+	}
+
+	template<class T, class E>
 	void SubscribeToEvent(Object* sender, const StringID& eventType, void(T::*f)(StringID, const E&))
 	{
 		SubscribeToEvent(sender, eventType, new TEventHandler<T, E>((T*)this, f));

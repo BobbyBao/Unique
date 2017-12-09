@@ -29,14 +29,22 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Renderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Shader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\ShaderVariation.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Skeleton.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Texture.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\View.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Application\Input.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Scene\Component.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Scene\LogicComponent.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Scene\Node.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Scene\Scene.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Scene\SceneEvents.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Scene\SceneResolver.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Scene\SmoothedTransform.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)UniquePCH.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Application\Application.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Skeleton.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Win32\Win32.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\GraphicsBuffer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Drawable.cpp" />
@@ -56,6 +64,11 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\View.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Application\Input.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Scene\Component.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Scene\LogicComponent.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Scene\Node.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Scene\Scene.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Scene\SceneResolver.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Scene\SmoothedTransform.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)UniquePCH.cpp" />
   </ItemGroup>
 </Project>

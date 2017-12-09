@@ -23,10 +23,9 @@
 #include "Precompiled.h"
 
 #include "../Graphics/Skeleton.h"
-#include "../IO/Log.h"
-#include "../io/Deserializer.h"
-#include "../io/Serializer.h"
-#include "../DebugNew.h"
+#include "IO/Log.h"
+#include "IO/File.h"
+//#include "../DebugNew.h"
 
 namespace Unique
 {
@@ -40,16 +39,17 @@ Skeleton::~Skeleton()
 {
 }
 
-bool Skeleton::Load(Deserializer& source)
+bool Skeleton::Load(File& source)
 {
     ClearBones();
 
     if (source.IsEof())
         return false;
 
-    unsigned bones = source.ReadUInt();
+    unsigned bones;
+	source.ReadValue(bones);
     bones_.reserve(bones);
-
+	/*
     for (unsigned i = 0; i < bones; ++i)
     {
         Bone newBone;
@@ -72,33 +72,7 @@ bool Skeleton::Load(Deserializer& source)
             rootBoneIndex_ = i;
 
         bones_.push_back(newBone);
-    }
-
-    return true;
-}
-
-bool Skeleton::Save(Serializer& dest) const
-{
-    if (!dest.WriteUInt((unsigned)bones_.size()))
-        return false;
-
-    for (unsigned i = 0; i < (unsigned)bones_.size(); ++i)
-    {
-        const Bone& bone = bones_[i];
-        dest.WriteString(bone.name_);
-        dest.WriteUInt(bone.parentIndex_);
-        dest.WriteVector3(bone.initialPosition_);
-        dest.WriteQuaternion(bone.initialRotation_);
-        dest.WriteVector3(bone.initialScale_);
-        dest.Write(bone.offsetMatrix_.Data(), sizeof(Matrix3x4));
-
-        // Collision info
-        dest.WriteUByte(bone.collisionMask_);
-        if (bone.collisionMask_ & BONECOLLISION_SPHERE)
-            dest.WriteFloat(bone.radius_);
-        if (bone.collisionMask_ & BONECOLLISION_BOX)
-            dest.WriteBoundingBox(bone.boundingBox_);
-    }
+    }*/
 
     return true;
 }

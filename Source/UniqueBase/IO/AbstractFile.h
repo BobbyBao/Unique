@@ -54,7 +54,7 @@ public:
 	unsigned GetSize() const { return size_; }
 
 	template<class T>
-	bool Read(T& value)
+	bool ReadValue(T& value)
 	{
 		return Read(&value, sizeof value) == sizeof value;
 	}

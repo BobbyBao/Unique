@@ -72,9 +72,7 @@ Model::~Model()
 {
 }
 
-#if false
-
-bool Model::BeginLoad(Deserializer& source)
+bool Model::BeginLoad(File& source)
 {
     // Check ID
     String fileID = source.ReadFileID();
@@ -96,6 +94,7 @@ bool Model::BeginLoad(Deserializer& source)
     unsigned memoryUse = sizeof(Model);
     bool async = GetAsyncLoadState() == ASYNC_LOADING;
 
+#if false
     // Read vertex buffers
     unsigned numVertexBuffers = source.ReadUInt();
     vertexBuffers_.reserve(numVertexBuffers);
@@ -310,11 +309,13 @@ bool Model::BeginLoad(Deserializer& source)
     memoryUse += sizeof(Vector3) * (unsigned)geometries_.size();
 
     SetMemoryUse(memoryUse);
+#endif
     return true;
 }
 
 bool Model::EndLoad()
 {
+#if false
     // Upload vertex buffer data
     for (unsigned i = 0; i < vertexBuffers_.size(); ++i)
     {
@@ -357,10 +358,9 @@ bool Model::EndLoad()
     loadVBData_.clear();
     loadIBData_.clear();
     loadGeometries_.clear();
+#endif
     return true;
 }
-
-#endif
 
 void Model::SetBoundingBox(const BoundingBox& box)
 {
@@ -468,11 +468,11 @@ bool Model::SetGeometryCenter(unsigned index, const Vector3& center)
     geometryCenters_[index] = center;
     return true;
 }
-/*
+
 void Model::SetSkeleton(const Skeleton& skeleton)
 {
     skeleton_ = skeleton;
-}*/
+}
 
 void Model::SetGeometryBoneMappings(const Vector<PODVector<unsigned> >& geometryBoneMappings)
 {

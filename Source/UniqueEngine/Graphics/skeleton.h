@@ -32,7 +32,7 @@ static const unsigned BONECOLLISION_NONE = 0x0;
 static const unsigned BONECOLLISION_SPHERE = 0x1;
 static const unsigned BONECOLLISION_BOX = 0x2;
 
-class Deserializer;
+class File;
 class ResourceCache;
 class Serializer;
 
@@ -74,7 +74,7 @@ struct Bone
     /// Local-space bounding box.
     BoundingBox boundingBox_;
     /// Scene node.
-    WeakPtr<Node> node_;
+    WPtr<Node> node_;
 };
 
 /// Hierarchical collection of bones.
@@ -87,9 +87,7 @@ public:
     ~Skeleton();
 
     /// Read from a stream. Return true if successful.
-    bool Load(Deserializer& source);
-    /// Write to a stream. Return true if successful.
-    bool Save(Serializer& dest) const;
+    bool Load(File& source);
     /// Define from another skeleton.
     void Define(const Skeleton& src);
     /// Set root bone's index.
