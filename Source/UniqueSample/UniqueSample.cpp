@@ -173,10 +173,6 @@ namespace Unique
 			RasterizerStateDesc &RasterizerDesc = PSODesc.GraphicsPipeline.RasterizerDesc;
 			RasterizerDesc.FillMode = FILL_MODE_SOLID;
 			RasterizerDesc.CullMode = CULL_MODE_NONE;
-			//RasterizerDesc.FrontCounterClockwise = True;
-			RasterizerDesc.ScissorEnable = False;
-			//RSDesc.MultisampleEnable = false; // do not allow msaa (fonts would be degraded)
-			RasterizerDesc.AntialiasedLineEnable = False;
 
 			InputLayoutDesc &Layout = PSODesc.GraphicsPipeline.InputLayout;
 			LayoutElement TextLayoutElems[] =
@@ -193,7 +189,7 @@ namespace Unique
 			PSODesc.GraphicsPipeline.pPS = ps_;
 
 			renderDevice->CreatePipelineState(PSODesc, &pipelineState_);
-			pipelineState_->CreateShaderResourceBinding(&pSRB_);
+			pipelineState_->CreateShaderResourceBinding(&shaderResourceBinding_);
 
 // 			IShaderVariable* v1 = pSRB_->GetVariable(SHADER_TYPE_VERTEX, "g_WorldViewProj");
 // 			IShaderVariable* v2 = pSRB_->GetVariable(SHADER_TYPE_VERTEX, "g_WorldNorm");
@@ -247,8 +243,7 @@ namespace Unique
 		geometry_->SetNumVertexBuffers(1);
 		geometry_->SetVertexBuffer(0, pVertexBuffer);
 		geometry_->SetIndexBuffer(pIndexBuffer);
-		geometry_->SetDrawRange(PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, 
-			0, (unsigned int)indices.size());
+		geometry_->SetDrawRange(PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, 0, (unsigned int)indices.size());
 	}
 
 	// Copy world/view/proj matrices and light parameters to shader constants
@@ -460,11 +455,13 @@ namespace Unique
 		SetShaderConstants(world, view, proj);
 
 		deviceContext->SetPipelineState(pipelineState_);
-		pSRB_->BindResources(SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, resourceMapping_,
+
+		shaderResourceBinding_->BindResources(SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, resourceMapping_,
 			BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED | BIND_SHADER_RESOURCES_ALL_RESOLVED);
-		deviceContext->CommitShaderResources(pSRB_, COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
+
+		deviceContext->CommitShaderResources(shaderResourceBinding_, COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
 		
-		geometry_->Draw(pipelineState_);
+		geometry_->Draw(nullptr, resourceMapping_);
 
 	}
 

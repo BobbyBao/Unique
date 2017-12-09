@@ -329,7 +329,7 @@ namespace Unique
 
 			Hjson::Value parentNode = hJsonNode_;
 
-			for (size_t i = 0; i < parentNode.size(); ++i)
+			for (int i = 0; i < (int)parentNode.size(); ++i)
 			{
 				auto& child = parentNode[i];
 				hJsonNode_ = child;

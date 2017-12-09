@@ -40,7 +40,7 @@ namespace Unique
 		RefCntAutoPtr<IShader> vs_;
 		RefCntAutoPtr<IShader> ps_;
 		RefCntAutoPtr<IPipelineState> pipelineState_;
-		RefCntAutoPtr<IShaderResourceBinding> pSRB_;
+		RefCntAutoPtr<IShaderResourceBinding> shaderResourceBinding_;
 		RefCntAutoPtr<IResourceMapping> resourceMapping_;
 	};
 

@@ -135,14 +135,14 @@ namespace Unique
 		return mask;
 	}
 
-	PipelineState* Pass::GetInstance(Shader* shader, const String& defs)
+	PipelineState* Pass::GetPipeline(Shader* shader, const String& defs)
 	{
 		unsigned defMask = GetMask(shader, defs);
 
-		return GetInstance(shader, defMask);
+		return GetPipeline(shader, defMask);
 	}
 
-	PipelineState* Pass::GetInstance(Shader* shader, unsigned defMask)
+	PipelineState* Pass::GetPipeline(Shader* shader, unsigned defMask)
 	{
 		defMask &= allMask_;
 
@@ -274,7 +274,7 @@ namespace Unique
 			return nullptr;
 		}
 
-		return pass->GetInstance(this, defMask);
+		return pass->GetPipeline(this, defMask);
 	}
 
 	PipelineState* Shader::GetPipeline(const StringID& passName, const String& defs)
@@ -285,7 +285,7 @@ namespace Unique
 			return nullptr;
 		}
 
-		return pass->GetInstance(this, defs);
+		return pass->GetPipeline(this, defs);
 	}
 
 	Vector<String> Shader::SplitDef(const String& defs)
@@ -297,31 +297,7 @@ namespace Unique
 
 		return defs.Split(' ');
 	}
-
-	String Shader::GetShaderPath(DeviceType renderID)
-	{
-		switch (renderID)
-		{
-		case DeviceType::D3D11:
-		case DeviceType::D3D12:
-			return "Shaders/HLSL/";
-			
-		case DeviceType::OpenGL:
-			return "Shaders/GLSL/";
-		case DeviceType::OpenGLES:
-			return "Shaders/ESSL/";
-
-		//case DeviceType::Vulkan:
-		//	return "Shaders/VKSL/";
-		//case DeviceType::Metal:
-		//	return "Shaders/metal/";
-		default:
-			break;
-		}
-
-		return "";
-	}
-
+	
 
 
 }

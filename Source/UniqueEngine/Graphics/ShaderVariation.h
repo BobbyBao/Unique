@@ -44,12 +44,12 @@ namespace Unique
 
 		uClass("EntryPoint", entryPoint_, "ShaderProfile", shaderProfile_, "Defines", defines_, "Source", source_);
 
-		ShaderType	shaderType_;
-		String		entryPoint_;
-		ShaderProfile shaderProfile_;
-		String		defines_;
-		String		source_;
-		uint		mask_;
+		ShaderType		shaderType_;
+		String			entryPoint_;
+		ShaderProfile	shaderProfile_;
+		String			defines_;
+		String			source_;
+		uint			mask_;
 	};
 
 	class ShaderVariation : public GPUObject<RefCounted, IShader>
@@ -61,7 +61,7 @@ namespace Unique
 		void Reload();
 		bool LoadConvertedCode(const String & binaryShaderName);
 		bool Convert(const String& binaryShaderName);
-
+		ShaderType GetShaderType() const { return shaderStage_.shaderType_; }
 	private:
 		Shader& owner_;
 		ShaderStage shaderStage_;
@@ -86,6 +86,7 @@ namespace Unique
 	private:
 		Pass& shaderPass_;
 		Vector<SPtr<ShaderVariation>> shaders;
+		bool isComputePipeline_ = false;
 		RefCntAutoPtr<IShaderResourceBinding> shaderResourceBinding_;
 		bool dirty_ = true;
 

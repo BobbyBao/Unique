@@ -73,13 +73,13 @@ namespace Unique
 		virtual void Get(const void* ptr, void* dest) const
 		{
 			const void* src = reinterpret_cast<const unsigned char*>(ptr) + offset_;
-			*((T*)dest) = *((T*)src);
+			std::memcpy(dest, src, sizeof(T));
 		}
 
 		virtual void Set(void* ptr, const void* value)
 		{
 			void* dest = reinterpret_cast<unsigned char*>(ptr) + offset_;
-			*((T*)dest) = *((T*)value);
+			std::memcpy(dest, value, sizeof(T));
 		}
 
 	protected:

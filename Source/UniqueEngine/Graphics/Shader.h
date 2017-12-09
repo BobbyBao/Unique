@@ -21,9 +21,9 @@ namespace Unique
 
 		uint GetMask(Shader* shader, const String& defs);
 
-		PipelineState* GetInstance(Shader* shader, const String & defs);
+		PipelineState* GetPipeline(Shader* shader, const String & defs);
 
-		PipelineState* GetInstance(Shader* shader, unsigned defMask);
+		PipelineState* GetPipeline(Shader* shader, unsigned defMask);
 
 		bool Prepare();
 
@@ -44,6 +44,12 @@ namespace Unique
 		friend class PipelineState;
 	};
 
+	
+	struct ShaderVarible
+	{
+
+	};
+
 	class Shader : public Resource
 	{
 		uRTTI(Shader, Resource)
@@ -56,6 +62,7 @@ namespace Unique
 		virtual bool Create();
 
 		Pass* AddPass(const String& name);
+
 		Pass* GetShaderPass(const StringID & pass);
 
 		uint GetMask(const StringID& passName, const String & defs);
@@ -66,7 +73,6 @@ namespace Unique
 
 		static Vector<String> SplitDef(const String& defs);
 
-		static String GetShaderPath(DeviceType renderID);
 	private:
 		String shaderName_;
 		Vector<Pass> passes_;

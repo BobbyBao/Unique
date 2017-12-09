@@ -5,30 +5,29 @@ Shader("Default"):
 	{
 		DepthState: 
 		{
-			TestEnabled: false
-			WriteEnabled: true
-			CompareOp: Less
+			DepthEnable: true
+			DepthWriteEnable: true
 		}
 		
 		InputLayout:
 		[
 			{
-				InputIndex:0
-				NumComponents:3
-				ValueType:FLOAT32
-				IsNormalized:false
+				InputIndex: 0
+				NumComponents: 3
+				ValueType: FLOAT32
+				IsNormalized: false
 			}
 			{
-				InputIndex:1
-				NumComponents:3
-				ValueType:FLOAT32
-				IsNormalized:false
+				InputIndex: 1
+				NumComponents: 3
+				ValueType: FLOAT32
+				IsNormalized: false
 			}
 			{
-				InputIndex:2
-				NumComponents:4
-				ValueType:UINT8
-				IsNormalized:true
+				InputIndex: 2
+				NumComponents: 4
+				ValueType: UINT8
+				IsNormalized: true
 			}
 		]
 		

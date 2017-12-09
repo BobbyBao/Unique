@@ -76,7 +76,7 @@ namespace Unique
 		}
 
 		String& defines = defines_;
-		String binaryShaderName = Shader::GetShaderPath(graphics.GetDeviceType()) + name;
+		String binaryShaderName = "";// Shader::GetShaderPath(graphics.GetDeviceType()) + name;
 
 		if (!defines.Empty())
 		{
@@ -89,7 +89,7 @@ namespace Unique
 		{
 			if (!Convert(binaryShaderName))
 			{
-				if (LoadConvertedCode(Shader::GetShaderPath(graphics.GetDeviceType()) + name + extension))
+				if (LoadConvertedCode(/*Shader::GetShaderPath(graphics.GetDeviceType()) +*/ name + extension))
 				{
 					UNIQUE_LOGWARNING("==============================Load shader failed, name : " + binaryShaderName);
 				}
@@ -209,13 +209,23 @@ namespace Unique
 
 	PipelineState::PipelineState(Shader& shader, Pass& shaderPass, unsigned defs) : shaderPass_(shaderPass)
 	{
-		for(int i = 0; i < 6; i++)
+		if (shaderPass.shaderStage_[5])
 		{
-			if (shaderPass.shaderStage_[i])
+			isComputePipeline_ = true;
+		}
+		else
+		{
+			isComputePipeline_ = false;
+
+			for (int i = 0; i < 5; i++)
 			{
-				SPtr<ShaderVariation> sv(new ShaderVariation(shader, shaderPass.shaderStage_[i], shaderPass, defs));
-				shaders.push_back(sv);
+				if (shaderPass.shaderStage_[i])
+				{
+					SPtr<ShaderVariation> sv(new ShaderVariation(shader, shaderPass.shaderStage_[i], shaderPass, defs));
+					shaders.push_back(sv);
+				}
 			}
+
 		}
 
 	}
@@ -232,7 +242,7 @@ namespace Unique
 		}
 
 		PipelineStateDesc PSODesc;
-		PSODesc.IsComputePipeline = false;
+		PSODesc.IsComputePipeline = isComputePipeline_;
 		PSODesc.GraphicsPipeline.NumRenderTargets = 1;
 		PSODesc.GraphicsPipeline.RTVFormats[0] = TEX_FORMAT_RGBA8_UNORM_SRGB;
 		PSODesc.GraphicsPipeline.DSVFormat = TEX_FORMAT_D32_FLOAT;
@@ -246,8 +256,44 @@ namespace Unique
 
 		PSODesc.GraphicsPipeline.PrimitiveTopologyType = PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 		
-		//PSODesc.GraphicsPipeline.pVS = vs_;
-		//PSODesc.GraphicsPipeline.pPS = ps_;
+		if (isComputePipeline_)
+		{
+			for (auto shader : shaders)
+			{
+				if (shader->GetShaderType() == SHADER_TYPE_COMPUTE)
+				{
+					PSODesc.ComputePipeline.pCS = shader->GetHandle();
+					break;
+				}
+			}
+		}
+		else
+		{
+			for (auto shader : shaders)
+			{
+				switch (shader->GetShaderType())
+				{
+				case SHADER_TYPE_VERTEX:
+					PSODesc.GraphicsPipeline.pVS = shader->GetHandle();
+					break;
+				case SHADER_TYPE_PIXEL:
+					PSODesc.GraphicsPipeline.pPS = shader->GetHandle();
+					break;
+				case SHADER_TYPE_GEOMETRY:
+					PSODesc.GraphicsPipeline.pGS = shader->GetHandle();
+					break;
+				case SHADER_TYPE_HULL:
+					PSODesc.GraphicsPipeline.pHS = shader->GetHandle();
+					break;
+				case SHADER_TYPE_DOMAIN:
+					PSODesc.GraphicsPipeline.pDS = shader->GetHandle();
+					break;
+				default:
+					break;
+				}
+
+			}
+		}
 
 		renderDevice->CreatePipelineState(PSODesc, &handle_);
 		handle_->CreateShaderResourceBinding(&shaderResourceBinding_);

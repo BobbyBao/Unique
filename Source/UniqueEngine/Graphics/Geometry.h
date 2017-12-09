@@ -60,7 +60,7 @@ public:
     /// Set the LOD distance.
     void SetLodDistance(float distance);
 
-	void Draw(IPipelineState* pipeline);
+	void Draw(PipelineState* pipeline, IResourceMapping* resourceMapping);
     
 	/// Return all vertex buffers.
     const Vector<SPtr<VertexBuffer> >& GetVertexBuffers() const { return vertexBuffers_; }

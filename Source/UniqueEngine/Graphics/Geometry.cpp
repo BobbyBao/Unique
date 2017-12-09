@@ -159,7 +159,7 @@ namespace Unique
 		lodDistance_ = distance;
 	}
 
-	void Geometry::Draw(IPipelineState* pipeline)
+	void Geometry::Draw(PipelineState* pipeline, IResourceMapping* resourceMapping)
 	{
 		IBuffer *buffer[8] = { nullptr };
 		Uint32 offsets[8] = { 0 };

@@ -7,13 +7,10 @@
 
 namespace Unique
 {
-
 	template<class T>
 	class SerializeTraits<Unique::SPtr<T> > : public SerializeTraitsBase<Unique::SPtr<T> >
 	{
 	public:
-
-		inline static bool AllowTransferOptimization() { return T::AllowTransferOptimization(); }
 		inline static const char* GetTypeName() { return T::GetTypeStatic().c_str(); }
 		inline static bool IsObject() { return true; }
 
@@ -42,7 +39,6 @@ namespace Unique
 		}
 
 		static bool IsContinousMemoryArray() { return true; }
-		static void ResizeSTLStyleArray(value_type& data, int rs) { resize_trimmed(data, rs); }
 	};
 
 	template<>
@@ -107,13 +103,6 @@ namespace Unique
 	class SerializeTraitsFlags : public SerializeTraitsBase<T>
 	{
 	public:
-
-		struct FlagPair
-		{
-			long enumValue;
-			const char* enumName;
-		};
-
 		template<class TransferFunction>
 		inline static void TransferFlags(value_type& data, Map<const char*, long> flags, TransferFunction& transfer)
 		{
@@ -121,31 +110,48 @@ namespace Unique
 			if (transfer.IsReading())
 			{
 				transfer.TransferPrimitive(str);
-				Vector<String> strs = str.Split("|");
-				for(auto& s : strs)
+				auto i = flags.find(str.CString());
+				if (i != flags.end())
 				{
-					auto it = flags.find(s);
-					if(it != flags.end())
+					data = i->second;
+				}
+				else
+				{
+					Vector<String> strs = str.Split("|");
+					for (auto& s : strs)
 					{
-						data |= it.second;
+						auto it = flags.find(s);
+						if (it != flags.end())
+						{
+							data |= it.second;
+						}
 					}
 				}
-			//	data = (value_type)GetEnum(enumNames, count, str);
+
 			}
 			else
 			{
 				int i = 0;
 				for(auto it : flags)
 				{
-					if(data & it.second)
+					if (data == it->second)
 					{
-						if(i != 0)
-						{
-							str.Append('|');
-						}
-						str.Append(it.first);
-						i++;
+						str = it->first;
+						break;
 					}
+					else
+					{
+						if (data & it.second)
+						{
+							if (i != 0)
+							{
+								str.Append('|');
+							}
+							str.Append(it.first);
+							i++;
+						}
+					}
+				
 				}
 
 				transfer.TransferPrimitive(str);
