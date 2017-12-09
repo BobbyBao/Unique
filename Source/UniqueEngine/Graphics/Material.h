@@ -1,6 +1,11 @@
 #pragma once
 #include "Resource/Resource.h"
 
+namespace Diligent
+{
+	class IResourceMapping;
+}
+
 namespace Unique
 {
 	class Material : public Resource
@@ -9,6 +14,8 @@ namespace Unique
 	public:
 		Material();
 		~Material();
+
+		Diligent::IResourceMapping* resourceMapping_;
 	};
 
 

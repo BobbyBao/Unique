@@ -62,6 +62,7 @@ namespace Unique
 
 		CreateResource();
 
+		/*
 		SPtr<Shader> shader(new Shader());
 		JsonReader jsonReader;
 		jsonReader.Load("Shaders/Test.shader", shader, true, true);
@@ -69,7 +70,6 @@ namespace Unique
 		JsonWriter jsonWriter;
 		jsonWriter.Save("test2.json", shader);
 		
-		/*
 		{
 			shader->SetName("test_shader");
 			Pass* pass = shader->AddPass("Test");
@@ -194,6 +194,12 @@ namespace Unique
 
 			renderDevice->CreatePipelineState(PSODesc, &pipelineState_);
 			pipelineState_->CreateShaderResourceBinding(&pSRB_);
+
+// 			IShaderVariable* v1 = pSRB_->GetVariable(SHADER_TYPE_VERTEX, "g_WorldViewProj");
+// 			IShaderVariable* v2 = pSRB_->GetVariable(SHADER_TYPE_VERTEX, "g_WorldNorm");
+// 			IShaderVariable* v3 = pSRB_->GetVariable(SHADER_TYPE_VERTEX, "g_LightDir");
+		
+		
 		}
 
 

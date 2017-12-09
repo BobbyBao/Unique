@@ -250,7 +250,7 @@ namespace Unique
 		//PSODesc.GraphicsPipeline.pPS = ps_;
 
 		renderDevice->CreatePipelineState(PSODesc, &handle_);
-		handle_->CreateShaderResourceBinding(&pSRB_);
+		handle_->CreateShaderResourceBinding(&shaderResourceBinding_);
 		dirty_ = false;
 		return true;
 	}
