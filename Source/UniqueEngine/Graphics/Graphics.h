@@ -67,6 +67,7 @@ namespace Unique
 		bool exit_ = false;
 
 	protected:
+
 		void ExecuteCommands(CommandQueue& cmds);
 		void FrameNoRenderWait();
 		void MainSemPost();

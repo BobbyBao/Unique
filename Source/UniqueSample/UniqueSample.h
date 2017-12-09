@@ -14,14 +14,16 @@ namespace Unique
 	public:
 		UniqueSample();
 		~UniqueSample();
+
 	private:
 		virtual void Initialize();
 		virtual void Terminate();
 		virtual void OnPreRender();
 		virtual void OnPostRender();
-		
+		void CreateResource();
 		void BuildSponge(int levelMax, bool aoEnabled);
 		void SetShaderConstants(const float4x4& world, const float4x4& view, const float4x4& proj);
+		void CreatePipeline();
 
 		::Quaternion m_SpongeRotation; // model rotation
 		int m_SpongeLevel;           // number of recursions

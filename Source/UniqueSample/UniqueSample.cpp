@@ -60,6 +60,17 @@ namespace Unique
 	{
 		Application::Initialize();
 
+		CreateResource();
+	}
+
+	void UniqueSample::Terminate()
+	{
+	}
+
+
+	void UniqueSample::CreateResource()
+	{
+
 		auto& graphics = GetSubsystem<Graphics>();
 
 		BufferDesc BuffDesc;
@@ -68,10 +79,19 @@ namespace Unique
 		BuffDesc.uiSizeInBytes = sizeof(ShaderConstants);
 		BuffDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
 		renderDevice->CreateBuffer(BuffDesc, BufferData(), &m_pConstantBuffer);
-		
+
 		// Create vertex and index buffers
 		BuildSponge(m_SpongeLevel, m_SpongeAO);
 
+		CreatePipeline();
+
+		// Init model rotation
+		float3 axis(-1, 1, 0);
+		m_SpongeRotation = RotationFromAxisAngle(axis, M_PI / 4);
+	}
+
+	void UniqueSample::CreatePipeline()
+	{
 		{
 			ShaderCreationAttribs Attrs;
 			Attrs.Desc.Name = "MainVS";
@@ -91,7 +111,7 @@ namespace Unique
 			Attrs.FilePath = "MainPS_DX.hlsl";
 			Attrs.EntryPoint = "main";
 			Attrs.Desc.ShaderType = SHADER_TYPE_PIXEL;
-			Attrs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL; 
+			Attrs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
 			Attrs.Desc.TargetProfile = SHADER_PROFILE_DX_4_0;
 			BasicShaderSourceStreamFactory BasicSSSFactory("assets\\shaders;assets\\shaders\\inc;");
 			Attrs.pShaderSourceStreamFactory = &BasicSSSFactory;
@@ -130,7 +150,7 @@ namespace Unique
 			RasterizerDesc.FillMode = FILL_MODE_SOLID;
 			RasterizerDesc.CullMode = CULL_MODE_NONE;
 			//RasterizerDesc.FrontCounterClockwise = True;
-			RasterizerDesc.ScissorEnable = True;
+			RasterizerDesc.ScissorEnable = False;
 			//RSDesc.MultisampleEnable = false; // do not allow msaa (fonts would be degraded)
 			RasterizerDesc.AntialiasedLineEnable = False;
 
@@ -147,7 +167,7 @@ namespace Unique
 			PSODesc.GraphicsPipeline.PrimitiveTopologyType = PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 			PSODesc.GraphicsPipeline.pVS = vs_;
 			PSODesc.GraphicsPipeline.pPS = ps_;
-			
+
 			renderDevice->CreatePipelineState(PSODesc, &pipelineState_);
 			pipelineState_->CreateShaderResourceBinding(&pSRB_);
 		}
@@ -155,11 +175,11 @@ namespace Unique
 
 		ResourceMappingEntry entries[] =
 		{
-			{"Constants", m_pConstantBuffer },
+			{ "Constants", m_pConstantBuffer },
 
 			ResourceMappingEntry()
 		};
-		
+
 		ResourceMappingDesc rmd;
 		rmd.pEntries = entries;
 
@@ -167,60 +187,9 @@ namespace Unique
 		pipelineState_->BindShaderResources(resourceMapping_, BIND_SHADER_RESOURCES_ALL_RESOLVED);
 		//vs_->BindResources(resourceMapping_, 0/*BIND_SHADER_RESOURCES_ALL_RESOLVED*/);
 		//ps_->BindResources(resourceMapping_, 0/*BIND_SHADER_RESOURCES_ALL_RESOLVED*/);
-		// Init model rotation
-		float3 axis(-1, 1, 0);
-		m_SpongeRotation = RotationFromAxisAngle(axis, M_PI / 4);
-	}
 
-	void UniqueSample::Terminate()
-	{
 	}
 	
-	void UniqueSample::OnPreRender()
-	{
-		float dt = (float)0.05f;
-		if (m_Animate && dt > 0 && dt < 0.2f)
-		{
-			float3 axis;
-			float angle = 0;
-			AxisAngleFromRotation(axis, angle, m_SpongeRotation);
-			if (length(axis) < 1.0e-6f)
-				axis[1] = 1;
-			angle += m_AnimationSpeed * dt;
-			if (angle >= 2.0f*M_PI)
-				angle -= 2.0f*M_PI;
-			else if (angle <= 0)
-				angle += 2.0f*M_PI;
-			m_SpongeRotation = RotationFromAxisAngle(axis, angle);
-		}
-
-		auto& graphics = GetSubsystem<Graphics>();
-		// Clear the back buffer 
-		deviceContext->ClearRenderTarget(nullptr, m_BackgroundColor);
-		deviceContext->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f);
-
-		// Set world/view/proj matrices and global shader constants
-		float aspectRatio = graphics.GetAspectRatio();
-		float4x4 proj = Projection(M_PI / 4, aspectRatio, 0.1f, 100.0f, graphics.IsDirect3D());
-		float dist = m_CamDistance + 0.4f;
-		float3 camPosInv(dist * 0.3f, dist * 0.0f, dist * 2.0f);
-		float4x4 view = translationMatrix(camPosInv);
-		float4x4 world = QuaternionToMatrix(m_SpongeRotation);
-
-		SetShaderConstants(world, view, proj);
-	
-		deviceContext->SetPipelineState(pipelineState_);
-		pSRB_->BindResources(SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, resourceMapping_,
-			BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED| BIND_SHADER_RESOURCES_ALL_RESOLVED);
-		deviceContext->CommitShaderResources(pSRB_, COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
-
-		geometry_->Draw(pipelineState_);
-	}
-	
-	void UniqueSample::OnPostRender()
-	{
-	}
-
 	void AppendCubeToBuffers(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices,
 		const float4x4& xform, float aoRatio, const bool aoEdges[12],
 		const unsigned int faceColors[6]);
@@ -228,6 +197,14 @@ namespace Unique
 	void FillSpongeBuffers(int level, int levelMax, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices,
 		const float3& center, bool aoEnabled, const bool aoEdges[12], const unsigned int faceColors[6]);
 	
+#if USE_GEO
+	SPtr<VertexBuffer> pVertexBuffer(new VertexBuffer());
+	SPtr<IndexBuffer> pIndexBuffer(new IndexBuffer());
+#else
+	RefCntAutoPtr<IBuffer> pVertexBuffer;
+	RefCntAutoPtr<IBuffer> pIndexBuffer;
+#endif
+	unsigned int SpongeIndicesCount;
 	// Build sponge vertex and index buffers 
 	void UniqueSample::BuildSponge(int levelMax, bool aoEnabled)
 	{
@@ -240,14 +217,12 @@ namespace Unique
 		unsigned int faceColors[6] = { COLORS[0], COLORS[0], COLORS[0], COLORS[0], COLORS[0], COLORS[0] };
 		FillSpongeBuffers(0, levelMax, vertices, indices, float3(), aoEnabled, aoEdges, faceColors);
 
+		SpongeIndicesCount = (unsigned int)indices.size();
 
-		SPtr<VertexBuffer> pVertexBuffer(new VertexBuffer());
+#if USE_GEO
 		pVertexBuffer->Create(vertices.size(), sizeof(Vertex), USAGE_STATIC, vertices.data());
 
-		SPtr<IndexBuffer> pIndexBuffer(new IndexBuffer());
 		pIndexBuffer->Create(indices.size(), sizeof(unsigned int), USAGE_STATIC, indices.data());
-
-		auto SpongeIndicesCount = (unsigned int)indices.size();
 
 		geometry_ = new Geometry();
 		geometry_->SetNumVertexBuffers(1);
@@ -256,6 +231,28 @@ namespace Unique
 
 		geometry_->SetDrawRange(PrimitiveTopology::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
 			0, SpongeIndicesCount);
+#else
+
+		BufferDesc BuffDesc;
+		BuffDesc.BindFlags = BIND_VERTEX_BUFFER;
+		BuffDesc.Usage = USAGE_STATIC;
+		BuffDesc.uiSizeInBytes = (Uint32)vertices.size() * sizeof(Vertex);
+		BufferData BuffData;
+		BuffData.pData = vertices.data();
+		BuffData.DataSize = BuffDesc.uiSizeInBytes;
+
+		renderDevice->CreateBuffer(BuffDesc, BuffData, &pVertexBuffer);
+
+		// Create index buffer
+		BuffDesc.uiSizeInBytes = (Uint32)indices.size() * sizeof(unsigned int);
+		BuffDesc.BindFlags = BIND_INDEX_BUFFER;
+		BuffData.pData = &indices[0];
+		BuffData.DataSize = BuffDesc.uiSizeInBytes;
+
+		renderDevice->CreateBuffer(BuffDesc, BuffData, &pIndexBuffer);
+#endif
+
+
 
 	}
 
@@ -432,6 +429,70 @@ namespace Unique
 							FillSpongeBuffers(level + 1, levelMax, vertices, indices, t, aoEnabled, aoEdgesCopy, faceColorsCopy);
 						}
 		}
+	}
+	
+	void UniqueSample::OnPreRender()
+	{
+		float dt = (float)0.05f;
+		if (m_Animate && dt > 0 && dt < 0.2f)
+		{
+			float3 axis;
+			float angle = 0;
+			AxisAngleFromRotation(axis, angle, m_SpongeRotation);
+			if (length(axis) < 1.0e-6f)
+				axis[1] = 1;
+			angle += m_AnimationSpeed * dt;
+			if (angle >= 2.0f*M_PI)
+				angle -= 2.0f*M_PI;
+			else if (angle <= 0)
+				angle += 2.0f*M_PI;
+			m_SpongeRotation = RotationFromAxisAngle(axis, angle);
+		}
+
+		//auto& graphics = GetSubsystem<Graphics>();
+		// Clear the back buffer 
+		deviceContext->ClearRenderTarget(nullptr, m_BackgroundColor);
+		deviceContext->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f);
+
+		// Set world/view/proj matrices and global shader constants
+		float aspectRatio = resolution_.x_ / (float)resolution_.y_;
+		float4x4 proj = Projection(M_PI / 4, aspectRatio, 0.1f, 100.0f, deviceType_ == DeviceType::D3D11|| deviceType_ == DeviceType::D3D12);
+		float dist = m_CamDistance + 0.4f;
+		float3 camPosInv(dist * 0.3f, dist * 0.0f, dist * 2.0f);
+		float4x4 view = translationMatrix(camPosInv);
+		float4x4 world = QuaternionToMatrix(m_SpongeRotation);
+
+		SetShaderConstants(world, view, proj);
+
+		deviceContext->SetPipelineState(pipelineState_);
+		pSRB_->BindResources(SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, resourceMapping_,
+			BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED | BIND_SHADER_RESOURCES_ALL_RESOLVED);
+		deviceContext->CommitShaderResources(pSRB_, COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
+
+#if USE_GEO
+
+		geometry_->Draw(pipelineState_);
+
+#else
+
+		DrawAttribs DrawAttrs;
+		DrawAttrs.Topology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+		DrawAttrs.IsIndexed = true;
+		DrawAttrs.IndexType = VT_UINT32;
+		DrawAttrs.NumIndices = SpongeIndicesCount;
+
+		IBuffer *buffer[1] = { pVertexBuffer };
+		Uint32 offsets[1] = { 0 };
+		Uint32 strides[1] = { sizeof(Vertex) };
+
+		deviceContext->SetVertexBuffers(0, 1, buffer, strides, offsets, SET_VERTEX_BUFFERS_FLAG_RESET);
+		deviceContext->SetIndexBuffer(pIndexBuffer, 0);
+		deviceContext->Draw(DrawAttrs);
+#endif
+	}
+
+	void UniqueSample::OnPostRender()
+	{
 	}
 
 

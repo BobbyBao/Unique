@@ -18,7 +18,7 @@ namespace Unique
 	int Graphics::currentContext_ = 0;
 	CommandQueue Graphics::comands_;
 
-	extern void InitDevice(SDL_Window* window, IRenderDevice **ppRenderDevice, IDeviceContext **ppImmediateContext, ISwapChain **ppSwapChain, DeviceType DevType);
+	extern void CreateDevice(SDL_Window* window, IRenderDevice **ppRenderDevice, IDeviceContext **ppImmediateContext, ISwapChain **ppSwapChain, DeviceType DevType);
 	
 	Graphics::Graphics()
 	{
@@ -45,7 +45,7 @@ namespace Unique
 			return false;
 		}
 
-		InitDevice(window, &renderDevice_, &deviceContext_, &swapChain_, deviceType);
+		CreateDevice(window, &renderDevice_, &deviceContext_, &swapChain_, deviceType);
 		
 		renderDevice = renderDevice_;
 		deviceContext = deviceContext_;
