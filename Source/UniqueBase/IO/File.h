@@ -24,7 +24,7 @@
 
 #include "../Container/ArrayPtr.h"
 #include "../Core/Object.h"
-#include "AbstractFile.h"
+#include "IFile.h"
 
 #ifdef __ANDROID__
 struct SDL_RWops;
@@ -57,7 +57,7 @@ enum FileMode
 class PackageFile;
 
 /// %File opened either through the filesystem or from within a package file.
-class UNIQUE_API File : public Object, public AbstractFile
+class UNIQUE_API File : public Object, public IFile
 {
     uRTTI(File, Object)
 

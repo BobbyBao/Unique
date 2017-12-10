@@ -50,8 +50,8 @@ namespace Unique
 		template<class TransferFunction>
 		inline static void Transfer(value_type& data, TransferFunction& transfer)
 		{
-			transfer.Transfer(data.first, "key", AttributeFlag::Default);
-			transfer.Transfer(data.second, "value", AttributeFlag::Default);
+			transfer.TransferAttribute("Key", data.first, AttributeFlag::Default);
+			transfer.TransferAttribute("Value", data.second, AttributeFlag::Default);
 		}
 	};
 

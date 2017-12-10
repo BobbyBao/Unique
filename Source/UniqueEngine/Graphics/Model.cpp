@@ -33,7 +33,22 @@
 #include "IO/FileSystem.h"
 #include "Resource/ResourceCache.h"
 
-
+// Legacy vertex element bitmasks.
+static const unsigned MASK_NONE = 0x0;
+static const unsigned MASK_POSITION = 0x1;
+static const unsigned MASK_NORMAL = 0x2;
+static const unsigned MASK_COLOR = 0x4;
+static const unsigned MASK_TEXCOORD1 = 0x8;
+static const unsigned MASK_TEXCOORD2 = 0x10;
+static const unsigned MASK_CUBETEXCOORD1 = 0x20;
+static const unsigned MASK_CUBETEXCOORD2 = 0x40;
+static const unsigned MASK_TANGENT = 0x80;
+static const unsigned MASK_BLENDWEIGHTS = 0x100;
+static const unsigned MASK_BLENDINDICES = 0x200;
+static const unsigned MASK_INSTANCEMATRIX1 = 0x400;
+static const unsigned MASK_INSTANCEMATRIX2 = 0x800;
+static const unsigned MASK_INSTANCEMATRIX3 = 0x1000;
+static const unsigned MASK_OBJECTINDEX = 0x2000;
 
 namespace Unique
 {
@@ -72,7 +87,7 @@ Model::~Model()
 {
 }
 
-bool Model::BeginLoad(File& source)
+bool Model::BeginLoad(IFile& source)
 {
     // Check ID
     String fileID = source.ReadFileID();
@@ -94,42 +109,42 @@ bool Model::BeginLoad(File& source)
     unsigned memoryUse = sizeof(Model);
     bool async = GetAsyncLoadState() == ASYNC_LOADING;
 
-#if false
     // Read vertex buffers
-    unsigned numVertexBuffers = source.ReadUInt();
+    unsigned numVertexBuffers = source.Read<unsigned>();
     vertexBuffers_.reserve(numVertexBuffers);
     morphRangeStarts_.resize(numVertexBuffers);
     morphRangeCounts_.resize(numVertexBuffers);
-    loadVBData_.resize(numVertexBuffers);
+	loadVBData_.resize(numVertexBuffers);
+
     for (unsigned i = 0; i < numVertexBuffers; ++i)
     {
         VertexBufferDesc& desc = loadVBData_[i];
 
-        desc.vertexCount_ = source.ReadUInt();
+        desc.vertexCount_ = source.Read<uint>();
         if (!hasVertexDeclarations)
         {
-            unsigned elementMask = source.ReadUInt();
-            desc.vertexElements_ = VertexBuffer::GetElements(elementMask);
+            unsigned elementMask = source.Read<uint>();
+        //    desc.vertexElements_ = VertexBuffer::GetElements(elementMask);
         }
         else
-        {
+        {/*
             desc.vertexElements_.clear();
-            unsigned numElements = source.ReadUInt();
+            unsigned numElements = source.Read<uint>();
             for (unsigned j = 0; j < numElements; ++j)
             {
-                unsigned elementDesc = source.ReadUInt();
+                unsigned elementDesc = source.Read<uint>();
                 VertexElementType type = (VertexElementType)(elementDesc & 0xff);
                 VertexElementSemantic semantic = (VertexElementSemantic)((elementDesc >> 8) & 0xff);
                 unsigned char index = (unsigned char)((elementDesc >> 16) & 0xff);
                 desc.vertexElements_.push_back(VertexElement(type, semantic, index));
-            }
+            }*/
         }
 
-        morphRangeStarts_[i] = source.ReadUInt();
-        morphRangeCounts_[i] = source.ReadUInt();
+        morphRangeStarts_[i] = source.Read<uint>();
+        morphRangeCounts_[i] = source.Read<uint>();
 
         SPtr<VertexBuffer> buffer(new VertexBuffer());
-        unsigned vertexSize = VertexBuffer::GetVertexSize(desc.vertexElements_);
+		unsigned vertexSize = 0;// VertexBuffer::GetVertexSize(desc.vertexElements_);
         desc.dataSize_ = desc.vertexCount_ * vertexSize;
 
         // Prepare vertex buffer data to be uploaded during EndLoad()
@@ -142,11 +157,12 @@ bool Model::BeginLoad(File& source)
         {
             // If not async loading, use locking to avoid extra allocation & copy
             desc.data_.Reset(); // Make sure no previous data
+			/*
             buffer->SetShadowed(true);
             buffer->SetSize(desc.vertexCount_, desc.vertexElements_);
             void* dest = buffer->Lock(0, desc.vertexCount_);
             source.Read(dest, desc.vertexCount_ * vertexSize);
-            buffer->Unlock();
+            buffer->Unlock();*/
         }
 
         memoryUse += sizeof(VertexBuffer) + desc.vertexCount_ * vertexSize;
@@ -154,13 +170,13 @@ bool Model::BeginLoad(File& source)
     }
 
     // Read index buffers
-    unsigned numIndexBuffers = source.ReadUInt();
+    unsigned numIndexBuffers = source.Read<uint>();
     indexBuffers_.reserve(numIndexBuffers);
     loadIBData_.resize(numIndexBuffers);
     for (unsigned i = 0; i < numIndexBuffers; ++i)
     {
-        unsigned indexCount = source.ReadUInt();
-        unsigned indexSize = source.ReadUInt();
+        unsigned indexCount = source.Read<uint>();
+        unsigned indexSize = source.Read<uint>();
 
         SPtr<IndexBuffer> buffer(new IndexBuffer());
 
@@ -177,11 +193,12 @@ bool Model::BeginLoad(File& source)
         {
             // If not async loading, use locking to avoid extra allocation & copy
             loadIBData_[i].data_.Reset(); // Make sure no previous data
-            buffer->SetShadowed(true);
+            /*
+			buffer->SetShadowed(true);
             buffer->SetSize(indexCount, indexSize > sizeof(unsigned short));
             void* dest = buffer->Lock(0, indexCount);
             source.Read(dest, indexCount * indexSize);
-            buffer->Unlock();
+            buffer->Unlock();*/
         }
 
         memoryUse += sizeof(IndexBuffer) + indexCount * indexSize;
@@ -189,7 +206,7 @@ bool Model::BeginLoad(File& source)
     }
 
     // Read geometries
-    unsigned numGeometries = source.ReadUInt();
+    unsigned numGeometries = source.Read<uint>();
     geometries_.reserve(numGeometries);
     geometryBoneMappings_.reserve(numGeometries);
     geometryCenters_.reserve(numGeometries);
@@ -197,26 +214,26 @@ bool Model::BeginLoad(File& source)
     for (unsigned i = 0; i < numGeometries; ++i)
     {
         // Read bone mappings
-        unsigned boneMappingCount = source.ReadUInt();
+        unsigned boneMappingCount = source.Read<uint>();
         PODVector<unsigned> boneMapping(boneMappingCount);
         for (unsigned j = 0; j < boneMappingCount; ++j)
-            boneMapping[j] = source.ReadUInt();
+            boneMapping[j] = source.Read<uint>();
         geometryBoneMappings_.push_back(boneMapping);
 
-        unsigned numLodLevels = source.ReadUInt();
+        unsigned numLodLevels = source.Read<uint>();
         Vector<SPtr<Geometry> > geometryLodLevels;
         geometryLodLevels.reserve(numLodLevels);
         loadGeometries_[i].resize(numLodLevels);
 
         for (unsigned j = 0; j < numLodLevels; ++j)
         {
-            float distance = source.ReadFloat();
-            PrimitiveType type = (PrimitiveType)source.ReadUInt();
+            float distance = source.Read<float>();
+            PrimitiveTopology type = (PrimitiveTopology)source.Read<uint>();
 
-            unsigned vbRef = source.ReadUInt();
-            unsigned ibRef = source.ReadUInt();
-            unsigned indexStart = source.ReadUInt();
-            unsigned indexCount = source.ReadUInt();
+            unsigned vbRef = source.Read<uint>();
+            unsigned ibRef = source.Read<uint>();
+            unsigned indexStart = source.Read<uint>();
+            unsigned indexCount = source.Read<uint>();
 
             if (vbRef >= vertexBuffers_.size())
             {
@@ -253,7 +270,7 @@ bool Model::BeginLoad(File& source)
     }
 
     // Read morphs
-    unsigned numMorphs = source.ReadUInt();
+    unsigned numMorphs = source.Read<uint>();
     morphs_.reserve(numMorphs);
     for (unsigned i = 0; i < numMorphs; ++i)
     {
@@ -262,15 +279,15 @@ bool Model::BeginLoad(File& source)
         newMorph.name_ = source.ReadString();
         newMorph.nameHash_ = newMorph.name_;
         newMorph.weight_ = 0.0f;
-        unsigned numBuffers = source.ReadUInt();
+        unsigned numBuffers = source.Read<uint>();
 
         for (unsigned j = 0; j < numBuffers; ++j)
         {
             VertexBufferMorph newBuffer;
-            unsigned bufferIndex = source.ReadUInt();
+            unsigned bufferIndex = source.Read<uint>();
 
-            newBuffer.elementMask_ = source.ReadUInt();
-            newBuffer.vertexCount_ = source.ReadUInt();
+            newBuffer.elementMask_ = source.Read<uint>();
+            newBuffer.vertexCount_ = source.Read<uint>();
 
             // Base size: size of each vertex index
             unsigned vertexSize = sizeof(unsigned);
@@ -299,17 +316,17 @@ bool Model::BeginLoad(File& source)
     memoryUse += skeleton_.GetNumBones() * sizeof(Bone);
 
     // Read bounding box
-    boundingBox_ = source.ReadBoundingBox();
+    boundingBox_ = source.Read<BoundingBox>();
 
     // Read geometry centers
     for (unsigned i = 0; i < geometries_.size() && !source.IsEof(); ++i)
-        geometryCenters_.push_back(source.ReadVector3());
+        geometryCenters_.push_back(source.Read<Vector3>());
     while (geometryCenters_.size() < geometries_.size())
         geometryCenters_.push_back(Vector3::ZERO);
     memoryUse += sizeof(Vector3) * (unsigned)geometries_.size();
 
     SetMemoryUse(memoryUse);
-#endif
+
     return true;
 }
 

@@ -39,40 +39,39 @@ Skeleton::~Skeleton()
 {
 }
 
-bool Skeleton::Load(File& source)
+bool Skeleton::Load(IFile& source)
 {
     ClearBones();
 
     if (source.IsEof())
         return false;
 
-    unsigned bones;
-	source.ReadValue(bones);
+	uint bones = source.Read<uint>();
     bones_.reserve(bones);
-	/*
+
     for (unsigned i = 0; i < bones; ++i)
     {
         Bone newBone;
         newBone.name_ = source.ReadString();
         newBone.nameHash_ = newBone.name_;
-        newBone.parentIndex_ = source.ReadUInt();
-        newBone.initialPosition_ = source.ReadVector3();
-		newBone.initialRotation_ = source.ReadQuaternion();
-        newBone.initialScale_ = source.ReadVector3();
+        newBone.parentIndex_ = source.Read<uint>();
+        newBone.initialPosition_ = source.Read<Vector3>();
+		newBone.initialRotation_ = source.Read<Quaternion>();
+        newBone.initialScale_ = source.Read<Vector3>();
         source.Read(&newBone.offsetMatrix_.m00_, sizeof(Matrix3x4));
 
         // Read bone collision data
-        newBone.collisionMask_ = source.ReadUByte();
+        newBone.collisionMask_ = source.Read<byte>();
         if (newBone.collisionMask_ & BONECOLLISION_SPHERE)
-            newBone.radius_ = source.ReadFloat();
+            newBone.radius_ = source.Read<float>();
         if (newBone.collisionMask_ & BONECOLLISION_BOX)
-            newBone.boundingBox_ = source.ReadBoundingBox();
+            newBone.boundingBox_ = source.Read<BoundingBox>();
 
         if (newBone.parentIndex_ == i)
             rootBoneIndex_ = i;
 
         bones_.push_back(newBone);
-    }*/
+    }
 
     return true;
 }

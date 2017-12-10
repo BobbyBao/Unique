@@ -42,7 +42,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\TypeInfo.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\WorkQueue.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)DebugNew.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)IO\AbstractFile.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IO\IFile.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)IO\File.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)IO\FileSystem.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)IO\FileWatcher.h" />
@@ -110,7 +110,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\Timer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\TypeInfo.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\WorkQueue.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)IO\AbstractFile.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)IO\IFile.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)IO\File.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)IO\FileSystem.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)IO\FileWatcher.cpp" />

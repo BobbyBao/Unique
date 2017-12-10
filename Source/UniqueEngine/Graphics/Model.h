@@ -115,7 +115,7 @@ public:
     /// Destruct.
     virtual ~Model();
     /// Load resource from stream. May be called from a worker thread. Return true if successful.
-    virtual bool BeginLoad(File& source);
+    virtual bool BeginLoad(IFile& source);
     /// Finish resource loading. Always called from the main thread. Return true if successful.
     virtual bool EndLoad();
 

@@ -25,22 +25,24 @@
 
 namespace Unique
 {
-
-/// A common root class for objects that implement both Serializer and Deserializer.
-class UNIQUE_API AbstractFile
+class UNIQUE_API IFile
 {
 public:
     /// Construct.
-	AbstractFile();
+	IFile();
     /// Construct.
-	AbstractFile(unsigned int size);
+	IFile(unsigned int size);
 	/// Destruct.
-	virtual ~AbstractFile();
+	virtual ~IFile();
 
 	/// Read bytes from the stream. Return number of bytes actually read.
 	virtual unsigned Read(void* dest, unsigned size) = 0;
 	/// Set position from the beginning of the stream.
 	virtual unsigned Seek(unsigned position) = 0;
+	/// Return name of the stream.
+	virtual const String& GetName() const;
+	/// Return a checksum if applicable.
+	virtual unsigned GetChecksum();
 	/// Write bytes to the stream. Return number of bytes actually written.
 	virtual unsigned Write(const void* data, unsigned size) = 0;
 
@@ -54,13 +56,17 @@ public:
 	unsigned GetSize() const { return size_; }
 
 	template<class T>
-	bool ReadValue(T& value)
+	T Read()
 	{
-		return Read(&value, sizeof value) == sizeof value;
+		T value;
+		int sz = Read(&value, sizeof value);
+		assert(sz == sizeof value);
+		return value;
 	}
 
-	bool Read(String& str);
-	bool Read(ByteArray& bytes);
+	String ReadString();
+
+	ByteArray ReadBytes();
 
 	String ReadFileID();
 

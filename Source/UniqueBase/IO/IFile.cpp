@@ -1,47 +1,60 @@
 
 #include "Precompiled.h"
-#include "../IO/AbstractFile.h"
+#include "../IO/IFile.h"
 
 namespace Unique
 { 
-	AbstractFile::AbstractFile()
+	IFile::IFile()
 	{
 	}
 
-	AbstractFile::AbstractFile(unsigned int size) : size_(size)
+	IFile::IFile(unsigned int size) : size_(size)
 	{
 	}
 
-	AbstractFile::~AbstractFile()
+	IFile::~IFile()
 	{
 	}
 
-	bool AbstractFile::Read(String& str)
+	const String& IFile::GetName() const
 	{
-		str.Clear();
+		return String::EMPTY;
+	}
+
+	unsigned IFile::GetChecksum()
+	{
+		return 0;
+	}
+
+	String IFile::ReadString()
+	{
+		String str;
 
 		while (!IsEof())
 		{
-			char c;
-			Read<char>(c);
+			char c = Read<char>();
 			if (!c)
 				break;
 			else
 				str += c;
 		}
 
-		return true;
+		return str;
 	}
 
-	bool AbstractFile::Read(ByteArray& bytes)
+	ByteArray IFile::ReadBytes()
 	{
-		uint sz = 0;
-		Read<uint>(sz);
+		ByteArray bytes;
+		uint sz = Read<uint>();
 		bytes.resize(sz);
-		return Read((void*)bytes.data(), sz) == sz;
+
+		if(Read((void*)bytes.data(), sz) != sz)
+			return ByteArray();
+		
+		return bytes;
 	}
 
-	String AbstractFile::ReadFileID()
+	String IFile::ReadFileID()
 	{
 		String ret;
 		ret.Resize(4);
@@ -49,14 +62,13 @@ namespace Unique
 		return ret;
 	}
 
-	String AbstractFile::ReadLine()
+	String IFile::ReadLine()
 	{
 		String ret;
 
 		while (!IsEof())
 		{
-			char c;
-			Read(c);
+			char c = Read<char>();
 			if (c == 10)
 				break;
 			if (c == 13)
@@ -64,8 +76,7 @@ namespace Unique
 				// Peek next char to see if it's 10, and skip it too
 				if (!IsEof())
 				{
-					char next;
-					Read(next);
+					char next = Read<char>();
 					if (next != 10)
 						Seek(position_ - 1);
 				}
@@ -79,7 +90,7 @@ namespace Unique
 	}
 
 
-	ByteArray AbstractFile::ReadAll()
+	ByteArray IFile::ReadAll()
 	{
 		uint size = GetSize();
 		ByteArray byteArray(size);
@@ -90,7 +101,7 @@ namespace Unique
 		return byteArray;
 	}
 
-	bool AbstractFile::Write(const String& value)
+	bool IFile::Write(const String& value)
 	{
 		const char* chars = value.CString();
 		// Count length to the first zero, because ReadString() does the same
@@ -98,7 +109,7 @@ namespace Unique
 		return Write(chars, length + 1) == length + 1;
 	}
 
-	bool AbstractFile::WriteFileID(const String& value)
+	bool IFile::WriteFileID(const String& value)
 	{
 		bool success = true;
 		unsigned length = std::min(value.Length(), 4U);
@@ -109,7 +120,7 @@ namespace Unique
 		return success;
 	}
 
-	bool AbstractFile::WriteLine(const String& value)
+	bool IFile::WriteLine(const String& value)
 	{
 		bool success = true;
 		success &= Write(value.CString(), value.Length()) == value.Length();
@@ -119,7 +130,7 @@ namespace Unique
 	}
 
 
-	bool AbstractFile::Write(const ByteArray& bytes)
+	bool IFile::Write(const ByteArray& bytes)
 	{
 		Write(bytes.size());
 		return Write(bytes.data(), (uint)bytes.size()) == (uint)bytes.size();
