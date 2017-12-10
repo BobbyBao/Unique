@@ -1,5 +1,6 @@
 #pragma once
 #include "Resource/Resource.h"
+#include "Shader.h"
 
 namespace Diligent
 {
@@ -15,7 +16,8 @@ namespace Unique
 		Material();
 		~Material();
 
-		Diligent::IResourceMapping* resourceMapping_;
+	private:
+		SPtr<Shader> shader_;
 	};
 
 

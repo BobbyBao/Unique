@@ -4,6 +4,10 @@
 
 namespace Unique
 {
+	uObject(Material)
+	{
+
+	}
 
 	Material::Material()
 	{

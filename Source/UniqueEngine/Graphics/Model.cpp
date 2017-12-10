@@ -33,22 +33,6 @@
 #include "IO/FileSystem.h"
 #include "Resource/ResourceCache.h"
 
-// Legacy vertex element bitmasks.
-static const unsigned MASK_NONE = 0x0;
-static const unsigned MASK_POSITION = 0x1;
-static const unsigned MASK_NORMAL = 0x2;
-static const unsigned MASK_COLOR = 0x4;
-static const unsigned MASK_TEXCOORD1 = 0x8;
-static const unsigned MASK_TEXCOORD2 = 0x10;
-static const unsigned MASK_CUBETEXCOORD1 = 0x20;
-static const unsigned MASK_CUBETEXCOORD2 = 0x40;
-static const unsigned MASK_TANGENT = 0x80;
-static const unsigned MASK_BLENDWEIGHTS = 0x100;
-static const unsigned MASK_BLENDINDICES = 0x200;
-static const unsigned MASK_INSTANCEMATRIX1 = 0x400;
-static const unsigned MASK_INSTANCEMATRIX2 = 0x800;
-static const unsigned MASK_INSTANCEMATRIX3 = 0x1000;
-static const unsigned MASK_OBJECTINDEX = 0x2000;
 
 namespace Unique
 {
@@ -87,17 +71,17 @@ Model::~Model()
 {
 }
 
-bool Model::BeginLoad(IFile& source)
+bool Model::Load(IFile& source)
 {
     // Check ID
     String fileID = source.ReadFileID();
-    if (fileID != "UMDL" && fileID != "UMD2")
+    if (fileID != "UMDL" /*&& fileID != "UMD2"*/)
     {
         UNIQUE_LOGERROR(source.GetName() + " is not a valid model file");
         return false;
     }
 
-    bool hasVertexDeclarations = (fileID == "UMD2");
+    //bool hasVertexDeclarations = (fileID == "UMD2");
 
     geometries_.clear();
     geometryBoneMappings_.clear();
@@ -114,92 +98,44 @@ bool Model::BeginLoad(IFile& source)
     vertexBuffers_.reserve(numVertexBuffers);
     morphRangeStarts_.resize(numVertexBuffers);
     morphRangeCounts_.resize(numVertexBuffers);
-	loadVBData_.resize(numVertexBuffers);
+	//loadVBData_.resize(numVertexBuffers);
 
     for (unsigned i = 0; i < numVertexBuffers; ++i)
     {
-        VertexBufferDesc& desc = loadVBData_[i];
-
-        desc.vertexCount_ = source.Read<uint>();
-        if (!hasVertexDeclarations)
-        {
-            unsigned elementMask = source.Read<uint>();
-        //    desc.vertexElements_ = VertexBuffer::GetElements(elementMask);
-        }
-        else
-        {/*
-            desc.vertexElements_.clear();
-            unsigned numElements = source.Read<uint>();
-            for (unsigned j = 0; j < numElements; ++j)
-            {
-                unsigned elementDesc = source.Read<uint>();
-                VertexElementType type = (VertexElementType)(elementDesc & 0xff);
-                VertexElementSemantic semantic = (VertexElementSemantic)((elementDesc >> 8) & 0xff);
-                unsigned char index = (unsigned char)((elementDesc >> 16) & 0xff);
-                desc.vertexElements_.push_back(VertexElement(type, semantic, index));
-            }*/
-        }
+        uint vertexCount = source.Read<uint>();
+		unsigned elementMask = source.Read<uint>();
 
         morphRangeStarts_[i] = source.Read<uint>();
         morphRangeCounts_[i] = source.Read<uint>();
 
         SPtr<VertexBuffer> buffer(new VertexBuffer());
-		unsigned vertexSize = 0;// VertexBuffer::GetVertexSize(desc.vertexElements_);
-        desc.dataSize_ = desc.vertexCount_ * vertexSize;
 
-        // Prepare vertex buffer data to be uploaded during EndLoad()
-        if (async)
-        {
-            desc.data_ = new unsigned char[desc.dataSize_];
-            source.Read(desc.data_.Get(), desc.dataSize_);
-        }
-        else
-        {
-            // If not async loading, use locking to avoid extra allocation & copy
-            desc.data_.Reset(); // Make sure no previous data
-			/*
-            buffer->SetShadowed(true);
-            buffer->SetSize(desc.vertexCount_, desc.vertexElements_);
-            void* dest = buffer->Lock(0, desc.vertexCount_);
-            source.Read(dest, desc.vertexCount_ * vertexSize);
-            buffer->Unlock();*/
-        }
+		//desc.vertexElements_ = VertexBuffer::GetElements(elementMask);
+		unsigned vertexSize = VertexBuffer::GetVertexSize(elementMask);
+        uint dataSize = vertexCount * vertexSize;
 
-        memoryUse += sizeof(VertexBuffer) + desc.vertexCount_ * vertexSize;
+		ByteArray data;
+		data.resize(dataSize);
+		source.Read(data.data(), (uint)data.size());
+		buffer->CreateByMask(elementMask, std::move(data), USAGE_STATIC);
+
+        memoryUse += sizeof(VertexBuffer) + dataSize;
         vertexBuffers_.push_back(buffer);
     }
 
     // Read index buffers
     unsigned numIndexBuffers = source.Read<uint>();
     indexBuffers_.reserve(numIndexBuffers);
-    loadIBData_.resize(numIndexBuffers);
     for (unsigned i = 0; i < numIndexBuffers; ++i)
     {
         unsigned indexCount = source.Read<uint>();
         unsigned indexSize = source.Read<uint>();
 
         SPtr<IndexBuffer> buffer(new IndexBuffer());
-
-        // Prepare index buffer data to be uploaded during EndLoad()
-        if (async)
-        {
-            loadIBData_[i].indexCount_ = indexCount;
-            loadIBData_[i].indexSize_ = indexSize;
-            loadIBData_[i].dataSize_ = indexCount * indexSize;
-            loadIBData_[i].data_ = new unsigned char[loadIBData_[i].dataSize_];
-            source.Read(loadIBData_[i].data_.Get(), loadIBData_[i].dataSize_);
-        }
-        else
-        {
-            // If not async loading, use locking to avoid extra allocation & copy
-            loadIBData_[i].data_.Reset(); // Make sure no previous data
-            /*
-			buffer->SetShadowed(true);
-            buffer->SetSize(indexCount, indexSize > sizeof(unsigned short));
-            void* dest = buffer->Lock(0, indexCount);
-            source.Read(dest, indexCount * indexSize);
-            buffer->Unlock();*/
-        }
+		ByteArray data;
+		data.resize(indexCount * indexSize);
+        source.Read(data.data(), (uint)data.size());
+		buffer->Create(std::move(data), indexSize, USAGE_STATIC);
 
         memoryUse += sizeof(IndexBuffer) + indexCount * indexSize;
         indexBuffers_.push_back(buffer);
@@ -238,16 +174,12 @@ bool Model::BeginLoad(IFile& source)
             if (vbRef >= vertexBuffers_.size())
             {
                 UNIQUE_LOGERROR("Vertex buffer index out of bounds");
-                loadVBData_.clear();
-                loadIBData_.clear();
                 loadGeometries_.clear();
                 return false;
             }
             if (ibRef >= indexBuffers_.size())
             {
                 UNIQUE_LOGERROR("Index buffer index out of bounds");
-                loadVBData_.clear();
-                loadIBData_.clear();
                 loadGeometries_.clear();
                 return false;
             }
@@ -311,6 +243,21 @@ bool Model::BeginLoad(IFile& source)
         memoryUse += sizeof(ModelMorph);
     }
 
+	// Set up geometries
+	for (unsigned i = 0; i < geometries_.size(); ++i)
+	{
+		for (unsigned j = 0; j < geometries_[i].size(); ++j)
+		{
+			Geometry* geometry = geometries_[i][j];
+			GeometryDesc& desc = loadGeometries_[i][j];
+			geometry->SetVertexBuffer(0, vertexBuffers_[desc.vbRef_]);
+			geometry->SetIndexBuffer(indexBuffers_[desc.ibRef_]);
+			geometry->SetDrawRange(desc.type_, desc.indexStart_, desc.indexCount_);
+		}
+	}
+
+	loadGeometries_.clear();
+
     // Read skeleton
     skeleton_.Load(source);
     memoryUse += skeleton_.GetNumBones() * sizeof(Bone);
@@ -327,55 +274,6 @@ bool Model::BeginLoad(IFile& source)
 
     SetMemoryUse(memoryUse);
 
-    return true;
-}
-
-bool Model::EndLoad()
-{
-#if false
-    // Upload vertex buffer data
-    for (unsigned i = 0; i < vertexBuffers_.size(); ++i)
-    {
-        VertexBuffer* buffer = vertexBuffers_[i];
-        VertexBufferDesc& desc = loadVBData_[i];
-        if (desc.data_)
-        {
-            buffer->SetShadowed(true);
-            buffer->SetSize(desc.vertexCount_, desc.vertexElements_);
-            buffer->SetData(desc.data_.Get());
-        }
-    }
-
-    // Upload index buffer data
-    for (unsigned i = 0; i < indexBuffers_.size(); ++i)
-    {
-        IndexBuffer* buffer = indexBuffers_[i];
-        IndexBufferDesc& desc = loadIBData_[i];
-        if (desc.data_)
-        {
-            buffer->SetShadowed(true);
-            buffer->SetSize(desc.indexCount_, desc.indexSize_ > sizeof(unsigned short));
-            buffer->SetData(desc.data_.Get());
-        }
-    }
-
-    // Set up geometries
-    for (unsigned i = 0; i < geometries_.size(); ++i)
-    {
-        for (unsigned j = 0; j < geometries_[i].size(); ++j)
-        {
-            Geometry* geometry = geometries_[i][j];
-            GeometryDesc& desc = loadGeometries_[i][j];
-            geometry->SetVertexBuffer(0, vertexBuffers_[desc.vbRef_]);
-            geometry->SetIndexBuffer(indexBuffers_[desc.ibRef_]);
-            geometry->SetDrawRange(desc.type_, desc.indexStart_, desc.indexCount_);
-        }
-    }
-
-    loadVBData_.clear();
-    loadIBData_.clear();
-    loadGeometries_.clear();
-#endif
     return true;
 }
 
@@ -500,7 +398,7 @@ void Model::SetMorphs(const Vector<ModelMorph>& morphs)
 {
     morphs_ = morphs;
 }
-/*
+
 SPtr<Model> Model::Clone(const String& cloneName) const
 {
     SPtr<Model> ret(new Model());
@@ -516,7 +414,7 @@ SPtr<Model> Model::Clone(const String& cloneName) const
 
     // Deep copy vertex/index buffers
     HashMap<VertexBuffer*, VertexBuffer*> vbMapping;
-    for (Vector<SPtr<VertexBuffer> >::const_iterator i = vertexBuffers_.begin(); i != vertexBuffers_.end(); ++i)
+    for (auto i = vertexBuffers_.begin(); i != vertexBuffers_.end(); ++i)
     {
         VertexBuffer* origBuffer = *i;
         SPtr<VertexBuffer> cloneBuffer;
@@ -524,6 +422,7 @@ SPtr<Model> Model::Clone(const String& cloneName) const
         if (origBuffer)
         {
             cloneBuffer = new VertexBuffer();
+			/*
             cloneBuffer->SetSize(origBuffer->GetVertexCount(), origBuffer->GetElementMask(), origBuffer->usage());
             cloneBuffer->SetShadowed(origBuffer->IsShadowed());
             if (origBuffer->IsShadowed())
@@ -535,7 +434,7 @@ SPtr<Model> Model::Clone(const String& cloneName) const
                     cloneBuffer->SetData(origData);
                 else
                     UNIQUE_LOGERROR("Failed to lock original vertex buffer for copying");
-            }
+            }*/
             vbMapping[origBuffer] = cloneBuffer;
         }
 
@@ -543,7 +442,7 @@ SPtr<Model> Model::Clone(const String& cloneName) const
     }
 
     HashMap<IndexBuffer*, IndexBuffer*> ibMapping;
-    for (Vector<SPtr<IndexBuffer> >::const_iterator i = indexBuffers_.begin(); i != indexBuffers_.end(); ++i)
+    for (auto i = indexBuffers_.begin(); i != indexBuffers_.end(); ++i)
     {
         IndexBuffer* origBuffer = *i;
         SPtr<IndexBuffer> cloneBuffer;
@@ -551,6 +450,7 @@ SPtr<Model> Model::Clone(const String& cloneName) const
         if (origBuffer)
         {
             cloneBuffer = new IndexBuffer();
+			/*
             cloneBuffer->SetSize(origBuffer->GetIndexCount(), origBuffer->GetIndexSize() == sizeof(unsigned),
                 origBuffer->IsDynamic());
             cloneBuffer->SetShadowed(origBuffer->IsShadowed());
@@ -563,7 +463,7 @@ SPtr<Model> Model::Clone(const String& cloneName) const
                     cloneBuffer->SetData(origData);
                 else
                     UNIQUE_LOGERROR("Failed to lock original index buffer for copying");
-            }
+            }*/
             ibMapping[origBuffer] = cloneBuffer;
         }
 
@@ -590,7 +490,7 @@ SPtr<Model> Model::Clone(const String& cloneName) const
                     cloneGeometry->SetVertexBuffer(k, vbMapping[origGeometry->GetVertexBuffer(k)]);
                 }
                 cloneGeometry->SetDrawRange(origGeometry->GetPrimitiveType(), origGeometry->GetIndexStart(),
-                    origGeometry->GetIndexCount(), origGeometry->GetVertexStart(), origGeometry->GetVertexCount(), false);
+                    origGeometry->GetIndexCount(), origGeometry->GetVertexStart(), origGeometry->GetVertexCount());
                 cloneGeometry->SetLodDistance(origGeometry->GetLodDistance());
             }
 
@@ -600,10 +500,10 @@ SPtr<Model> Model::Clone(const String& cloneName) const
 
 
     // Deep copy the morph data (if any) to allow modifying it
-    for (Vector<ModelMorph>::iterator i = ret->morphs_.begin(); i != ret->morphs_.end(); ++i)
+    for (auto i = ret->morphs_.begin(); i != ret->morphs_.end(); ++i)
     {
         ModelMorph& morph = *i;
-        for (HashMap<unsigned, VertexBufferMorph>::iterator j = morph.buffers_.begin(); j != morph.buffers_.end(); ++j)
+        for (auto j = morph.buffers_.begin(); j != morph.buffers_.end(); ++j)
         {
             VertexBufferMorph& vbMorph = j->second;
             if (vbMorph.dataSize_)
@@ -618,7 +518,7 @@ SPtr<Model> Model::Clone(const String& cloneName) const
     ret->SetMemoryUse(GetMemoryUse());
 
     return ret;
-}*/
+}
 
 unsigned Model::GetNumGeometryLodLevels(unsigned index) const
 {

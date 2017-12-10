@@ -14,12 +14,13 @@ namespace Unique
 
 	SPtr<Resource> ModelImporter::Import(const String& path)
 	{
-		SPtr<Model> model;
 		SPtr<File> file = cache.GetFile(path);
 		if (file)
 		{
 			return nullptr;
 		}
+
+		SPtr<Model> model;
 
 		return model;
 	}

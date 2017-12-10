@@ -98,6 +98,7 @@ namespace Unique
 		{
 			return ByteArray();
 		}
+
 		return byteArray;
 	}
 

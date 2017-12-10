@@ -63,32 +63,6 @@ struct ModelMorph
     HashMap<unsigned, VertexBufferMorph> buffers_;
 };
 
-/// Description of vertex buffer data for asynchronous loading.
-struct VertexBufferDesc
-{
-    /// Vertex count.
-    unsigned vertexCount_;
-    /// Vertex declaration.
-    //PODVector<VertexElement> vertexElements_;
-    /// Vertex data size.
-    unsigned dataSize_;
-    /// Vertex data.
-    SharedArrayPtr<unsigned char> data_;
-};
-
-/// Description of index buffer data for asynchronous loading.
-struct IndexBufferDesc
-{
-    /// Index count.
-    unsigned indexCount_;
-    /// Index size.
-    unsigned indexSize_;
-    /// Index data size.
-    unsigned dataSize_;
-    /// Index data.
-    SharedArrayPtr<unsigned char> data_;
-};
-
 /// Description of a geometry for asynchronous loading.
 struct GeometryDesc
 {
@@ -108,16 +82,13 @@ struct GeometryDesc
 class UNIQUE_API Model : public Resource
 {
     uRTTI(Model, Resource)
-
 public:
     /// Construct.
     Model();
     /// Destruct.
     virtual ~Model();
     /// Load resource from stream. May be called from a worker thread. Return true if successful.
-    virtual bool BeginLoad(IFile& source);
-    /// Finish resource loading. Always called from the main thread. Return true if successful.
-    virtual bool EndLoad();
+    virtual bool Load(IFile& source);
 
     /// Set local-space bounding box.
     void SetBoundingBox(const BoundingBox& box);
@@ -217,12 +188,10 @@ private:
     PODVector<unsigned> morphRangeStarts_;
     /// Vertex buffer morph range vertex count.
     PODVector<unsigned> morphRangeCounts_;
-    /// Vertex buffer data for asynchronous loading.
-    Vector<VertexBufferDesc> loadVBData_;
-    /// Index buffer data for asynchronous loading.
-    Vector<IndexBufferDesc> loadIBData_;
     /// Geometry definitions for asynchronous loading.
     Vector<PODVector<GeometryDesc> > loadGeometries_;
+
+	friend class ModelImporter;
 };
 
 }

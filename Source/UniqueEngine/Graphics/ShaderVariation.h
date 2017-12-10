@@ -82,13 +82,13 @@ namespace Unique
 		void Reload();
 
 		IPipelineState* GetPipeline();
-		RefCntAutoPtr<IShaderResourceBinding> GetShaderResourceBinding() const { return shaderResourceBinding_; }
+		IShaderResourceBinding* GetShaderResourceBinding() { return shaderResourceBinding_; }
 	private:
 		Pass& shaderPass_;
 		Vector<SPtr<ShaderVariation>> shaders;
 		bool isComputePipeline_ = false;
 		RefCntAutoPtr<IShaderResourceBinding> shaderResourceBinding_;
 		bool dirty_ = true;
-
+		IResourceMapping* resourceMapping_;
 	};
 }
