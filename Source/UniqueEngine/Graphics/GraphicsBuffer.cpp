@@ -15,7 +15,7 @@ namespace Unique
 			uAttribute("Data", data_)
 	}
 
-	uObject(ConsterBuffer)
+	uObject(ConstBuffer)
 	{
 		uFactory("Graphics")
 			uAttribute("Data", data_)
@@ -30,13 +30,14 @@ namespace Unique
 	{
 	}
 
-	bool GraphicsBuffer::Create(uint elementCount, uint elementSize, Usage usage, void* data)
+	bool GraphicsBuffer::Create(uint elementCount, uint elementSize, Usage usage, uint flags, void* data)
 	{
 		desc_.ElementByteStride = elementSize;
 		desc_.uiSizeInBytes = elementCount*elementSize;
 		desc_.Usage = usage;
-
+		desc_.CPUAccessFlags = flags;
 		data_.resize(desc_.uiSizeInBytes);
+		
 		if (data)
 		{
 			std::memcpy(data_.data(), data, desc_.uiSizeInBytes);
@@ -45,11 +46,12 @@ namespace Unique
 		return GPUObject<IBuffer>::Create();
 	}
 
-	bool GraphicsBuffer::Create(ByteArray&& data, uint elementSize, Usage usage)
+	bool GraphicsBuffer::Create(ByteArray&& data, uint elementSize, Usage usage, uint flags)
 	{
 		desc_.ElementByteStride = elementSize;
 		desc_.uiSizeInBytes = (uint)data.size();
 		desc_.Usage = usage;
+		desc_.CPUAccessFlags = flags;
 		data_ = data;
 
 		return GPUObject<IBuffer>::Create();

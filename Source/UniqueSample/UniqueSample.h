@@ -10,7 +10,7 @@ namespace Unique
 	class Geometry;
 	class Shader;
 	class PipelineState;
-	class ConsterBuffer;
+	class ConstBuffer;
 
 	class UniqueSample : public Application
 	{
@@ -23,6 +23,7 @@ namespace Unique
 		virtual void Terminate();
 		virtual void OnPreRender();
 		virtual void OnPostRender();
+
 		void CreateResource();
 		void BuildSponge(int levelMax, bool aoEnabled);
 		void SetShaderConstants(const float4x4& world, const float4x4& view, const float4x4& proj);
@@ -38,7 +39,7 @@ namespace Unique
 
 		Diligent::RefCntAutoPtr<Diligent::IBuffer> m_pConstantBuffer;
 
-		SPtr<ConsterBuffer> constBuffer_;
+		SPtr<ConstBuffer> constBuffer_;
 		SPtr<Geometry> geometry_;
 		SPtr<Shader> shader_;
 		PipelineState* pipeline_;

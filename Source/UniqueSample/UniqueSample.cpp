@@ -88,8 +88,8 @@ namespace Unique
 		BuffDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
 		renderDevice->CreateBuffer(BuffDesc, BufferData(), &m_pConstantBuffer);
 
-		constBuffer_ = new ConsterBuffer();
-		constBuffer_->Create(ShaderConstants(), USAGE_DYNAMIC);
+		constBuffer_ = new ConstBuffer();
+		constBuffer_->Create(ShaderConstants(), USAGE_DYNAMIC, CPU_ACCESS_WRITE);
 
 		// Create vertex and index buffers
 		BuildSponge(m_SpongeLevel, m_SpongeAO);
@@ -139,10 +139,10 @@ namespace Unique
 		FillSpongeBuffers(0, levelMax, vertices, indices, float3(), aoEnabled, aoEdges, faceColors);
 
 		SPtr<VertexBuffer> pVertexBuffer(new VertexBuffer());
-		pVertexBuffer->Create(vertices);
+		pVertexBuffer->Create(std::move(vertices));
 
 		SPtr<IndexBuffer> pIndexBuffer(new IndexBuffer());
-		pIndexBuffer->Create(indices);
+		pIndexBuffer->Create(std::move(indices));
 
 		geometry_ = new Geometry();
 		geometry_->SetNumVertexBuffers(1);
