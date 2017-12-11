@@ -1,6 +1,7 @@
 #pragma once
 #include "../Core/CoreDefs.h"
 #include "../Container/refcounted.h"
+#include "../Serialize/Serializer.h"
 #include "../Serialize/BinaryReader.h"
 #include "../Serialize/BinaryWriter.h"
 #include "../Serialize/JsonReader.h"
@@ -18,6 +19,7 @@ namespace Unique
 		{
 		}
 
+		virtual void Visit(Serializer& serializer, void* obj) {}
 		virtual void Visit(BinaryWriter& serializer, void* obj) {}
 		virtual void Visit(BinaryReader& serializer, void* obj) {}
 		virtual void Visit(JsonWriter& serializer, void* obj) {}
@@ -48,6 +50,11 @@ namespace Unique
 			{
 				flag_ |= AttributeFlag::Map;
 			}
+		}
+
+		virtual void Visit(Serializer& serializer, void* obj)
+		{
+			VisitImpl(serializer, obj);
 		}
 
 		virtual void Visit(BinaryWriter& serializer, void* obj)
@@ -117,6 +124,11 @@ namespace Unique
 			}
 			assert(getFunction_);
 			assert(setFunction_);
+		}
+
+		virtual void Visit(Serializer& serializer, void* obj)
+		{
+			VisitImpl(serializer, obj);
 		}
 
 		virtual void Visit(BinaryWriter& serializer, void* obj)

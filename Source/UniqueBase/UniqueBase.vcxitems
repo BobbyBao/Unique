@@ -14,6 +14,8 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\JsonDeserializer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\JsonSerializer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Container\Algorithm.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Container\Arrayptr.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Container\Container.h" />
@@ -76,6 +78,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Resource\ResourceEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Resource\ResourceImporter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Resource\ResourceRef.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\Serializer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\BinaryReader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\BinaryWriter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\hjson\hjson.h" />
@@ -96,6 +99,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Unique.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\JsonDeserializer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\JsonSerializer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Container\RefCounted.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Container\Str.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Container\Stringid.cpp" />
@@ -142,6 +147,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Resource\ResourceCache.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Resource\ResourceImporter.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Resource\ResourceRef.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\Serializer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\hjson\hjson_decode.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\hjson\hjson_encode.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\hjson\hjson_parsenumber.cpp" />

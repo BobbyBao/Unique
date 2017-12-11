@@ -8,6 +8,8 @@
 #include <BasicShaderSourceStreamFactory.h>
 #include "Graphics/Shader.h"
 #include "Graphics/PipelineState.h"
+#include "Serialize/JsonSerializer.h"
+#include "Serialize/JsonDeserializer.h"
 
 UNIQUE_IMPLEMENT_MAIN(Unique::UniqueSample)
 
@@ -70,6 +72,18 @@ namespace Unique
 
 		JsonWriter jsonWriter;
 		jsonWriter.Save("test2.json", shader);
+
+		{
+
+			SPtr<Shader> newShader(new Shader());
+
+			File file("test2.json");
+			JsonDeserializer jsonDeser;
+			jsonDeser.Load(file, newShader);
+
+			JsonSerializer jsonSer;
+			jsonSer.Save("test3.json", newShader);
+		}
 		
 		/*
 		{

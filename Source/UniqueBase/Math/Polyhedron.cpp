@@ -136,16 +136,16 @@ void Polyhedron::Clip(const Plane& plane)
     }
 
     // Remove empty faces
-    for (uint i = faces_.size() - 1; i < faces_.size(); --i)
+    for (size_t i = faces_.size() - 1; i < faces_.size(); --i)
     {
         if (faces_[i].empty())
             faces_.erase(faces_.begin() + i);
     }
 
     // Create a new face from the clipped vertices. First remove duplicates
-    for (unsigned i = 0; i < clippedVertices_.size(); ++i)
+    for (size_t i = 0; i < clippedVertices_.size(); ++i)
     {
-        for (unsigned j = clippedVertices_.size() - 1; j > i; --j)
+        for (size_t j = clippedVertices_.size() - 1; j > i; --j)
         {
             if (clippedVertices_[j].Equals(clippedVertices_[i]))
                 clippedVertices_.erase(clippedVertices_.begin() + j);

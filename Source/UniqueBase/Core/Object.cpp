@@ -70,6 +70,7 @@ void Object::Transfer(TransferFunction& transfer)
 	transfer.EndObject();
 }
 
+template UNIQUE_API void Object::Transfer(Serializer&);
 template UNIQUE_API void Object::Transfer(BinaryWriter&);
 template UNIQUE_API void Object::Transfer(BinaryReader&);
 template UNIQUE_API void Object::Transfer(JsonWriter&);

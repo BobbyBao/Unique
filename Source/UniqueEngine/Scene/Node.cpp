@@ -577,7 +577,7 @@ void Node::RemoveChildren(bool recursive)
 {
     unsigned numRemoved = 0;
 
-    for (uint i = children_.size() - 1; i < children_.size(); --i)
+    for (size_t i = children_.size() - 1; i < children_.size(); --i)
     {
         Node* childNode = children_[i];
 
@@ -693,7 +693,7 @@ void Node::RemoveComponents()
 {
     unsigned numRemoved = 0;
 
-    for (uint i = components_.size() - 1; i < components_.size(); --i)
+    for (size_t i = components_.size() - 1; i < components_.size(); --i)
     {
 		RemoveComponent(components_.begin() + i);
 		++numRemoved;
@@ -705,7 +705,7 @@ void Node::RemoveComponents(StringID type)
 {
     unsigned numRemoved = 0;
 
-    for (uint i = components_.size() - 1; i < components_.size(); --i)
+    for (size_t i = components_.size() - 1; i < components_.size(); --i)
     {
         if (components_[i]->GetType() == type)
         {

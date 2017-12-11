@@ -46,7 +46,7 @@ namespace Unique
 		UpdateOffsets();
 
 		desc_.ElementByteStride = GetVertexSize(elements_);
-		desc_.uiSizeInBytes = data.size();
+		desc_.uiSizeInBytes = (uint)data.size();
 		desc_.Usage = usage;
 		data_ = data;
 
