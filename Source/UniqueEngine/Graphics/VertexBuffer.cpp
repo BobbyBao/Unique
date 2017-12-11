@@ -3,12 +3,68 @@
 
 namespace Unique
 {
+	/// Hardcoded legacy vertex elements.
+	enum LegacyVertexElement
+	{
+		ELEMENT_POSITION = 0,
+		ELEMENT_NORMAL,
+		ELEMENT_COLOR,
+		ELEMENT_TEXCOORD1,
+		ELEMENT_TEXCOORD2,
+		ELEMENT_CUBETEXCOORD1,
+		ELEMENT_CUBETEXCOORD2,
+		ELEMENT_TANGENT,
+		ELEMENT_BLENDWEIGHTS,
+		ELEMENT_BLENDINDICES,
+		ELEMENT_INSTANCEMATRIX1,
+		ELEMENT_INSTANCEMATRIX2,
+		ELEMENT_INSTANCEMATRIX3,
+		// Custom 32-bit integer object index. Due to API limitations, not supported on D3D9
+		ELEMENT_OBJECTINDEX,
+		MAX_LEGACY_VERTEX_ELEMENTS
+	};
+
+	uEnumTraits
+	(
+		VertexElementType,
+		"INT", 
+		"FLOAT",
+		"VECTOR2",
+		"VECTOR3",
+		"VECTOR4",
+		"UBYTE4",
+		"UBYTE4_NORM"
+	)
+	
+	uEnumTraits
+	(
+		VertexElementSemantic,
+		"POSITION",
+		"NORMAL", 
+		"BINORMAL",
+		"TANGENT", 
+		"TEXCOORD",
+		"COLOR",
+		"BLENDWEIGHTS",
+		"BLENDINDICES",
+		"OBJECTINDEX"
+	)
+
+		uClassTraits
+		(
+			VertexElement,
+			"Type", self.type_,
+			"Semantic", self.semantic_,
+			"Index", self.index_,
+			"PerInstance", self.perInstance_
+		)
+
 	uObject(VertexBuffer)
 	{
 		uFactory("Graphics")
+			uAttribute("Elements", elements_)
 			uAttribute("Data", data_)
 	}
-
 
 	extern UNIQUE_API const VertexElement LEGACY_VERTEXELEMENTS[] =
 	{

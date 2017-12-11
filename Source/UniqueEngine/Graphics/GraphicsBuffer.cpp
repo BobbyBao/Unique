@@ -5,20 +5,33 @@
 
 namespace Unique
 {
+	uEnumTraits
+	(
+		Usage,
+		"STATIC",
+		"DEFAULT",
+		"DYNAMIC",
+		"CPU_ACCESSIBLE"
+	)
+
 	uObject(GraphicsBuffer)
 	{
+		uAttribute("SizeInBytes", desc_.uiSizeInBytes)
+		uAttribute("Usage", desc_.Usage)
+		uAttribute("CPUAccessFlags", desc_.CPUAccessFlags)
 	}
-
+	
 	uObject(IndexBuffer)
 	{
 		uFactory("Graphics")
-			uAttribute("Data", data_)
+		uAttribute("ElementByteStride", desc_.ElementByteStride)
+		uAttribute("Data", data_)
 	}
 
 	uObject(ConstBuffer)
 	{
 		uFactory("Graphics")
-			uAttribute("Data", data_)
+		uAttribute("Data", data_)
 	}
 
 	GraphicsBuffer::GraphicsBuffer(uint flags)

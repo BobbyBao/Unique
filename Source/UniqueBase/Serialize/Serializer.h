@@ -85,15 +85,15 @@ namespace Unique
 		template<class T>
 		void TransferAttribute(const char* name, T& data, AttributeFlag metaFlag = AttributeFlag::Default)\
 		{
-			AttributeFlag metaFlagSave = metaFlag_;
-			metaFlag_ = metaFlag;
+			AttributeFlag metaFlagSave = attributeFlag_;
+			attributeFlag_ = metaFlag;
 			if (StartAttribute(name))
 			{
 				Unique::SerializeTraits<T>::Transfer(data, *this);
 				EndAttribute();
 			}
 
-			metaFlag_ = metaFlagSave;
+			attributeFlag_ = metaFlagSave;
 		}
 
 		template <typename... Rest>
@@ -158,7 +158,7 @@ namespace Unique
 
 		bool rootObject_ = true;
 		std::string rootType_;
-		AttributeFlag metaFlag_;
+		AttributeFlag attributeFlag_;
 		TransferState state_;
 		ByteArray data_;
 	};

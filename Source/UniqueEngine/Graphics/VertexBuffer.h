@@ -83,7 +83,6 @@ namespace Unique
 		/// Return buffer hash for building vertex declarations. Used internally.
 		unsigned long long GetBufferHash(unsigned streamIndex) { return elementHash_ << (streamIndex * 16); }
 
-
 		/// Return element with specified type and semantic from a vertex element list, or null if does not exist.
 		static const VertexElement* GetElement(const PODVector<VertexElement>& elements, VertexElementType type, VertexElementSemantic semantic, unsigned char index = 0);
 

@@ -32,6 +32,34 @@ namespace Unique
 	using LogicOperation = LOGIC_OPERATION;
 	using ColorMask = COLOR_MASK;
 
+	/// Arbitrary vertex declaration element datatypes.
+	enum VertexElementType
+	{
+		TYPE_INT = 0,
+		TYPE_FLOAT,
+		TYPE_VECTOR2,
+		TYPE_VECTOR3,
+		TYPE_VECTOR4,
+		TYPE_UBYTE4,
+		TYPE_UBYTE4_NORM,
+		MAX_VERTEX_ELEMENT_TYPES
+	};
+
+	/// Arbitrary vertex declaration element semantics.
+	enum VertexElementSemantic
+	{
+		SEM_POSITION = 0,
+		SEM_NORMAL,
+		SEM_BINORMAL,
+		SEM_TANGENT,
+		SEM_TEXCOORD,
+		SEM_COLOR,
+		SEM_BLENDWEIGHTS,
+		SEM_BLENDINDICES,
+		SEM_OBJECTINDEX,
+		MAX_VERTEX_ELEMENT_SEMANTICS
+	};
+
 	uEnumTraits(ValueType,
 				"UNDEFINED", "INT8", "INT16", "INT32", "UINT8", "UINT16", "UINT32", "FLOAT16", "FLOAT32")
 	
@@ -68,53 +96,5 @@ namespace Unique
 	uFlagsTraits(ColorMask, {"RED", COLOR_MASK_RED}, {"GREEN", COLOR_MASK_GREEN}, {"BLUE", COLOR_MASK_BLUE}, {"ALPHA", COLOR_MASK_ALPHA}, { "ALL", COLOR_MASK_ALL })
 	
 
-	/// Hardcoded legacy vertex elements.
-	enum LegacyVertexElement
-	{
-		ELEMENT_POSITION = 0,
-		ELEMENT_NORMAL,
-		ELEMENT_COLOR,
-		ELEMENT_TEXCOORD1,
-		ELEMENT_TEXCOORD2,
-		ELEMENT_CUBETEXCOORD1,
-		ELEMENT_CUBETEXCOORD2,
-		ELEMENT_TANGENT,
-		ELEMENT_BLENDWEIGHTS,
-		ELEMENT_BLENDINDICES,
-		ELEMENT_INSTANCEMATRIX1,
-		ELEMENT_INSTANCEMATRIX2,
-		ELEMENT_INSTANCEMATRIX3,
-		// Custom 32-bit integer object index. Due to API limitations, not supported on D3D9
-		ELEMENT_OBJECTINDEX,
-		MAX_LEGACY_VERTEX_ELEMENTS
-	};
-
-	/// Arbitrary vertex declaration element datatypes.
-	enum VertexElementType
-	{
-		TYPE_INT = 0,
-		TYPE_FLOAT,
-		TYPE_VECTOR2,
-		TYPE_VECTOR3,
-		TYPE_VECTOR4,
-		TYPE_UBYTE4,
-		TYPE_UBYTE4_NORM,
-		MAX_VERTEX_ELEMENT_TYPES
-	};
-
-	/// Arbitrary vertex declaration element semantics.
-	enum VertexElementSemantic
-	{
-		SEM_POSITION = 0,
-		SEM_NORMAL,
-		SEM_BINORMAL,
-		SEM_TANGENT,
-		SEM_TEXCOORD,
-		SEM_COLOR,
-		SEM_BLENDWEIGHTS,
-		SEM_BLENDINDICES,
-		SEM_OBJECTINDEX,
-		MAX_VERTEX_ELEMENT_SEMANTICS
-	};
 
 }
