@@ -52,7 +52,7 @@ namespace Unique
 		return handle_ != nullptr;
 
 		// to do :
-		auto& graphics = Subsystem<Graphics>();
+		auto& graphics = GetSubsystem<Graphics>();
 		if (graphics.IsDirect3D())
 		{
 			return handle_ != nullptr;
@@ -134,7 +134,7 @@ namespace Unique
 			return false;
 		}
 
-		auto& graphics = Subsystem<Graphics>();
+		auto& graphics = GetSubsystem<Graphics>();
 		//to do:
 		return true;
 	}
@@ -176,7 +176,7 @@ namespace Unique
 			break;
 		}
 
-		FileSystem& fileSystem = Subsystem<FileSystem>();
+		FileSystem& fileSystem = GetSubsystem<FileSystem>();
 
 		String inputFile = "Cache/" + Shader::GetShaderPath(RendererID::Direct3D11) 
 			+ ReplaceExtension( owner_.GetName(), ".hlsl");

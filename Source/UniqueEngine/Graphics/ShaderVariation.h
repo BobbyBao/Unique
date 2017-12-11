@@ -56,17 +56,17 @@ namespace Unique
 	{
 	public:
 		ShaderVariation(Shader& shader, const ShaderStage& type, Pass& shaderPass, uint defs);
-		bool CreateImpl();
 
+		bool CreateImpl();
 		void Reload();
 		bool LoadConvertedCode(const String & binaryShaderName);
 		bool Convert(const String& binaryShaderName);
 		ShaderType GetShaderType() const { return shaderStage_.shaderType_; }
-	private:
+
+	protected:
 		Shader& owner_;
 		ShaderStage shaderStage_;
 		Pass& shaderPass_;
-
 		/// Defines to use in compiling.
 		String defines_;
 		unsigned mask_ = 0;
