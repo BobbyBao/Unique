@@ -104,7 +104,7 @@ namespace Unique
 	{
 	public:
 		template<class TransferFunction>
-		inline static void TransferFlags(value_type& data, Map<const char*, long> flags, TransferFunction& transfer)
+		inline static void TransferFlags(value_type& data, Map<const char*, value_type> flags, TransferFunction& transfer)
 		{
 			Unique::String str;
 			if (transfer.IsReading())
@@ -117,13 +117,13 @@ namespace Unique
 				}
 				else
 				{
-					Vector<String> strs = str.Split("|");
+					Vector<String> strs = str.Split('|');
 					for (auto& s : strs)
 					{
 						auto it = flags.find(s);
 						if (it != flags.end())
 						{
-							data |= it.second;
+							data |= it->second;
 						}
 					}
 				}
@@ -132,22 +132,22 @@ namespace Unique
 			else
 			{
 				int i = 0;
-				for(auto it : flags)
+				for(auto& kvp : flags)
 				{
-					if (data == it->second)
+					if (data == kvp.second)
 					{
-						str = it->first;
+						str = kvp.first;
 						break;
 					}
 					else
 					{
-						if (data & it.second)
+						if (data & kvp.second)
 						{
 							if (i != 0)
 							{
 								str.Append('|');
 							}
-							str.Append(it.first);
+							str.Append(kvp.first);
 							i++;
 						}
 					}
@@ -170,7 +170,7 @@ public:\
 	template<class TransferFunction>\
 	inline static void Transfer(value_type& data, TransferFunction& transfer)\
 	{\
-		static Map<long, const char*> flags = \
+		static Map<const char*, value_type> flags = \
 		{\
 			__VA_ARGS__\
 		};\

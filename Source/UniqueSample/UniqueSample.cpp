@@ -64,7 +64,6 @@ namespace Unique
 
 		CreateResource();
 
-		/*
 		SPtr<Shader> shader(new Shader());
 		JsonReader jsonReader;
 		jsonReader.Load("Shaders/Test.shader", shader, true, true);
@@ -72,6 +71,7 @@ namespace Unique
 		JsonWriter jsonWriter;
 		jsonWriter.Save("test2.json", shader);
 		
+		/*
 		{
 			shader->SetName("test_shader");
 			Pass* pass = shader->AddPass("Test");

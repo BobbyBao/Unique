@@ -53,7 +53,7 @@ namespace Unique
 		"DestBlendAlpha", self.DestBlendAlpha,
 		"BlendOpAlpha", self.BlendOpAlpha,
 		"LogicOp", self.LogicOp,
-		"RenderTargetWriteMask", self.RenderTargetWriteMask
+		"RenderTargetWriteMask", (ColorMask&)self.RenderTargetWriteMask
 	)
 		
 	uClassTraits

@@ -860,7 +860,7 @@ unsigned Node::GetNumChildren(bool recursive) const
         return (unsigned)children_.size();
     else
     {
-		uint allChildren = children_.size();
+		uint allChildren = (uint)children_.size();
         for (Vector<SPtr<Node> >::const_iterator i = children_.begin(); i != children_.end(); ++i)
             allChildren += (*i)->GetNumChildren(true);
 

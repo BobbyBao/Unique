@@ -63,7 +63,9 @@ namespace Unique
 		"INVERT", "AND", "NAND", "OR", "NOR", "XOR", "EQUIV", "AND_REVERSE",
 		"AND_INVERTED",	"OR_REVERSE", "OR_INVERTED")
 		
-	uFlagsTraits(ColorMask, {"RED", COLOR_MASK_RED}, {"GREEN", COLOR_MASK_GREEN}, {"BLUE", COLOR_MASK_BLUE}, {"ALPHA", COLOR_MASK_ALPHA})
+
+	ENABLE_BITMASK_OPERATORS(ColorMask)
+	uFlagsTraits(ColorMask, {"RED", COLOR_MASK_RED}, {"GREEN", COLOR_MASK_GREEN}, {"BLUE", COLOR_MASK_BLUE}, {"ALPHA", COLOR_MASK_ALPHA}, { "ALL", COLOR_MASK_ALL })
 	
 
 	/// Hardcoded legacy vertex elements.
