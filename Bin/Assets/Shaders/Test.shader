@@ -9,6 +9,12 @@ Shader("Default"):
 			DepthWriteEnable: true
 		}
 		
+		RasterizerState: 
+		{
+			FillMode: SOLID
+			CullMode: NONE
+		}
+
 		InputLayout:
 		[
 			{

@@ -8,10 +8,11 @@
 
 namespace Unique
 {
-	class Shader;
-
 	using BlendFactor = BLEND_FACTOR;
 	using BlendOperation = BLEND_OPERATION;
+
+	class Shader;
+	class PipelineState;
 
 	class Pass
 	{

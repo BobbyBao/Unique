@@ -23,8 +23,9 @@
 #include "Precompiled.h"
 #include "Geometry.h"
 #include "Graphics.h"
-#include "GraphicsBuffer.h"
+#include "VertexBuffer.h"
 #include "Graphics/Shader.h"
+#include "Graphics/PipelineState.h"
 #include "IO/Log.h"
 
 //#include "../Math/Ray.h"
@@ -172,7 +173,7 @@ namespace Unique
 			strides[i] = vertexBuffers_[i]->GetStride();
 		}
 
-		deviceContext->SetVertexBuffers(0, vertexBuffers_.size(), buffer, strides, offsets, SET_VERTEX_BUFFERS_FLAG_RESET);
+		deviceContext->SetVertexBuffers(0, (uint)vertexBuffers_.size(), buffer, strides, offsets, SET_VERTEX_BUFFERS_FLAG_RESET);
 
 		if (indexBuffer_ && indexCount_ > 0)
 		{
@@ -183,6 +184,14 @@ namespace Unique
 		{
 			drawAttribs_.NumVertices = vertexCount_;
 		}
+
+		deviceContext->SetPipelineState(pipeline->GetPipeline());
+
+		pipeline->GetShaderResourceBinding()->BindResources(SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, resourceMapping,
+			BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED | BIND_SHADER_RESOURCES_ALL_RESOLVED);
+
+		deviceContext->CommitShaderResources(pipeline->GetShaderResourceBinding(), COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
+
 
 		deviceContext->Draw(drawAttribs_);
 	}
@@ -235,6 +244,5 @@ namespace Unique
 			uvOffset) : ray.HitDistance(vertexData, vertexSize, vertexStart_, vertexCount_, outNormal, outUV, uvOffset);
 	}
 	*/
-
 
 }

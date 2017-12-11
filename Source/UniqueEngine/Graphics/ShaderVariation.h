@@ -52,7 +52,7 @@ namespace Unique
 		uint			mask_;
 	};
 
-	class ShaderVariation : public GPUObject<RefCounted, IShader>
+	class ShaderVariation : public RefCounted, public GPUObject<IShader>
 	{
 	public:
 		ShaderVariation(Shader& shader, const ShaderStage& type, Pass& shaderPass, uint defs);
@@ -73,22 +73,4 @@ namespace Unique
 		bool dirty_ = false;
 	};
 	
-	class PipelineState : public GPUObject<RefCounted, IPipelineState>
-	{
-	public:
-		PipelineState(Shader& shader, Pass& shaderPass, unsigned defs);
-
-		bool CreateImpl();
-		void Reload();
-
-		IPipelineState* GetPipeline();
-		IShaderResourceBinding* GetShaderResourceBinding() { return shaderResourceBinding_; }
-	private:
-		Pass& shaderPass_;
-		Vector<SPtr<ShaderVariation>> shaders;
-		bool isComputePipeline_ = false;
-		RefCntAutoPtr<IShaderResourceBinding> shaderResourceBinding_;
-		bool dirty_ = true;
-		IResourceMapping* resourceMapping_;
-	};
 }

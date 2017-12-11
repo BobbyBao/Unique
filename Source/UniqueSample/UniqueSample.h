@@ -8,6 +8,9 @@
 namespace Unique
 {
 	class Geometry;
+	class Shader;
+	class PipelineState;
+	class ConsterBuffer;
 
 	class UniqueSample : public Application
 	{
@@ -23,7 +26,6 @@ namespace Unique
 		void CreateResource();
 		void BuildSponge(int levelMax, bool aoEnabled);
 		void SetShaderConstants(const float4x4& world, const float4x4& view, const float4x4& proj);
-		void CreatePipeline();
 
 		::Quaternion m_SpongeRotation; // model rotation
 		int m_SpongeLevel;           // number of recursions
@@ -36,7 +38,11 @@ namespace Unique
 
 		Diligent::RefCntAutoPtr<Diligent::IBuffer> m_pConstantBuffer;
 
+		SPtr<ConsterBuffer> constBuffer_;
 		SPtr<Geometry> geometry_;
+		SPtr<Shader> shader_;
+		PipelineState* pipeline_;
+
 		RefCntAutoPtr<IShader> vs_;
 		RefCntAutoPtr<IShader> ps_;
 		RefCntAutoPtr<IPipelineState> pipelineState_;

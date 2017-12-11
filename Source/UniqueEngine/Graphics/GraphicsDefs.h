@@ -65,6 +65,8 @@ namespace Unique
 		
 	uFlagsTraits(ColorMask, {"RED", COLOR_MASK_RED}, {"GREEN", COLOR_MASK_GREEN}, {"BLUE", COLOR_MASK_BLUE}, {"ALPHA", COLOR_MASK_ALPHA})
 	
+
+	/// Hardcoded legacy vertex elements.
 	enum LegacyVertexElement
 	{
 		ELEMENT_POSITION = 0,
@@ -85,20 +87,32 @@ namespace Unique
 		MAX_LEGACY_VERTEX_ELEMENTS
 	};
 
-	// Legacy vertex element bitmasks.
-	static const unsigned MASK_NONE = 0x0;
-	static const unsigned MASK_POSITION = 0x1;
-	static const unsigned MASK_NORMAL = 0x2;
-	static const unsigned MASK_COLOR = 0x4;
-	static const unsigned MASK_TEXCOORD1 = 0x8;
-	static const unsigned MASK_TEXCOORD2 = 0x10;
-	static const unsigned MASK_CUBETEXCOORD1 = 0x20;
-	static const unsigned MASK_CUBETEXCOORD2 = 0x40;
-	static const unsigned MASK_TANGENT = 0x80;
-	static const unsigned MASK_BLENDWEIGHTS = 0x100;
-	static const unsigned MASK_BLENDINDICES = 0x200;
-	static const unsigned MASK_INSTANCEMATRIX1 = 0x400;
-	static const unsigned MASK_INSTANCEMATRIX2 = 0x800;
-	static const unsigned MASK_INSTANCEMATRIX3 = 0x1000;
-	static const unsigned MASK_OBJECTINDEX = 0x2000;
+	/// Arbitrary vertex declaration element datatypes.
+	enum VertexElementType
+	{
+		TYPE_INT = 0,
+		TYPE_FLOAT,
+		TYPE_VECTOR2,
+		TYPE_VECTOR3,
+		TYPE_VECTOR4,
+		TYPE_UBYTE4,
+		TYPE_UBYTE4_NORM,
+		MAX_VERTEX_ELEMENT_TYPES
+	};
+
+	/// Arbitrary vertex declaration element semantics.
+	enum VertexElementSemantic
+	{
+		SEM_POSITION = 0,
+		SEM_NORMAL,
+		SEM_BINORMAL,
+		SEM_TANGENT,
+		SEM_TEXCOORD,
+		SEM_COLOR,
+		SEM_BLENDWEIGHTS,
+		SEM_BLENDINDICES,
+		SEM_OBJECTINDEX,
+		MAX_VERTEX_ELEMENT_SEMANTICS
+	};
+
 }

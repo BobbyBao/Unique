@@ -25,7 +25,7 @@
 #include "Core/Context.h"
 #include "Core/Profiler.h"
 #include "../Graphics/Geometry.h"
-#include "../Graphics/GraphicsBuffer.h"
+#include "../Graphics/VertexBuffer.h"
 #include "../Graphics/Model.h"
 #include "../Graphics/Graphics.h"
 #include "IO/Log.h"

@@ -4,9 +4,10 @@
 #include "UniqueSample.h"
 #include "MapHelper.h"
 #include "Graphics/Geometry.h"
-#include "Graphics/GraphicsBuffer.h"
+#include "Graphics/VertexBuffer.h"
 #include <BasicShaderSourceStreamFactory.h>
 #include "Graphics/Shader.h"
+#include "Graphics/PipelineState.h"
 
 UNIQUE_IMPLEMENT_MAIN(Unique::UniqueSample)
 
@@ -20,6 +21,7 @@ namespace Unique
 		float3 Normal;
 		unsigned int AmbientColor;
 	};
+
 	struct ShaderConstants
 	{
 		float4x4 WorldViewProjT;
@@ -94,7 +96,7 @@ namespace Unique
 
 	void UniqueSample::CreateResource()
 	{
-
+		auto& cache = GetSubsystem<ResourceCache>();
 		auto& graphics = GetSubsystem<Graphics>();
 
 		BufferDesc BuffDesc;
@@ -104,100 +106,18 @@ namespace Unique
 		BuffDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
 		renderDevice->CreateBuffer(BuffDesc, BufferData(), &m_pConstantBuffer);
 
+		constBuffer_ = new ConsterBuffer();
+		constBuffer_->Create(ShaderConstants(), USAGE_DYNAMIC);
+
 		// Create vertex and index buffers
 		BuildSponge(m_SpongeLevel, m_SpongeAO);
-
-		CreatePipeline();
-
-		// Init model rotation
-		float3 axis(-1, 1, 0);
-		m_SpongeRotation = RotationFromAxisAngle(axis, M_PI / 4);
-	}
-
-	void UniqueSample::CreatePipeline()
-	{
-		{
-			ShaderCreationAttribs Attrs;
-			//Attrs.Desc.Name = "MainVS";
-			Attrs.FilePath = "MainVS_DX.hlsl";
-			//Attrs.EntryPoint = "main";
-			Attrs.Desc.ShaderType = SHADER_TYPE_VERTEX;
-			Attrs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-			//Attrs.Desc.TargetProfile = SHADER_PROFILE_DX_4_0;
-			BasicShaderSourceStreamFactory BasicSSSFactory("assets\\shaders;assets\\shaders\\inc;");
-			Attrs.pShaderSourceStreamFactory = &BasicSSSFactory;
-			renderDevice->CreateShader(Attrs, &vs_);
-		}
-
-		{
-			ShaderCreationAttribs Attrs;
-			//Attrs.Desc.Name = "MainPS";
-			Attrs.FilePath = "MainPS_DX.hlsl";
-			//Attrs.EntryPoint = "main";
-			Attrs.Desc.ShaderType = SHADER_TYPE_PIXEL;
-			Attrs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-			//Attrs.Desc.TargetProfile = SHADER_PROFILE_DX_4_0;
-			BasicShaderSourceStreamFactory BasicSSSFactory("assets\\shaders;assets\\shaders\\inc;");
-			Attrs.pShaderSourceStreamFactory = &BasicSSSFactory;
-			renderDevice->CreateShader(Attrs, &ps_);
-		}
-
-		{
-
-			PipelineStateDesc PSODesc;
-			PSODesc.IsComputePipeline = false;
-			PSODesc.GraphicsPipeline.NumRenderTargets = 1;
-			PSODesc.GraphicsPipeline.RTVFormats[0] = TEX_FORMAT_RGBA8_UNORM_SRGB;
-			PSODesc.GraphicsPipeline.DSVFormat = TEX_FORMAT_D32_FLOAT;
-
-			// Init depth-stencil state
-			DepthStencilStateDesc &DepthStencilDesc = PSODesc.GraphicsPipeline.DepthStencilDesc;
-			DepthStencilDesc.DepthEnable = true;
-			DepthStencilDesc.DepthWriteEnable = true;
-
-			// Init blend state
-			BlendStateDesc &BSDesc = PSODesc.GraphicsPipeline.BlendDesc;
-			BSDesc.IndependentBlendEnable = False;
-			auto &RT0 = BSDesc.RenderTargets[0];
-			RT0.BlendEnable = False;
-			/*
-			RT0.RenderTargetWriteMask = COLOR_MASK_ALL;
-			RT0.SrcBlend = BLEND_FACTOR_SRC_ALPHA;
-			RT0.DestBlend = BLEND_FACTOR_INV_SRC_ALPHA;
-			RT0.BlendOp = BLEND_OPERATION_ADD;
-			RT0.SrcBlendAlpha = BLEND_FACTOR_SRC_ALPHA;
-			RT0.DestBlendAlpha = BLEND_FACTOR_INV_SRC_ALPHA;
-			RT0.BlendOpAlpha = BLEND_OPERATION_ADD;*/
-
-			// Init rasterizer state
-			RasterizerStateDesc &RasterizerDesc = PSODesc.GraphicsPipeline.RasterizerDesc;
-			RasterizerDesc.FillMode = FILL_MODE_SOLID;
-			RasterizerDesc.CullMode = CULL_MODE_NONE;
-
-			InputLayoutDesc &Layout = PSODesc.GraphicsPipeline.InputLayout;
-			LayoutElement TextLayoutElems[] =
-			{
-				LayoutElement(0, 0, 3, VT_FLOAT32, False),
-				LayoutElement(1, 0, 3, VT_FLOAT32, False),
-				LayoutElement(2, 0, 4, VT_UINT8, True),
-			};
-			Layout.LayoutElements = TextLayoutElems;
-			Layout.NumElements = _countof(TextLayoutElems);
-
-			PSODesc.GraphicsPipeline.PrimitiveTopologyType = PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-			PSODesc.GraphicsPipeline.pVS = vs_;
-			PSODesc.GraphicsPipeline.pPS = ps_;
-
-			renderDevice->CreatePipelineState(PSODesc, &pipelineState_);
-			pipelineState_->CreateShaderResourceBinding(&shaderResourceBinding_);
-
-// 			IShaderVariable* v1 = pSRB_->GetVariable(SHADER_TYPE_VERTEX, "g_WorldViewProj");
-// 			IShaderVariable* v2 = pSRB_->GetVariable(SHADER_TYPE_VERTEX, "g_WorldNorm");
-// 			IShaderVariable* v3 = pSRB_->GetVariable(SHADER_TYPE_VERTEX, "g_LightDir");
 		
-		
-		}
+		JsonReader jsonReader;
+		jsonReader.Load("Shaders/Test.shader", shader_, true, true);
+		shader_->Load();
+		pipeline_ = shader_->GetPipeline("Main", "");
 
+		//shader_ = cache.GetResource<Shader>("Shaders/Test.shader");
 
 		ResourceMappingEntry entries[] =
 		{
@@ -210,8 +130,11 @@ namespace Unique
 		rmd.pEntries = entries;
 
 		renderDevice->CreateResourceMapping(rmd, &resourceMapping_);
-		pipelineState_->BindShaderResources(resourceMapping_, BIND_SHADER_RESOURCES_ALL_RESOLVED);
+		pipeline_->GetPipeline()->BindShaderResources(resourceMapping_, BIND_SHADER_RESOURCES_ALL_RESOLVED);
 
+		// Init model rotation
+		float3 axis(-1, 1, 0);
+		m_SpongeRotation = RotationFromAxisAngle(axis, M_PI / 4);
 	}
 	
 	void AppendCubeToBuffers(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices,
@@ -454,14 +377,7 @@ namespace Unique
 
 		SetShaderConstants(world, view, proj);
 
-		deviceContext->SetPipelineState(pipelineState_);
-
-		shaderResourceBinding_->BindResources(SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, resourceMapping_,
-			BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED | BIND_SHADER_RESOURCES_ALL_RESOLVED);
-
-		deviceContext->CommitShaderResources(shaderResourceBinding_, COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
-		
-		geometry_->Draw(nullptr, resourceMapping_);
+		geometry_->Draw(pipeline_, resourceMapping_);
 
 	}
 

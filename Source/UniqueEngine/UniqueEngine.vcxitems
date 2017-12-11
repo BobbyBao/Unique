@@ -33,6 +33,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Texture.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\View.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Application\Input.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\PipelineState.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Scene\Component.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Scene\LogicComponent.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Scene\Node.h" />
@@ -41,6 +42,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Scene\SceneResolver.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Scene\SmoothedTransform.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)UniquePCH.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\VertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Application\Application.cpp" />
@@ -63,6 +65,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Texture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\View.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Application\Input.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\PipelineState.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Scene\Component.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Scene\LogicComponent.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Scene\Node.cpp" />
@@ -70,5 +73,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Scene\SceneResolver.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Scene\SmoothedTransform.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)UniquePCH.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\VertexBuffer.cpp" />
   </ItemGroup>
 </Project>

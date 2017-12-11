@@ -1,6 +1,7 @@
 #include "Precompiled.h"
 #include "Shader.h"
 #include "Graphics/Graphics.h"
+#include "PipelineState.h"
 
 namespace Unique
 {	

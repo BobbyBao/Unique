@@ -27,8 +27,8 @@ namespace Unique
 		State state_ = State::None;
 	};
 
-	template<class Super, class T = void>
-	class GPUObject : public Super, public GPUObjectBase
+	template<class T = void>
+	class GPUObject : public GPUObjectBase
 	{
 	public:
 		enum class State
