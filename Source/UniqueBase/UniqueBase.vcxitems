@@ -14,7 +14,10 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\BinaryDeserializer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\BinarySerializer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\HjsonDeserializer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\HjsonSerializer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\JsonDeserializer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\JsonSerializer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Container\Algorithm.h" />
@@ -80,11 +83,11 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Resource\ResourceImporter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Resource\ResourceRef.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\Serializer.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\BinaryReader.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\BinaryWriter.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\backup\BinaryReader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\backup\BinaryWriter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\hjson\hjson.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\JsonReader.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\JsonWriter.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\backup\JsonReader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\backup\JsonWriter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-common.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-expect.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-node.h" />
@@ -100,7 +103,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Unique.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\BinaryDeserializer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\BinarySerializer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\HjsonDeserializer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\HjsonSerializer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\JsonDeserializer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\JsonSerializer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Container\RefCounted.cpp" />

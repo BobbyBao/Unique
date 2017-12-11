@@ -8,6 +8,7 @@
 #include <BasicShaderSourceStreamFactory.h>
 #include "Graphics/Shader.h"
 #include "Graphics/PipelineState.h"
+#include "Serialize/HjsonDeserializer.h"
 
 
 UNIQUE_IMPLEMENT_MAIN(Unique::UniqueSample)
@@ -93,8 +94,8 @@ namespace Unique
 		// Create vertex and index buffers
 		BuildSponge(m_SpongeLevel, m_SpongeAO);
 		
-		JsonReader jsonReader;
-		jsonReader.Load("Shaders/Test.shader", shader_, true, true);
+		HjsonDeserializer jsonReader(true);
+		jsonReader.Load("Shaders/Test.shader", shader_);
 		shader_->Load();
 		pipeline_ = shader_->GetPipeline("Main", "");
 

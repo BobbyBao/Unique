@@ -71,10 +71,13 @@ void Object::Transfer(TransferFunction& transfer)
 }
 
 template UNIQUE_API void Object::Transfer(Serializer&);
+
+#ifdef NO_VIRTUAL
 template UNIQUE_API void Object::Transfer(BinaryWriter&);
 template UNIQUE_API void Object::Transfer(BinaryReader&);
 template UNIQUE_API void Object::Transfer(JsonWriter&);
 template UNIQUE_API void Object::Transfer(JsonReader&);
+#endif
 
 void Object::OnEvent(Object* sender, StringID eventType, const Event& eventData)
 {

@@ -7,7 +7,7 @@
 #include <rapidjson/document.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/istreamwrapper.h>
-#include "hjson/hjson.h"
+#include "../hjson/hjson.h"
 
 using namespace rapidjson;
 

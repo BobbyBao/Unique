@@ -1,9 +1,6 @@
 #include "Precompiled.h"
 #include "HjsonDeserializer.h"
-#include "rapidjson/rapidjson.h"
-#include <rapidjson/document.h>
-#include <rapidjson/stringbuffer.h>
-#include <rapidjson/istreamwrapper.h>
+
 
 namespace Unique
 {
@@ -27,8 +24,8 @@ namespace Unique
 
 	void HjsonDeserializer::TransferBin(ByteArray& data)
 	{
-	//	const char* base64 = currentNode_->GetString();
-	//	data = FromBase64(base64, currentNode_->GetStringLength());
+		const std::string& base64 = (const std::string&)currentNode_;
+		data = FromBase64(base64.c_str(), base64.length());
 	}
 
 	inline bool SplitTypeInfo(const std::string& info, const std::string& type, std::string& name)
@@ -70,7 +67,6 @@ namespace Unique
 			}
 		}
 
-
 		return true;
 	}
 
@@ -84,15 +80,15 @@ namespace Unique
 			for (auto& it = hJsonRoot.begin(); it != hJsonRoot.end(); ++it)
 			{
 				auto& key = it->first;
-				hJsonNode_ = it->second;
+				currentNode_ = it->second;
 				
 				if (rootObject_)
 				{
 					std::string name;
 					if (SplitTypeInfo(key.c_str(), rootType_, name))
 					{
-						hJsonNode_["Type"] = rootType_;
-						hJsonNode_["Name"] = name;
+						currentNode_["Type"] = rootType_;
+						currentNode_["Name"] = name;
 					}
 
 				}
@@ -102,7 +98,7 @@ namespace Unique
 		else
 		{
 			hJsonRoot = Hjson::Unmarshal(data_.data(), data_.size());
-			hJsonNode_ = hJsonRoot;
+			currentNode_ = hJsonRoot;
 		}
 
 		return true;
@@ -114,7 +110,7 @@ namespace Unique
 
 	SPtr<Object> HjsonDeserializer::CreateObject()
 	{
-		Hjson::Value v = hJsonNode_["Type"];
+		Hjson::Value v = currentNode_["Type"];
 		if (v.empty())
 		{
 			UNIQUE_LOGWARNING("Unkown object type.");
@@ -129,7 +125,7 @@ namespace Unique
 		if (dsl_ && ((metaFlag_ & AttributeFlag::Vector) || (metaFlag_ & AttributeFlag::Map)))
 		{
 			Vector<std::pair<std::string, Hjson::Value>> elements;
-			for (auto& it = hJsonNode_.begin(); it != hJsonNode_.end(); ++it)
+			for (auto& it = currentNode_.begin(); it != currentNode_.end(); ++it)
 			{
 				auto& mapKey = it->first;
 				auto& mapValue = it->second;
@@ -164,24 +160,24 @@ namespace Unique
 				for (auto& e : elements)
 				{
 					v.push_back(e.second);
-					hJsonNode_.erase(e.first);
+					currentNode_.erase(e.first);
 				}
 
-				hJsonNode_[key.CString()] = v;
-				hJsonParentNode_.push_back(hJsonNode_);
-				hJsonNode_ = v;
+				currentNode_[key.CString()] = v;
+				parentNode_.push_back(currentNode_);
+				currentNode_ = v;
 			}
 		}
 		else
 		{
-			Hjson::Value v = hJsonNode_[key.CString()];
+			Hjson::Value v = currentNode_[key.CString()];
 			if (v.empty())
 			{
 				return false;
 			}
 
-			hJsonParentNode_.push_back(hJsonNode_);
-			hJsonNode_ = v;
+			parentNode_.push_back(currentNode_);
+			currentNode_ = v;
 		}
 
 		return true;
@@ -189,84 +185,84 @@ namespace Unique
 
 	void HjsonDeserializer::EndAttribute()
 	{
-		hJsonNode_ = hJsonParentNode_.back();
-		hJsonParentNode_.pop_back();
+		currentNode_ = parentNode_.back();
+		parentNode_.pop_back();
 	}
 
 	bool HjsonDeserializer::StartArray(uint& size)
 	{
-		if (hJsonNode_.type() != Hjson::Value::VECTOR)
+		if (currentNode_.type() != Hjson::Value::VECTOR)
 		{
 			assert(false);
 			return false;
 		}
 
-		size = (uint)hJsonNode_.size();
-		hJsonParentNode_.push_back(hJsonNode_);
+		size = (uint)currentNode_.size();
+		parentNode_.push_back(currentNode_);
 		return true;
 	}
 
 	void HjsonDeserializer::SetElement(uint index)
 	{
-		auto parentNode = hJsonParentNode_.back();
+		auto parentNode = parentNode_.back();
 		auto& child = parentNode[index];
-		hJsonNode_ = child;
+		currentNode_ = child;
 	}
 
 	void HjsonDeserializer::EndArray()
 	{
-		hJsonNode_ = hJsonParentNode_.back();
-		hJsonParentNode_.pop_back();
+		currentNode_ = parentNode_.back();
+		parentNode_.pop_back();
 	}
 	
 	void HjsonDeserializer::TransferPrimitive(std::string& data)
 	{
-		data = (const char*)hJsonNode_;
+		data = (const char*)currentNode_;
 	}
 
 	void HjsonDeserializer::TransferPrimitive(String& data)
 	{
-		data = (const char*)hJsonNode_;
+		data = (const char*)currentNode_;
 	}
 
 	void HjsonDeserializer::TransferPrimitive(bool& data)
 	{
-		data = (bool)hJsonNode_;
+		data = (bool)currentNode_;
 	}
 
 	void HjsonDeserializer::TransferPrimitive(char& data)
 	{
-		data = (char)hJsonNode_;
+		data = (char)currentNode_;
 	}
 
 	void HjsonDeserializer::TransferPrimitive(unsigned char& data)
 	{
-		data = (byte)hJsonNode_;
+		data = (byte)currentNode_;
 	}
 
 	void HjsonDeserializer::TransferPrimitive(short& data)
 	{
-		data = (short)hJsonNode_;
+		data = (short)currentNode_;
 	}
 	
 	void HjsonDeserializer::TransferPrimitive(unsigned short& data)
 	{
-		data = (ushort)hJsonNode_;
+		data = (ushort)currentNode_;
 	}
 
 	void HjsonDeserializer::TransferPrimitive(int& data)
 	{
-		data = (int)hJsonNode_;
+		data = (int)currentNode_;
 	}
 	
 	void HjsonDeserializer::TransferPrimitive(unsigned int& data)
 	{
-		data = (uint)hJsonNode_;
+		data = (uint)currentNode_;
 	}
 
 	void HjsonDeserializer::TransferPrimitive(long long& data)
 	{
-	//	data = (uint)hJsonNode_;
+	//	data = (uint)currentNode_;
 	}
 
 	void HjsonDeserializer::TransferPrimitive(unsigned long long& data)
@@ -277,11 +273,11 @@ namespace Unique
 
 	void HjsonDeserializer::TransferPrimitive(float& data)
 	{
-		data = (float)hJsonNode_;
+		data = (float)currentNode_;
 	}
 
 	void HjsonDeserializer::TransferPrimitive(double& data)
 	{
-		data = (double)hJsonNode_;
+		data = (double)currentNode_;
 	}
 }

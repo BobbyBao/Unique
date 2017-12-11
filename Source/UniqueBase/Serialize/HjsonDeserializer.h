@@ -1,5 +1,11 @@
 #pragma once
 #include "Serializer.h"
+#include "hjson/hjson.h"
+
+namespace Hjson
+{
+	class Value;
+}
 
 namespace Unique
 {
@@ -37,8 +43,8 @@ namespace Unique
 		virtual void TransferPrimitive(double& data);
 	private:
 		bool dsl_ = false;
-		Hjson::Value hJsonNode_;
-		Vector<Hjson::Value> hJsonParentNode_;
+		Hjson::Value currentNode_;
+		Vector<Hjson::Value> parentNode_;
 		Vector<String> currentObjectName_;
 	};
 

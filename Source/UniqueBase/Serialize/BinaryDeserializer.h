@@ -1,21 +1,15 @@
 #pragma once
 #include "Serializer.h"
-
-#include <rapidjson/rapidjson.h>
-#include <rapidjson/document.h>
-#include <rapidjson/stringbuffer.h>
-#include <rapidjson/istreamwrapper.h>
-
-using namespace rapidjson;
+#include "Serialize/mpack/mpack.h"
 
 namespace Unique
 {
 
-	class JsonDeserializer : public Serializer
+	class BinaryDeserializer : public Serializer
 	{
 	public:
-		JsonDeserializer();
-		~JsonDeserializer();
+		BinaryDeserializer();
+		~BinaryDeserializer();
 		virtual bool StartObject(uint size);
 		virtual void EndObject();
 		virtual void TransferBin(ByteArray& data);
@@ -43,9 +37,10 @@ namespace Unique
 		virtual void TransferPrimitive(float& data);
 		virtual void TransferPrimitive(double& data);
 	private:
-		UPtr<rapidjson::Document> document = nullptr;
-		rapidjson::Value* currentNode_ = nullptr;
-		Vector<rapidjson::Value*> parentNode_;
+
+		mpack_tree_t tree_;
+		mpack_node_t currentNode_;
+		Vector<mpack_node_t> parentNode_;
 	};
 
 }

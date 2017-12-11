@@ -1,7 +1,7 @@
 #include "Precompiled.h"
 #include "ShaderImporter.h"
 #include "../Shader.h"
-
+#include "Serialize/HjsonDeserializer.h"
 
 namespace Unique
 {
@@ -15,9 +15,9 @@ namespace Unique
 
 	SPtr<Resource> ShaderImporter::Import(const String& path)
 	{
-		JsonReader reader;
+		HjsonDeserializer reader(true);
 		SPtr<Shader> shader;
-		if (!reader.Load(path, shader, true, true))
+		if (!reader.Load(path, shader))
 		{
 			return nullptr;
 		}

@@ -33,10 +33,10 @@ namespace Unique
 		SPtr<Shader> shader(new Shader());
 		HjsonDeserializer jsonReader(true);
 		jsonReader.Load("Shaders/Test.shader", shader);
-
+#ifdef NO_VIRTUAL
 		JsonWriter jsonWriter;
 		jsonWriter.Save("test2.json", shader);
-
+#endif
 		{
 
 			SPtr<Shader> newShader(new Shader());
@@ -73,12 +73,14 @@ namespace Unique
 			JsonSerializer jsonSer;
 			jsonSer.Save("perf_2.json", shader);
 		}
+
+#ifdef NO_JSON
 		{
 			PerfBlock("No virtual");
 			JsonWriter jsonWriter;
 			jsonWriter.Save("perf_1.json", shader);
 		}
-
+#endif
 		/*
 		SPtr<Shader> s(new Shader());
 		JsonReader jsonReader;

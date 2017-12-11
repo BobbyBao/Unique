@@ -6,6 +6,8 @@
 #include <rapidjson/prettywriter.h>
 #include <rapidjson/ostreamwrapper.h>
 
+using namespace rapidjson;
+
 namespace Unique
 {
 	JsonSerializer::JsonSerializer() : Serializer(TransferState::Writing)

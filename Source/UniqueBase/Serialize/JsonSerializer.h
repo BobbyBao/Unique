@@ -1,11 +1,12 @@
 #pragma once
 #include "Serializer.h"
+#include <fstream>
 
-namespace rapidjson
-{
-	template<typename OutputStream, typename SourceEncoding = UTF8<>, typename TargetEncoding = UTF8<>, typename StackAllocator = CrtAllocator, unsigned writeFlags = kWriteDefaultFlags>
-	class PrettyWriter;
-}
+#include <rapidjson/rapidjson.h>
+#include <rapidjson/document.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/prettywriter.h>
+#include <rapidjson/ostreamwrapper.h>
 
 
 namespace Unique
@@ -42,8 +43,8 @@ namespace Unique
 		virtual void TransferPrimitive(double& data);
 		
 		std::ofstream jsonFile;
-		OStreamWrapper* ostreamWrapper = nullptr;
-		PrettyWriter<OStreamWrapper>* writer_ = nullptr;
+		rapidjson::OStreamWrapper* ostreamWrapper = nullptr;
+		rapidjson::PrettyWriter<rapidjson::OStreamWrapper>* writer_ = nullptr;
 	};
 
 }

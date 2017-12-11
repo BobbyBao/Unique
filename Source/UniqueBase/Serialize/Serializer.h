@@ -186,9 +186,11 @@ namespace Unique
 	inline void Serializer::TransferArray(T& data, int metaFlag)
 	{
 		typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
+		
 		uint size = 0;
 		if (IsReading())
 		{
+			data.clear();
 			if (StartArray(size))
 			{
 				for (uint i = 0; i < size; ++i)
@@ -227,14 +229,38 @@ namespace Unique
 		typedef typename non_const_value_type::first_type first_type;
 		typedef typename non_const_value_type::second_type second_type;
 
-		StartArray((uint)data.size());
-
-		for (non_const_value_type& val : data)
+		uint size = 0;
+		if (IsReading())
 		{
-			SerializeTraits<non_const_value_type>::Transfer(val, *this);
-		}
+			data.clear();
+			if (StartArray(size))
+			{
+				for (uint i = 0; i < size; ++i)
+				{
+					SetElement(i);
+					non_const_value_type val;
+					SerializeTraits<non_const_value_type>::Transfer(val, *this);
+					data.insert(val);
+				}
 
-		EndArray();
+				EndArray();
+			}
+
+		}
+		else
+		{
+			size = (uint)data.size();
+			if (StartArray(size))
+			{
+				for (non_const_value_type& val : data)
+				{
+					SerializeTraits<non_const_value_type>::Transfer(val, *this);
+				}
+
+				EndArray();
+			}
+
+		}
 	}
 
 
@@ -243,14 +269,38 @@ namespace Unique
 	{
 		typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
 
-		StartArray((uint)data.size());
-
-		for (non_const_value_type& val : data)
+		uint size = 0;
+		if (IsReading())
 		{
-			SerializeTraits<non_const_value_type>::Transfer(val, *this);
-		}
+			data.clear();
+			if (StartArray(size))
+			{
+				for (uint i = 0; i < size; ++i)
+				{
+					SetElement(i);
+					non_const_value_type val;
+					SerializeTraits<non_const_value_type>::Transfer(val, *this);
+					data.insert(val);
+				}
 
-		EndArray();
+				EndArray();
+			}
+
+		}
+		else
+		{
+			size = (uint)data.size();
+			if (StartArray(size))
+			{
+				for (non_const_value_type& val : data)
+				{
+					SerializeTraits<non_const_value_type>::Transfer(val, *this);
+				}
+
+				EndArray();
+			}
+
+		}
 	}
 
 
