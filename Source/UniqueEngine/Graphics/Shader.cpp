@@ -110,6 +110,8 @@ namespace Unique
 		uAttribute("Pass", passes_)	
 	}
 
+	StringID Pass::MAIN("MAIN");
+
 	Pass::Pass(const String& name) : name_(name)
 	{
 		for (int i = 0; i < 6; i++)
@@ -243,10 +245,26 @@ namespace Unique
 		return &(passes_.back());
 	}
 
-	Pass* Shader::GetShaderPass(const StringID & passName)
+	Pass* Shader::GetShaderPass(const StringID& passName)
 	{
 		for (auto& p : passes_)
 		{
+			if (p.name_ == StringID::EMPTY)
+			{
+				if (passName == Pass::MAIN)
+				{
+					return &p;
+				}
+			}
+
+			if (p.name_ == Pass::MAIN)
+			{
+				if (passName == StringID::EMPTY)
+				{
+					return &p;
+				}
+			}
+
 			if (p.name_ == passName)
 			{
 				return &p;

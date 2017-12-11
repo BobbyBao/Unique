@@ -106,6 +106,7 @@ namespace Unique
 
 		static const StringID NONE;
 
+		static const StringID EMPTY;
 
 	private:
 		/**Constructs a StringID object in a way that works for pointers to character arrays and standard strings. */

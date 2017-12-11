@@ -34,6 +34,8 @@ namespace Unique
 		RasterizerStateDesc		rasterizerState_;
 		Vector<LayoutElement>	inputLayout_;
 		ShaderStage				shaderStage_[6];
+
+		static StringID MAIN;
 	private:
 		
 		Vector<String>			allDefs_;
@@ -46,8 +48,10 @@ namespace Unique
 	};
 
 	
-	struct ShaderVarible
+	class ShaderVarible
 	{
+	public:
+		StringID name_;
 
 	};
 
@@ -66,7 +70,7 @@ namespace Unique
 
 		Pass* GetShaderPass(const StringID & pass);
 
-		uint GetMask(const StringID& passName, const String & defs);
+		uint GetMask(const StringID& passName, const String& defs);
 
 		PipelineState* GetPipeline(const StringID& passName, uint defMask);
 
@@ -76,6 +80,7 @@ namespace Unique
 
 	private:
 		String shaderName_;
+		Vector<ShaderVarible> shaderVaribles_;
 		Vector<Pass> passes_;
 	};
 

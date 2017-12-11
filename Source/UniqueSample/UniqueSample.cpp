@@ -80,38 +80,23 @@ namespace Unique
 	{
 		auto& cache = GetSubsystem<ResourceCache>();
 		auto& graphics = GetSubsystem<Graphics>();
-
-		BufferDesc BuffDesc;
-		BuffDesc.BindFlags = BIND_UNIFORM_BUFFER;
-		BuffDesc.Usage = USAGE_DYNAMIC;
-		BuffDesc.uiSizeInBytes = sizeof(ShaderConstants);
-		BuffDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
-		renderDevice->CreateBuffer(BuffDesc, BufferData(), &m_pConstantBuffer);
-
+		
 		constBuffer_ = new ConstBuffer();
 		constBuffer_->Create(ShaderConstants(), USAGE_DYNAMIC, CPU_ACCESS_WRITE);
+		m_pConstantBuffer = constBuffer_->GetHandle();
 
 		// Create vertex and index buffers
 		BuildSponge(m_SpongeLevel, m_SpongeAO);
 		
 		HjsonDeserializer jsonReader(true);
 		jsonReader.Load("Shaders/Test.shader", shader_);
+
 		shader_->Load();
+
 		pipeline_ = shader_->GetPipeline("Main", "");
-
-		//shader_ = cache.GetResource<Shader>("Shaders/Test.shader");
-
-		ResourceMappingEntry entries[] =
-		{
-			{ "Constants", m_pConstantBuffer },
-
-			ResourceMappingEntry()
-		};
-
-		ResourceMappingDesc rmd;
-		rmd.pEntries = entries;
-
-		renderDevice->CreateResourceMapping(rmd, &resourceMapping_);
+		
+		renderDevice->CreateResourceMapping(ResourceMappingDesc(), &resourceMapping_);
+		resourceMapping_->AddResource("Constants", m_pConstantBuffer, true);
 		pipeline_->GetPipeline()->BindShaderResources(resourceMapping_, BIND_SHADER_RESOURCES_ALL_RESOLVED);
 
 		// Init model rotation

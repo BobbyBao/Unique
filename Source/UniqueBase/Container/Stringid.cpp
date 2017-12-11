@@ -6,6 +6,8 @@ namespace Unique
 {
 	const StringID StringID::NONE = StringID();
 
+	const StringID StringID::EMPTY = StringID("");
+
 	volatile StringID::InitStatics StringID::mInitStatics = StringID::InitStatics();
 
 	StringID::InternalData* StringID::mStringHashTable[HASH_TABLE_SIZE];
@@ -94,10 +96,10 @@ namespace Unique
 	uint StringID::calcHash(T const& input, uint& size)
 	{
 		size = StringIDUtil<T>::size(input);
-
+		
 		uint hash = 0;
 		for (uint i = 0; i < size; i++)
-			hash = hash * 101 + input[i];
+			hash = hash * 101 + std::tolower(input[i]);
 
 		return hash;
 	}
@@ -132,7 +134,7 @@ namespace Unique
 	public:
 		static uint size(const char* const& input) { return (uint)strlen(input); }
 		static void copy(const char* const& input, char* dest) { memcpy(dest, input, strlen(input) + 1); }
-		static bool compare(const char* const& a, char* b) { return strcmp(a, b) == 0; }
+		static bool compare(const char* const& a, char* b) { return _stricmp(a, b) == 0; }
 	};
 
 	template<>
@@ -146,7 +148,7 @@ namespace Unique
 			std::strcpy(dest, input.CString());
 			dest[len] = '\0';
 		}
-		static bool compare(String const& a, char* b) { return std::strcmp(a.CString(), b) == 0; }
+		static bool compare(String const& a, char* b) { return _stricmp(a.CString(), b) == 0; }
 	};
 
 	template class StringID::StringIDUtil <const char*>;
