@@ -14,6 +14,7 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\HjsonDeserializer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\JsonDeserializer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\JsonSerializer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Container\Algorithm.h" />
@@ -99,6 +100,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Unique.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\HjsonDeserializer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\JsonDeserializer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\JsonSerializer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Container\RefCounted.cpp" />

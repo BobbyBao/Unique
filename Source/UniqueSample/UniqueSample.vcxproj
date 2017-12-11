@@ -85,6 +85,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>..\..\bin\</OutDir>
+    <IntDir>..\..\Temp\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -135,22 +137,26 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;_WINDOWS;PLATFORM_WIN32;ENGINE_DLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\..\External\include;.\;..\UniqueBase;../../External/Include;../../DiligentCore/Common/include;../../DiligentCore/Common/interface;../../DiligentCore/Graphics/GraphicsEngine/include;../../DiligentCore/Graphics/GraphicsEngine/interface;../../DiligentCore/Platforms/Basic/include;../../DiligentCore/Platforms/interface;../../DiligentCore/Graphics/GraphicsEngineD3D11/include;../../DiligentCore/Graphics/GraphicsEngineD3D11/interface;../../DiligentCore/Graphics/GraphicsEngineD3D12/include;../../DiligentCore/Graphics/GraphicsEngineD3D12/interface;../../DiligentCore/Graphics/GraphicsEngineOpenGL/include;../../DiligentCore/Graphics/GraphicsEngineOpenGL/interface;../../DiligentCore/Graphics/HLSL2GLSLConverterLib/interface;../../DiligentCore/Graphics/GraphicsTools/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>../../External/Lib/x64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>winmm.lib;SDL2.lib;opengl32.lib;d3d12.lib;dxgi.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Test.cpp" />
     <ClCompile Include="UniqueSample.cpp" />
   </ItemGroup>
   <ItemGroup>

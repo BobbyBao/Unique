@@ -55,6 +55,9 @@ namespace Unique
 				return false;
 			}
 
+			rootObject_ = SerializeTraits<T>::IsObject();
+			rootType_ = SerializeTraits<T>::GetTypeName();
+
 			StartDocument(source.GetName());
 			SerializeTraits<T>::Transfer(data, *this);
 			EndDocument();
@@ -153,6 +156,8 @@ namespace Unique
 			TransferAttribute(name, val);
 		}
 
+		bool rootObject_ = true;
+		std::string rootType_;
 		AttributeFlag metaFlag_;
 		TransferState state_;
 		ByteArray data_;

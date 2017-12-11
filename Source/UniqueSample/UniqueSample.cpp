@@ -8,8 +8,7 @@
 #include <BasicShaderSourceStreamFactory.h>
 #include "Graphics/Shader.h"
 #include "Graphics/PipelineState.h"
-#include "Serialize/JsonSerializer.h"
-#include "Serialize/JsonDeserializer.h"
+
 
 UNIQUE_IMPLEMENT_MAIN(Unique::UniqueSample)
 
@@ -60,47 +59,15 @@ namespace Unique
 	{
 	}
 
+	extern void TestIO();
+
 	void UniqueSample::Initialize()
 	{
 		Application::Initialize();
 
 		CreateResource();
 
-		SPtr<Shader> shader(new Shader());
-		JsonReader jsonReader;
-		jsonReader.Load("Shaders/Test.shader", shader, true, true);
-
-		JsonWriter jsonWriter;
-		jsonWriter.Save("test2.json", shader);
-
-		{
-
-			SPtr<Shader> newShader(new Shader());
-
-			File file("test2.json");
-			JsonDeserializer jsonDeser;
-			jsonDeser.Load(file, newShader);
-
-			JsonSerializer jsonSer;
-			jsonSer.Save("test3.json", newShader);
-		}
-		
-		/*
-		{
-			shader->SetName("test_shader");
-			Pass* pass = shader->AddPass("Test");
-			pass->shaderStage_[0] = { ShaderType::SHADER_TYPE_VERTEX, "Assets/shader.hlsl", "VS", "vs_5_0" };
-			pass->shaderStage_[1] = { ShaderType::SHADER_TYPE_PIXEL, "Assets/shader.hlsl", "PS", "ps_5_0" };
-
-			JsonWriter jsonWriter;
-			jsonWriter.Save("test.json", shader);
-
-			SPtr<Shader> s(new Shader());
-			JsonReader jsonReader;
-			jsonReader.Load("test.json", s);
-
-			jsonWriter.Save("test1.json", s);
-		}*/
+		TestIO();
 	}
 
 	void UniqueSample::Terminate()

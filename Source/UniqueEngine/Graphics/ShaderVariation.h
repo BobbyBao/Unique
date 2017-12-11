@@ -19,19 +19,19 @@ namespace Unique
 
 	struct ShaderStage
 	{
-		ShaderStage(ShaderType type = ShaderType::SHADER_TYPE_UNKNOWN) : shaderType_(type)
+		ShaderStage(ShaderType type = ShaderType::SHADER_TYPE_UNKNOWN)
+			: shaderType_(type)
 		{
 		}
 
-		ShaderStage(
-			ShaderType type, const String& filename) :
-			shaderType_{ type }
+		ShaderStage(ShaderType type, const String& filename) :
+			shaderType_(type)
 		{
 		}
 
 		ShaderStage(
 			ShaderType type, const String& filename, const String& entryPoint, const ShaderProfile& target) :
-			shaderType_{ type },
+			shaderType_(type),
 			entryPoint_{ entryPoint },
 			shaderProfile_{ target }
 		{
@@ -46,10 +46,10 @@ namespace Unique
 
 		ShaderType		shaderType_;
 		String			entryPoint_;
-		ShaderProfile	shaderProfile_;
+		ShaderProfile	shaderProfile_ = SHADER_PROFILE_DEFAULT;
 		String			defines_;
 		String			source_;
-		uint			mask_;
+		uint			mask_ = 0;
 	};
 
 	class ShaderVariation : public RefCounted, public GPUObject<IShader>
