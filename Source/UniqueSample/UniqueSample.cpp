@@ -9,6 +9,7 @@
 #include "Graphics/Shader.h"
 #include "Graphics/PipelineState.h"
 #include "Serialize/HjsonDeserializer.h"
+#include "Math/Matrix4.h"
 
 
 UNIQUE_IMPLEMENT_MAIN(Unique::UniqueSample)
@@ -26,9 +27,9 @@ namespace Unique
 
 	struct ShaderConstants
 	{
-		float4x4 WorldViewProjT;
-		float4x4 WorldNormT;
-		float3 LightDir;
+		Matrix4 WorldViewProjT;
+		Matrix4 WorldNormT;
+		Vector3 LightDir;
 		float LightCoeff;
 	};
 
@@ -42,9 +43,9 @@ namespace Unique
 	{
 		m_SpongeLevel = 2;                       // number of recursions
 		m_SpongeAO = true;                      // apply ambient occlusion
-		m_LightDir[0] = -0.5f;
-		m_LightDir[1] = -0.2f;
-		m_LightDir[2] = 1;
+		m_LightDir.x_ = -0.5f;
+		m_LightDir.y_ = -0.2f;
+		m_LightDir.z_ = 1;
 		m_CamDistance = 0.7f;                  // camera distance
 		m_BackgroundColor[0] = 0;
 		m_BackgroundColor[1] = 0;
@@ -53,7 +54,7 @@ namespace Unique
 		m_Animate = false;                       // enable animation
 		m_AnimationSpeed = 0.2f;               // animation speed
 
-		SetDeviceType(DeviceType::D3D11);
+		SetDeviceType(DeviceType::OpenGL);
 	}
 
 	UniqueSample::~UniqueSample()
@@ -100,8 +101,8 @@ namespace Unique
 		pipeline_->GetPipeline()->BindShaderResources(resourceMapping_, BIND_SHADER_RESOURCES_ALL_RESOLVED);
 
 		// Init model rotation
-		float3 axis(-1, 1, 0);
-		m_SpongeRotation = RotationFromAxisAngle(axis, M_PI / 4);
+		Vector3 axis(-1, 1, 0);
+		m_SpongeRotation = Quaternion(M_PI / 4, axis);// RotationFromAxisAngle(axis, M_PI / 4);
 	}
 	
 	void AppendCubeToBuffers(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices,
@@ -137,13 +138,13 @@ namespace Unique
 	}
 
 	// Copy world/view/proj matrices and light parameters to shader constants
-	void UniqueSample::SetShaderConstants(const float4x4& world, const float4x4& view, const float4x4& proj)
+	void UniqueSample::SetShaderConstants(const Matrix4& world, const Matrix4& view, const Matrix4& proj)
 	{
 		MapHelper<ShaderConstants> MappedData(deviceContext, m_pConstantBuffer, MAP_WRITE, MAP_FLAG_DISCARD);
 		ShaderConstants *cst = MappedData;
-		cst->WorldViewProjT = transposeMatrix(world * view * proj);
-		cst->WorldNormT = transposeMatrix(world);
-		cst->LightDir = (1.0f / length(m_LightDir)) * m_LightDir;
+		cst->WorldViewProjT = (proj* view *world);
+		cst->WorldNormT = world;
+		cst->LightDir = (1.0f / m_LightDir.Length()) * m_LightDir;
 		cst->LightCoeff = 0.85f;
 	}
 
@@ -310,23 +311,54 @@ namespace Unique
 						}
 		}
 	}
+
+
+	Matrix4 CreateProjection(float fov, float aspectRatio, float nearClip, float farClip, bool bIsDirectX)
+	{
+		Matrix4 ret = Matrix4::ZERO;
+		float h = (1.0f / tanf(fov /** M_DEGTORAD*/ * 0.5f));// *zoom_;
+		float w = h / aspectRatio;
+		float q = farClip / (farClip - nearClip);
+		float r = -q * nearClip;
+
+		ret.m00_ = w;
+		//ret.m02_ = projectionOffset_.x_ * 2.0f;
+		ret.m11_ = h;
+		//ret.m12_ = projectionOffset_.y_ * 2.0f;
+		ret.m22_ = q;
+		ret.m23_ = r;
+		ret.m32_ = 1.0f;
+
+		if (!bIsDirectX)
+		{
+			ret.m20_ = 2.0f * ret.m20_ - ret.m30_;
+			ret.m21_ = 2.0f * ret.m21_ - ret.m31_;
+			ret.m22_ = 2.0f * ret.m22_ - ret.m32_;
+			ret.m23_ = 2.0f * ret.m23_ - ret.m33_;
+		}
+
+		return ret;
+	}
+
 	
 	void UniqueSample::OnPreRender()
 	{
 		float dt = (float)0.05f;
 		if (m_Animate && dt > 0 && dt < 0.2f)
 		{
-			float3 axis;
-			float angle = 0;
-			AxisAngleFromRotation(axis, angle, m_SpongeRotation);
-			if (length(axis) < 1.0e-6f)
-				axis[1] = 1;
+			Vector3 axis = m_SpongeRotation.Axis();
+			float angle = m_SpongeRotation.Angle();
+			//AxisAngleFromRotation(axis, angle, m_SpongeRotation);
+			
+			if (axis.Length() < 1.0e-6f)
+				axis.y_ = 1;
+
 			angle += m_AnimationSpeed * dt;
 			if (angle >= 2.0f*M_PI)
 				angle -= 2.0f*M_PI;
 			else if (angle <= 0)
 				angle += 2.0f*M_PI;
-			m_SpongeRotation = RotationFromAxisAngle(axis, angle);
+			m_SpongeRotation = Quaternion(angle, axis);// RotationFromAxisAngle(axis, angle);
 		}
 
 		auto& graphics = GetSubsystem<Graphics>();
@@ -336,13 +368,16 @@ namespace Unique
 
 		// Set world/view/proj matrices and global shader constants
 		float aspectRatio = graphics.GetAspectRatio();
-		float4x4 proj = Projection(M_PI / 4, aspectRatio, 0.1f, 100.0f, graphics.IsDirect3D());
+		
+		Matrix4 proj = CreateProjection(M_PI / 4, aspectRatio, 0.1f, 100.0f, graphics.IsDirect3D());
+		
 		float dist = m_CamDistance + 0.4f;
 		float3 camPosInv(dist * 0.3f, dist * 0.0f, dist * 2.0f);
-		float4x4 view = translationMatrix(camPosInv);
-		float4x4 world = QuaternionToMatrix(m_SpongeRotation);
 
-		SetShaderConstants(world, view, proj);
+		Matrix4 view = Matrix4::IDENTITY;
+		view.SetTranslation(Vector3(dist * 0.3f, dist * 0.0f, dist * 2.0f));
+		Matrix4 world = Matrix4::IDENTITY;
+		SetShaderConstants((Matrix4&)world, (Matrix4&)view, (Matrix4&)proj);
 
 		geometry_->Draw(pipeline_, resourceMapping_);
 

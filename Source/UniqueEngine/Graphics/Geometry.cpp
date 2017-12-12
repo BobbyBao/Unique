@@ -192,7 +192,6 @@ namespace Unique
 
 		deviceContext->CommitShaderResources(pipeline->GetShaderResourceBinding(), COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
 
-
 		deviceContext->Draw(drawAttribs_);
 	}
 
