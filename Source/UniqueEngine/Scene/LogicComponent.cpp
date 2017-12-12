@@ -94,11 +94,11 @@ void LogicComponent::OnSceneSet(Scene* scene)
         UpdateEventSubscription();
     else
     {
-        UnsubscribeFromEvent(SceneUpdate::Type());
-        UnsubscribeFromEvent(ScenePostUpdate::Type());
+        Unsubscribe(SceneUpdate::Type());
+        Unsubscribe(ScenePostUpdate::Type());
 #if defined(UNIQUE_PHYSICS) || defined(UNIQUE_URHO2D)
-        UnsubscribeFromEvent(E_PHYSICSPRESTEP);
-        UnsubscribeFromEvent(E_PHYSICSPOSTSTEP);
+        Unsubscribe(E_PHYSICSPRESTEP);
+        Unsubscribe(E_PHYSICSPOSTSTEP);
 #endif
         currentEventMask_ = 0;
     }
@@ -115,24 +115,24 @@ void LogicComponent::UpdateEventSubscription()
     bool needUpdate = enabled && ((updateEventMask_ & USE_UPDATE) || !delayedStartCalled_);
     if (needUpdate && !(currentEventMask_ & USE_UPDATE))
     {
-        SubscribeToEvent(scene, &LogicComponent::HandleSceneUpdate);
+        Subscribe(scene, &LogicComponent::HandleSceneUpdate);
         currentEventMask_ |= USE_UPDATE;
     }
     else if (!needUpdate && (currentEventMask_ & USE_UPDATE))
     {
-        UnsubscribeFromEvent(scene, SceneUpdate::Type());
+        Unsubscribe(scene, SceneUpdate::Type());
         currentEventMask_ &= ~USE_UPDATE;
     }
 
     bool needPostUpdate = enabled && (updateEventMask_ & USE_POSTUPDATE);
     if (needPostUpdate && !(currentEventMask_ & USE_POSTUPDATE))
     {
-        SubscribeToEvent(scene, &LogicComponent::HandleScenePostUpdate);
+        Subscribe(scene, &LogicComponent::HandleScenePostUpdate);
         currentEventMask_ |= USE_POSTUPDATE;
     }
     else if (!needPostUpdate && (currentEventMask_ & USE_POSTUPDATE))
     {
-        UnsubscribeFromEvent(scene, ScenePostUpdate::Type());
+        Unsubscribe(scene, ScenePostUpdate::Type());
         currentEventMask_ &= ~USE_POSTUPDATE;
     }
 
@@ -144,24 +144,24 @@ void LogicComponent::UpdateEventSubscription()
     bool needFixedUpdate = enabled && (updateEventMask_ & USE_FIXEDUPDATE);
     if (needFixedUpdate && !(currentEventMask_ & USE_FIXEDUPDATE))
     {
-        SubscribeToEvent(world, E_PHYSICSPRESTEP, UNIQUE_HANDLER(LogicComponent, HandlePhysicsPreStep));
+        Subscribe(world, E_PHYSICSPRESTEP, UNIQUE_HANDLER(LogicComponent, HandlePhysicsPreStep));
         currentEventMask_ |= USE_FIXEDUPDATE;
     }
     else if (!needFixedUpdate && (currentEventMask_ & USE_FIXEDUPDATE))
     {
-        UnsubscribeFromEvent(world, E_PHYSICSPRESTEP);
+        Unsubscribe(world, E_PHYSICSPRESTEP);
         currentEventMask_ &= ~USE_FIXEDUPDATE;
     }
 
     bool needFixedPostUpdate = enabled && (updateEventMask_ & USE_FIXEDPOSTUPDATE);
     if (needFixedPostUpdate && !(currentEventMask_ & USE_FIXEDPOSTUPDATE))
     {
-        SubscribeToEvent(world, E_PHYSICSPOSTSTEP, UNIQUE_HANDLER(LogicComponent, HandlePhysicsPostStep));
+        Subscribe(world, E_PHYSICSPOSTSTEP, UNIQUE_HANDLER(LogicComponent, HandlePhysicsPostStep));
         currentEventMask_ |= USE_FIXEDPOSTUPDATE;
     }
     else if (!needFixedPostUpdate && (currentEventMask_ & USE_FIXEDPOSTUPDATE))
     {
-        UnsubscribeFromEvent(world, E_PHYSICSPOSTSTEP);
+        Unsubscribe(world, E_PHYSICSPOSTSTEP);
         currentEventMask_ &= ~USE_FIXEDPOSTUPDATE;
     }
 #endif
@@ -178,7 +178,7 @@ void LogicComponent::HandleSceneUpdate(const SceneUpdate& eventData)
         // If did not need actual update events, unsubscribe now
         if (!(updateEventMask_ & USE_UPDATE))
         {
-            UnsubscribeFromEvent(GetScene(), SceneUpdate::Type());
+            Unsubscribe(GetScene(), SceneUpdate::Type());
             currentEventMask_ &= ~USE_UPDATE;
             return;
         }

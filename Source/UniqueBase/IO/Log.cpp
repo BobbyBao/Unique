@@ -70,7 +70,7 @@ Log::Log() :
 {
     logInstance = this;
 
-    SubscribeToEvent(&Log::HandleEndFrame);
+    Subscribe(&Log::HandleEndFrame);
 }
 
 Log::~Log()

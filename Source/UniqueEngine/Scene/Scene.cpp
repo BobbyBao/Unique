@@ -73,8 +73,8 @@ Scene::Scene() :
     SetID(GetFreeNodeID());
     NodeAdded(this);
 
-    SubscribeToEvent(&Scene::HandleUpdate);
-    SubscribeToEvent(&Scene::HandleResourceBackgroundLoaded);
+    Subscribe(&Scene::HandleUpdate);
+    Subscribe(&Scene::HandleResourceBackgroundLoaded);
 }
 
 Scene::~Scene()

@@ -129,7 +129,7 @@ bool Object::IsInstanceOf(const TypeInfo* info) const
     return GetTypeInfo()->IsTypeOf(info);
 }
 
-void Object::SubscribeToEvent(const StringID& eventType, EventHandler* handler)
+void Object::Subscribe(const StringID& eventType, EventHandler* handler)
 {
     if (!handler)
         return;
@@ -150,7 +150,7 @@ void Object::SubscribeToEvent(const StringID& eventType, EventHandler* handler)
     }
 }
 
-void Object::SubscribeToEvent(Object* sender, const StringID& eventType, EventHandler* handler)
+void Object::Subscribe(Object* sender, const StringID& eventType, EventHandler* handler)
 {
     // If a null sender was specified, the event can not be subscribed to. Delete the handler in that case
     if (!sender || !handler)
@@ -175,7 +175,7 @@ void Object::SubscribeToEvent(Object* sender, const StringID& eventType, EventHa
     }
 }
 
-void Object::UnsubscribeFromEvent(StringID eventType)
+void Object::Unsubscribe(StringID eventType)
 {
     for (;;)
     {
@@ -194,7 +194,7 @@ void Object::UnsubscribeFromEvent(StringID eventType)
     }
 }
 
-void Object::UnsubscribeFromEvent(Object* sender, StringID eventType)
+void Object::Unsubscribe(Object* sender, StringID eventType)
 {
     if (!sender)
         return;
@@ -377,12 +377,12 @@ void Object::SendEvent(const StringID& eventType, const Event& eventData)
     context->EndSendEvent();
 }
 
-bool Object::HasSubscribedToEvent(StringID eventType) const
+bool Object::HasSubscribed(StringID eventType) const
 {
     return FindEventHandler(eventType) != 0;
 }
 
-bool Object::HasSubscribedToEvent(Object* sender, StringID eventType) const
+bool Object::HasSubscribed(Object* sender, StringID eventType) const
 {
     if (!sender)
         return false;

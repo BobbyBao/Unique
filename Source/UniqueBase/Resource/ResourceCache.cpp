@@ -74,7 +74,7 @@ ResourceCache::ResourceCache() :
     backgroundLoader_ = new BackgroundLoader(this);
 
     // Subscribe BeginFrame for handling directory watchers and background loaded resource finalization
-    SubscribeToEvent(&ResourceCache::HandleBeginFrame);
+    Subscribe(&ResourceCache::HandleBeginFrame);
 
 //	RegisterReader(new TextureReader());
 }

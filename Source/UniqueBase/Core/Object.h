@@ -56,46 +56,46 @@ public:
 	void SendEvent(const StringID& eventType, const Event& eventData);
 	
     /// Return whether has subscribed to an event without specific sender.
-    bool HasSubscribedToEvent(StringID eventType) const;
+    bool HasSubscribed(StringID eventType) const;
     /// Return whether has subscribed to a specific sender's event.
-    bool HasSubscribedToEvent(Object* sender, StringID eventType) const;
+    bool HasSubscribed(Object* sender, StringID eventType) const;
     /// Return whether has subscribed to any event.
     bool HasEventHandlers() const { return !eventHandlers_.empty(); }
 
 	template<class T, class E>
-	void SubscribeToEvent(void(T::*f)(const E&))
+	void Subscribe(void(T::*f)(const E&))
 	{
-		SubscribeToEvent(E::Type(), new TEventHandler<T, E>((T*)this, f));
+		Subscribe(E::Type(), new TEventHandler<T, E>((T*)this, f));
 	}
 
 	template<class T, class E>
-	void SubscribeToEvent(const StringID& eventType, void(T::*f)(const E&))
+	void Subscribe(const StringID& eventType, void(T::*f)(const E&))
 	{
-		SubscribeToEvent(eventType, new TEventHandler<T, E>((T*)this, f));
+		Subscribe(eventType, new TEventHandler<T, E>((T*)this, f));
 	}
 
 	template<class T, class E>
-	void SubscribeToEvent(Object* sender, void(T::*f)(const E&))
+	void Subscribe(Object* sender, void(T::*f)(const E&))
 	{
-		SubscribeToEvent(sender, E::Type(), new TEventHandler<T, E>((T*)this, f));
+		Subscribe(sender, E::Type(), new TEventHandler<T, E>((T*)this, f));
 	}
 
 	template<class T, class E>
-	void SubscribeToEvent(Object* sender, const StringID& eventType, void(T::*f)(const E&))
+	void Subscribe(Object* sender, const StringID& eventType, void(T::*f)(const E&))
 	{
-		SubscribeToEvent(sender, eventType, new TEventHandler<T, E>((T*)this, f));
+		Subscribe(sender, eventType, new TEventHandler<T, E>((T*)this, f));
 	}
 
 	/// Subscribe to an event that can be sent by any sender.
-	void SubscribeToEvent(const StringID& eventType, EventHandler* handler);
+	void Subscribe(const StringID& eventType, EventHandler* handler);
 	/// Subscribe to a specific sender's event.
-	void SubscribeToEvent(Object* sender, const StringID& eventType, EventHandler* handler);
+	void Subscribe(Object* sender, const StringID& eventType, EventHandler* handler);
 
 protected:
 	/// Unsubscribe from an event.
-	void UnsubscribeFromEvent(StringID eventType);
+	void Unsubscribe(StringID eventType);
 	/// Unsubscribe from a specific sender's event.
-	void UnsubscribeFromEvent(Object* sender, StringID eventType);
+	void Unsubscribe(Object* sender, StringID eventType);
 	/// Unsubscribe from a specific sender's events.
 	void UnsubscribeFromEvents(Object* sender);
 	/// Unsubscribe from all events.

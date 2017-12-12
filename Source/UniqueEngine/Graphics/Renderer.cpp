@@ -7,7 +7,7 @@ namespace Unique
 {
 	Renderer::Renderer() : graphics(Subsystem<Graphics>())
 	{
-		SubscribeToEvent(&Renderer::Handle);
+		Subscribe(&Renderer::Handle);
 
 	}
 

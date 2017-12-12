@@ -287,7 +287,7 @@ FileSystem::FileSystem() :
     nextAsyncExecID_(1),
     executeConsoleCommands_(false)
 {
-    SubscribeToEvent(&FileSystem::HandleBeginFrame);
+    Subscribe(&FileSystem::HandleBeginFrame);
 
     // Subscribe to console commands
     SetExecuteConsoleCommands(true);
@@ -903,11 +903,6 @@ void FileSystem::HandleBeginFrame(const BeginFrame& eventData)
         AsyncExecRequest* request = *i;
         if (request->IsCompleted())
         {
-            //using namespace AsyncExecFinished;
-
-            //VariantMap& newEventData = GetEventDataMap();
-            //newEventData[P_REQUESTID] = request->GetRequestID();
-            //newEventData[P_EXITCODE] = request->GetExitCode();
 			AsyncExecFinished newEventData;
 			newEventData.requestID_ = request->GetRequestID();
 			newEventData.exitCode_ = request->GetExitCode();

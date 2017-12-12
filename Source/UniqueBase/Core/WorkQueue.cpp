@@ -70,7 +70,7 @@ WorkQueue::WorkQueue() :
     lastSize_(0),
     maxNonThreadedWorkMs_(5)
 {
-    SubscribeToEvent(&WorkQueue::HandleBeginFrame);
+    Subscribe(&WorkQueue::HandleBeginFrame);
 }
 
 WorkQueue::~WorkQueue()
