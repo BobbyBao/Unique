@@ -9,6 +9,7 @@
 #include "Graphics/Shader.h"
 #include "Graphics/PipelineState.h"
 #include "Serialize/HjsonDeserializer.h"
+#include "Math/Matrix3x4.h"
 #include "Math/Matrix4.h"
 
 
@@ -20,8 +21,8 @@ namespace Unique
 {
 	struct Vertex
 	{
-		float3 Position;
-		float3 Normal;
+		Vector3 Position;
+		Vector3 Normal;
 		unsigned int AmbientColor;
 	};
 
@@ -106,11 +107,11 @@ namespace Unique
 	}
 	
 	void AppendCubeToBuffers(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices,
-		const float4x4& xform, float aoRatio, const bool aoEdges[12],
+		const Matrix3x4& xform, float aoRatio, const bool aoEdges[12],
 		const unsigned int faceColors[6]);
 
 	void FillSpongeBuffers(int level, int levelMax, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices,
-		const float3& center, bool aoEnabled, const bool aoEdges[12], const unsigned int faceColors[6]);
+		const Vector3& center, bool aoEnabled, const bool aoEdges[12], const unsigned int faceColors[6]);
 	
 	// Build sponge vertex and index buffers 
 	void UniqueSample::BuildSponge(int levelMax, bool aoEnabled)
@@ -122,7 +123,7 @@ namespace Unique
 		indices.clear();
 		bool aoEdges[12] = { false, false, false, false, false, false, false, false, false, false, false, false };
 		unsigned int faceColors[6] = { COLORS[0], COLORS[0], COLORS[0], COLORS[0], COLORS[0], COLORS[0] };
-		FillSpongeBuffers(0, levelMax, vertices, indices, float3(), aoEnabled, aoEdges, faceColors);
+		FillSpongeBuffers(0, levelMax, vertices, indices, Vector3(), aoEnabled, aoEdges, faceColors);
 
 		SPtr<VertexBuffer> pVertexBuffer(new VertexBuffer());
 		pVertexBuffer->Create(std::move(vertices));
@@ -151,7 +152,7 @@ namespace Unique
 	// Append vertices and indices of a cube to the index and vertex buffers.
 	// The cube has gradient ambient-occlusion defined per edge.
 	void AppendCubeToBuffers(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices,
-		const float4x4& xform, float aoRatio, const bool aoEdges[12],
+		const Matrix3x4& xform, float aoRatio, const bool aoEdges[12],
 		const unsigned int faceColors[6])
 	{
 		unsigned int indicesOffset = (unsigned int)vertices.size();
@@ -173,12 +174,12 @@ namespace Unique
 
 		const float R = 0.5f; // unit cube radius
 							  // the 4 corner coordinates for each of the 6 faces
-		const float3 A[6] = { float3(-R, -R, -R), float3(+R, -R, -R), float3(+R, -R, +R), float3(-R, -R, +R), float3(-R, +R, -R), float3(-R, -R, -R) };
-		const float3 B[6] = { float3(+R, -R, -R), float3(+R, -R, +R), float3(-R, -R, +R), float3(-R, -R, -R), float3(+R, +R, -R), float3(+R, -R, -R) };
-		const float3 C[6] = { float3(-R, +R, -R), float3(+R, +R, -R), float3(+R, +R, +R), float3(-R, +R, +R), float3(-R, +R, +R), float3(-R, -R, +R) };
-		const float3 D[6] = { float3(+R, +R, -R), float3(+R, +R, +R), float3(-R, +R, +R), float3(-R, +R, -R), float3(+R, +R, +R), float3(+R, -R, +R) };
+		const Vector3 A[6] = { Vector3(-R, -R, -R), Vector3(+R, -R, -R), Vector3(+R, -R, +R), Vector3(-R, -R, +R), Vector3(-R, +R, -R), Vector3(-R, -R, -R) };
+		const Vector3 B[6] = { Vector3(+R, -R, -R), Vector3(+R, -R, +R), Vector3(-R, -R, +R), Vector3(-R, -R, -R), Vector3(+R, +R, -R), Vector3(+R, -R, -R) };
+		const Vector3 C[6] = { Vector3(-R, +R, -R), Vector3(+R, +R, -R), Vector3(+R, +R, +R), Vector3(-R, +R, +R), Vector3(-R, +R, +R), Vector3(-R, -R, +R) };
+		const Vector3 D[6] = { Vector3(+R, +R, -R), Vector3(+R, +R, +R), Vector3(-R, +R, +R), Vector3(-R, +R, -R), Vector3(+R, +R, +R), Vector3(+R, -R, +R) };
 		// the 6 face normals
-		const float3 N[6] = { float3(0,  0, -1), float3(+1,  0,  0), float3(0,  0, +1), float3(-1,  0,  0), float3(0, +1,  0), float3(0, -1,  0) };
+		const Vector3 N[6] = { Vector3(0,  0, -1), Vector3(+1,  0,  0), Vector3(0,  0, +1), Vector3(-1,  0,  0), Vector3(0, +1,  0), Vector3(0, -1,  0) };
 		// association between edge indices and the 6 faces
 		const int E[6][4] = { { 0, 1, 2, 3 },{ 8, 7, 9, 1 },{ 4, 5, 6, 7 },{ 11, 3, 10, 5 },{ 2, 9, 6, 10 },{ 0, 8, 4, 11 } };
 
@@ -196,7 +197,7 @@ namespace Unique
 
 					vertex.Position = (1.0f - v) * ((1.0f - u) * A[face] + u * B[face])
 						+ v * ((1.0f - u) * C[face] + u * D[face]);
-					vertex.Position = vertex.Position * xform;
+					vertex.Position = xform * vertex.Position;
 
 					vertex.Normal = N[face];
 
@@ -241,7 +242,7 @@ namespace Unique
 
 	// Recursive function called to fill the vertex and index buffers with the cubes forming the Menger sponge.
 	void FillSpongeBuffers(int level, int levelMax, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices,
-		const float3& center, bool aoEnabled, const bool aoEdges[12], const unsigned int faceColors[6])
+		const Vector3& center, bool aoEnabled, const bool aoEdges[12], const unsigned int faceColors[6])
 	{
 		float scale = pow(1.0f / 3.0f, level);
 
@@ -250,7 +251,7 @@ namespace Unique
 			float aoRatio = pow(3.0f, level) * 0.02f;
 			if (aoRatio > 0.4999f)
 				aoRatio = 0.4999f;
-			float4x4 xform = scaleMatrix(scale, scale, scale) * translationMatrix(center);
+			Matrix3x4 xform(center, Quaternion::IDENTITY, scale);
 			AppendCubeToBuffers(vertices, indices, xform, aoRatio, aoEdges, faceColors);
 		}
 		else
@@ -287,7 +288,7 @@ namespace Unique
 						if (!((i == 0 && j == 0) || (i == 0 && k == 0) || (j == 0 && k == 0)))
 						{
 							float s = 1.0f / 3.0f * scale;
-							float3 t(center[0] + s * i, center[1] + s * j, center[2] + s * k);
+							Vector3 t(center.x_ + s * i, center.y_ + s * j, center.z_ + s * k);
 
 							for (l = 0; l < 12; l++)
 								aoEdgesCopy[l] = aoEdges[l];
@@ -316,15 +317,13 @@ namespace Unique
 	Matrix4 CreateProjection(float fov, float aspectRatio, float nearClip, float farClip, bool bIsDirectX)
 	{
 		Matrix4 ret = Matrix4::ZERO;
-		float h = (1.0f / tanf(fov /** M_DEGTORAD*/ * 0.5f));// *zoom_;
+		float h = (1.0f / tanf(fov * 0.5f));
 		float w = h / aspectRatio;
 		float q = farClip / (farClip - nearClip);
 		float r = -q * nearClip;
 
 		ret.m00_ = w;
-		//ret.m02_ = projectionOffset_.x_ * 2.0f;
 		ret.m11_ = h;
-		//ret.m12_ = projectionOffset_.y_ * 2.0f;
 		ret.m22_ = q;
 		ret.m23_ = r;
 		ret.m32_ = 1.0f;
@@ -348,7 +347,6 @@ namespace Unique
 		{
 			Vector3 axis = m_SpongeRotation.Axis();
 			float angle = m_SpongeRotation.Angle();
-			//AxisAngleFromRotation(axis, angle, m_SpongeRotation);
 			
 			if (axis.Length() < 1.0e-6f)
 				axis.y_ = 1;
@@ -372,12 +370,12 @@ namespace Unique
 		Matrix4 proj = CreateProjection(M_PI / 4, aspectRatio, 0.1f, 100.0f, graphics.IsDirect3D());
 		
 		float dist = m_CamDistance + 0.4f;
-		float3 camPosInv(dist * 0.3f, dist * 0.0f, dist * 2.0f);
+		Vector3 camPosInv(dist * 0.3f, dist * 0.0f, dist * 2.0f);
 
 		Matrix4 view = Matrix4::IDENTITY;
-		view.SetTranslation(Vector3(dist * 0.3f, dist * 0.0f, dist * 2.0f));
+		view.SetTranslation(camPosInv);
 		Matrix4 world = Matrix4::IDENTITY;
-		SetShaderConstants((Matrix4&)world, (Matrix4&)view, (Matrix4&)proj);
+		SetShaderConstants(world, view, proj);
 
 		geometry_->Draw(pipeline_, resourceMapping_);
 
