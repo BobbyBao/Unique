@@ -130,9 +130,9 @@ public:
 
 private:
     /// Handle the logic update event to update the scene, if active.
-    void HandleUpdate(StringID eventType, const Unique::Update& eventData);
+    void HandleUpdate(const Unique::Update& eventData);
     /// Handle a background loaded resource completing.
-    void HandleResourceBackgroundLoaded(StringID eventType, const struct ResourceBackgroundLoaded& eventData);
+    void HandleResourceBackgroundLoaded(const struct ResourceBackgroundLoaded& eventData);
 #if false
     /// Update asynchronous loading.
     void UpdateAsyncLoading();

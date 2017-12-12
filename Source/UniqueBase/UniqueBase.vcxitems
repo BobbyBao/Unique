@@ -100,6 +100,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\SerializeTraitsBasic.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\SerializeTraitsStd.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\TransferBase.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\TypeTraits.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Unique.h" />
   </ItemGroup>
   <ItemGroup>

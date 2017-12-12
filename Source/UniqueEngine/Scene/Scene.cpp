@@ -463,7 +463,7 @@ String Scene::GetVarNamesAttr() const
     return ret;
 }
 
-void Scene::HandleUpdate(StringID eventType, const Unique::Update& eventData)
+void Scene::HandleUpdate(const Unique::Update& eventData)
 {
     if (!updateEnabled_)
         return;
@@ -471,7 +471,7 @@ void Scene::HandleUpdate(StringID eventType, const Unique::Update& eventData)
     Update(eventData.timeStep_);
 }
 
-void Scene::HandleResourceBackgroundLoaded(StringID eventType, const ResourceBackgroundLoaded& eventData)
+void Scene::HandleResourceBackgroundLoaded(const ResourceBackgroundLoaded& eventData)
 {
     if (asyncLoading_)
     {

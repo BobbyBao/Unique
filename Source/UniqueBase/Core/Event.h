@@ -2,8 +2,8 @@
 #define _SRC_EVENT_EVENT_HANDLER_HPP_
 
 #include "../Container/linkedlist.h"
-
 #include "../Container/StringID.h"
+#include "TypeInfo.h"
 
 namespace Unique
 {
@@ -16,16 +16,9 @@ namespace Unique
 	template<typename T>
 	struct TEvent : Event
 	{
-		static const char* GetTypeName(const char* name)
-		{
-			const char* p = std::strrchr(name, ':');
-			return p ? ++p : name;
-		}
-
 		static const Unique::StringID& Type()
 		{
-			static const Unique::StringID eventID(GetTypeName(typeid(T).name()));
-			return eventID;
+			return TypeInfo::TypeName<T>();
 		}
 	};
 
@@ -83,7 +76,7 @@ namespace Unique
 	template <class T, class E> class TEventHandler : public EventHandler
 	{
 	public:
-		typedef void (T::*HandlerFunctionPtr)(StringID, const E&);
+		typedef void (T::*HandlerFunctionPtr)(const E&);
 
 		/// Construct with receiver and function pointers and userdata.
 		TEventHandler(T* receiver, HandlerFunctionPtr function, void* userData = 0) :
@@ -98,13 +91,7 @@ namespace Unique
 		virtual void Invoke(const Event& eventData)
 		{
 			T* receiver = static_cast<T*>(receiver_);
-			(receiver->*function_)(eventType_, (const E&)eventData);
-		}
-
-		void Invoke(const E& args)
-		{
-			T* receiver = static_cast<T*>(receiver_);
-			(receiver->*function_)(eventType_, args);
+			(receiver->*function_)((const E&)eventData);
 		}
 
 		/// Return a unique copy of the event handler.
@@ -118,7 +105,7 @@ namespace Unique
 		HandlerFunctionPtr function_;
 	};
 
-	typedef void(__stdcall *EventFn)(Object* self, StringID, const void* eventData);
+	typedef void(__stdcall *EventFn)(Object* self, const void* eventData);
 
 	class StaticEventHandler : public EventHandler
 	{
@@ -133,7 +120,7 @@ namespace Unique
 		/// Invoke event handler function.
 		virtual void Invoke(const Event& eventData)
 		{
-			function_(receiver_, eventType_, &eventData);
+			function_(receiver_, &eventData);
 		}
 
 		/// Return a unique copy of the event handler.

@@ -86,14 +86,14 @@ private:
     /// Subscribe/unsubscribe to update events based on current enabled state and update event mask.
     void UpdateEventSubscription();
     /// Handle scene update event.
-    void HandleSceneUpdate(StringID eventType, const struct SceneUpdate& eventData);
+    void HandleSceneUpdate(const struct SceneUpdate& eventData);
     /// Handle scene post-update event.
-    void HandleScenePostUpdate(StringID eventType, const struct ScenePostUpdate& eventData);
+    void HandleScenePostUpdate(const struct ScenePostUpdate& eventData);
 #if defined(UNIQUE_PHYSICS) || defined(UNIQUE_URHO2D)
     /// Handle physics pre-step event.
-    void HandlePhysicsPreStep(StringID eventType, VariantMap& eventData);
+    void HandlePhysicsPreStep(VariantMap& eventData);
     /// Handle physics post-step event.
-    void HandlePhysicsPostStep(StringID eventType, VariantMap& eventData);
+    void HandlePhysicsPostStep(VariantMap& eventData);
 #endif
     /// Requested event subscription mask.
     unsigned char updateEventMask_;

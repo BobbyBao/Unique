@@ -167,10 +167,8 @@ void LogicComponent::UpdateEventSubscription()
 #endif
 }
 
-void LogicComponent::HandleSceneUpdate(StringID eventType, const SceneUpdate& eventData)
+void LogicComponent::HandleSceneUpdate(const SceneUpdate& eventData)
 {
-    //using namespace SceneUpdate;
-
     // Execute user-defined delayed start function before first update
     if (!delayedStartCalled_)
     {
@@ -190,7 +188,7 @@ void LogicComponent::HandleSceneUpdate(StringID eventType, const SceneUpdate& ev
     Update(eventData.timeStep_);
 }
 
-void LogicComponent::HandleScenePostUpdate(StringID eventType, const ScenePostUpdate& eventData)
+void LogicComponent::HandleScenePostUpdate(const ScenePostUpdate& eventData)
 {
  //   using namespace ScenePostUpdate;
 
@@ -200,7 +198,7 @@ void LogicComponent::HandleScenePostUpdate(StringID eventType, const ScenePostUp
 
 #if defined(UNIQUE_PHYSICS) || defined(UNIQUE_URHO2D)
 
-void LogicComponent::HandlePhysicsPreStep(StringID eventType, VariantMap& eventData)
+void LogicComponent::HandlePhysicsPreStep(VariantMap& eventData)
 {
     using namespace PhysicsPreStep;
 
@@ -215,7 +213,7 @@ void LogicComponent::HandlePhysicsPreStep(StringID eventType, VariantMap& eventD
     FixedUpdate(eventData[P_TIMESTEP].GetFloat());
 }
 
-void LogicComponent::HandlePhysicsPostStep(StringID eventType, VariantMap& eventData)
+void LogicComponent::HandlePhysicsPostStep(VariantMap& eventData)
 {
     using namespace PhysicsPostStep;
 

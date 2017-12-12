@@ -895,7 +895,7 @@ void FileSystem::ScanDirInternal(Vector<String>& result, String path, const Stri
 #endif
 }
 
-void FileSystem::HandleBeginFrame(StringID eventType, const BeginFrame& eventData)
+void FileSystem::HandleBeginFrame(const BeginFrame& eventData)
 {
     /// Go through the execution queue and post + remove completed requests
     for (List<AsyncExecRequest*>::iterator i = asyncExecQueue_.begin(); i != asyncExecQueue_.end();)
@@ -921,11 +921,10 @@ void FileSystem::HandleBeginFrame(StringID eventType, const BeginFrame& eventDat
     }
 }
 
-void FileSystem::HandleConsoleCommand(StringID eventType, const Event& eventData)
+void FileSystem::HandleConsoleCommand(const ConsoleCommand& eventData)
 {
-//     using namespace ConsoleCommand;
-//     if (eventData[P_ID].GetString() == GetTypeName())
-//         SystemCommand(eventData[P_COMMAND].GetString(), true);
+	if (eventData.type_ == GetType())
+		SystemCommand(eventData.command_, true);
 }
 
 void SplitPath(const String& fullPath, String& pathName, String& fileName, String& extension, bool lowercaseExtension)

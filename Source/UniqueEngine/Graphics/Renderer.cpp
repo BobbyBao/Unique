@@ -26,7 +26,7 @@ namespace Unique
 
 	}
 
-	void Renderer::Handle(StringID type, const EndFrame& args)
+	void Renderer::Handle(const EndFrame& args)
 	{
 		graphics.EndFrame();
 	}

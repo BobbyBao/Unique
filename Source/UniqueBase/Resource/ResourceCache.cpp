@@ -1081,7 +1081,7 @@ void ResourceCache::UpdateResourceGroup(StringID type)
     }
 }
 
-void ResourceCache::HandleBeginFrame(StringID eventType, const BeginFrame& eventData)
+void ResourceCache::HandleBeginFrame(const BeginFrame& eventData)
 {
     for (unsigned i = 0; i < fileWatchers_.size(); ++i)
     {

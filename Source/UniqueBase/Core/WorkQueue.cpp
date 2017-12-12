@@ -392,7 +392,7 @@ void WorkQueue::ReturnToPool(SPtr<WorkItem>& item)
     }
 }
 
-void WorkQueue::HandleBeginFrame(StringID eventType, const BeginFrame& eventData)
+void WorkQueue::HandleBeginFrame(const BeginFrame& eventData)
 {
     // If no worker threads, complete low-priority work here
     if (threads_.empty() && !queue_.empty())

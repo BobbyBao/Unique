@@ -134,7 +134,7 @@ private:
     /// Return a work item to the pool.
     void ReturnToPool(SPtr<WorkItem>& item);
     /// Handle frame start event. Purge completed work from the main thread queue, and perform work if no threads at all.
-    void HandleBeginFrame(StringID eventType, const struct BeginFrame& eventData);
+    void HandleBeginFrame(const struct BeginFrame& eventData);
 
     /// Worker threads.
     Vector<SPtr<WorkerThread> > threads_;

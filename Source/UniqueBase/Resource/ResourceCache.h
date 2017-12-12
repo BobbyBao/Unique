@@ -222,7 +222,7 @@ private:
     /// Update a resource group. Recalculate memory use and release resources if over memory budget.
     void UpdateResourceGroup(StringID type);
     /// Handle begin frame event. Automatic resource reloads and the finalization of background loaded resources are processed here.
-    void HandleBeginFrame(StringID eventType, const struct BeginFrame& eventData);
+    void HandleBeginFrame(const struct BeginFrame& eventData);
     /// Search FileSystem for file.
     File* SearchResourceDirs(const String& nameIn);
     /// Search resource packages for file.

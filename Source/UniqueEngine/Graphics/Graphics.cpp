@@ -38,9 +38,7 @@ namespace Unique
 		
 		if (!window) 
 		{
-			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't create window: %s\n",
-				SDL_GetError());
-
+			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't create window: %s\n", SDL_GetError());
 			SDL_Quit();
 			return false;
 		}
@@ -99,7 +97,6 @@ namespace Unique
 	{
 		return (deviceType_ == DeviceType::OpenGL || deviceType_ == DeviceType::OpenGLES);
 	}
-	
 
 	void Graphics::BeginFrame()
 	{

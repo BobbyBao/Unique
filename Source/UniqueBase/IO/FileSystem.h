@@ -105,9 +105,9 @@ private:
     void ScanDirInternal
         (Vector<String>& result, String path, const String& startPath, const String& filter, unsigned flags, bool recursive) const;
     /// Handle begin frame event to check for completed async executions.
-    void HandleBeginFrame(StringID eventType, const struct BeginFrame& eventData);
+    void HandleBeginFrame(const struct BeginFrame& eventData);
     /// Handle a console command event.
-    void HandleConsoleCommand(StringID eventType, const Event& eventData);
+    void HandleConsoleCommand(const struct ConsoleCommand& eventData);
 
     /// Allowed directories.
     HashSet<String> allowedPaths_;

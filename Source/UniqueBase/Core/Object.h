@@ -63,25 +63,25 @@ public:
     bool HasEventHandlers() const { return !eventHandlers_.empty(); }
 
 	template<class T, class E>
-	void SubscribeToEvent(void(T::*f)(StringID, const E&))
+	void SubscribeToEvent(void(T::*f)(const E&))
 	{
 		SubscribeToEvent(E::Type(), new TEventHandler<T, E>((T*)this, f));
 	}
 
 	template<class T, class E>
-	void SubscribeToEvent(const StringID& eventType, void(T::*f)(StringID, const E&))
+	void SubscribeToEvent(const StringID& eventType, void(T::*f)(const E&))
 	{
 		SubscribeToEvent(eventType, new TEventHandler<T, E>((T*)this, f));
 	}
 
 	template<class T, class E>
-	void SubscribeToEvent(Object* sender, void(T::*f)(StringID, const E&))
+	void SubscribeToEvent(Object* sender, void(T::*f)(const E&))
 	{
 		SubscribeToEvent(sender, E::Type(), new TEventHandler<T, E>((T*)this, f));
 	}
 
 	template<class T, class E>
-	void SubscribeToEvent(Object* sender, const StringID& eventType, void(T::*f)(StringID, const E&))
+	void SubscribeToEvent(Object* sender, const StringID& eventType, void(T::*f)(const E&))
 	{
 		SubscribeToEvent(sender, eventType, new TEventHandler<T, E>((T*)this, f));
 	}

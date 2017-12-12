@@ -15,8 +15,8 @@ namespace Unique
 
 	Vector<String> Application::argv_;
 	bool Application::quit_ = false;
-	Application::Application() :
-		context_(new Context()),
+	Application::Application(Context* context) :
+		context_(context),
 		resolution_(800, 600),
 		deviceType_(DeviceType::OpenGL)
 	{
@@ -145,8 +145,11 @@ namespace Unique
 	{
 		try
 		{
-			auto app = UPtr<Application>(new Application());
+			UPtr<Context> context(new Context());
+			auto app = UPtr<Application>(new Application(context.get()));
 			app->Run();
+			app = nullptr;
+			context = nullptr;
 		}
 		catch (const std::exception& e)
 		{

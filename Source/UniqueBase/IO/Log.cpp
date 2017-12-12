@@ -261,7 +261,7 @@ void Log::WriteRaw(const String& message, bool error)
     logInstance->inWrite_ = false;
 }
 
-void Log::HandleEndFrame(StringID eventType, const EndFrame& eventData)
+void Log::HandleEndFrame(const EndFrame& eventData)
 {
     // If the MainThreadID is not valid, processing this loop can potentially be endless
     if (!Thread::IsMainThread())

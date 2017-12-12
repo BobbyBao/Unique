@@ -31,7 +31,7 @@ namespace Unique
 		Matrix4 WorldViewProjT;
 		Matrix4 WorldNormT;
 		Vector3 LightDir;
-		float LightCoeff;
+		float LightCoeff;	
 	};
 
 	// Each cube face is split into a 3x3 grid
@@ -40,7 +40,7 @@ namespace Unique
 													// Faces color of the sponge wrt to recursion level
 	const unsigned int COLORS[] = { 0xffffffff, 0xff007fff, 0xff7fff00, 0xffff007f, 0xff0000ff, 0xff00ff00, 0xffff0000 };
 
-	UniqueSample::UniqueSample()
+	UniqueSample::UniqueSample(Context* context) : Application(context)
 	{
 		m_SpongeLevel = 2;                       // number of recursions
 		m_SpongeAO = true;                      // apply ambient occlusion
@@ -56,6 +56,9 @@ namespace Unique
 		m_AnimationSpeed = 0.2f;               // animation speed
 
 		SetDeviceType(DeviceType::OpenGL);
+
+	//	SubscribeToEvent()
+
 	}
 
 	UniqueSample::~UniqueSample()

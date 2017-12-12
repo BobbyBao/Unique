@@ -41,4 +41,10 @@ uEvent(AsyncExecFinished)
     int exitCode_;            // int
 };
 
+uEvent(ConsoleCommand)
+{
+	StringID type_;
+	String command_;
+};
+
 }

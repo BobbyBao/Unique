@@ -16,7 +16,7 @@ namespace Unique
 		void End();
 		void Stop();
 	private:
-		void Handle(StringID type, const EndFrame& args);
+		void Handle(const EndFrame& args);
 
 		void RenderUpdate();
 	

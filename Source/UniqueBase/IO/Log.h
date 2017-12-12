@@ -109,7 +109,7 @@ public:
 
 private:
     /// Handle end of frame. Process the threaded log messages.
-    void HandleEndFrame(StringID eventType, const struct EndFrame& eventData);
+    void HandleEndFrame(const struct EndFrame& eventData);
 
     /// Mutex for threaded operation.
     std::mutex logMutex_;

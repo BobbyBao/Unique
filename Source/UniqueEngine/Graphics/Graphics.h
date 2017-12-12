@@ -38,7 +38,6 @@ namespace Unique
 		bool IsDirect3D() const;
 		bool IsOpenGL() const;
 
-
 		//***MainThread***
 		void BeginFrame();
 		void EndFrame();
@@ -60,12 +59,9 @@ namespace Unique
 		IntVector2 resolution_;
 		DeviceType deviceType_;
 		bool debugger_ = false;
-
 		bool vsync_ = false;
-
-		int multiSampling_ = 4;
 		bool exit_ = false;
-
+		int multiSampling_ = 4;
 	protected:
 
 		void ExecuteCommands(CommandQueue& cmds);

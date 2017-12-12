@@ -15,7 +15,7 @@ namespace Unique
 	class UniqueSample : public Application
 	{
 	public:
-		UniqueSample();
+		UniqueSample(Context* context);
 		~UniqueSample();
 
 	private:

@@ -7,7 +7,6 @@ namespace Unique
 {
 	class Attribute;
 
-
 	/// Type info.
 	class UNIQUE_API TypeInfo
 	{
@@ -28,6 +27,7 @@ namespace Unique
 		const StringID& GetType() const { return type_; }
 		/// Return base type info.
 		const TypeInfo* GetBaseTypeInfo() const { return baseTypeInfo_; }
+		
 		/*
 		template<class C, class T>
 		void RegisterAttribute(const char* name, T C::* m, AttributeFlag flag = AttributeFlag::Default)
@@ -53,8 +53,22 @@ namespace Unique
 		void RegisterAttribute(Attribute* attr);
 
 		const Vector<SPtr<Attribute>>& GetAttributes() const { return attributes_;}
+
+		template<class T>
+		static const Unique::StringID& TypeName()
+		{
+			static const Unique::StringID eventID(GetTypeName(typeid(T).name()));
+			return eventID;
+		}
 		
 	private:
+
+		static const char* GetTypeName(const char* name)
+		{
+			const char* p = std::strrchr(name, ':');
+			return p ? ++p : name;
+		}
+
 		/// Type.
 		StringID type_;
 		// Category
@@ -71,10 +85,6 @@ namespace Unique
 	
 #define uAttribute(name, variable, ...)\
 	ClassName::GetTypeInfoStatic()->RegisterAttribute<decltype(((ClassName*)0)->variable)>(name, offsetof(ClassName, variable), ##__VA_ARGS__);
-
-	/// Define an attribute that uses get and set functions.
-//#define uAccessor(name, getFunction, setFunction, typeName, mode)\
-//	ClassName::GetTypeInfoStatic()->RegisterAttribute(new Unique::AttributeAccessorImpl<ClassName, typeName, Unique::AttributeTrait<typeName > >(name, &ClassName::getFunction, &ClassName::setFunction, mode));
 
 #define uAccessor(name, getFunction, setFunction, ...)\
 	ClassName::GetTypeInfoStatic()->RegisterAccessor(name, &ClassName::getFunction, &ClassName::setFunction, ##__VA_ARGS__);

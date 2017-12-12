@@ -8,7 +8,7 @@ namespace Unique
 	class Application : public Object
 	{
 	public:
-		Application();
+		Application(Context* context);
 		virtual ~Application();
 
 		void SetDeviceType(DeviceType deviceType) { deviceType_ = deviceType; }
@@ -18,23 +18,23 @@ namespace Unique
 		void Run();
 		
 		static void Quit();
-		static Vector<String>			argv_;
+		static Vector<String> argv_;
 	protected:
 		virtual void Initialize();
 		virtual void Terminate();
 		virtual void OnPreRender();
 		virtual void OnPostRender();
 
-		DeviceType		deviceType_;
-		String			title_;
-		IntVector2		resolution_;
-		uint			multiSampling_ = 8;
-		bool			vsync_ = true;
-		bool			debugger = true;
-		bool            loadingDone_ = false;
-		UPtr<Context>	context_;
+		DeviceType	deviceType_;
+		String		title_;
+		IntVector2	resolution_;
+		uint		multiSampling_ = 8;
+		bool		vsync_ = true;
+		bool		debugger = true;
+		bool        loadingDone_ = false;
+		Context*	context_ = nullptr;
 
-		static bool				quit_;
+		static bool	quit_;
 
 		friend class ResizeEventHandler;
 
@@ -46,8 +46,11 @@ namespace Unique
 		try
 		{
 			Unique_Setup(argc, argv);
-			auto app = UPtr<T>(new T());
+			UPtr<Context> context(new Context());
+			auto app = UPtr<T>(new T(context.get()));
 			app->Run();
+			app = nullptr;
+			context = nullptr;
 		}
 		catch (const std::exception& e)
 		{
