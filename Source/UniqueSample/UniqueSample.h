@@ -24,6 +24,9 @@ namespace Unique
 		virtual void OnPreRender();
 		virtual void OnPostRender();
 
+		void HandleStartup(const struct Startup& eventData);
+		void HandleShutdown(const struct Shutdown& eventData);
+
 		void CreateResource();
 		void BuildSponge(int levelMax, bool aoEnabled);
 		void SetShaderConstants(const Matrix4& world, const Matrix4& view, const Matrix4& proj);

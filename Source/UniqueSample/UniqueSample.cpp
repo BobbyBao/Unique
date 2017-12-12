@@ -57,7 +57,8 @@ namespace Unique
 
 		SetDeviceType(DeviceType::OpenGL);
 
-	//	SubscribeToEvent()
+		Subscribe(&UniqueSample::HandleStartup);
+		Subscribe(&UniqueSample::HandleShutdown);
 
 	}
 
@@ -80,6 +81,16 @@ namespace Unique
 	{
 	}
 
+
+	void UniqueSample::HandleStartup(const struct Startup& eventData)
+	{
+		UNIQUE_LOGINFO("Startup");
+	}
+
+	void UniqueSample::HandleShutdown(const struct Shutdown& eventData)
+	{
+		UNIQUE_LOGINFO("Shutdown");
+	}
 
 	void UniqueSample::CreateResource()
 	{
@@ -317,7 +328,7 @@ namespace Unique
 	}
 
 
-	Matrix4 CreateProjection(float fov, float aspectRatio, float nearClip, float farClip, bool bIsDirectX)
+	Matrix4 CreateProjection(float fov, float aspectRatio, float nearClip, float farClip, bool isOpenGL)
 	{
 		Matrix4 ret = Matrix4::ZERO;
 		float h = (1.0f / tanf(fov * 0.5f));
@@ -331,7 +342,7 @@ namespace Unique
 		ret.m23_ = r;
 		ret.m32_ = 1.0f;
 
-		if (!bIsDirectX)
+		if (isOpenGL)
 		{
 			ret.m20_ = 2.0f * ret.m20_ - ret.m30_;
 			ret.m21_ = 2.0f * ret.m21_ - ret.m31_;
