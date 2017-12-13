@@ -23,6 +23,8 @@ namespace Unique
 		void HandleStartup(const struct Startup& eventData);
 		void HandleShutdown(const struct Shutdown& eventData);
 		void HandleUpdate(const struct Update& eventData);
+		void HandleRenderUpdate(const struct RenderUpdate& eventData);
+		virtual void OnPreRender();
 
 		Quaternion m_SpongeRotation; // model rotation
 		int m_SpongeLevel;           // number of recursions
@@ -39,9 +41,6 @@ namespace Unique
 		PipelineState* pipeline_;
 
 		IBuffer* m_pConstantBuffer;
-
-		RefCntAutoPtr<IPipelineState> pipelineState_;
-		RefCntAutoPtr<IShaderResourceBinding> shaderResourceBinding_;
 
 		Vector<Batch> geometries_[2];
 

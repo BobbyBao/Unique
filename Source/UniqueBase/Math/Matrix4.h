@@ -705,6 +705,33 @@ public:
         }
     }
 
+
+	static Matrix4 CreateProjection(float fov, float aspectRatio, float nearClip, float farClip, bool isOpenGL)
+	{
+		Matrix4 ret = Matrix4::ZERO;
+		float h = (1.0f / tanf(fov * 0.5f));
+		float w = h / aspectRatio;
+		float q = farClip / (farClip - nearClip);
+		float r = -q * nearClip;
+
+		ret.m00_ = w;
+		ret.m11_ = h;
+		ret.m22_ = q;
+		ret.m23_ = r;
+		ret.m32_ = 1.0f;
+
+		if (isOpenGL)
+		{
+			ret.m20_ = 2.0f * ret.m20_ - ret.m30_;
+			ret.m21_ = 2.0f * ret.m21_ - ret.m31_;
+			ret.m22_ = 2.0f * ret.m22_ - ret.m32_;
+			ret.m23_ = 2.0f * ret.m23_ - ret.m33_;
+		}
+
+		return ret;
+	}
+
+
     /// Zero matrix.
     static const Matrix4 ZERO;
     /// Identity matrix.

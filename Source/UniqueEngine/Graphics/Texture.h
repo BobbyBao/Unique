@@ -15,14 +15,17 @@ namespace Unique
 		Texture();
 		~Texture();
 
+
+		//bool Create2D(int width, int height);
+
+		bool Create(const TextureDesc& desc, const TextureData& texData);
+
 		bool Create(Image& img);
-
-		bool Save(const String& filename, unsigned int mipLevel = 0);
-
-		// Load image from file, create texture, upload image into texture, and generate MIP-maps.
-		static SPtr<Texture> Load(const String& filename);
+		
 	protected:
+		bool CreateImpl();
 		TextureDesc desc_;
+		TextureData texData_;
 	};
 
 

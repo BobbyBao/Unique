@@ -18,6 +18,7 @@ namespace Unique
 
 	private:
 		SPtr<Shader> shader_;
+		Vector<ShaderVariable> shaderVaribles_;
 	};
 
 

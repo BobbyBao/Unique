@@ -20,7 +20,7 @@ namespace Unique
 
 	extern void CreateDevice(SDL_Window* window, IRenderDevice **ppRenderDevice, IDeviceContext **ppImmediateContext, ISwapChain **ppSwapChain, DeviceType DevType);
 	
-	Graphics::Graphics()
+	Graphics::Graphics() : title_("Unique Engine")
 	{
 	}
 
@@ -33,17 +33,17 @@ namespace Unique
 		resolution_ = size;
 		deviceType_ = deviceType;
 
-		SDL_Window *window = SDL_CreateWindow("Unique Test",
-			SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,	size.x_, size.y_, SDL_WINDOW_RESIZABLE);
+		window_ = SDL_CreateWindow(title_.CString(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+			size.x_, size.y_, SDL_WINDOW_RESIZABLE);
 		
-		if (!window) 
+		if (!window_)
 		{
 			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't create window: %s\n", SDL_GetError());
 			SDL_Quit();
 			return false;
 		}
 
-		CreateDevice(window, &renderDevice_, &deviceContext_, &swapChain_, deviceType);
+		CreateDevice(window_, &renderDevice_, &deviceContext_, &swapChain_, deviceType);
 		
 		renderDevice = renderDevice_;
 
@@ -74,6 +74,16 @@ namespace Unique
 			fn();
 		}
 
+	}
+
+	void Graphics::SetTitle(const String& title)
+	{
+		title_ = title;
+
+		if (window_)
+		{
+			SDL_SetWindowTitle(window_, title_.CString());
+		}
 	}
 
 	DeviceType Graphics::GetDeviceType() const

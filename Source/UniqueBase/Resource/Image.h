@@ -3,6 +3,15 @@
 
 namespace Unique
 {
+	struct ImageDesc
+	{
+		int width;
+		int height;
+		int bitsPerPixel;
+		int numComponents;
+		int rowStride; // In bytes
+	};
+
 	class Image : public Resource
 	{
 		uRTTI(Image, Resource)
@@ -10,17 +19,14 @@ namespace Unique
 		Image();
 		~Image();
 
-		bool Load(File& file);
+		bool Load(IFile& file);
 
 		static SPtr<Image> LoadImage(const char* filename);
 		
-		int width = 0;
-		int height = 0;
 	protected:
-		byte* data_ = nullptr;
-
-		int components = 0;
+		ImageDesc desc_;
 		int reqComponents = 0;
+		byte* data_ = nullptr;
 	};
 
 	class ImageImporter : public ResourceImporter

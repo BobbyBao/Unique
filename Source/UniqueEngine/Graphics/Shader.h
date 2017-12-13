@@ -47,12 +47,26 @@ namespace Unique
 		friend class PipelineState;
 	};
 
-	
-	class ShaderVarible
+	enum ShaderVariableType
+	{
+		INT,
+		FLOAT,
+		FLOAT2,
+		FLOAT3,
+		FLOAT4,
+		MATRIX,
+		ARRAY
+	};
+
+	class ShaderVariable
 	{
 	public:
 		StringID name_;
+		ShaderVariableType type_;
+		Vector4 value_;
+		RefCntAutoPtr<IShaderVariable> handle_;
 
+		uClass(ShaderVariable, "Name", name_, "Value", value_)
 	};
 
 	class Shader : public Resource
@@ -80,7 +94,7 @@ namespace Unique
 
 	private:
 		String shaderName_;
-		Vector<ShaderVarible> shaderVaribles_;
+		Vector<ShaderVariable> shaderVaribles_;
 		Vector<Pass> passes_;
 	};
 

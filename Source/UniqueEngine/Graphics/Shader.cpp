@@ -217,7 +217,6 @@ namespace Unique
 
 	Shader::Shader()
 	{
-		passes_.reserve(16);
 	}
 
 	Shader::~Shader()

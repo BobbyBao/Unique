@@ -23,17 +23,15 @@ namespace Unique
 		}
 	}
 
-	bool Image::Load(File& file)
+	bool Image::Load(IFile& file)
 	{
-		uint size = file.GetSize();
-		SharedArrayPtr<byte> data(new byte[size]);
-		if(file.Read(data, size) != size)
+		ByteArray data = file.ReadAll();
+		if(data.empty())
 		{
 			return false;
 		}
 			
-		data_ = stbi_load_from_memory(data.Get(), size, &width, &height, &components, reqComponents);
-		
+		data_ = stbi_load_from_memory((byte*)data.data(), data.size(), &desc_.width, &desc_.height, &desc_.numComponents, reqComponents);
 		return data_ != nullptr;
 	}
 

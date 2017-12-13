@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../Unique.h"
-
+#include <atomic>
 
 namespace Unique
 {
@@ -25,9 +25,9 @@ struct RefCount
     }
 
     /// Reference count. If below zero, the object has been destroyed.
-    int refs_;
+    std::atomic<int32_t> refs_;
     /// Weak reference count.
-    int weakRefs_;
+	std::atomic<int32_t> weakRefs_;
 };
 
 /// Base class for intrusively reference-counted objects. These are noncopyable and non-assignable.
