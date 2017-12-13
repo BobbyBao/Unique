@@ -56,7 +56,7 @@ namespace Unique
 			std::memcpy(data_.data(), data, desc_.uiSizeInBytes);
 		}
 
-		return GPUObject<IBuffer>::Create();
+		return GPUObject::Create();
 	}
 
 	bool GraphicsBuffer::Create(ByteArray&& data, uint elementSize, Usage usage, uint flags)
@@ -67,7 +67,7 @@ namespace Unique
 		desc_.CPUAccessFlags = flags;
 		data_ = data;
 
-		return GPUObject<IBuffer>::Create();
+		return GPUObject::Create();
 	}
 
 	bool GraphicsBuffer::CreateImpl()
@@ -78,7 +78,7 @@ namespace Unique
 		BufferData BuffData;
 		BuffData.pData = data_.data();
 		BuffData.DataSize = desc_.uiSizeInBytes;
-		renderDevice->CreateBuffer(desc_, BuffData, &handle_);
+		renderDevice->CreateBuffer(desc_, BuffData, (IBuffer**)&handle_);
 		return handle_ != nullptr;
 	}
 

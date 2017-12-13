@@ -13,7 +13,7 @@
 #include "Math/Matrix4.h"
 
 
-UNIQUE_IMPLEMENT_MAIN(Unique::UniqueSample)
+//UNIQUE_IMPLEMENT_MAIN(Unique::UniqueSample)
 
 using namespace Diligent;
 
@@ -87,7 +87,7 @@ namespace Unique
 		
 		constBuffer_ = new ConstBuffer();
 		constBuffer_->Create(ShaderConstants(), USAGE_DYNAMIC, CPU_ACCESS_WRITE);
-		m_pConstantBuffer = constBuffer_->GetHandle();
+		m_pConstantBuffer = *constBuffer_;
 
 		// Create vertex and index buffers
 		geometry_ = BuildSponge(m_SpongeLevel, m_SpongeAO);

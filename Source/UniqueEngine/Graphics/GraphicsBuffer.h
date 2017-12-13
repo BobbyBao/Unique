@@ -5,7 +5,7 @@
 
 namespace Unique
 {
-	class UNIQUE_API GraphicsBuffer : public Object, public GPUObject<IBuffer>
+	class UNIQUE_API GraphicsBuffer : public Object, public GPUObject
 	{
 		uRTTI(GraphicsBuffer, Object)
 	public:

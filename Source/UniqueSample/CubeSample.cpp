@@ -9,6 +9,8 @@
 #include "Math/Matrix3x4.h"
 #include "Math/Matrix4.h"
 
+UNIQUE_IMPLEMENT_MAIN(Unique::CubeSample)
+
 namespace Unique
 {
 
@@ -31,7 +33,7 @@ namespace Unique
 	{
 		Subscribe(&CubeSample::HandleStartup);
 		Subscribe(&CubeSample::HandleShutdown);
-		Subscribe(&CubeSample::HandleShutdown);
+		Subscribe(&CubeSample::HandleUpdate);
 	}
 
 
@@ -47,20 +49,20 @@ namespace Unique
 
 		constBuffer_ = new ConstBuffer();
 		constBuffer_->Create(ShaderConstants(), USAGE_DYNAMIC, CPU_ACCESS_WRITE);
-		m_pConstantBuffer = constBuffer_->GetHandle();
 
 		// Create vertex and index buffers
 		geometry_ = UniqueSample::BuildSponge(m_SpongeLevel, m_SpongeAO);
 
 		shader_ = cache.GetResource<Shader>("Shaders/Test.shader");
-
-		graphics.EndFrame();
-
 		pipeline_ = shader_->GetPipeline("Main", "");
+
+		graphics.EndFrame();	
+
+		m_pConstantBuffer = *constBuffer_;
 
 		renderDevice->CreateResourceMapping(ResourceMappingDesc(), &resourceMapping_);
 		resourceMapping_->AddResource("Constants", m_pConstantBuffer, true);
-		pipeline_->GetPipeline()->BindShaderResources(resourceMapping_, BIND_SHADER_RESOURCES_ALL_RESOLVED);
+	//	pipeline_->GetPipeline()->BindShaderResources(resourceMapping_, BIND_SHADER_RESOURCES_ALL_RESOLVED);
 
 	}
 

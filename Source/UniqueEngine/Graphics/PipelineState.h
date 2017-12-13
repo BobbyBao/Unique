@@ -7,7 +7,7 @@ namespace Unique
 	class Shader;
 	class Pass;
 
-	class PipelineState : public RefCounted, public GPUObject<IPipelineState>
+	class PipelineState : public RefCounted, public GPUObject
 	{
 	public:
 		PipelineState(Shader& shader, Pass& shaderPass, unsigned defs);

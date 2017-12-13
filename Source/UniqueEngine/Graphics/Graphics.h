@@ -41,6 +41,9 @@ namespace Unique
 		//***MainThread***
 		void BeginFrame();
 		void EndFrame();
+		void AddResource(const String& key, IDeviceObject* res);
+
+
 		//****************
 
 		//Execute in render thread
@@ -62,6 +65,8 @@ namespace Unique
 		bool vsync_ = false;
 		bool exit_ = false;
 		int multiSampling_ = 4;
+
+		RefCntAutoPtr<IResourceMapping> resourceMapping_;
 	protected:
 
 		void ExecuteCommands(CommandQueue& cmds);

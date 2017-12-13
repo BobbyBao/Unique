@@ -3,7 +3,7 @@
 
 namespace Unique
 {
-	class GPUObjectBase
+	class GPUObject
 	{
 	public:
 		enum class State
@@ -20,47 +20,18 @@ namespace Unique
 		//call in render thread
 		virtual void UpdateBuffer();
 
+		bool IsValid() const { return handle_ != nullptr; }
+
+		template<class T>
+		operator T*() { return (T*)handle_; }
+		
 	protected:	
 		virtual bool CreateImpl();
 		virtual void ReleaseImpl();
 
 		State state_ = State::None;
+		IDeviceObject* handle_ = nullptr;
 	};
-
-	template<class T = void>
-	class GPUObject : public GPUObjectBase
-	{
-	public:
-		enum class State
-		{
-			None,
-			Creating,
-			Created,
-			Dying,
-			Dead
-		};
-
-		bool IsValid() const { return handle_ != nullptr; }
-
-
-		operator T&() { return *handle_; }
-
-		T* GetHandle() const { return handle_; }
-	protected:
-
-		virtual void ReleaseImpl()
-		{
-			if (handle_ != nullptr)
-			{
-				handle_->Release();
-				handle_ = nullptr;
-			}
-		}
-
-		T* handle_ = nullptr;
-
-		friend class Graphics;
-	};
-
+	
 
 }

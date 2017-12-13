@@ -60,7 +60,7 @@ namespace Unique
 			{
 				if (shader->GetShaderType() == SHADER_TYPE_COMPUTE)
 				{
-					PSODesc.ComputePipeline.pCS = shader->GetHandle();
+					PSODesc.ComputePipeline.pCS = *shader;
 					break;
 				}
 			}
@@ -72,19 +72,19 @@ namespace Unique
 				switch (shader->GetShaderType())
 				{
 				case SHADER_TYPE_VERTEX:
-					PSODesc.GraphicsPipeline.pVS = shader->GetHandle();
+					PSODesc.GraphicsPipeline.pVS = *shader;
 					break;
 				case SHADER_TYPE_PIXEL:
-					PSODesc.GraphicsPipeline.pPS = shader->GetHandle();
+					PSODesc.GraphicsPipeline.pPS = *shader;
 					break;
 				case SHADER_TYPE_GEOMETRY:
-					PSODesc.GraphicsPipeline.pGS = shader->GetHandle();
+					PSODesc.GraphicsPipeline.pGS = *shader;
 					break;
 				case SHADER_TYPE_HULL:
-					PSODesc.GraphicsPipeline.pHS = shader->GetHandle();
+					PSODesc.GraphicsPipeline.pHS = *shader;
 					break;
 				case SHADER_TYPE_DOMAIN:
-					PSODesc.GraphicsPipeline.pDS = shader->GetHandle();
+					PSODesc.GraphicsPipeline.pDS = *shader;
 					break;
 				default:
 					break;
@@ -93,8 +93,8 @@ namespace Unique
 			}
 		}
 
-		renderDevice->CreatePipelineState(PSODesc, &handle_);
-		handle_->CreateShaderResourceBinding(&shaderResourceBinding_);
+		renderDevice->CreatePipelineState(PSODesc, (IPipelineState**)&handle_);
+		((IPipelineState*)handle_)->CreateShaderResourceBinding(&shaderResourceBinding_);
 		dirty_ = false;
 		return true;
 	}
@@ -109,7 +109,7 @@ namespace Unique
 			}
 		}
 
-		return handle_;
+		return (IPipelineState*)handle_;
 	}
 
 	void PipelineState::Reload()

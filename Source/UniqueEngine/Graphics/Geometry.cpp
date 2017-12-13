@@ -168,7 +168,7 @@ namespace Unique
 		Uint32 offset = 0;
 		for (size_t i = 0; i < vertexBuffers_.size(); i++)
 		{
-			buffer[i] = vertexBuffers_[i]->GetHandle();
+			buffer[i] = *vertexBuffers_[i];
 			offsets[i] = offset;
 			strides[i] = vertexBuffers_[i]->GetStride();
 		}
@@ -177,7 +177,7 @@ namespace Unique
 
 		if (indexBuffer_ && indexCount_ > 0)
 		{
-			deviceContext->SetIndexBuffer(indexBuffer_->GetHandle(), 0);
+			deviceContext->SetIndexBuffer(*indexBuffer_, 0);
 			drawAttribs_.NumIndices = indexCount_;
 		}
 		else if (vertexCount_ > 0)

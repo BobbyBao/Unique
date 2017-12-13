@@ -47,7 +47,7 @@ namespace Unique
 		Attrs.Desc.TargetProfile = SHADER_PROFILE_DX_4_0;
 		BasicShaderSourceStreamFactory BasicSSSFactory("assets\\shaders;assets\\shaders\\inc;");
 		Attrs.pShaderSourceStreamFactory = &BasicSSSFactory;
-		renderDevice->CreateShader(Attrs, &handle_);
+		renderDevice->CreateShader(Attrs, (IShader**)&handle_);
 
 		return handle_ != nullptr;
 

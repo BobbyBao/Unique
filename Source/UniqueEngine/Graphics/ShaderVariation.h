@@ -52,7 +52,7 @@ namespace Unique
 		uint			mask_ = 0;
 	};
 
-	class ShaderVariation : public RefCounted, public GPUObject<IShader>
+	class ShaderVariation : public RefCounted, public GPUObject
 	{
 	public:
 		ShaderVariation(Shader& shader, const ShaderStage& type, Pass& shaderPass, uint defs);

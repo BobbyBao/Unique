@@ -46,7 +46,10 @@ namespace Unique
 		CreateDevice(window, &renderDevice_, &deviceContext_, &swapChain_, deviceType);
 		
 		renderDevice = renderDevice_;
+
 		deviceContext = deviceContext_;
+
+		renderDevice->CreateResourceMapping(ResourceMappingDesc(), &resourceMapping_);
 
 		FrameNoRenderWait();
 
@@ -107,6 +110,12 @@ namespace Unique
 		RenderSemWait();
 
 		FrameNoRenderWait();
+	}
+
+
+	void Graphics::AddResource(const String& key, IDeviceObject* res)
+	{
+
 	}
 
 	void Graphics::BeginRender()

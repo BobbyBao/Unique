@@ -8,7 +8,7 @@ namespace Unique
 {
 	class Image;
 
-	class Texture : public Resource, public GPUObject<ITexture>
+	class Texture : public Resource, public GPUObject
 	{
 		uRTTI(Texture, Resource)
 	public:

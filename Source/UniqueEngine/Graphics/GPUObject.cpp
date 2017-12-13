@@ -5,7 +5,7 @@
 namespace Unique
 {
 
-	bool GPUObjectBase::Create()
+	bool GPUObject::Create()
 	{
 		if (Thread::IsMainThread())
 		{
@@ -28,7 +28,7 @@ namespace Unique
 		return true;
 	}
 
-	void GPUObjectBase::Release()
+	void GPUObject::Release()
 	{
 		state_ = State::Dying;
 		Graphics::AddCommand([=]()
@@ -38,16 +38,21 @@ namespace Unique
 		});
 	}
 
-	void GPUObjectBase::UpdateBuffer()
+	void GPUObject::UpdateBuffer()
 	{
 	}
 
-	bool GPUObjectBase::CreateImpl()
+	bool GPUObject::CreateImpl()
 	{ 
 		return true; 
 	}
 
-	void GPUObjectBase::ReleaseImpl()
+	void GPUObject::ReleaseImpl()
 	{
+		if (handle_ != nullptr)
+		{
+			handle_->Release();
+			handle_ = nullptr;
+		}
 	}
 }
