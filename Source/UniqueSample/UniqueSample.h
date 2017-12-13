@@ -43,13 +43,9 @@ namespace Unique
 		PipelineState* pipeline_;
 
 		Diligent::RefCntAutoPtr<Diligent::IBuffer> m_pConstantBuffer;
-
-
-		RefCntAutoPtr<IShader> vs_;
-		RefCntAutoPtr<IShader> ps_;
 		RefCntAutoPtr<IPipelineState> pipelineState_;
 		RefCntAutoPtr<IShaderResourceBinding> shaderResourceBinding_;
-		RefCntAutoPtr<IResourceMapping> resourceMapping_;
+
 	};
 
 }

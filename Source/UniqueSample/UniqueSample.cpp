@@ -13,7 +13,7 @@
 #include "Math/Matrix4.h"
 
 
-//UNIQUE_IMPLEMENT_MAIN(Unique::UniqueSample)
+UNIQUE_IMPLEMENT_MAIN(Unique::UniqueSample)
 
 using namespace Diligent;
 
@@ -99,9 +99,8 @@ namespace Unique
 
 		pipeline_ = shader_->GetPipeline("Main", "");
 		
-		renderDevice->CreateResourceMapping(ResourceMappingDesc(), &resourceMapping_);
-		resourceMapping_->AddResource("Constants", m_pConstantBuffer, true);
-		pipeline_->GetPipeline()->BindShaderResources(resourceMapping_, BIND_SHADER_RESOURCES_ALL_RESOLVED);
+		graphics.AddResource("Constants", m_pConstantBuffer, true);
+		graphics.BindShaderResources(pipeline_->GetPipeline(), BIND_SHADER_RESOURCES_ALL_RESOLVED);
 
 		// Init model rotation
 		Vector3 axis(-1, 1, 0);
@@ -386,7 +385,7 @@ namespace Unique
 		Matrix4 world = Matrix4::IDENTITY;
 		SetShaderConstants(world, view, proj);
 
-		geometry_->Draw(pipeline_, resourceMapping_);
+		geometry_->Draw(pipeline_);
 
 	}
 

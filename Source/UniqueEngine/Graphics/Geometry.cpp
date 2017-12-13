@@ -160,7 +160,7 @@ namespace Unique
 		lodDistance_ = distance;
 	}
 
-	void Geometry::Draw(PipelineState* pipeline, IResourceMapping* resourceMapping)
+	void Geometry::Draw(PipelineState* pipeline)
 	{
 		IBuffer *buffer[8] = { nullptr };
 		Uint32 offsets[8] = { 0 };
@@ -187,8 +187,10 @@ namespace Unique
 
 		deviceContext->SetPipelineState(pipeline->GetPipeline());
 
-		pipeline->GetShaderResourceBinding()->BindResources(SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, resourceMapping,
-			BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED | BIND_SHADER_RESOURCES_ALL_RESOLVED);
+		auto& graphics = GetSubsystem<Graphics>();
+
+		graphics.BindResources(pipeline->GetShaderResourceBinding(),
+			SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED | BIND_SHADER_RESOURCES_ALL_RESOLVED);
 
 		deviceContext->CommitShaderResources(pipeline->GetShaderResourceBinding(), COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
 

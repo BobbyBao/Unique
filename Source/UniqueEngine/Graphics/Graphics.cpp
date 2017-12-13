@@ -113,9 +113,29 @@ namespace Unique
 	}
 
 
-	void Graphics::AddResource(const String& key, IDeviceObject* res)
+	void Graphics::AddResource(const Char *Name, IDeviceObject *pObject, bool bIsUnique)
 	{
+		resourceMapping_->AddResource(Name, pObject, bIsUnique);
+	}
 
+	void Graphics::AddResourceArray(const Char *Name, uint StartIndex, IDeviceObject* const* ppObjects, uint NumElements, bool bIsUnique)
+	{
+		resourceMapping_->AddResourceArray(Name, StartIndex, ppObjects, NumElements, bIsUnique);
+	}
+
+	void Graphics::RemoveResourceByName(const Char *Name, uint ArrayIndex)
+	{
+		resourceMapping_->RemoveResourceByName(Name, ArrayIndex);
+	}
+
+	void Graphics::BindShaderResources(IPipelineState* pipelineState, uint flags)
+	{
+		pipelineState->BindShaderResources(resourceMapping_, flags);
+	}
+
+	void Graphics::BindResources(IShaderResourceBinding* shaderResourceBinding, uint shaderFlags, uint flags)
+	{
+		shaderResourceBinding->BindResources(shaderFlags, resourceMapping_, flags);
 	}
 
 	void Graphics::BeginRender()

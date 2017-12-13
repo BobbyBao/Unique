@@ -12,6 +12,7 @@ namespace Unique
 	class VertexBuffer;
 	class IndexBuffer;
 	class Texture;
+	class GPUObject;
 
 	using CommandQueue = Vector<std::function<void()> > ;
 
@@ -41,9 +42,12 @@ namespace Unique
 		//***MainThread***
 		void BeginFrame();
 		void EndFrame();
-		void AddResource(const String& key, IDeviceObject* res);
 
-
+		void AddResource(const Char *Name, IDeviceObject *pObject, bool bIsUnique);   
+		void AddResourceArray(const Char *Name, uint StartIndex, IDeviceObject* const* ppObjects, uint NumElements, bool bIsUnique);
+		void RemoveResourceByName(const Char *Name, uint ArrayIndex = 0);
+		void BindShaderResources(IPipelineState* pipelineState, uint flags);
+		void BindResources(IShaderResourceBinding* shaderResourceBinding, uint shaderFlags, uint flags);
 		//****************
 
 		//Execute in render thread
