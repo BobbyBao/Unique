@@ -109,7 +109,7 @@ void Time::BeginFrame(float timeStep)
 
     timeStep_ = timeStep;
 
-    Profiler* profiler = &Subsystem<Profiler>();
+    Profiler* profiler = &GetSubsystem<Profiler>();
     if (profiler)
         profiler->BeginFrame();
 
@@ -133,7 +133,7 @@ void Time::EndFrame()
         SendEvent(Unique::EndFrame());
     }
 
-    Profiler* profiler = &Subsystem<Profiler>();
+    Profiler* profiler = &GetSubsystem<Profiler>();
     if (profiler)
         profiler->EndFrame();
 }

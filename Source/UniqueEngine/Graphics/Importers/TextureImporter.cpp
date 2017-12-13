@@ -72,7 +72,7 @@ namespace Unique
 
 	SPtr<Resource> TextureImporter::loadRaw(const String& path)
 	{
-		ResourceCache& cache = Subsystem<ResourceCache>();
+		ResourceCache& cache = GetSubsystem<ResourceCache>();
 		SPtr<File> file = cache.GetFile(path);
 		if (!file)
 		{

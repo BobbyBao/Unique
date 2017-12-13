@@ -5,7 +5,7 @@
 
 namespace Unique
 {
-	ResourceImporter::ResourceImporter(StringID type) : type_(type), cache(Subsystem<ResourceCache>())
+	ResourceImporter::ResourceImporter(StringID type) : type_(type), cache(GetSubsystem<ResourceCache>())
 	{
 		UNIQUE_LOGINFOF("Regiseter reader : %s", type);
 	}

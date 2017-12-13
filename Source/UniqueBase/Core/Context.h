@@ -156,7 +156,7 @@ public:
 	}
 
 	template<class T>
-	static T* Subsystem()
+	static T* GetSubsystem()
 	{
 		return SubsystemHolder<T>::Instance();
 	}
@@ -236,9 +236,8 @@ public:
 
 
 UNIQUE_C_API Context* GetContext();
-template <class T> T& Subsystem() { return *GetContext()->Subsystem<T>(); }
-template <class T> T& GetSubsystem() { return *GetContext()->Subsystem<T>(); }
-template <class T> bool HasSubsystem() { return GetContext()->Subsystem<T>() != nullptr; }
+template <class T> T& GetSubsystem() { return *GetContext()->GetSubsystem<T>(); }
+template <class T> bool HasSubsystem() { return GetContext()->GetSubsystem<T>() != nullptr; }
 
 
 }

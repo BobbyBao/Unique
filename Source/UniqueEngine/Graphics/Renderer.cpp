@@ -5,7 +5,7 @@
 
 namespace Unique
 {
-	Renderer::Renderer() : graphics(Subsystem<Graphics>())
+	Renderer::Renderer() : graphics(GetSubsystem<Graphics>())
 	{
 		Subscribe(&Renderer::Handle);
 

@@ -3,6 +3,7 @@
 #include "RefCntAutoPtr.h"
 #include "RenderDevice.h"
 #include "DeviceContext.h"
+#include "Graphics/View.h"
 
 namespace Unique
 {
@@ -37,10 +38,12 @@ namespace Unique
 		SPtr<Shader> shader_;
 		PipelineState* pipeline_;
 
-		Diligent::RefCntAutoPtr<Diligent::IBuffer> m_pConstantBuffer;
+		IBuffer* m_pConstantBuffer;
 
 		RefCntAutoPtr<IPipelineState> pipelineState_;
 		RefCntAutoPtr<IShaderResourceBinding> shaderResourceBinding_;
+
+		Vector<Batch> geometries_[2];
 
 	};
 

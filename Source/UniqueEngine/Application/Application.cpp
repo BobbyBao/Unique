@@ -50,7 +50,7 @@ namespace Unique
 			return;
 		}
 
-		auto& cache = Subsystem<ResourceCache>();
+		auto& cache = GetSubsystem<ResourceCache>();
 		cache.SetAutoReloadResources(true);
 		cache.AddResourceDir("Assets");
 		cache.AddResourceDir("CoreData");
@@ -60,7 +60,7 @@ namespace Unique
 		cache.RegisterImporter(new TextureImporter());
 		cache.RegisterImporter(new ModelImporter());
 
-		Graphics& graphics = Subsystem<Graphics>();
+		Graphics& graphics = GetSubsystem<Graphics>();
 		graphics.Initialize(resolution_, deviceType_);
 		
 		loadingDone_ = true;
@@ -89,8 +89,8 @@ namespace Unique
 	{
 		Initialize();
 	
-		Renderer& renderer = Subsystem<Renderer>();
-		Input& input = Subsystem<Input>();
+		Renderer& renderer = GetSubsystem<Renderer>();
+		Input& input = GetSubsystem<Input>();
 
 		context_->Run();
 

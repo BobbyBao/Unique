@@ -123,7 +123,7 @@ namespace Unique
 	
 	bool ShaderVariation::LoadConvertedCode(const String& binaryShaderName)
 	{
-		auto& cache = Subsystem<ResourceCache>();
+		auto& cache = GetSubsystem<ResourceCache>();
 		if (!cache.Exists(binaryShaderName))
 			return false;
 

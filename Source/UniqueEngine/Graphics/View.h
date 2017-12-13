@@ -12,10 +12,10 @@ namespace Unique
 	public:
 		Geometry* geometry_;
 		Material* material_;
-		PipelineState*  shaderInstance_;
-		void* worldTransform;
+		PipelineState*  pipelineState_;
+		void* worldTransform_;
+		uint numWorldTransforms_;
 
-		void Draw();
 	};
 
 	class View : public Object

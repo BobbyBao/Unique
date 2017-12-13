@@ -50,7 +50,7 @@ static const unsigned BUFFERSIZE = 4096;
 #endif
 
 FileWatcher::FileWatcher() :
-    fileSystem_(&Subsystem<FileSystem>()),
+    fileSystem_(&GetSubsystem<FileSystem>()),
     delay_(1.0f),
     watchSubDirs_(false)
 {

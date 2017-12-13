@@ -55,7 +55,7 @@ namespace Unique
 			pFactoryD3D11->CreateSwapChainD3D11(*ppRenderDevice, *ppImmediateContext, SCDesc, hWnd, ppSwapChain);
 		}
 		break;
-
+#if false
 		case DeviceType::D3D12:
 		{
 #ifdef ENGINE_DLL
@@ -75,7 +75,7 @@ namespace Unique
 			pFactoryD3D12->CreateSwapChainD3D12(*ppRenderDevice, *ppImmediateContext, SCDesc, hWnd, ppSwapChain);
 		}
 		break; 
-#if false
+
 #endif
 		case DeviceType::OpenGL:
 		{

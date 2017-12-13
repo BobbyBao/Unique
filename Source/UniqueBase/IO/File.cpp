@@ -431,7 +431,7 @@ bool File::OpenInternal(const String& fileName, FileMode mode, bool fromPackage)
     readSyncNeeded_ = false;
     writeSyncNeeded_ = false;
     
-    FileSystem& fileSystem = Subsystem<FileSystem>();
+    FileSystem& fileSystem = GetSubsystem<FileSystem>();
     if (!fileSystem.CheckAccess(GetPath(fileName)))
     {
         UNIQUE_LOGERRORF("Access denied to %s", fileName.CString());

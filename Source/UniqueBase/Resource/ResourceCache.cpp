@@ -89,7 +89,7 @@ bool ResourceCache::AddResourceDir(const String& pathName, unsigned priority)
 {
     std::lock_guard<Mutex> lock(resourceMutex_);
 
-    FileSystem& fileSystem = Subsystem<FileSystem>();
+    FileSystem& fileSystem = GetSubsystem<FileSystem>();
     if (!fileSystem.DirExists(pathName))
     {
         UNIQUE_LOGERROR("Could not open directory " + pathName);
@@ -737,7 +737,7 @@ bool ResourceCache::Exists(const String& nameIn) const
             return true;
     }
 
-    FileSystem& fileSystem = Subsystem<FileSystem>();
+    FileSystem& fileSystem = GetSubsystem<FileSystem>();
     for (unsigned i = 0; i < resourceDirs_.size(); ++i)
     {
         if (fileSystem.FileExists(resourceDirs_[i] + name))
@@ -770,7 +770,7 @@ unsigned long long ResourceCache::GetTotalMemoryUse() const
 
 String ResourceCache::GetResourceFileName(const String& name) const
 {
-    FileSystem& fileSystem = Subsystem<FileSystem>();
+    FileSystem& fileSystem = GetSubsystem<FileSystem>();
     for (unsigned i = 0; i < resourceDirs_.size(); ++i)
     {
         if (fileSystem.FileExists(resourceDirs_[i] + name))
@@ -795,7 +795,7 @@ String ResourceCache::GetPreferredResourceDir(const String& path) const
     bool pathHasKnownDirs = false;
     bool parentHasKnownDirs = false;
 
-    FileSystem& fileSystem = Subsystem<FileSystem>();
+    FileSystem& fileSystem = GetSubsystem<FileSystem>();
 
     for (unsigned i = 0; checkDirs[i] != 0; ++i)
     {
@@ -832,7 +832,7 @@ String ResourceCache::SanitateResourceName(const String& nameIn) const
     name.Replace("./", "");
 
     // If the path refers to one of the resource directories, normalize the resource name
-    FileSystem& fileSystem = Subsystem<FileSystem>();
+    FileSystem& fileSystem = GetSubsystem<FileSystem>();
     if (resourceDirs_.size())
     {
         String namePath = GetPath(name);
@@ -859,7 +859,7 @@ String ResourceCache::SanitateResourceDirName(const String& nameIn) const
 {
     String fixedPath = AddTrailingSlash(nameIn);
     if (!IsAbsolutePath(fixedPath))
-        fixedPath = Subsystem<FileSystem>().GetCurrentDir() + fixedPath;
+        fixedPath = GetSubsystem<FileSystem>().GetCurrentDir() + fixedPath;
 
     // Sanitate away /./ construct
     fixedPath.Replace("/./", "/");
@@ -1108,7 +1108,7 @@ void ResourceCache::HandleBeginFrame(const BeginFrame& eventData)
 
 File* ResourceCache::SearchResourceDirs(const String& nameIn)
 {
-    FileSystem& fileSystem = Subsystem<FileSystem>();
+    FileSystem& fileSystem = GetSubsystem<FileSystem>();
     for (unsigned i = 0; i < resourceDirs_.size(); ++i)
     {
         if (fileSystem.FileExists(resourceDirs_[i] + nameIn))

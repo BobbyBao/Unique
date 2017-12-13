@@ -22,9 +22,5 @@ namespace Unique
 	}
 
 
-	void Batch::Draw()
-	{
-
-	}
 }
 
