@@ -156,6 +156,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CubeSample.cpp" />
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="UniqueSample.cpp" />
   </ItemGroup>
@@ -186,6 +187,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CubeSample.h" />
     <ClInclude Include="UniqueSample.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

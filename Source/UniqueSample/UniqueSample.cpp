@@ -57,8 +57,6 @@ namespace Unique
 
 		SetDeviceType(DeviceType::OpenGL);
 
-		Subscribe(&UniqueSample::HandleStartup);
-		Subscribe(&UniqueSample::HandleShutdown);
 
 	}
 
@@ -74,23 +72,13 @@ namespace Unique
 
 		CreateResource();
 
-		TestIO();
+	//	TestIO();
 	}
 
 	void UniqueSample::Terminate()
 	{
 	}
 
-
-	void UniqueSample::HandleStartup(const struct Startup& eventData)
-	{
-		UNIQUE_LOGINFO("Startup");
-	}
-
-	void UniqueSample::HandleShutdown(const struct Shutdown& eventData)
-	{
-		UNIQUE_LOGINFO("Shutdown");
-	}
 
 	void UniqueSample::CreateResource()
 	{
@@ -102,7 +90,7 @@ namespace Unique
 		m_pConstantBuffer = constBuffer_->GetHandle();
 
 		// Create vertex and index buffers
-		BuildSponge(m_SpongeLevel, m_SpongeAO);
+		geometry_ = BuildSponge(m_SpongeLevel, m_SpongeAO);
 		
 		HjsonDeserializer jsonReader(true);
 		jsonReader.Load("Shaders/Test.shader", shader_);
@@ -128,7 +116,7 @@ namespace Unique
 		const Vector3& center, bool aoEnabled, const bool aoEdges[12], const unsigned int faceColors[6]);
 	
 	// Build sponge vertex and index buffers 
-	void UniqueSample::BuildSponge(int levelMax, bool aoEnabled)
+	SPtr<Geometry> UniqueSample::BuildSponge(int levelMax, bool aoEnabled)
 	{
 		// Fill vertex and index memory buffers
 		static std::vector<Vertex> vertices;
@@ -145,11 +133,12 @@ namespace Unique
 		SPtr<IndexBuffer> pIndexBuffer(new IndexBuffer());
 		pIndexBuffer->Create(std::move(indices));
 
-		geometry_ = new Geometry();
-		geometry_->SetNumVertexBuffers(1);
-		geometry_->SetVertexBuffer(0, pVertexBuffer);
-		geometry_->SetIndexBuffer(pIndexBuffer);
-		geometry_->SetDrawRange(PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, 0, (unsigned int)indices.size());
+		SPtr<Geometry> geo(new Geometry());
+		geo->SetNumVertexBuffers(1);
+		geo->SetVertexBuffer(0, pVertexBuffer);
+		geo->SetIndexBuffer(pIndexBuffer);
+		geo->SetDrawRange(PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, 0, (unsigned int)indices.size());
+		return geo;
 	}
 
 	// Copy world/view/proj matrices and light parameters to shader constants
@@ -356,6 +345,11 @@ namespace Unique
 	
 	void UniqueSample::OnPreRender()
 	{
+		if (!geometry_)
+		{
+			return;
+		}
+
 		float dt = (float)0.05f;
 		if (m_Animate && dt > 0 && dt < 0.2f)
 		{
@@ -388,6 +382,7 @@ namespace Unique
 
 		Matrix4 view = Matrix4::IDENTITY;
 		view.SetTranslation(camPosInv);
+
 		Matrix4 world = Matrix4::IDENTITY;
 		SetShaderConstants(world, view, proj);
 

@@ -12,21 +12,16 @@ namespace Unique
 	class ConstBuffer;
 	class Matrix4;
 
-	class UniqueSample : public Application
+	class CubeSample : public Application
 	{
 	public:
-		UniqueSample(Context* context);
-		~UniqueSample();
+		CubeSample(Context* context);
+		~CubeSample();
 
-		static SPtr<Geometry> BuildSponge(int levelMax, bool aoEnabled);
-	private:
-		virtual void Initialize();
-		virtual void Terminate();
-		virtual void OnPreRender();
-		virtual void OnPostRender();
-
-		void CreateResource();
-		void SetShaderConstants(const Matrix4& world, const Matrix4& view, const Matrix4& proj);
+	protected:
+		void HandleStartup(const struct Startup& eventData);
+		void HandleShutdown(const struct Shutdown& eventData);
+		void HandleUpdate(const struct Update& eventData);
 
 		Quaternion m_SpongeRotation; // model rotation
 		int m_SpongeLevel;           // number of recursions
@@ -44,13 +39,10 @@ namespace Unique
 
 		Diligent::RefCntAutoPtr<Diligent::IBuffer> m_pConstantBuffer;
 
-
-		RefCntAutoPtr<IShader> vs_;
-		RefCntAutoPtr<IShader> ps_;
 		RefCntAutoPtr<IPipelineState> pipelineState_;
 		RefCntAutoPtr<IShaderResourceBinding> shaderResourceBinding_;
 		RefCntAutoPtr<IResourceMapping> resourceMapping_;
 	};
 
-}
 
+}

@@ -21,9 +21,15 @@
     <ClCompile Include="Test.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="CubeSample.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UniqueSample.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CubeSample.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
