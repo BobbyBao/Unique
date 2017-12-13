@@ -60,8 +60,7 @@ namespace Unique
 
 		m_pConstantBuffer = *constBuffer_;
 
-		renderDevice->CreateResourceMapping(ResourceMappingDesc(), &resourceMapping_);
-		resourceMapping_->AddResource("Constants", m_pConstantBuffer, true);
+		graphics.AddResource("Constants", m_pConstantBuffer, true);
 	//	pipeline_->GetPipeline()->BindShaderResources(resourceMapping_, BIND_SHADER_RESOURCES_ALL_RESOLVED);
 
 	}

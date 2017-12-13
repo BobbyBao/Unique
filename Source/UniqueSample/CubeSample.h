@@ -41,7 +41,7 @@ namespace Unique
 
 		RefCntAutoPtr<IPipelineState> pipelineState_;
 		RefCntAutoPtr<IShaderResourceBinding> shaderResourceBinding_;
-		RefCntAutoPtr<IResourceMapping> resourceMapping_;
+
 	};
 
 
