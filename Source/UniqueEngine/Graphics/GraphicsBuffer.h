@@ -48,6 +48,10 @@ namespace Unique
 
 		BufferDesc desc_;
 		ByteArray data_;
+		ByteArray data1_;
+		bool dirty_[2] = { false };
+		uint lockStart_[2];
+		uint lockCount_[2];
 	};
 
 	class UNIQUE_API IndexBuffer : public GraphicsBuffer

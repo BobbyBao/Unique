@@ -16,10 +16,8 @@ namespace Unique
 		void End();
 		void Stop();
 	private:
-		void Handle(const EndFrame& args);
-
+		void HandleEndFrame(const EndFrame& args);
 		void RenderUpdate();
-	
 
 		class Graphics& graphics;
 		Vector<SPtr<View>> views_;

@@ -31,7 +31,7 @@ static const unsigned MAX_TRIANGLES = 100000;
 
 uObject(DebugRenderer)
 {
-	//TRANSFER_ACCESSOR("Line Antialias", GetLineAntiAlias, SetLineAntiAlias, bool)
+	uAccessor("Line Antialias", GetLineAntiAlias, SetLineAntiAlias)
 }
 
 DebugRenderer::DebugRenderer() : lineAntiAlias_(false)
@@ -41,7 +41,7 @@ DebugRenderer::DebugRenderer() : lineAntiAlias_(false)
 	ResourceCache& cache = GetSubsystem<ResourceCache>();
 	shader_ = cache.GetResource<Shader>("shaders/basic.shader");
 
-	uiShaderInstance_ = shader_->GetPipeline("", "VERTEXCOLOR");
+	pipelineState_ = shader_->GetPipeline("", "VERTEXCOLOR");
 }
 
 DebugRenderer::~DebugRenderer()

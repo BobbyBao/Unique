@@ -40,8 +40,8 @@ namespace Unique
 		bool IsOpenGL() const;
 
 		//***MainThread***
-		void BeginFrame();
-		void EndFrame();
+
+		void Frame();
 
 		void AddResource(const Char *Name, IDeviceObject *pObject, bool bIsUnique);   
 		void AddResourceArray(const Char *Name, uint StartIndex, IDeviceObject* const* ppObjects, uint NumElements, bool bIsUnique);

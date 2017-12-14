@@ -33,7 +33,7 @@ namespace Unique
 		bool m_SpongeAO;             // apply ambient occlusion
 		Vector3 m_LightDir;          // light direction vector
 		float m_CamDistance;         // camera distance
-		float m_BackgroundColor[4];  // background color
+		Color m_BackgroundColor;  // background color
 		bool m_Animate;              // enable animation
 		float m_AnimationSpeed;      // animation speed
 

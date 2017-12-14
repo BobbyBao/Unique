@@ -31,7 +31,7 @@ namespace Unique
 
 	CubeSample::CubeSample(Context* context) : Application(context)
 	{
-		m_SpongeLevel = 2;                       // number of recursions
+		m_SpongeLevel = 2;                      // number of recursions
 		m_SpongeAO = true;                      // apply ambient occlusion
 		m_LightDir.x_ = -0.5f;
 		m_LightDir.y_ = -0.2f;
@@ -41,7 +41,7 @@ namespace Unique
 		m_BackgroundColor[1] = 0;
 		m_BackgroundColor[2] = 0.5f;
 		m_BackgroundColor[3] = 1;
-		m_Animate = false;                       // enable animation
+		m_Animate = false;                     // enable animation
 		m_AnimationSpeed = 0.2f;               // animation speed
 
 		Subscribe(&CubeSample::HandleStartup);
@@ -70,7 +70,7 @@ namespace Unique
 		shader_ = cache.GetResource<Shader>("Shaders/Test.shader");
 		pipeline_ = shader_->GetPipeline("Main", "");
 
-		graphics.EndFrame();	
+		graphics.Frame();	
 
 		m_pConstantBuffer = *constBuffer_;
 

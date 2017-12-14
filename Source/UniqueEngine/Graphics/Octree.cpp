@@ -206,7 +206,7 @@ void Octant::ResetRoot()
             children_[i]->ResetRoot();
     }
 }
-#if false
+
 void Octant::DrawDebugGeometry(DebugRenderer* debug, bool depthTest)
 {
     if (debug && debug->IsInside(worldBoundingBox_))
@@ -220,7 +220,7 @@ void Octant::DrawDebugGeometry(DebugRenderer* debug, bool depthTest)
         }
     }
 }
-#endif
+
 void Octant::Initialize(const BoundingBox& box)
 {
     worldBoundingBox_ = box;
@@ -313,10 +313,11 @@ void Octant::GetDrawablesOnlyInternal(RayOctreeQuery& query, PODVector<Drawable*
 
 uObject(Octree)
 {
+	uFactory("Graphics")
 
-//	TRANSFER("Bounding Box Min", worldBoundingBox_.min_)
-//		TRANSFER("Bounding Box Max", worldBoundingBox_.max_)
-//		TRANSFER("Number of Levels", numLevels_)
+	//uAttribute("Bounding Box Min", worldBoundingBox_.min_)
+	//	uAttribute("Bounding Box Max", worldBoundingBox_.max_)
+		uAttribute("Number of Levels", numLevels_)
 
 }
 
@@ -325,7 +326,7 @@ Octree::Octree() : Octant(BoundingBox(-DEFAULT_OCTREE_SIZE, DEFAULT_OCTREE_SIZE)
 {
     // If the engine is running headless, subscribe to RenderUpdate events for manually updating the octree
     // to allow raycasts and animation update
-//     if (!Subsystem<Graphics>())
+//     if (!GetSubsystem<Graphics>())
 //         SubscribeToEvent(E_RENDERUPDATE, UNIQUE_HANDLER(Octree, HandleRenderUpdate));
 }
 
@@ -335,26 +336,7 @@ Octree::~Octree()
     drawableUpdates_.clear();
     ResetRoot();
 }
-/*
-void Octree::RegisterObject()
-{
-    context->RegisterFactory<Octree>(SUBSYSTEM_CATEGORY);
 
-    Vector3 defaultBoundsMin = -Vector3::ONE * DEFAULT_OCTREE_SIZE;
-    Vector3 defaultBoundsMax = Vector3::ONE * DEFAULT_OCTREE_SIZE;
-
-    UNIQUE_ATTRIBUTE("Bounding Box Min", Vector3, worldBoundingBox_.min_, defaultBoundsMin, TF_DEFAULT);
-    UNIQUE_ATTRIBUTE("Bounding Box Max", Vector3, worldBoundingBox_.max_, defaultBoundsMax, TF_DEFAULT);
-    UNIQUE_ATTRIBUTE("Number of Levels", int, numLevels_, DEFAULT_OCTREE_LEVELS, TF_DEFAULT);
-}
-
-void Octree::OnSetAttribute(const AttributeInfo& attr, const Variant& src)
-{
-    // If any of the (size) attributes change, Resize the octree
-	Object::OnSetAttribute(attr, src);
-    SetSize(worldBoundingBox_, numLevels_);
-}*/
-#if false
 void Octree::DrawDebugGeometry(DebugRenderer* debug, bool depthTest)
 {
     if (debug)
@@ -364,7 +346,7 @@ void Octree::DrawDebugGeometry(DebugRenderer* debug, bool depthTest)
         Octant::DrawDebugGeometry(debug, depthTest);
     }
 }
-#endif
+
 void Octree::SetSize(const BoundingBox& box, unsigned numLevels)
 {
 //    UNIQUE_PROFILE(ResizeOctree);
@@ -580,8 +562,8 @@ void Octree::CancelUpdate(Drawable* drawable)
 
 void Octree::DrawDebugGeometry(bool depthTest)
 {
-//     DebugRenderer* debug = GetComponent<DebugRenderer>();
-//     DrawDebugGeometry(debug, depthTest);
+	DebugRenderer* debug = GetComponent<DebugRenderer>();
+	DrawDebugGeometry(debug, depthTest);
 }
 
 void Octree::HandleRenderUpdate(StringID eventType, RenderUpdate& eventData)

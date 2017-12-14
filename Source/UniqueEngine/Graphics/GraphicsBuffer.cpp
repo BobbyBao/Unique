@@ -84,33 +84,44 @@ namespace Unique
 
 	bool GraphicsBuffer::SetData(const void* data)
 	{
+		if (desc_.Usage == USAGE_STATIC)
+		{
+			UNIQUE_LOGERROR("Set data for static buffer");
+			return false;
+		}
+
 		if (!data)
 		{
-			UNIQUE_LOGERROR("Null pointer for vertex buffer data");
+			UNIQUE_LOGERROR("Null pointer for buffer data");
 			return false;
 		}
 
 		if (GetSizeInBytes() == 0)
 		{
-			UNIQUE_LOGERROR("Vertex elements not defined, can not set vertex buffer data");
+			UNIQUE_LOGERROR("Null element size, can not set buffer data");
 			return false;
 		}
 
 		if (IsDynamic())
 		{
-		//	ByteArray& currentData = Graphics::currentContext_ == 0 ? data_ : data1_;
-		//	std::memcpy(currentData.data(), data, currentData.size());
+			ByteArray& currentData = Graphics::currentContext_ == 0 ? data_ : data1_;
+			std::memcpy(currentData.data(), data, currentData.size());
+			dirty_[Graphics::currentContext_] = true; 
+			lockStart_[Graphics::currentContext_] = 0;
+			lockCount_[Graphics::currentContext_] = (uint)currentData.size();
 		}
 		else
 		{
 			std::memcpy(data_.data(), data, data_.size());
-			/*
-			GraphicsContext::AddCommand([=]()
-			{
-				void* buffer = renderer->MapBuffer(*this, LLGL::BufferCPUAccess::WriteOnly);
-				memcpy(buffer, data_.data(), data_.size());
-				renderer->UnmapBuffer(*this);
-			});*/
+
+			Graphics::AddCommand([=]()
+			{			
+				IBuffer* buffer = *this;
+				void* bufferData = nullptr;
+				buffer->Map(deviceContext, MAP_WRITE, MAP_FLAG_DISCARD, bufferData);
+				memcpy(bufferData, data_.data(), data_.size());
+				buffer->Unmap(deviceContext, MAP_WRITE, MAP_FLAG_DISCARD);
+			});
 		}
 
 
@@ -119,24 +130,30 @@ namespace Unique
 
 	bool GraphicsBuffer::SetDataRange(const void* data, unsigned start, unsigned count, bool discard)
 	{
+		if (desc_.Usage == USAGE_STATIC)
+		{
+			UNIQUE_LOGERROR("Set data for static buffer");
+			return false;
+		}
+
 		if (start == 0 && count == GetCount())
 			return SetData(data);
 
 		if (!data)
 		{
-			UNIQUE_LOGERROR("Null pointer for vertex buffer data");
+			UNIQUE_LOGERROR("Null pointer for buffer data");
 			return false;
 		}
 
 		if (GetStride() == 0)
 		{
-			UNIQUE_LOGERROR("Vertex elements not defined, can not set vertex buffer data");
+			UNIQUE_LOGERROR("Vertex elements not defined, can not set buffer data");
 			return false;
 		}
 
 		if (start + count > GetCount())
 		{
-			UNIQUE_LOGERROR("Illegal range for setting new vertex buffer data");
+			UNIQUE_LOGERROR("Illegal range for setting new buffer data");
 			return false;
 		}
 
@@ -145,19 +162,24 @@ namespace Unique
 
 		if (IsDynamic())
 		{
-//			ByteArray& currentData = Graphics::currentContext_ == 0 ? data_ : data1_;
-//			std::memcpy(currentData.data() + start * GetStride(), data, count * GetStride());
+			ByteArray& currentData = Graphics::currentContext_ == 0 ? data_ : data1_;
+			std::memcpy(currentData.data() + start * GetStride(), data, count * GetStride());
+			dirty_[Graphics::currentContext_] = true;
+			lockStart_[Graphics::currentContext_] = start;
+			lockCount_[Graphics::currentContext_] = count;
 		}
 		else
 		{
 			std::memcpy(data_.data() + start * GetStride(), data, count * GetStride());
-			/*
-			GraphicsContext::AddCommand([=]()
+			
+			Graphics::AddCommand([=]()
 			{
-				void* buffer = renderer->MapBuffer(*this, LLGL::BufferCPUAccess::WriteOnly);
-				memcpy(buffer, data_.data() + start * elementSize_, count * elementSize_);
-				renderer->UnmapBuffer(*this);
-			});*/
+				IBuffer* buffer = *this; 
+				void* bufferData = nullptr;
+				buffer->Map(deviceContext, MAP_WRITE, MAP_FLAG_DISCARD, bufferData);
+				memcpy(bufferData, data_.data() + start * GetStride(), count * GetStride());
+				buffer->Unmap(deviceContext, MAP_WRITE, MAP_FLAG_DISCARD);
+			});
 		}
 
 		return true;
@@ -165,6 +187,16 @@ namespace Unique
 
 	void GraphicsBuffer::UpdateBuffer()
 	{
+		if (dirty_[Graphics::GetRenderContext()])
+		{
+			IBuffer* buffer = *this;
+			void* bufferData = nullptr;
+			buffer->Map(deviceContext, MAP_WRITE, MAP_FLAG_DISCARD, bufferData);
+			memcpy(bufferData, data_.data() + lockStart_[Graphics::GetRenderContext()] * GetStride(), 
+				lockCount_[Graphics::GetRenderContext()] * GetStride());
+			buffer->Unmap(deviceContext, MAP_WRITE, MAP_FLAG_DISCARD);
+
+		}
 	}
 
 }

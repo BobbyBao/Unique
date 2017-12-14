@@ -60,6 +60,7 @@ namespace Unique
 		MAX_VERTEX_ELEMENT_SEMANTICS
 	};
 
+
 	uEnumTraits(ValueType,
 				"UNDEFINED", "INT8", "INT16", "INT32", "UINT8", "UINT16", "UINT32", "FLOAT16", "FLOAT32")
 	

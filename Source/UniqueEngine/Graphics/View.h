@@ -7,6 +7,18 @@ namespace Unique
 	class Material;
 	class PipelineState;
 
+	struct ViewParameter
+	{
+		Matrix4 view_;
+		Matrix4 viewInv_;
+		Matrix4 viewProj_;
+	};
+
+	struct ObjectParameter
+	{
+		Matrix4 world_;
+	};
+
 	class Batch
 	{
 	public:

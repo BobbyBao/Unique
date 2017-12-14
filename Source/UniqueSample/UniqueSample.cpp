@@ -48,10 +48,10 @@ namespace Unique
 		m_LightDir.y_ = -0.2f;
 		m_LightDir.z_ = 1;
 		m_CamDistance = 0.7f;                  // camera distance
-		m_BackgroundColor[0] = 0;
-		m_BackgroundColor[1] = 0;
-		m_BackgroundColor[2] = 0.5f;
-		m_BackgroundColor[3] = 1;
+		m_BackgroundColor.r_ = 0;
+		m_BackgroundColor.g_ = 0;
+		m_BackgroundColor.b_ = 0.5f;
+		m_BackgroundColor.a_ = 1;
 		m_Animate = false;                       // enable animation
 		m_AnimationSpeed = 0.2f;               // animation speed
 
@@ -368,7 +368,7 @@ namespace Unique
 
 		auto& graphics = GetSubsystem<Graphics>();
 		// Clear the back buffer 
-		deviceContext->ClearRenderTarget(nullptr, m_BackgroundColor);
+		deviceContext->ClearRenderTarget(nullptr, m_BackgroundColor.Data());
 		deviceContext->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f);
 
 		// Set world/view/proj matrices and global shader constants

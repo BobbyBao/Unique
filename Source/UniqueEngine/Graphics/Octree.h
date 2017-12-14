@@ -97,8 +97,9 @@ public:
 
     /// Reset root pointer recursively. Called when the whole octree is being destroyed.
     void ResetRoot();
+
     /// Draw bounds to the debug graphics recursively.
-//    void DrawDebugGeometry(DebugRenderer* debug, bool depthTest);
+	void DrawDebugGeometry(DebugRenderer* debug, bool depthTest);
 
 protected:
     /// Initialize bounding box.
@@ -163,7 +164,7 @@ class UNIQUE_API Octree : public Component, public Octant
 {
     friend void RaycastDrawablesWork(const WorkItem* item, unsigned threadIndex);
 
-	uRTTI(Octree, Component);
+	uRTTI(Octree, Component)
 
 public:
     /// Construct.
@@ -196,6 +197,7 @@ public:
     /// Visualize the component as debug geometry.
     void DrawDebugGeometry(bool depthTest);
 
+	virtual void DrawDebugGeometry(DebugRenderer* debug, bool depthTest);
 private:
     /// Handle render update in case of headless execution.
     void HandleRenderUpdate(StringID eventType, struct RenderUpdate& eventData);

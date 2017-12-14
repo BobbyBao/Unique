@@ -173,7 +173,7 @@ private:
     bool lineAntiAlias_;
 
 	SPtr<Shader> shader_;
-	SPtr<PipelineState> uiShaderInstance_;
+	SPtr<PipelineState> pipelineState_;
 };
 
 }

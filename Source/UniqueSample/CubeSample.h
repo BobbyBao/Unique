@@ -24,6 +24,7 @@ namespace Unique
 		void HandleShutdown(const struct Shutdown& eventData);
 		void HandleUpdate(const struct Update& eventData);
 		void HandleRenderUpdate(const struct RenderUpdate& eventData);
+
 		virtual void OnPreRender();
 
 		Quaternion m_SpongeRotation; // model rotation

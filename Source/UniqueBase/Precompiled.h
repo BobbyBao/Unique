@@ -6,6 +6,8 @@
 #include "Math/MathDefs.h"
 #include "Math/Vector2.h"
 #include "Math/Vector3.h"
+#include "Math/Matrix3x4.h"
+#include "Math/Matrix4.h"
 #include "Core/Attribute.h"
 #include "Core/Context.h"
 #include "Core/Profiler.h"

@@ -7,16 +7,13 @@ namespace Unique
 {
 	Renderer::Renderer() : graphics(GetSubsystem<Graphics>())
 	{
-		Subscribe(&Renderer::Handle);
-
+		Subscribe(&Renderer::HandleEndFrame);
 	}
-
 
 	Renderer::~Renderer()
 	{
 	}
-
-
+	
 	void Renderer::RenderUpdate()
 	{
 		for (auto& view : views_)
@@ -26,11 +23,10 @@ namespace Unique
 
 	}
 
-	void Renderer::Handle(const EndFrame& args)
+	void Renderer::HandleEndFrame(const EndFrame& args)
 	{
-		graphics.EndFrame();
+		graphics.Frame();
 	}
-
 
 	void Renderer::Begin()
 	{

@@ -111,11 +111,7 @@ namespace Unique
 		return (deviceType_ == DeviceType::OpenGL || deviceType_ == DeviceType::OpenGLES);
 	}
 
-	void Graphics::BeginFrame()
-	{
-	}
-
-	void Graphics::EndFrame()
+	void Graphics::Frame()
 	{
 		RenderSemWait();
 
