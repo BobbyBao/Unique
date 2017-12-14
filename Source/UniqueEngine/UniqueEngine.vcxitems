@@ -15,6 +15,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)Application\Application.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Camera.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\DebugRenderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\GraphicsBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Drawable.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Geometry.h" />
@@ -24,8 +26,11 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Importers\ModelImporter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Importers\ShaderImporter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Importers\TextureImporter.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Light.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Material.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Model.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Octree.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\OctreeQuery.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Renderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Shader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\ShaderVariation.h" />
@@ -47,6 +52,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Application\Application.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Camera.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\DebugRenderer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Light.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Octree.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\OctreeQuery.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Skeleton.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Win32\Win32.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\GraphicsBuffer.cpp" />
