@@ -50,19 +50,5 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\..\External\Dll\LLGL\x64\Debug\LLGLD.dll">
-      <Link>LLGLD.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\External\Dll\LLGL\x64\Debug\LLGL_Direct3D11D.dll">
-      <Link>LLGL_Direct3D11D.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\External\Dll\LLGL\x64\Debug\LLGL_OpenGLD.dll">
-      <Link>LLGL_OpenGLD.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

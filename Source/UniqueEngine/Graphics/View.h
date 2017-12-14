@@ -26,7 +26,7 @@ namespace Unique
 		Material* material_;
 		PipelineState*  pipelineState_;
 		void* worldTransform_;
-		uint numWorldTransforms_;
+		uint numWorldTransform_;
 
 	};
 
