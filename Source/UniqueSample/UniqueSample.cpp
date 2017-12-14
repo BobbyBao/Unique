@@ -13,7 +13,7 @@
 #include "Math/Matrix4.h"
 
 
-UNIQUE_IMPLEMENT_MAIN(Unique::UniqueSample)
+//UNIQUE_IMPLEMENT_MAIN(Unique::UniqueSample)
 
 using namespace Diligent;
 

@@ -9,7 +9,7 @@
 #include "Math/Matrix3x4.h"
 #include "Math/Matrix4.h"
 
-//UNIQUE_IMPLEMENT_MAIN(Unique::CubeSample)
+UNIQUE_IMPLEMENT_MAIN(Unique::CubeSample)
 
 namespace Unique
 {
@@ -31,9 +31,23 @@ namespace Unique
 
 	CubeSample::CubeSample(Context* context) : Application(context)
 	{
+		m_SpongeLevel = 2;                       // number of recursions
+		m_SpongeAO = true;                      // apply ambient occlusion
+		m_LightDir.x_ = -0.5f;
+		m_LightDir.y_ = -0.2f;
+		m_LightDir.z_ = 1;
+		m_CamDistance = 0.7f;                  // camera distance
+		m_BackgroundColor[0] = 0;
+		m_BackgroundColor[1] = 0;
+		m_BackgroundColor[2] = 0.5f;
+		m_BackgroundColor[3] = 1;
+		m_Animate = false;                       // enable animation
+		m_AnimationSpeed = 0.2f;               // animation speed
+
 		Subscribe(&CubeSample::HandleStartup);
 		Subscribe(&CubeSample::HandleShutdown);
 		Subscribe(&CubeSample::HandleUpdate);
+		Subscribe(&CubeSample::HandleRenderUpdate);
 	}
 
 
@@ -61,8 +75,6 @@ namespace Unique
 		m_pConstantBuffer = *constBuffer_;
 
 		graphics.AddResource("Constants", m_pConstantBuffer, true);
-	//	pipeline_->GetPipeline()->BindShaderResources(resourceMapping_, BIND_SHADER_RESOURCES_ALL_RESOLVED);
-
 	}
 
 	void CubeSample::HandleShutdown(const struct Shutdown& eventData)
@@ -106,16 +118,17 @@ namespace Unique
 
 		Matrix4 world = Matrix4::IDENTITY;
 
-		MapHelper<ShaderConstants> MappedData(deviceContext, m_pConstantBuffer, MAP_WRITE, MAP_FLAG_DISCARD);
-		ShaderConstants *cst = MappedData;
-		cst->WorldViewProjT = (proj* view *world);
-		cst->WorldNormT = world;
-		cst->LightDir = (1.0f / m_LightDir.Length()) * m_LightDir;
-		cst->LightCoeff = 0.85f;
 
 		Vector<Batch>& batches = geometries_[graphics.GetRenderContext()];
 		for (auto& batch : batches)
 		{
+			MapHelper<ShaderConstants> MappedData(deviceContext, m_pConstantBuffer, MAP_WRITE, MAP_FLAG_DISCARD);
+			ShaderConstants *cst = MappedData;
+			cst->WorldViewProjT = (proj* view *world);
+			cst->WorldNormT = world;
+			cst->LightDir = (1.0f / m_LightDir.Length()) * m_LightDir;
+			cst->LightCoeff = 0.85f;
+
 			batch.geometry_->Draw(pipeline_);
 		}
 	}
