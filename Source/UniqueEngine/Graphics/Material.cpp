@@ -6,6 +6,7 @@ namespace Unique
 {
 	uObject(Material)
 	{
+		uFactory("Graphics")
 
 	}
 

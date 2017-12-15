@@ -1,5 +1,5 @@
 
-Shader("Default"):
+Shader("Basic"):
 {
     Pass("Main"):
 	{
@@ -39,7 +39,7 @@ Shader("Default"):
 			EntryPoint: "VS" 
 			ShaderProfile: "DX_4_0"
 			Defines: ""
-			Source: "Default.hlsl"
+			Source: "HLSL/Basic.hlsl"
 		}
 		
 		PixelShader:
@@ -47,7 +47,7 @@ Shader("Default"):
 			EntryPoint: "PS"
 			ShaderProfile: "DX_4_0"
 			Defines: ""
-			Source: "Default.hlsl"
+			Source: "HLSL/Basic.hlsl"
 		}
 		
 	}

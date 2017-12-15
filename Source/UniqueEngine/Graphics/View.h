@@ -14,7 +14,7 @@ namespace Unique
 		Matrix4 viewProj_;
 	};
 
-	struct ObjectParameter
+	struct ObjectVS
 	{
 		Matrix4 world_;
 	};

@@ -76,7 +76,6 @@ namespace Unique
 	uClassTraits
 	(
 		LayoutElement, 
-		"InputIndex", self.InputIndex, 
 		"BufferSlot", self.BufferSlot,
 		"NumComponents", self.NumComponents,
 		"ValueType", self.ValueType,
@@ -94,7 +93,6 @@ namespace Unique
 		"RasterizerState", self.rasterizerState_,
 		"BlendStateDesc", self.blendState_,
 		"InputLayout", self.inputLayout_,
-		//"ShaderDefines", self.allDefs_,
 		"VertexShader", self.shaderStage_[0],
 		"PixelShader", self.shaderStage_[1],
 		"GeometryShader", self.shaderStage_[2],
@@ -163,6 +161,11 @@ namespace Unique
 
 	bool Pass::Prepare()
 	{
+		for (size_t i = 0; i < inputLayout_.size(); i++)
+		{
+			inputLayout_[i].InputIndex = i;
+		}
+
 		auto& computeShader = shaderStage_[5];
 		if (computeShader)
 		{

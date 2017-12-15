@@ -45,7 +45,7 @@ namespace Unique
 		Attrs.Desc.ShaderType = shaderStage_.shaderType_;
 		Attrs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
 		Attrs.Desc.TargetProfile = SHADER_PROFILE_DX_4_0;
-		BasicShaderSourceStreamFactory BasicSSSFactory("assets\\shaders;assets\\shaders\\inc;");
+		BasicShaderSourceStreamFactory BasicSSSFactory("CoreData\\Shaders;CoreData\\Shaders\\HLSL;");
 		Attrs.pShaderSourceStreamFactory = &BasicSSSFactory;
 		renderDevice->CreateShader(Attrs, (IShader**)&handle_);
 

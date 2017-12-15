@@ -34,10 +34,6 @@ transfer.TransferAttributes(##__VA_ARGS__);\
 }
 
 
-#define DEFINE_GET_TYPESTRING_CONTAINER(x)						\
-inline static bool IsBasicType() { return SerializeTraits<T>::IsBasicType(); }
-
-
 namespace Unique
 {
 	template<class T>
