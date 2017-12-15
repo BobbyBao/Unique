@@ -27,12 +27,12 @@ namespace Unique
 
 		virtual void OnPreRender();
 
-		Quaternion m_SpongeRotation; // model rotation
+		Quaternion spongeRotation_; // model rotation
 		int m_SpongeLevel;           // number of recursions
 		bool m_SpongeAO;             // apply ambient occlusion
 		Vector3 m_LightDir;          // light direction vector
 		float m_CamDistance;         // camera distance
-		float m_BackgroundColor[4];  // background color
+		Color backgroundColor_;	// background color
 		bool m_Animate;              // enable animation
 		float m_AnimationSpeed;      // animation speed
 
@@ -40,9 +40,7 @@ namespace Unique
 		SPtr<Geometry> geometry_;
 		SPtr<Shader> shader_;
 		PipelineState* pipeline_;
-
-		IBuffer* m_pConstantBuffer;
-
+		
 		Vector<Batch> geometries_[2];
 
 	};

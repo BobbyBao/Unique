@@ -654,10 +654,10 @@ bool DebugRenderer::HasContent() const
 void DebugRenderer::HandleEndFrame(const EndFrame& eventData)
 {
     // When the amount of debug geometry is reduced, release memory
-    unsigned linesSize = lines_.size();
-    unsigned noDepthLinesSize = noDepthLines_.size();
-    unsigned trianglesSize = triangles_.size();
-    unsigned noDepthTrianglesSize = noDepthTriangles_.size();
+    unsigned linesSize = (uint)lines_.size();
+    unsigned noDepthLinesSize = (uint)noDepthLines_.size();
+    unsigned trianglesSize = (uint)triangles_.size();
+    unsigned noDepthTrianglesSize = (uint)noDepthTriangles_.size();
 
     lines_.clear();
     noDepthLines_.clear();

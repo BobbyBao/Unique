@@ -31,7 +31,7 @@ namespace Unique
 			return false;
 		}
 			
-		data_ = stbi_load_from_memory((byte*)data.data(), data.size(), &desc_.width, &desc_.height, &desc_.numComponents, reqComponents);
+		data_ = stbi_load_from_memory((byte*)data.data(), (int)data.size(), &desc_.width, &desc_.height, &desc_.numComponents, reqComponents);
 		return data_ != nullptr;
 	}
 

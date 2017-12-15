@@ -28,6 +28,8 @@ namespace Unique
 		void SetTitle(const String& title);
 		DeviceType GetDeviceType() const;
 		void SetDebug(bool val);
+		uint GetWidth() const { return resolution_.x_; }
+		uint GetHeight() const { return resolution_.y_; }
 		const IntVector2& GetResolution() const;
 
 		// Returns the aspect ratio of the render context resolution (X:Y).
@@ -43,6 +45,7 @@ namespace Unique
 
 		void Frame();
 
+		void AddResource(const Char *Name, GPUObject* pObject, bool bIsUnique = true);
 		void AddResource(const Char *Name, IDeviceObject *pObject, bool bIsUnique);   
 		void AddResourceArray(const Char *Name, uint StartIndex, IDeviceObject* const* ppObjects, uint NumElements, bool bIsUnique);
 		void RemoveResourceByName(const Char *Name, uint ArrayIndex = 0);

@@ -163,7 +163,7 @@ namespace Unique
 	{
 		for (size_t i = 0; i < inputLayout_.size(); i++)
 		{
-			inputLayout_[i].InputIndex = i;
+			inputLayout_[i].InputIndex = (uint)i;
 		}
 
 		auto& computeShader = shaderStage_[5];

@@ -6,6 +6,8 @@
 
 namespace Unique
 {
+	class TextureView;
+
 	class Renderer : public Object
 	{
 		uRTTI(Renderer, Object)
@@ -31,14 +33,21 @@ namespace Unique
 	private:
 		void HandleEndFrame(const EndFrame& eventData);
 		void HandleRenderUpdate(const RenderUpdate& eventData);
+		void UpdateQueuedViewport(unsigned index);
 
-		class Graphics& graphics;
+		class Graphics& graphics_;
 
 		/// Backbuffer viewports.
 		Vector<SPtr<Viewport> > viewports_;
+		/// Render surface viewports queued for update.
+		Vector<Pair<WPtr<TextureView>, WPtr<Viewport> > > queuedViewports_;
+		/// Views that have been processed this frame.
+		Vector<WPtr<View> > views_;
+		/// Prepared views by culling camera.
+		HashMap<Camera*, WPtr<View> > preparedViews_;
+		/// Octrees that have been updated during the frame.
+		HashSet<Octree*> updatedOctrees_;
 
-		Vector<SPtr<View>> views_;  
-		
 		/// Frame info for rendering.
 		FrameInfo frame_;
 	};

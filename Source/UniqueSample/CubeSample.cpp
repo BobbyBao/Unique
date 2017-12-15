@@ -18,7 +18,7 @@ namespace Unique
 	{
 		Vector3 Position;
 		Vector3 Normal;
-		unsigned int AmbientColor;
+		uint AmbientColor;
 	};
 
 	struct ShaderConstants
@@ -29,7 +29,7 @@ namespace Unique
 		float LightCoeff;
 	};
 
-	CubeSample::CubeSample(Context* context) : Application(context)
+	CubeSample::CubeSample(Context* context) : Application(context), backgroundColor_(0.0f, 0.0f, 0.5f, 1.0f)
 	{
 		m_SpongeLevel = 2;                      // number of recursions
 		m_SpongeAO = true;                      // apply ambient occlusion
@@ -37,10 +37,6 @@ namespace Unique
 		m_LightDir.y_ = -0.2f;
 		m_LightDir.z_ = 1;
 		m_CamDistance = 0.7f;                  // camera distance
-		m_BackgroundColor[0] = 0;
-		m_BackgroundColor[1] = 0;
-		m_BackgroundColor[2] = 0.5f;
-		m_BackgroundColor[3] = 1;
 		m_Animate = false;                     // enable animation
 		m_AnimationSpeed = 0.2f;               // animation speed
 
@@ -71,10 +67,8 @@ namespace Unique
 		pipeline_ = shader_->GetPipeline("Main", "");
 
 		graphics.Frame();	
-
-		m_pConstantBuffer = *constBuffer_;
-
-		graphics.AddResource("Constants", m_pConstantBuffer, true);
+		
+		graphics.AddResource("Constants", constBuffer_);
 	}
 
 	void CubeSample::HandleShutdown(const struct Shutdown& eventData)
@@ -102,7 +96,7 @@ namespace Unique
 	{
 		auto& graphics = GetSubsystem<Graphics>();
 		// Clear the back buffer 
-		deviceContext->ClearRenderTarget(nullptr, m_BackgroundColor);
+		deviceContext->ClearRenderTarget(nullptr, backgroundColor_);
 		deviceContext->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f);
 
 		// Set world/view/proj matrices and global shader constants
@@ -122,7 +116,7 @@ namespace Unique
 		Vector<Batch>& batches = geometries_[graphics.GetRenderContext()];
 		for (auto& batch : batches)
 		{
-			MapHelper<ShaderConstants> MappedData(deviceContext, m_pConstantBuffer, MAP_WRITE, MAP_FLAG_DISCARD);
+			MapHelper<ShaderConstants> MappedData(deviceContext, *constBuffer_, MAP_WRITE, MAP_FLAG_DISCARD);
 			ShaderConstants *cst = MappedData;
 			cst->WorldViewProjT = (proj* view *world);
 			cst->WorldNormT = world;

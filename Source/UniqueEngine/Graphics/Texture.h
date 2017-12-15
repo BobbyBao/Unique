@@ -21,11 +21,19 @@ namespace Unique
 		bool Create(const TextureDesc& desc, const TextureData& texData);
 
 		bool Create(Image& img);
-		
+
+		uint GetWidth() const { return desc_.Width; }
+		uint GetHeight() const { return desc_.Height; }
 	protected:
 		bool CreateImpl();
 		TextureDesc desc_;
 		TextureData texData_;
+	};
+
+	class TextureView : public RefCounted
+	{
+	public:
+		ITextureView* textureView_;
 	};
 
 

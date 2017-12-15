@@ -118,6 +118,10 @@ namespace Unique
 		FrameNoRenderWait();
 	}
 
+	void Graphics::AddResource(const Char *Name, GPUObject* pObject, bool bIsUnique)
+	{
+		resourceMapping_->AddResource(Name, *pObject, bIsUnique);
+	}
 
 	void Graphics::AddResource(const Char *Name, IDeviceObject *pObject, bool bIsUnique)
 	{

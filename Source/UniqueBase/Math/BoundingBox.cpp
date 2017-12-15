@@ -74,11 +74,11 @@ void BoundingBox::Merge(const Frustum& frustum)
 
 void BoundingBox::Merge(const Polyhedron& poly)
 {
-    for (unsigned i = 0; i < poly.faces_.size(); ++i)
+    for (size_t i = 0; i < poly.faces_.size(); ++i)
     {
         const PODVector<Vector3>& face = poly.faces_[i];
         if (!face.empty())
-            Merge(&face[0], face.size());
+            Merge(&face[0], (uint)face.size());
     }
 }
 

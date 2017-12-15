@@ -345,7 +345,7 @@ void Drawable::LimitVertexLights(bool removeConvertedLights)
 {
     if (removeConvertedLights)
     {
-        for (unsigned i = vertexLights_.size() - 1; i < vertexLights_.size(); --i)
+        for (size_t i = vertexLights_.size() - 1; i < vertexLights_.size(); --i)
         {
             if (!vertexLights_[i]->GetPerVertex())
                 vertexLights_.erase(vertexLights_.begin() + i);

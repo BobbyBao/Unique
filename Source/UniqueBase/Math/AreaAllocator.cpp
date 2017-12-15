@@ -147,7 +147,7 @@ bool AreaAllocator::Allocate(int width, int height, int& x, int& y)
     else
     {
         // Remove the reserved area from all free areas
-        for (size_t i = 0; i < freeAreas_.size();)
+        for (uint i = 0; i < (uint)freeAreas_.size();)
         {
             if (SplitRect(i, reserved))
                 freeAreas_.erase(freeAreas_.begin() + i);

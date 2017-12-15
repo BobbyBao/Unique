@@ -349,14 +349,14 @@ void Octree::DrawDebugGeometry(DebugRenderer* debug, bool depthTest)
 
 void Octree::SetSize(const BoundingBox& box, unsigned numLevels)
 {
-//    UNIQUE_PROFILE(ResizeOctree);
+    UNIQUE_PROFILE(ResizeOctree);
 
     // If drawables exist, they are temporarily moved to the root
     for (unsigned i = 0; i < NUM_OCTANTS; ++i)
         DeleteChild(i);
 
     Initialize(box);
-    numDrawables_ = drawables_.size();
+    numDrawables_ = (uint)drawables_.size();
     numLevels_ = Max(numLevels, 1U);
 }
 
@@ -371,7 +371,7 @@ void Octree::Update(const FrameInfo& frame)
     // Let drawables update themselves before reinsertion. This can be used for animation
     if (!drawableUpdates_.empty())
     {
-   //     UNIQUE_PROFILE(UpdateDrawables);
+		UNIQUE_PROFILE(UpdateDrawables);
 
         // Perform updates in worker threads. Notify the scene that a threaded update is going on and components
         // (for example physics objects) should not perform non-threadsafe work when marked dirty
@@ -409,7 +409,7 @@ void Octree::Update(const FrameInfo& frame)
     // If any drawables were inserted during threaded update, update them now from the main thread
     if (!threadedDrawableUpdates_.empty())
     {
-    //    UNIQUE_PROFILE(UpdateDrawablesQueuedDuringUpdate);
+		UNIQUE_PROFILE(UpdateDrawablesQueuedDuringUpdate);
 
         for (PODVector<Drawable*>::const_iterator i = threadedDrawableUpdates_.begin(); i != threadedDrawableUpdates_.end(); ++i)
         {
@@ -440,7 +440,7 @@ void Octree::Update(const FrameInfo& frame)
     // the proper octant yet
     if (!drawableUpdates_.empty())
     {
-   //     UNIQUE_PROFILE(ReinsertToOctree);
+		UNIQUE_PROFILE(ReinsertToOctree);
 
         for (PODVector<Drawable*>::iterator i = drawableUpdates_.begin(); i != drawableUpdates_.end(); ++i)
         {
@@ -491,7 +491,7 @@ void Octree::GetDrawables(OctreeQuery& query) const
 
 void Octree::Raycast(RayOctreeQuery& query) const
 {
-//    UNIQUE_PROFILE(Raycast);
+	UNIQUE_PROFILE(Raycast);
 
     query.result_.clear();
     GetDrawablesInternal(query);
@@ -500,7 +500,7 @@ void Octree::Raycast(RayOctreeQuery& query) const
 
 void Octree::RaycastSingle(RayOctreeQuery& query) const
 {
-//    UNIQUE_PROFILE(Raycast);
+	UNIQUE_PROFILE(Raycast);
 
     query.result_.clear();
     rayQueryDrawables_.clear();
@@ -522,7 +522,7 @@ void Octree::RaycastSingle(RayOctreeQuery& query) const
         Drawable* drawable = *i;
         if (drawable->GetSortValue() < Min(closestHit, query.maxDistance_))
         {
-            unsigned oldSize = query.result_.size();
+            size_t oldSize = query.result_.size();
             drawable->ProcessRayQuery(query, query.result_);
             if (query.result_.size() > oldSize)
                 closestHit = Min(closestHit, query.result_.back().distance_);

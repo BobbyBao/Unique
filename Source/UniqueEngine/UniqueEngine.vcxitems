@@ -15,6 +15,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)Application\Application.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Batch.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Camera.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\DebugRenderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\GraphicsBuffer.h" />
@@ -53,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Application\Application.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Batch.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Camera.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\DebugRenderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Light.cpp" />
