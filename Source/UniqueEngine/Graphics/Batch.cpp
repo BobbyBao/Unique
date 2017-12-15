@@ -207,7 +207,7 @@ namespace Unique
 		
 		// Set camera & viewport shader parameters
 		unsigned cameraHash = (unsigned)(size_t)camera;
-		IntRect viewport = view->GetV;
+		IntRect viewport = view->GetViewRect();
 		IntVector2 viewSize = IntVector2(viewport.Width(), viewport.Height());
 		unsigned viewportHash = (unsigned)(viewSize.x_ | (viewSize.y_ << 16));
 #if false

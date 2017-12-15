@@ -54,7 +54,7 @@ namespace Unique
 			QueueViewport(0, viewports_[i]);
 
 		// Update main viewports. This may queue further views
-		unsigned numMainViewports = queuedViewports_.Size();
+		unsigned numMainViewports = queuedViewports_.size();
 		for (unsigned i = 0; i < numMainViewports; ++i)
 			UpdateQueuedViewport(i);
 

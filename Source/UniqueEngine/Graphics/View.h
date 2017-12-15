@@ -186,6 +186,10 @@ namespace Unique
 		PODVector<Light*> lights_;
 		/// Number of active occluders.
 		unsigned activeOccluders_;
+
+		friend void CheckVisibilityWork(const WorkItem* item, unsigned threadIndex);
+		friend void ProcessLightWork(const WorkItem* item, unsigned threadIndex);
+
 	};
 
 }

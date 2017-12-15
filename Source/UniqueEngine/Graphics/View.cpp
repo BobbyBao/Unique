@@ -3,6 +3,7 @@
 #include "OctreeQuery.h"
 #include "Core/WorkQueue.h"
 
+#include "Camera.h"
 
 
 namespace Unique
