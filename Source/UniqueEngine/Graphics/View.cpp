@@ -249,7 +249,7 @@ namespace Unique
 	{
 	}
 
-	bool View::Define(ITextureView* renderTarget, Unique::Viewport* viewport)
+	bool View::Define(TextureView* renderTarget, Unique::Viewport* viewport)
 	{
 // 		sourceView_ = nullptr;
 // 		renderPath_ = viewport->GetRenderPath();
@@ -258,8 +258,7 @@ namespace Unique
 
 		renderTarget_ = renderTarget;
 		drawDebug_ = viewport->GetDrawDebug();
-		IRenderDevice
-		IDeviceContext
+
 		// Validate the rect and calculate size. If zero rect, use whole rendertarget size
 		int rtWidth = renderTarget ? renderTarget->GetWidth() : graphics_.GetWidth();
 		int rtHeight = renderTarget ? renderTarget->GetHeight() : graphics_.GetHeight();
@@ -292,6 +291,9 @@ namespace Unique
 		camera_ = viewport->GetCamera();
 		if (!cullCamera_)
 			cullCamera_ = camera_;
+
+
+		return true;
 	}
 
 	void View::Update(const FrameInfo& frame)

@@ -4,8 +4,12 @@
 #include "../Graphics/Drawable.h"
 #include "../Graphics/Viewport.h"
 
+#include "../Graphics/VertexBuffer.h"
+
 namespace Unique
 {
+	//class VertexBuffer;
+
 	static const int INSTANCING_BUFFER_DEFAULT_SIZE = 1024;
 
 	class Renderer : public Object
@@ -37,7 +41,7 @@ namespace Unique
 		void HandleEndFrame(const EndFrame& eventData);
 		void HandleRenderUpdate(const RenderUpdate& eventData);
 		void UpdateQueuedViewport(unsigned index);
-		void QueueViewport(ITextureView* renderTarget, Viewport* viewport);
+		void QueueViewport(TextureView* renderTarget, Viewport* viewport);
 		void CreateInstancingBuffer();
 		bool ResizeInstancingBuffer(unsigned numInstances);
 
@@ -46,7 +50,7 @@ namespace Unique
 		/// Backbuffer viewports.
 		Vector<SPtr<Viewport> > viewports_;
 		/// Render surface viewports queued for update.
-		Vector<Pair<ITextureView*, WPtr<Viewport> > > queuedViewports_;
+		Vector<Pair<TextureView*, WPtr<Viewport> > > queuedViewports_;
 		/// Views that have been processed this frame.
 		Vector<WPtr<View> > views_;
 		/// Prepared views by culling camera.

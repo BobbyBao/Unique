@@ -102,7 +102,7 @@ namespace Unique
 		const FrameInfo& GetFrameInfo() const { return frame_; }
 
 		/// Return the rendertarget. 0 if using the backbuffer.
-		ITextureView* GetRenderTarget() const { return renderTarget_; }
+		TextureView* GetRenderTarget() const { return renderTarget_; }
 
 		/// Return whether should draw debug geometry.
 		bool GetDrawDebug() const { return drawDebug_; }
@@ -126,7 +126,7 @@ namespace Unique
 //		const Vector<LightBatchQueue>& GetLightQueues() const { return lightQueues_; }
 
 
-		bool Define(ITextureView* renderTarget, Unique::Viewport* viewport);
+		bool Define(TextureView* renderTarget, Unique::Viewport* viewport);
 
 		void Update(const FrameInfo& frame);
 
@@ -148,15 +148,15 @@ namespace Unique
 		/// Culling camera. Usually same as the viewport camera.
 		Camera* cullCamera_;
 		/// Destination color rendertarget.
-		ITextureView* renderTarget_;
+		TextureView* renderTarget_;
 		/// Substitute rendertarget for deferred rendering. Allocated if necessary.
-		ITextureView* substituteRenderTarget_;
+		TextureView* substituteRenderTarget_;
 		/// Texture(s) for sampling the viewport contents. Allocated if necessary.
 		Texture* viewportTextures_[MAX_VIEWPORT_TEXTURES];
 		/// Color rendertarget active for the current renderpath command.
-		ITextureView* currentRenderTarget_;
+		TextureView* currentRenderTarget_;
 		/// Last used custom depth render surface.
-		ITextureView* lastCustomDepthSurface_;
+		TextureView* lastCustomDepthSurface_;
 		/// Texture containing the latest viewport texture.
 		Texture* currentViewportTexture_;
 		/// Dummy texture for D3D9 depth only rendering.

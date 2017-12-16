@@ -5,7 +5,6 @@
 #include "Core/CoreEvents.h"
 #include "../Graphics/DebugRenderer.h"
 #include "../Scene/Scene.h"
-#include "../Graphics/VertexBuffer.h"
 
 namespace Unique
 {
@@ -91,7 +90,7 @@ namespace Unique
 
 	void Renderer::UpdateQueuedViewport(unsigned index)
 	{
-		ITextureView* renderTarget = queuedViewports_[index].first;
+		TextureView* renderTarget = queuedViewports_[index].first;
 		WPtr<Viewport>& viewport = queuedViewports_[index].second;
 
 		// Null pointer means backbuffer view. Differentiate between that and an expired rendersurface
@@ -140,11 +139,11 @@ namespace Unique
 		view->Update(frame_);
 	}
 
-	void Renderer::QueueViewport(ITextureView* renderTarget, Viewport* viewport)
+	void Renderer::QueueViewport(TextureView* renderTarget, Viewport* viewport)
 	{
 		if (viewport)
 		{
-			Pair<ITextureView*, WPtr<Viewport> > newView =
+			Pair<TextureView*, WPtr<Viewport> > newView =
 				std::make_pair(renderTarget, WPtr<Viewport>(viewport));
 
 			// Prevent double add of the same rendertarget/viewport combination
@@ -186,10 +185,10 @@ namespace Unique
 	{
 		instancingBuffer_ = new VertexBuffer();
 		const PODVector<VertexElement> instancingBufferElements = CreateInstancingBufferElements(numExtraInstancingBufferElements_);
-		if (!instancingBuffer_->Create(INSTANCING_BUFFER_DEFAULT_SIZE, instancingBufferElements, true))
-		{
-			instancingBuffer_.Reset();
-		}
+// 		if (!instancingBuffer_->Create(INSTANCING_BUFFER_DEFAULT_SIZE, instancingBufferElements, true))
+// 		{
+// 			instancingBuffer_.Reset();
+// 		}
 	}
 
 
@@ -205,15 +204,15 @@ namespace Unique
 		unsigned newSize = INSTANCING_BUFFER_DEFAULT_SIZE;
 		while (newSize < numInstances)
 			newSize <<= 1;
-
+		/*
 		const PODVector<VertexElement> instancingBufferElements = CreateInstancingBufferElements(numExtraInstancingBufferElements_);
-		if (!instancingBuffer_->SetSize(newSize, instancingBufferElements, true))
+		if (!instancingBuffer_->CreateByMask(newSize, instancingBufferElements, true))
 		{
 			UNIQUE_LOGERROR("Failed to resize instancing buffer to " + String(newSize));
 			// If failed, try to restore the old size
 			instancingBuffer_->SetSize(oldSize, instancingBufferElements, true);
 			return false;
-		}
+		}*/
 
 		UNIQUE_LOGDEBUG("Resized instancing buffer to " + String(newSize));
 		return true;

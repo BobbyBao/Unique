@@ -9,6 +9,7 @@
 namespace Unique
 {
 	class Image;
+	class TextureView;
 
 	class Texture : public Resource, public GPUObject
 	{
@@ -25,8 +26,8 @@ namespace Unique
 
 		uint GetHeight() const { return desc_.Height; }
 
-		ITextureView* GetTextureView() {
-			return textureView_;
+		TextureView* GetTextureView() {
+			return textureView_.get();
 		}
 	protected:
 		bool CreateImpl();
@@ -35,7 +36,8 @@ namespace Unique
 
 		TextureData texData_;
 
-		RefCntAutoPtr<ITextureView> textureView_;
+		//textureObject->GetDefaultView()
+		UPtr<TextureView> textureView_;
 	};
 
 	class TextureView
