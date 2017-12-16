@@ -618,9 +618,240 @@ namespace Unique
 		if (!geometry_->IsEmpty())
 		{
 			Prepare(view, camera, true, allowDepthWrite);
-			geometry_->Draw(view->GetGraphics());
+			geometry_->Draw(pipelineState_);
 		}
 	}
 
 
+	void BatchGroup::SetInstancingData(void* lockedData, unsigned stride, unsigned& freeIndex)
+	{
+		// Do not use up buffer space if not going to draw as instanced
+		if (geometryType_ != GEOM_INSTANCED)
+			return;
+
+		startIndex_ = freeIndex;
+		unsigned char* buffer = static_cast<unsigned char*>(lockedData) + startIndex_ * stride;
+
+		for (unsigned i = 0; i < instances_.size(); ++i)
+		{
+			const InstanceData& instance = instances_[i];
+
+			memcpy(buffer, instance.worldTransform_, sizeof(Matrix3x4));
+			if (instance.instancingData_)
+				memcpy(buffer + sizeof(Matrix3x4), instance.instancingData_, stride - sizeof(Matrix3x4));
+
+			buffer += stride;
+		}
+
+		freeIndex += instances_.size();
+	}
+
+	void BatchGroup::Draw(View* view, Camera* camera, bool allowDepthWrite) const
+	{
+// 		Graphics* graphics = view->GetGraphics();
+		Renderer& renderer = GetSubsystem<Renderer>();
+
+		if (instances_.size() && !geometry_->IsEmpty())
+		{
+			// Draw as individual objects if instancing not supported or could not fill the instancing buffer
+			VertexBuffer* instanceBuffer = renderer.GetInstancingBuffer();
+			if (!instanceBuffer || geometryType_ != GEOM_INSTANCED || startIndex_ == M_MAX_UNSIGNED)
+			{
+				Batch::Prepare(view, camera, false, allowDepthWrite);
+
+				//graphics->SetIndexBuffer(geometry_->GetIndexBuffer());
+				//graphics->SetVertexBuffers(geometry_->GetVertexBuffers());
+
+				for (unsigned i = 0; i < instances_.size(); ++i)
+				{
+// 					if (graphics->NeedParameterUpdate(SP_OBJECT, instances_[i].worldTransform_))
+// 						graphics->SetShaderParameter(VSP_MODEL, *instances_[i].worldTransform_);
+// 
+// 					graphics->Draw(geometry_->GetPrimitiveType(), geometry_->GetIndexStart(), geometry_->GetIndexCount(),
+// 						geometry_->GetVertexStart(), geometry_->GetVertexCount());
+				}
+			}
+			else
+			{
+				Batch::Prepare(view, camera, false, allowDepthWrite);
+
+				// Get the geometry vertex buffers, then add the instancing stream buffer
+				// Hack: use a const_cast to avoid dynamic allocation of new temp vectors
+				Vector<SPtr<VertexBuffer> >& vertexBuffers = const_cast<Vector<SPtr<VertexBuffer> >&>(
+					geometry_->GetVertexBuffers());
+				vertexBuffers.push_back(SPtr<VertexBuffer>(instanceBuffer));
+
+// 				graphics->SetIndexBuffer(geometry_->GetIndexBuffer());
+// 				graphics->SetVertexBuffers(vertexBuffers, startIndex_);
+// 				graphics->DrawInstanced(geometry_->GetPrimitiveType(), geometry_->GetIndexStart(), geometry_->GetIndexCount(),
+// 					geometry_->GetVertexStart(), geometry_->GetVertexCount(), instances_.Size());
+
+				// Remove the instancing buffer & element mask now
+				vertexBuffers.pop_back();
+			}
+		}
+	}
+
+	unsigned BatchGroupKey::ToHash() const
+	{
+		return (unsigned)(/*(size_t)zone_ / sizeof(Zone) +*/ (size_t)lightQueue_ / sizeof(LightBatchQueue) + (size_t)pass_ / sizeof(Pass) +
+			(size_t)material_ / sizeof(Material) + (size_t)geometry_ / sizeof(Geometry)) + renderOrder_;
+	}
+
+	void BatchQueue::Clear(int maxSortedInstances)
+	{
+		batches_.clear();
+		sortedBatches_.clear();
+		batchGroups_.clear();
+		maxSortedInstances_ = (unsigned)maxSortedInstances;
+	}
+
+	void BatchQueue::SortBackToFront()
+	{
+		sortedBatches_.resize(batches_.size());
+
+		for (unsigned i = 0; i < batches_.size(); ++i)
+			sortedBatches_[i] = &batches_[i];
+
+		std::sort(sortedBatches_.begin(), sortedBatches_.end(), CompareBatchesBackToFront);
+
+		sortedBatchGroups_.resize(batchGroups_.size());
+
+		unsigned index = 0;
+		for (auto i = batchGroups_.begin(); i != batchGroups_.end(); ++i)
+			sortedBatchGroups_[index++] = &i->second;
+
+		std::sort(sortedBatchGroups_.begin(), sortedBatchGroups_.end(), CompareBatchGroupOrder);
+	}
+
+	void BatchQueue::SortFrontToBack()
+	{
+		sortedBatches_.clear();
+
+		for (unsigned i = 0; i < batches_.size(); ++i)
+			sortedBatches_.push_back(&batches_[i]);
+
+		SortFrontToBack2Pass(sortedBatches_);
+
+		// Sort each group front to back
+		for (auto i = batchGroups_.begin(); i != batchGroups_.end(); ++i)
+		{
+			if (i->second.instances_.size() <= maxSortedInstances_)
+			{
+				std::sort(i->second.instances_.begin(), i->second.instances_.end(), CompareInstancesFrontToBack);
+				if (i->second.instances_.size())
+					i->second.distance_ = i->second.instances_[0].distance_;
+			}
+			else
+			{
+				float minDistance = M_INFINITY;
+				for (auto j = i->second.instances_.begin(); j != i->second.instances_.end(); ++j)
+					minDistance = Min(minDistance, j->distance_);
+				i->second.distance_ = minDistance;
+			}
+		}
+
+		sortedBatchGroups_.resize(batchGroups_.size());
+
+		unsigned index = 0;
+		for (auto i = batchGroups_.begin(); i != batchGroups_.end(); ++i)
+			sortedBatchGroups_[index++] = &i->second;
+
+		SortFrontToBack2Pass(reinterpret_cast<PODVector<Batch*>&>(sortedBatchGroups_));
+	}
+
+	void BatchQueue::SortFrontToBack2Pass(PODVector<Batch*>& batches)
+	{
+		// Mobile devices likely use a tiled deferred approach, with which front-to-back sorting is irrelevant. The 2-pass
+		// method is also time consuming, so just sort with state having priority
+#ifdef GL_ES_VERSION_2_0
+		std::sort(batches.begin(), batches.end(), CompareBatchesState);
+#else
+		// For desktop, first sort by distance and remap shader/material/geometry IDs in the sort key
+		std::sort(batches.begin(), batches.end(), CompareBatchesFrontToBack);
+
+		unsigned freeShaderID = 0;
+		unsigned short freeMaterialID = 0;
+		unsigned short freeGeometryID = 0;
+
+		for (auto i = batches.begin(); i != batches.end(); ++i)
+		{
+			Batch* batch = *i;
+
+			unsigned shaderID = (unsigned)(batch->sortKey_ >> 32);
+			auto j = shaderRemapping_.find(shaderID);
+			if (j != shaderRemapping_.end())
+				shaderID = j->second;
+			else
+			{
+				shaderID = shaderRemapping_[shaderID] = freeShaderID | (shaderID & 0x80000000);
+				++freeShaderID;
+			}
+
+			unsigned short materialID = (unsigned short)(batch->sortKey_ & 0xffff0000);
+			auto k = materialRemapping_.find(materialID);
+			if (k != materialRemapping_.end())
+				materialID = k->second;
+			else
+			{
+				materialID = materialRemapping_[materialID] = freeMaterialID;
+				++freeMaterialID;
+			}
+
+			unsigned short geometryID = (unsigned short)(batch->sortKey_ & 0xffff);
+			auto l = geometryRemapping_.find(geometryID);
+			if (l != geometryRemapping_.end())
+				geometryID = l->second;
+			else
+			{
+				geometryID = geometryRemapping_[geometryID] = freeGeometryID;
+				++freeGeometryID;
+			}
+
+			batch->sortKey_ = (((unsigned long long)shaderID) << 32) | (((unsigned long long)materialID) << 16) | geometryID;
+		}
+
+		shaderRemapping_.clear();
+		materialRemapping_.clear();
+		geometryRemapping_.clear();
+
+		// Finally sort again with the rewritten ID's
+		std::sort(batches.begin(), batches.end(), CompareBatchesState);
+#endif
+	}
+
+	void BatchQueue::SetInstancingData(void* lockedData, unsigned stride, unsigned& freeIndex)
+	{
+		for (auto i = batchGroups_.begin(); i != batchGroups_.end(); ++i)
+			i->second.SetInstancingData(lockedData, stride, freeIndex);
+	}
+
+	void BatchQueue::Draw(View* view, Camera* camera, bool markToStencil, bool usingLightOptimization, bool allowDepthWrite) const
+	{
+		// Instanced
+		for (auto i = sortedBatchGroups_.begin(); i != sortedBatchGroups_.end(); ++i)
+		{
+			BatchGroup* group = *i;
+			group->Draw(view, camera, allowDepthWrite);
+		}
+		// Non-instanced
+		for (auto i = sortedBatches_.begin(); i != sortedBatches_.end(); ++i)
+		{
+			Batch* batch = *i;
+			batch->Draw(view, camera, allowDepthWrite);
+		}
+	}
+
+	unsigned BatchQueue::GetNumInstances() const
+	{
+		unsigned total = 0;
+
+		for (auto i = batchGroups_.begin(); i != batchGroups_.end(); ++i)
+		{
+			if (i->second.geometryType_ == GEOM_INSTANCED)
+				total += i->second.instances_.size();
+		}
+
+		return total;
+	}
 }

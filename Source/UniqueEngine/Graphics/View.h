@@ -8,6 +8,8 @@ namespace Unique
 	class Geometry;
 	class Material;
 	class PipelineState;
+	class Renderer;
+	class Viewport;
 
 	struct ViewParameter
 	{
@@ -100,7 +102,7 @@ namespace Unique
 		const FrameInfo& GetFrameInfo() const { return frame_; }
 
 		/// Return the rendertarget. 0 if using the backbuffer.
-		TextureView* GetRenderTarget() const { return renderTarget_; }
+		ITextureView* GetRenderTarget() const { return renderTarget_; }
 
 		/// Return whether should draw debug geometry.
 		bool GetDrawDebug() const { return drawDebug_; }
@@ -123,10 +125,20 @@ namespace Unique
 		/// Return light batch queues.
 //		const Vector<LightBatchQueue>& GetLightQueues() const { return lightQueues_; }
 
+
+		bool Define(ITextureView* renderTarget, Unique::Viewport* viewport);
+
 		void Update(const FrameInfo& frame);
 
 		void Render();
 	protected:
+
+		/// Query for lit geometries and shadow casters for a light.
+		void ProcessLight(LightQueryResult& query, unsigned threadIndex);
+		/// Graphics subsystem.
+		Graphics& graphics_;
+		/// Renderer subsystem.
+		Renderer& renderer_;
 		/// Scene to use.
 		Scene* scene_;
 		/// Octree to use.
@@ -136,15 +148,15 @@ namespace Unique
 		/// Culling camera. Usually same as the viewport camera.
 		Camera* cullCamera_;
 		/// Destination color rendertarget.
-		TextureView* renderTarget_;
+		ITextureView* renderTarget_;
 		/// Substitute rendertarget for deferred rendering. Allocated if necessary.
-		TextureView* substituteRenderTarget_;
+		ITextureView* substituteRenderTarget_;
 		/// Texture(s) for sampling the viewport contents. Allocated if necessary.
 		Texture* viewportTextures_[MAX_VIEWPORT_TEXTURES];
 		/// Color rendertarget active for the current renderpath command.
-		TextureView* currentRenderTarget_;
+		ITextureView* currentRenderTarget_;
 		/// Last used custom depth render surface.
-		TextureView* lastCustomDepthSurface_;
+		ITextureView* lastCustomDepthSurface_;
 		/// Texture containing the latest viewport texture.
 		Texture* currentViewportTexture_;
 		/// Dummy texture for D3D9 depth only rendering.

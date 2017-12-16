@@ -5,10 +5,24 @@
 #include "Core/CoreEvents.h"
 #include "../Graphics/DebugRenderer.h"
 #include "../Scene/Scene.h"
+#include "../Graphics/VertexBuffer.h"
 
 namespace Unique
 {
-	Renderer::Renderer() : graphics_(GetSubsystem<Graphics>())
+	static const int MAX_EXTRA_INSTANCING_BUFFER_ELEMENTS = 4;
+
+	inline PODVector<VertexElement> CreateInstancingBufferElements(unsigned numExtraElements)
+	{
+		static const unsigned NUM_INSTANCEMATRIX_ELEMENTS = 3;
+		static const unsigned FIRST_UNUSED_TEXCOORD = 4;
+
+		PODVector<VertexElement> elements;
+		for (unsigned i = 0; i < NUM_INSTANCEMATRIX_ELEMENTS + numExtraElements; ++i)
+			elements.push_back(VertexElement(TYPE_VECTOR4, SEM_TEXCOORD, FIRST_UNUSED_TEXCOORD + i, true));
+		return elements;
+	}
+
+	Renderer::Renderer() : graphics_(GetSubsystem<Graphics>()), numExtraInstancingBufferElements_(3)
 	{
 		Subscribe(&Renderer::HandleRenderUpdate);
 		Subscribe(&Renderer::HandleEndFrame);
@@ -54,7 +68,7 @@ namespace Unique
 			QueueViewport(0, viewports_[i]);
 
 		// Update main viewports. This may queue further views
-		unsigned numMainViewports = queuedViewports_.size();
+		unsigned numMainViewports = (unsigned)queuedViewports_.size();
 		for (unsigned i = 0; i < numMainViewports; ++i)
 			UpdateQueuedViewport(i);
 
@@ -66,7 +80,7 @@ namespace Unique
 			UpdateQueuedViewport(i);
 
 		queuedViewports_.clear();
-		resetViews_ = false;
+		//resetViews_ = false;
 		/*
 		for (auto& view : views_)
 		{
@@ -77,11 +91,11 @@ namespace Unique
 
 	void Renderer::UpdateQueuedViewport(unsigned index)
 	{
-		WPtr<TextureView>& renderTarget = queuedViewports_[index].first;
+		ITextureView* renderTarget = queuedViewports_[index].first;
 		WPtr<Viewport>& viewport = queuedViewports_[index].second;
 
 		// Null pointer means backbuffer view. Differentiate between that and an expired rendersurface
-		if ((renderTarget.NotNull() && renderTarget.Expired()) || viewport.Expired())
+		if (renderTarget == nullptr || viewport.Expired())
 			return;
 
 		// (Re)allocate the view structure if necessary
@@ -126,6 +140,19 @@ namespace Unique
 		view->Update(frame_);
 	}
 
+	void Renderer::QueueViewport(ITextureView* renderTarget, Viewport* viewport)
+	{
+		if (viewport)
+		{
+			Pair<ITextureView*, WPtr<Viewport> > newView =
+				std::make_pair(renderTarget, WPtr<Viewport>(viewport));
+
+			// Prevent double add of the same rendertarget/viewport combination
+			if (!Contains(queuedViewports_, newView))
+				queuedViewports_.push_back(newView);
+		}
+	}
+
 	void Renderer::HandleEndFrame(const EndFrame& args)
 	{
 		graphics_.Frame();
@@ -153,5 +180,42 @@ namespace Unique
 	void Renderer::Stop()
 	{
 		graphics_.Close();
+	}
+
+	void Renderer::CreateInstancingBuffer()
+	{
+		instancingBuffer_ = new VertexBuffer();
+		const PODVector<VertexElement> instancingBufferElements = CreateInstancingBufferElements(numExtraInstancingBufferElements_);
+		if (!instancingBuffer_->Create(INSTANCING_BUFFER_DEFAULT_SIZE, instancingBufferElements, true))
+		{
+			instancingBuffer_.Reset();
+		}
+	}
+
+
+	bool Renderer::ResizeInstancingBuffer(unsigned numInstances)
+	{
+		if (!instancingBuffer_)
+			return false;
+
+		unsigned oldSize = instancingBuffer_->GetCount();
+		if (numInstances <= oldSize)
+			return true;
+
+		unsigned newSize = INSTANCING_BUFFER_DEFAULT_SIZE;
+		while (newSize < numInstances)
+			newSize <<= 1;
+
+		const PODVector<VertexElement> instancingBufferElements = CreateInstancingBufferElements(numExtraInstancingBufferElements_);
+		if (!instancingBuffer_->SetSize(newSize, instancingBufferElements, true))
+		{
+			UNIQUE_LOGERROR("Failed to resize instancing buffer to " + String(newSize));
+			// If failed, try to restore the old size
+			instancingBuffer_->SetSize(oldSize, instancingBufferElements, true);
+			return false;
+		}
+
+		UNIQUE_LOGDEBUG("Resized instancing buffer to " + String(newSize));
+		return true;
 	}
 }

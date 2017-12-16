@@ -6,7 +6,7 @@
 
 namespace Unique
 {
-	class TextureView;
+	static const int INSTANCING_BUFFER_DEFAULT_SIZE = 1024;
 
 	class Renderer : public Object
 	{
@@ -26,6 +26,9 @@ namespace Unique
 		/// Return backbuffer viewport by index.
 		Viewport* GetViewport(unsigned index) const;
 
+		/// Return the instancing vertex buffer
+		VertexBuffer* GetInstancingBuffer() const { return instancingBuffer_.Get(); }
+
 		void Begin();
 		void Render();
 		void End();
@@ -34,13 +37,16 @@ namespace Unique
 		void HandleEndFrame(const EndFrame& eventData);
 		void HandleRenderUpdate(const RenderUpdate& eventData);
 		void UpdateQueuedViewport(unsigned index);
+		void QueueViewport(ITextureView* renderTarget, Viewport* viewport);
+		void CreateInstancingBuffer();
+		bool ResizeInstancingBuffer(unsigned numInstances);
 
 		class Graphics& graphics_;
 
 		/// Backbuffer viewports.
 		Vector<SPtr<Viewport> > viewports_;
 		/// Render surface viewports queued for update.
-		Vector<Pair<WPtr<TextureView>, WPtr<Viewport> > > queuedViewports_;
+		Vector<Pair<ITextureView*, WPtr<Viewport> > > queuedViewports_;
 		/// Views that have been processed this frame.
 		Vector<WPtr<View> > views_;
 		/// Prepared views by culling camera.
@@ -49,7 +55,12 @@ namespace Unique
 		HashSet<Octree*> updatedOctrees_;
 
 		/// Frame info for rendering.
-		FrameInfo frame_;
+		FrameInfo frame_;    
+		
+		/// Instance stream vertex buffer.
+		SPtr<VertexBuffer> instancingBuffer_;
+		/// Number of extra instancing data elements.
+		int numExtraInstancingBufferElements_;
 	};
 
 }

@@ -88,7 +88,7 @@ namespace Unique
 		if(size != file->Read(dst_mem, size))
 		{
 			return nullptr;
-		}
+		} 
 		
 		SPtr<Texture> texture(new Texture());
 

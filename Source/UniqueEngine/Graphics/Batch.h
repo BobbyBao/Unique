@@ -34,7 +34,7 @@ namespace Unique
 		/// Construct from a drawable's source batch.
 		Batch(const SourceBatch& rhs) :
 			distance_(rhs.distance_),
-		//	renderOrder_(rhs.material_ ? rhs.material_->GetRenderOrder() : DEFAULT_RENDER_ORDER),
+			//	renderOrder_(rhs.material_ ? rhs.material_->GetRenderOrder() : DEFAULT_RENDER_ORDER),
 			isBase_(false),
 			geometry_(rhs.geometry_),
 			material_(rhs.material_),
@@ -209,6 +209,24 @@ namespace Unique
 		/// Return hash value.
 		unsigned ToHash() const;
 	};
+}
+
+#include <xstddef>
+namespace std
+{
+	template<>
+	struct hash<Unique::BatchGroupKey>
+	{
+		size_t operator()(const Unique::BatchGroupKey& value) const
+		{
+			return value.ToHash();
+		}
+	};
+}
+
+
+namespace Unique
+{
 
 	/// Queue that contains both instanced and non-instanced draw calls.
 	struct BatchQueue

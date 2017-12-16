@@ -2,9 +2,9 @@
 #include "View.h"
 #include "OctreeQuery.h"
 #include "Core/WorkQueue.h"
-
+#include "Viewport.h"
 #include "Camera.h"
-
+#include "Graphics.h"
 
 namespace Unique
 {
@@ -154,9 +154,9 @@ namespace Unique
 				if (drawable->GetDrawableFlags() & DRAWABLE_GEOMETRY)
 				{
 					Zone* drawableZone = drawable->GetZone();
-					if (!cameraZoneOverride &&
-						(drawable->IsZoneDirty() || !drawableZone || (drawableZone->GetViewMask() & cameraViewMask) == 0))
-						view->FindZone(drawable);
+// 					if (!cameraZoneOverride &&
+// 						(drawable->IsZoneDirty() || !drawableZone || (drawableZone->GetViewMask() & cameraViewMask) == 0))
+// 						view->FindZone(drawable);
 
 					const BoundingBox& geomBox = drawable->GetWorldBoundingBox();
 					Vector3 center = geomBox.Center();
@@ -236,16 +236,62 @@ namespace Unique
 	void SortShadowQueueWork(const WorkItem* item, unsigned threadIndex)
 	{
 		LightBatchQueue* start = reinterpret_cast<LightBatchQueue*>(item->start_);
-		for (unsigned i = 0; i < start->shadowSplits_.Size(); ++i)
+		for (unsigned i = 0; i < start->shadowSplits_.size(); ++i)
 			start->shadowSplits_[i].shadowBatches_.SortFrontToBack();
 	}
 
-	View::View()
+	View::View() 
+		: graphics_(GetSubsystem<Graphics>()), renderer_(GetSubsystem<Renderer>())
 	{
 	}
 
 	View::~View()
 	{
+	}
+
+	bool View::Define(ITextureView* renderTarget, Unique::Viewport* viewport)
+	{
+// 		sourceView_ = nullptr;
+// 		renderPath_ = viewport->GetRenderPath();
+// 		if (!renderPath_)
+// 			return false;
+
+		renderTarget_ = renderTarget;
+		drawDebug_ = viewport->GetDrawDebug();
+		IRenderDevice
+		IDeviceContext
+		// Validate the rect and calculate size. If zero rect, use whole rendertarget size
+		int rtWidth = renderTarget ? renderTarget->GetWidth() : graphics_.GetWidth();
+		int rtHeight = renderTarget ? renderTarget->GetHeight() : graphics_.GetHeight();
+		const IntRect& rect = viewport->GetRect();
+
+		if (rect != IntRect::ZERO)
+		{
+			viewRect_.left_ = Clamp(rect.left_, 0, rtWidth - 1);
+			viewRect_.top_ = Clamp(rect.top_, 0, rtHeight - 1);
+			viewRect_.right_ = Clamp(rect.right_, viewRect_.left_ + 1, rtWidth);
+			viewRect_.bottom_ = Clamp(rect.bottom_, viewRect_.top_ + 1, rtHeight);
+		}
+		else
+			viewRect_ = IntRect(0, 0, rtWidth, rtHeight);
+
+		viewSize_ = viewRect_.Size();
+		rtSize_ = IntVector2(rtWidth, rtHeight);
+
+		// On OpenGL flip the viewport if rendering to a texture for consistent UV addressing with Direct3D9
+#ifdef URHO3D_OPENGL
+		if (renderTarget_)
+		{
+			viewRect_.bottom_ = rtHeight - viewRect_.top_;
+			viewRect_.top_ = viewRect_.bottom_ - viewSize_.y_;
+		}
+#endif
+
+		scene_ = viewport->GetScene();
+		cullCamera_ = viewport->GetCullCamera();
+		camera_ = viewport->GetCamera();
+		if (!cullCamera_)
+			cullCamera_ = camera_;
 	}
 
 	void View::Update(const FrameInfo& frame)
@@ -257,6 +303,11 @@ namespace Unique
 
 	}
 
+	/// Query for lit geometries and shadow casters for a light.
+	void View::ProcessLight(LightQueryResult& query, unsigned threadIndex)
+	{
+
+	}
 
 }
 
