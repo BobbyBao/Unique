@@ -47,15 +47,15 @@ namespace Unique
 		Attrs.Desc.TargetProfile = SHADER_PROFILE_DX_4_0;
 		BasicShaderSourceStreamFactory BasicSSSFactory("CoreData\\Shaders;CoreData\\Shaders\\HLSL;");
 		Attrs.pShaderSourceStreamFactory = &BasicSSSFactory;
-		renderDevice->CreateShader(Attrs, (IShader**)&handle_);
+		renderDevice->CreateShader(Attrs, (IShader**)&deviceObject_);
 
-		return handle_ != nullptr;
+		return deviceObject_ != nullptr;
 
 		// to do :
 		auto& graphics = GetSubsystem<Graphics>();
 		if (graphics.IsDirect3D())
 		{
-			return handle_ != nullptr;
+			return deviceObject_ != nullptr;
 		}
 
 		String name = GetFileName(owner_.GetName());

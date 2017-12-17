@@ -16,6 +16,8 @@ namespace Unique
 		Material();
 		~Material();
 
+		Shader* GetShader() { return shader_; }
+
 	private:
 		SPtr<Shader> shader_;
 		Vector<ShaderVariable> shaderVaribles_;

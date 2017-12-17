@@ -63,7 +63,7 @@ namespace Unique
 
 		// Queue update of the main viewports. Use reverse order, as rendering order is also reverse
 		// to render auxiliary views before dependent main views
-		for (unsigned i = viewports_.size() - 1; i < viewports_.size(); --i)
+		for (size_t i = viewports_.size() - 1; i < viewports_.size(); --i)
 			QueueViewport(0, viewports_[i]);
 
 		// Update main viewports. This may queue further views
@@ -80,21 +80,77 @@ namespace Unique
 
 		queuedViewports_.clear();
 		//resetViews_ = false;
-		/*
+	}
+
+	void Renderer::HandleEndFrame(const EndFrame& args)
+	{
+		graphics_.Frame();
+	}
+
+	void Renderer::Begin()
+	{
+		graphics_.BeginRender();
+	}
+
+	void Renderer::Render()
+	{
 		for (auto& view : views_)
 		{
-			view->Update();
+			view->Render();
 		}
-		*/
+
+	}
+
+	void Renderer::DrawDebugGeometry(bool depthTest)
+	{
+	//	URHO3D_PROFILE(RendererDrawDebug);
+
+		/// \todo Because debug geometry is per-scene, if two cameras show views of the same area, occlusion is not shown correctly
+		HashSet<Drawable*> processedGeometries;
+		HashSet<Light*> processedLights;
+
+		for (unsigned i = 0; i < views_.size(); ++i)
+		{
+			View* view = views_[i];
+			if (!view || !view->GetDrawDebug())
+				continue;
+			Octree* octree = view->GetOctree();
+			if (!octree)
+				continue;
+			DebugRenderer* debug = octree->GetComponent<DebugRenderer>();
+			if (!debug || !debug->IsEnabledEffective())
+				continue;
+
+			// Process geometries / lights only once
+			const PODVector<Drawable*>& geometries = view->GetGeometries();
+			const PODVector<Light*>& lights = view->GetLights();
+
+			for (size_t i = 0; i < geometries.size(); ++i)
+			{
+				if (!processedGeometries.count(geometries[i]))
+				{
+					geometries[i]->DrawDebugGeometry(debug, depthTest);
+					processedGeometries.insert(geometries[i]);
+				}
+			}
+			for (size_t i = 0; i < lights.size(); ++i)
+			{
+				if (!processedLights.count(lights[i]))
+				{
+					lights[i]->DrawDebugGeometry(debug, depthTest);
+					processedLights.insert(lights[i]);
+				}
+			}
+		}
 	}
 
 	void Renderer::UpdateQueuedViewport(unsigned index)
 	{
-		TextureView* renderTarget = queuedViewports_[index].first;
+		WPtr<TextureView>& renderTarget = queuedViewports_[index].first;
 		WPtr<Viewport>& viewport = queuedViewports_[index].second;
 
 		// Null pointer means backbuffer view. Differentiate between that and an expired rendersurface
-		if (renderTarget == nullptr || viewport.Expired())
+		if ((renderTarget.NotNull() && renderTarget.Expired()) || viewport.Expired())
 			return;
 
 		// (Re)allocate the view structure if necessary
@@ -143,32 +199,13 @@ namespace Unique
 	{
 		if (viewport)
 		{
-			Pair<TextureView*, WPtr<Viewport> > newView =
-				std::make_pair(renderTarget, WPtr<Viewport>(viewport));
+			Pair<WPtr<TextureView>, WPtr<Viewport> > newView =
+				std::make_pair(WPtr<TextureView>(renderTarget), WPtr<Viewport>(viewport));
 
 			// Prevent double add of the same rendertarget/viewport combination
 			if (!Contains(queuedViewports_, newView))
 				queuedViewports_.push_back(newView);
 		}
-	}
-
-	void Renderer::HandleEndFrame(const EndFrame& args)
-	{
-		graphics_.Frame();
-	}
-
-	void Renderer::Begin()
-	{
-		graphics_.BeginRender();
-	}
-
-	void Renderer::Render()
-	{
-		for (auto& view : views_)
-		{
-			view->Render();
-		}
-
 	}
 
 	void Renderer::End()

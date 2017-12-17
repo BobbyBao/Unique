@@ -24,30 +24,50 @@ namespace Unique
 	{
 		ITexture* textureObject = nullptr;
 		renderDevice->CreateTexture(desc_, texData_, (ITexture**)&textureObject);
-		if (!handle_)
+		deviceObject_ = textureObject;
+		if (!deviceObject_)
 		{
 			return false;
 		}
 
-		handle_ = textureObject;
-		TEXTURE_VIEW_TYPE viewType; 
-		//BIND_SHADER_RESOURCE = 0x8L, ///< A buffer or a texture can be bound as a shader resource
-									 ///  \warning This flag cannot be used with MAP_WRITE_NO_OVERWRITE flag 
-		//	BIND_STREAM_OUTPUT = 0x10L,///< A buffer can be bound as a target for stream output stage
-		//	BIND_RENDER_TARGET = 0x20L,///< A texture can be bound as a render target
-		//	BIND_DEPTH_STENCIL = 0x40L,///< A texture can be bound as a depth-stencil target
-		//	BIND_UNORDERED_ACCESS = 0x80L,///< A buffer or a texture can be bound as an unordered access view
-		//	BIND_INDIRECT_DRAW_ARGS = 0x100L
+		if (desc_.BindFlags & BIND_SHADER_RESOURCE)
+		{
+			shaderResourceView_ = new TextureView(*this, textureObject->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE));
+		}
 
-		//textureObject->GetDefaultView(viewType);
-		return handle_ != nullptr;
+		if (desc_.BindFlags & BIND_RENDER_TARGET)
+		{
+			renderTargetView_ = new TextureView(*this, textureObject->GetDefaultView(TEXTURE_VIEW_RENDER_TARGET));
+		}
+
+		if (desc_.BindFlags & BIND_DEPTH_STENCIL)
+		{
+			depthStencilView_ = new TextureView(*this, textureObject->GetDefaultView(TEXTURE_VIEW_DEPTH_STENCIL));
+		}
+
+		if (desc_.BindFlags & BIND_UNORDERED_ACCESS)
+		{
+			unorderedAccessView_ = new TextureView(*this, textureObject->GetDefaultView(TEXTURE_VIEW_UNORDERED_ACCESS));
+		}
+
+		return deviceObject_ != nullptr;
+	}
+
+	void Texture::ReleaseImpl()
+	{
+		GPUObject::ReleaseImpl();
+
+		shaderResourceView_ = nullptr;
+		renderTargetView_ = nullptr;
+		depthStencilView_ = nullptr;
+		unorderedAccessView_ = nullptr;
 	}
 
 	bool Texture::Create(Image& img)
 	{
 
 
-		return handle_ != nullptr;
+		return deviceObject_ != nullptr;
 	}
 	
 	

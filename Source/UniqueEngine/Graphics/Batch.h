@@ -245,7 +245,7 @@ namespace Unique
 		/// Draw.
 		void Draw(View* view, Camera* camera, bool markToStencil, bool usingLightOptimization, bool allowDepthWrite) const;
 		/// Return the combined amount of instances.
-		unsigned GetNumInstances() const;
+		size_t GetNumInstances() const;
 
 		/// Return whether the batch group is empty.
 		bool IsEmpty() const { return batches_.empty() && batchGroups_.empty(); }

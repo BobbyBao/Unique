@@ -49,10 +49,10 @@ namespace Unique
 
 	void GPUObject::ReleaseImpl()
 	{
-		if (handle_ != nullptr)
+		if (deviceObject_ != nullptr)
 		{
-			handle_->Release();
-			handle_ = nullptr;
+			deviceObject_->Release();
+			deviceObject_ = nullptr;
 		}
 	}
 }

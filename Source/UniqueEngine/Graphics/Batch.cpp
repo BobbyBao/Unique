@@ -632,7 +632,7 @@ namespace Unique
 		startIndex_ = freeIndex;
 		unsigned char* buffer = static_cast<unsigned char*>(lockedData) + startIndex_ * stride;
 
-		for (unsigned i = 0; i < instances_.size(); ++i)
+		for (size_t i = 0; i < instances_.size(); ++i)
 		{
 			const InstanceData& instance = instances_[i];
 
@@ -643,7 +643,7 @@ namespace Unique
 			buffer += stride;
 		}
 
-		freeIndex += instances_.size();
+		freeIndex += (uint)instances_.size();
 	}
 
 	void BatchGroup::Draw(View* view, Camera* camera, bool allowDepthWrite) const
@@ -842,9 +842,9 @@ namespace Unique
 		}
 	}
 
-	unsigned BatchQueue::GetNumInstances() const
+	size_t BatchQueue::GetNumInstances() const
 	{
-		unsigned total = 0;
+		size_t total = 0;
 
 		for (auto i = batchGroups_.begin(); i != batchGroups_.end(); ++i)
 		{

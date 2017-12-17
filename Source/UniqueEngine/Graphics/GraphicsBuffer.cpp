@@ -78,8 +78,8 @@ namespace Unique
 		BufferData BuffData;
 		BuffData.pData = data_.data();
 		BuffData.DataSize = desc_.uiSizeInBytes;
-		renderDevice->CreateBuffer(desc_, BuffData, (IBuffer**)&handle_);
-		return handle_ != nullptr;
+		renderDevice->CreateBuffer(desc_, BuffData, (IBuffer**)&deviceObject_);
+		return deviceObject_ != nullptr;
 	}
 
 	bool GraphicsBuffer::SetData(const void* data)

@@ -1,10 +1,14 @@
 #include "Precompiled.h"
-#include "View.h"
-#include "OctreeQuery.h"
 #include "Core/WorkQueue.h"
+#include "../Scene/Scene.h"
 #include "Viewport.h"
+#include "View.h"
 #include "Camera.h"
 #include "Graphics.h"
+#include "Batch.h"
+#include "Geometry.h"
+#include "Octree.h"
+#include "OctreeQuery.h"
 
 namespace Unique
 {
@@ -241,7 +245,8 @@ namespace Unique
 	}
 
 	View::View() 
-		: graphics_(GetSubsystem<Graphics>()), renderer_(GetSubsystem<Renderer>())
+		: graphics_(GetSubsystem<Graphics>()), renderer_(GetSubsystem<Renderer>()), 
+		geometriesUpdated_(false), minInstances_(2)
 	{
 	}
 
@@ -292,17 +297,362 @@ namespace Unique
 		if (!cullCamera_)
 			cullCamera_ = camera_;
 
+		geometriesUpdated_ = false;
 
 		return true;
 	}
 
 	void View::Update(const FrameInfo& frame)
 	{
+		frame_.camera_ = cullCamera_;
+		frame_.timeStep_ = frame.timeStep_;
+		frame_.frameNumber_ = frame.frameNumber_;
+		frame_.viewSize_ = viewSize_;
+
+	//	renderTargets_.Clear();
+		geometries_.clear();
+		lights_.clear();
+
+		if (cullCamera_ && cullCamera_->GetAutoAspectRatio())
+			cullCamera_->SetAspectRatioInternal((float)frame_.viewSize_.x_ / (float)frame_.viewSize_.y_);
+
+		GetDrawables();
+		GetBatches();
 	}
 
 	void View::Render()
 	{
 
+	}
+
+	void View::SetGlobalShaderParameters()
+	{
+		//graphics_->SetShaderParameter(VSP_DELTATIME, frame_.timeStep_);
+		//graphics_->SetShaderParameter(PSP_DELTATIME, frame_.timeStep_);
+
+		if (scene_)
+		{
+			float elapsedTime = scene_->GetElapsedTime();
+		//	graphics_->SetShaderParameter(VSP_ELAPSEDTIME, elapsedTime);
+		//	graphics_->SetShaderParameter(PSP_ELAPSEDTIME, elapsedTime);
+		}
+
+	}
+
+	void View::SetCameraShaderParameters(Camera* camera)
+	{
+		if (!camera)
+			return;
+
+		Matrix3x4 cameraEffectiveTransform = camera->GetEffectiveWorldTransform();
+		/*
+		graphics_->SetShaderParameter(VSP_CAMERAPOS, cameraEffectiveTransform.Translation());
+		graphics_->SetShaderParameter(VSP_VIEWINV, cameraEffectiveTransform);
+		graphics_->SetShaderParameter(VSP_VIEW, camera->GetView());
+		graphics_->SetShaderParameter(PSP_CAMERAPOS, cameraEffectiveTransform.Translation());
+
+		float nearClip = camera->GetNearClip();
+		float farClip = camera->GetFarClip();
+		graphics_->SetShaderParameter(VSP_NEARCLIP, nearClip);
+		graphics_->SetShaderParameter(VSP_FARCLIP, farClip);
+		graphics_->SetShaderParameter(PSP_NEARCLIP, nearClip);
+		graphics_->SetShaderParameter(PSP_FARCLIP, farClip);
+
+		Vector4 depthMode = Vector4::ZERO;
+		if (camera->IsOrthographic())
+		{
+			depthMode.x_ = 1.0f;
+#ifdef URHO3D_OPENGL
+			depthMode.z_ = 0.5f;
+			depthMode.w_ = 0.5f;
+#else
+			depthMode.z_ = 1.0f;
+#endif
+		}
+		else
+			depthMode.w_ = 1.0f / camera->GetFarClip();
+
+		graphics_->SetShaderParameter(VSP_DEPTHMODE, depthMode);
+
+		Vector4 depthReconstruct
+		(farClip / (farClip - nearClip), -nearClip / (farClip - nearClip), camera->IsOrthographic() ? 1.0f : 0.0f,
+			camera->IsOrthographic() ? 0.0f : 1.0f);
+		graphics_->SetShaderParameter(PSP_DEPTHRECONSTRUCT, depthReconstruct);
+
+		Vector3 nearVector, farVector;
+		camera->GetFrustumSize(nearVector, farVector);
+		graphics_->SetShaderParameter(VSP_FRUSTUMSIZE, farVector);
+
+		Matrix4 projection = camera->GetGPUProjection();
+#ifdef URHO3D_OPENGL
+		// Add constant depth bias manually to the projection matrix due to glPolygonOffset() inconsistency
+		float constantBias = 2.0f * graphics_->GetDepthConstantBias();
+		projection.m22_ += projection.m32_ * constantBias;
+		projection.m23_ += projection.m33_ * constantBias;
+#endif
+
+		graphics_->SetShaderParameter(VSP_VIEWPROJ, projection * camera->GetView());
+
+		// If in a scene pass and the command defines shader parameters, set them now
+		if (passCommand_)
+			SetCommandShaderParameters(*passCommand_);
+		*/
+	}
+
+	void View::GetDrawables()
+	{
+		if (!octree_ || !cullCamera_)
+			return;
+
+		//URHO3D_PROFILE(GetDrawables);
+
+		auto& queue = GetSubsystem<WorkQueue>();
+		PODVector<Drawable*>& tempDrawables = tempDrawables_[0];
+
+		FrustumOctreeQuery query(tempDrawables, cullCamera_->GetFrustum(), DRAWABLE_GEOMETRY | DRAWABLE_LIGHT, cullCamera_->GetViewMask());
+		octree_->GetDrawables(query);
+	}
+
+	void View::GetBatches()
+	{
+		if (!octree_ || !cullCamera_)
+			return;
+
+		nonThreadedGeometries_.clear();
+		threadedGeometries_.clear();
+
+// 		ProcessLights();
+// 		GetLightBatches();
+ 		GetBaseBatches();
+	}
+
+	void View::GetBaseBatches()
+	{
+	//	URHO3D_PROFILE(GetBaseBatches);
+
+		for (auto i = geometries_.begin(); i != geometries_.end(); ++i)
+		{
+			Drawable* drawable = *i;
+			UpdateGeometryType type = drawable->GetUpdateGeometryType();
+			if (type == UPDATE_MAIN_THREAD)
+				nonThreadedGeometries_.push_back(drawable);
+			else if (type == UPDATE_WORKER_THREAD)
+				threadedGeometries_.push_back(drawable);
+
+			const Vector<SourceBatch>& batches = drawable->GetBatches();
+			bool vertexLightsProcessed = false;
+
+			for (unsigned j = 0; j < batches.size(); ++j)
+			{
+				const SourceBatch& srcBatch = batches[j];
+
+				// Check here if the material refers to a rendertarget texture with camera(s) attached
+				// Only check this for backbuffer views (null rendertarget)
+// 				if (srcBatch.material_ && srcBatch.material_->GetAuxViewFrameNumber() != frame_.frameNumber_ && !renderTarget_)
+// 					CheckMaterialForAuxView(srcBatch.material_);
+// 
+// 				Technique* tech = GetTechnique(drawable, srcBatch.material_);
+				Shader* tech = srcBatch.material_->GetShader();
+				if (!srcBatch.geometry_ || !srcBatch.numWorldTransforms_ || !tech)
+					continue;
+
+				// Check each of the scene passes
+				for (unsigned k = 0; k < scenePasses_.size(); ++k)
+				{
+					ScenePassInfo& info = scenePasses_[k];
+					// Skip forward base pass if the corresponding litbase pass already exists
+// 					if (info.passIndex_ == basePassIndex_ && j < 32 && drawable->HasBasePass(j))
+// 						continue;
+
+					Pass* pass = tech->GetShaderPass(info.passIndex_);
+					if (!pass)
+						continue;
+
+					Batch destBatch(srcBatch);
+					destBatch.pass_ = pass;
+					//destBatch.zone_ = GetZone(drawable);
+					destBatch.isBase_ = true;
+					//destBatch.lightMask_ = (unsigned char)GetLightMask(drawable);
+					destBatch.lightQueue_ = 0;
+
+ 					bool allowInstancing = info.allowInstancing_;
+// 					if (allowInstancing && info.markToStencil_ && destBatch.lightMask_ != (destBatch.zone_->GetLightMask() & 0xff))
+// 						allowInstancing = false;
+
+					AddBatchToQueue(*info.batchQueue_, destBatch, tech, allowInstancing);
+				}
+			}
+		}
+	}
+
+	void View::AddBatchToQueue(BatchQueue& queue, Batch& batch, Shader* tech, bool allowInstancing, bool allowShadows)
+	{
+		//if (!batch.material_)
+		//	batch.material_ = renderer_->GetDefaultMaterial();
+
+		// Convert to instanced if possible
+		if (allowInstancing && batch.geometryType_ == GEOM_STATIC && batch.geometry_->GetIndexBuffer())
+			batch.geometryType_ = GEOM_INSTANCED;
+
+		if (batch.geometryType_ == GEOM_INSTANCED)
+		{
+			BatchGroupKey key(batch);
+
+			auto i = queue.batchGroups_.find(key);
+			if (i == queue.batchGroups_.end())
+			{
+				// Create a new group based on the batch
+				// In case the group remains below the instancing limit, do not enable instancing shaders yet
+				BatchGroup newGroup(batch);
+				newGroup.geometryType_ = GEOM_STATIC;
+			//	renderer_->SetBatchShaders(newGroup, tech, allowShadows, queue);
+				newGroup.CalculateSortKey();
+
+				int oldSize = newGroup.instances_.size();
+				newGroup.AddTransforms(batch);
+				// Convert to using instancing shaders when the instancing limit is reached
+				if (oldSize < minInstances_ && (int)newGroup.instances_.size() >= minInstances_)
+				{
+					newGroup.geometryType_ = GEOM_INSTANCED;
+					//renderer_->SetBatchShaders(newGroup, tech, allowShadows, queue);
+					newGroup.CalculateSortKey();
+				}
+
+				queue.batchGroups_.insert(std::make_pair(key, newGroup));
+			}
+			else
+			{
+
+				int oldSize = i->second.instances_.size();
+				i->second.AddTransforms(batch);
+				// Convert to using instancing shaders when the instancing limit is reached
+				if (oldSize < minInstances_ && (int)i->second.instances_.size() >= minInstances_)
+				{
+					i->second.geometryType_ = GEOM_INSTANCED;
+					//renderer_->SetBatchShaders(i->second, tech, allowShadows, queue);
+					i->second.CalculateSortKey();
+				}
+			}
+		}
+		else
+		{
+		//	renderer_->SetBatchShaders(batch, tech, allowShadows, queue);
+			batch.CalculateSortKey();
+
+			// If batch is static with multiple world transforms and cannot instance, we must push copies of the batch individually
+			if (batch.geometryType_ == GEOM_STATIC && batch.numWorldTransforms_ > 1)
+			{
+				unsigned numTransforms = batch.numWorldTransforms_;
+				batch.numWorldTransforms_ = 1;
+				for (unsigned i = 0; i < numTransforms; ++i)
+				{
+					// Move the transform pointer to generate copies of the batch which only refer to 1 world transform
+					queue.batches_.push_back(batch);
+					++batch.worldTransform_;
+				}
+			}
+			else
+				queue.batches_.push_back(batch);
+		}
+	}
+
+	void View::UpdateGeometries()
+	{
+		// Update geometries in the source view if necessary (prepare order may differ from render order)
+// 		if (sourceView_ && !sourceView_->geometriesUpdated_)
+// 		{
+// 			sourceView_->UpdateGeometries();
+// 			return;
+// 		}
+
+//		URHO3D_PROFILE(SortAndUpdateGeometry);
+
+		WorkQueue& queue = GetSubsystem<WorkQueue>();
+#if false
+		// Sort batches
+		{
+			for (unsigned i = 0; i < renderPath_->commands_.Size(); ++i)
+			{
+				const RenderPathCommand& command = renderPath_->commands_[i];
+				if (!IsNecessary(command))
+					continue;
+
+				if (command.type_ == CMD_SCENEPASS)
+				{
+					SPtr<WorkItem> item = queue->GetFreeItem();
+					item->priority_ = M_MAX_UNSIGNED;
+					item->workFunction_ =
+						command.sortMode_ == SORT_FRONTTOBACK ? SortBatchQueueFrontToBackWork : SortBatchQueueBackToFrontWork;
+					item->start_ = &batchQueues_[command.passIndex_];
+					queue->AddWorkItem(item);
+				}
+			}
+
+			for (auto i = lightQueues_.Begin(); i != lightQueues_.End(); ++i)
+			{
+				SPtr<WorkItem> lightItem = queue->GetFreeItem();
+				lightItem->priority_ = M_MAX_UNSIGNED;
+				lightItem->workFunction_ = SortLightQueueWork;
+				lightItem->start_ = &(*i);
+				queue->AddWorkItem(lightItem);
+
+				if (i->shadowSplits_.Size())
+				{
+					SPtr<WorkItem> shadowItem = queue->GetFreeItem();
+					shadowItem->priority_ = M_MAX_UNSIGNED;
+					shadowItem->workFunction_ = SortShadowQueueWork;
+					shadowItem->start_ = &(*i);
+					queue->AddWorkItem(shadowItem);
+				}
+			}
+		}
+#endif
+		// Update geometries. Split into threaded and non-threaded updates.
+		{
+			if (threadedGeometries_.size())
+			{
+				// In special cases (context loss, multi-view) a drawable may theoretically first have reported a threaded update, but will actually
+				// require a main thread update. Check these cases first and move as applicable. The threaded work routine will tolerate the null
+				// pointer holes that we leave to the threaded update queue.
+				for (auto i = threadedGeometries_.begin(); i != threadedGeometries_.end(); ++i)
+				{
+					if ((*i)->GetUpdateGeometryType() == UPDATE_MAIN_THREAD)
+					{
+						nonThreadedGeometries_.push_back(*i);
+						*i = 0;
+					}
+				}
+
+				int numWorkItems = queue.GetNumThreads() + 1; // Worker threads + main thread
+				int drawablesPerItem = threadedGeometries_.size() / numWorkItems;
+
+				auto start = threadedGeometries_.begin();
+				for (int i = 0; i < numWorkItems; ++i)
+				{
+					auto end = threadedGeometries_.end();
+					if (i < numWorkItems - 1 && end - start > drawablesPerItem)
+						end = start + drawablesPerItem;
+
+					SPtr<WorkItem> item = queue.GetFreeItem();
+					item->priority_ = M_MAX_UNSIGNED;
+					item->workFunction_ = UpdateDrawableGeometriesWork;
+					item->aux_ = const_cast<FrameInfo*>(&frame_);
+					item->start_ = &(*start);
+					item->end_ = &(*end);
+					queue.AddWorkItem(item);
+
+					start = end;
+				}
+			}
+
+			// While the work queue is processed, update non-threaded geometries
+			for (auto i = nonThreadedGeometries_.begin(); i != nonThreadedGeometries_.end(); ++i)
+				(*i)->UpdateGeometry(frame_);
+		}
+
+		// Finally ensure all threaded work has completed
+		queue.Complete(M_MAX_UNSIGNED);
+		geometriesUpdated_ = true;
 	}
 
 	/// Query for lit geometries and shadow casters for a light.

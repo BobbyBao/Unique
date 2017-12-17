@@ -37,6 +37,8 @@ namespace Unique
 		void Render();
 		void End();
 		void Stop();
+
+		void DrawDebugGeometry(bool depthTest);
 	private:
 		void HandleEndFrame(const EndFrame& eventData);
 		void HandleRenderUpdate(const RenderUpdate& eventData);
@@ -50,7 +52,7 @@ namespace Unique
 		/// Backbuffer viewports.
 		Vector<SPtr<Viewport> > viewports_;
 		/// Render surface viewports queued for update.
-		Vector<Pair<TextureView*, WPtr<Viewport> > > queuedViewports_;
+		Vector<Pair<WPtr<TextureView>, WPtr<Viewport> > > queuedViewports_;
 		/// Views that have been processed this frame.
 		Vector<WPtr<View> > views_;
 		/// Prepared views by culling camera.

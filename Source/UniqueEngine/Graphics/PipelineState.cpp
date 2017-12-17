@@ -94,9 +94,9 @@ namespace Unique
 		}
 
 		auto& graphics = GetSubsystem<Graphics>();
-		renderDevice->CreatePipelineState(PSODesc, (IPipelineState**)&handle_);
+		renderDevice->CreatePipelineState(PSODesc, (IPipelineState**)&deviceObject_);
 		graphics.BindShaderResources(*this, BIND_SHADER_RESOURCES_ALL_RESOLVED);
-		((IPipelineState*)handle_)->CreateShaderResourceBinding(&shaderResourceBinding_);
+		((IPipelineState*)deviceObject_)->CreateShaderResourceBinding(&shaderResourceBinding_);
 		dirty_ = false;
 		return true;
 	}
@@ -111,7 +111,7 @@ namespace Unique
 			}
 		}
 
-		return (IPipelineState*)handle_;
+		return (IPipelineState*)deviceObject_;
 	}
 
 	void PipelineState::Reload()

@@ -20,17 +20,17 @@ namespace Unique
 		//call in render thread
 		virtual void UpdateBuffer();
 
-		bool IsValid() const { return handle_ != nullptr; }
+		bool IsValid() const { return deviceObject_ != nullptr; }
 
 		template<class T>
-		operator T*() { return (T*)handle_; }
+		operator T*() { return (T*)deviceObject_; }
 		
 	protected:	
 		virtual bool CreateImpl();
 		virtual void ReleaseImpl();
 
 		State state_ = State::None;
-		IDeviceObject* handle_ = nullptr;
+		IDeviceObject* deviceObject_ = nullptr;
 	};
 	
 

@@ -10,6 +10,7 @@ namespace Unique
 	class PipelineState;
 	class Renderer;
 	class Viewport;
+	class RenderPath;
 
 	struct ViewParameter
 	{
@@ -52,7 +53,7 @@ namespace Unique
 	struct ScenePassInfo
 	{
 		/// Pass index.
-		unsigned passIndex_;
+		StringID passIndex_;
 		/// Allow instancing flag.
 		bool allowInstancing_;
 		/// Mark to stencil flag.
@@ -85,6 +86,12 @@ namespace Unique
 	public:
 		View();
 		~View();
+
+		bool Define(TextureView* renderTarget, Unique::Viewport* viewport);
+
+		void Update(const FrameInfo& frame);
+
+		void Render();
 
 		/// Return scene.
 		Scene* GetScene() const { return scene_; }
@@ -126,13 +133,18 @@ namespace Unique
 //		const Vector<LightBatchQueue>& GetLightQueues() const { return lightQueues_; }
 
 
-		bool Define(TextureView* renderTarget, Unique::Viewport* viewport);
-
-		void Update(const FrameInfo& frame);
-
-		void Render();
+		/// Set global (per-frame) shader parameters. Called by Batch and internally by View.
+		void SetGlobalShaderParameters();
+		/// Set camera-specific shader parameters. Called by Batch and internally by View.
+		void SetCameraShaderParameters(Camera* camera);
 	protected:
-
+		/// Query the octree for drawable objects.
+		void GetDrawables();
+		/// Construct batches from the drawable objects.
+		void GetBatches();
+		void GetBaseBatches();
+		void AddBatchToQueue(BatchQueue& queue, Batch& batch, Shader* tech, bool allowInstancing = true, bool allowShadows = true);
+		void UpdateGeometries();
 		/// Query for lit geometries and shadow casters for a light.
 		void ProcessLight(LightQueryResult& query, unsigned threadIndex);
 		/// Graphics subsystem.
@@ -175,11 +187,14 @@ namespace Unique
 		float minZ_;
 		/// Maximum Z value of the visible scene.
 		float maxZ_;
-
+		/// Minimum number of instances required in a batch group to render as instanced.
+		int minInstances_;
+		/// Geometries updated flag.
+		bool geometriesUpdated_;
 		/// Draw debug geometry flag. Copied from the viewport.
 		bool drawDebug_;
 		/// Renderpath.
-		//RenderPath* renderPath_;
+		RenderPath* renderPath_;
 		/// Per-thread octree query results.
 		Vector<PODVector<Drawable*> > tempDrawables_;
 		/// Per-thread geometries, lights and Z range collection results.
@@ -198,6 +213,13 @@ namespace Unique
 		PODVector<Light*> lights_;
 		/// Number of active occluders.
 		unsigned activeOccluders_;
+
+		/// Info for scene render passes defined by the renderpath.
+		PODVector<ScenePassInfo> scenePasses_;
+		/// Per-pixel light queues.
+		Vector<LightBatchQueue> lightQueues_;
+		/// Batch queues by pass index.
+		HashMap<byte, BatchQueue> batchQueues_;
 
 		friend void CheckVisibilityWork(const WorkItem* item, unsigned threadIndex);
 		friend void ProcessLightWork(const WorkItem* item, unsigned threadIndex);

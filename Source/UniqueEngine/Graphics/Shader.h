@@ -64,7 +64,7 @@ namespace Unique
 		StringID name_;
 		ShaderVariableType type_;
 		Vector4 value_;
-		RefCntAutoPtr<IShaderVariable> handle_;
+		RefCntWeakPtr<IShaderVariable> handle_;
 
 		uClass(ShaderVariable, "Name", name_, "Value", value_)
 	};

@@ -26,30 +26,35 @@ namespace Unique
 
 		uint GetHeight() const { return desc_.Height; }
 
-		TextureView* GetTextureView() {
-			return textureView_.get();
-		}
+		TextureView* GetShaderResourceView() { return shaderResourceView_; }
+		TextureView* GetRenderTargetView() { return renderTargetView_; }
+		TextureView* GetDepthStencilView() { return depthStencilView_; }
+		TextureView* GetUnorderedAccessView() { return unorderedAccessView_; }
 	protected:
 		bool CreateImpl();
+		void ReleaseImpl();
 
 		TextureDesc desc_;
-
 		TextureData texData_;
-
-		//textureObject->GetDefaultView()
-		UPtr<TextureView> textureView_;
+		SPtr<TextureView> shaderResourceView_;
+		SPtr<TextureView> renderTargetView_;
+		SPtr<TextureView> depthStencilView_;
+		SPtr<TextureView> unorderedAccessView_;
 	};
 
-	class TextureView
+	class TextureView : public RefCounted
 	{
 	public:
+		TextureView(Texture& texture, ITextureView* textureView) 
+			: texture_(texture), textureView_(textureView)
+		{
+		}
 
-		int GetWidth() const { return width_; }
-		int GetHeight() const { return height_; }
+		uint GetWidth() const { return texture_.GetWidth(); }
+		uint GetHeight() const { return texture_.GetHeight(); }
 	private:
-		int width_;
-		int height_;
-		RefCntAutoPtr<ITextureView> textureView_;
+		Texture& texture_;
+		ITextureView* textureView_;
 	};
 
 }
