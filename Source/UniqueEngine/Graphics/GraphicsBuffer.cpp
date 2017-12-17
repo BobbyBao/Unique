@@ -28,7 +28,7 @@ namespace Unique
 		uAttribute("Data", data_)
 	}
 
-	uObject(ConstBuffer)
+	uObject(UniformBuffer)
 	{
 		uFactory("Graphics")
 		uAttribute("Data", data_)
@@ -106,7 +106,7 @@ namespace Unique
 		{
 			ByteArray& currentData = Graphics::currentContext_ == 0 ? data_ : data1_;
 			std::memcpy(currentData.data(), data, currentData.size());
-			dirty_[Graphics::currentContext_] = true; 
+			MarkDirty();
 			lockStart_[Graphics::currentContext_] = 0;
 			lockCount_[Graphics::currentContext_] = (uint)currentData.size();
 		}
@@ -164,7 +164,7 @@ namespace Unique
 		{
 			ByteArray& currentData = Graphics::currentContext_ == 0 ? data_ : data1_;
 			std::memcpy(currentData.data() + start * GetStride(), data, count * GetStride());
-			dirty_[Graphics::currentContext_] = true;
+			MarkDirty();
 			lockStart_[Graphics::currentContext_] = start;
 			lockCount_[Graphics::currentContext_] = count;
 		}
@@ -187,16 +187,12 @@ namespace Unique
 
 	void GraphicsBuffer::UpdateBuffer()
 	{
-		if (dirty_[Graphics::GetRenderContext()])
-		{
-			IBuffer* buffer = *this;
-			void* bufferData = nullptr;
-			buffer->Map(deviceContext, MAP_WRITE, MAP_FLAG_DISCARD, bufferData);
-			memcpy(bufferData, data_.data() + lockStart_[Graphics::GetRenderContext()] * GetStride(), 
-				lockCount_[Graphics::GetRenderContext()] * GetStride());
-			buffer->Unmap(deviceContext, MAP_WRITE, MAP_FLAG_DISCARD);
-
-		}
+		IBuffer* buffer = *this;
+		void* bufferData = nullptr;
+		buffer->Map(deviceContext, MAP_WRITE, MAP_FLAG_DISCARD, bufferData);
+		memcpy(bufferData, data_.data() + lockStart_[Graphics::GetRenderContext()] * GetStride(), 
+			lockCount_[Graphics::GetRenderContext()] * GetStride());
+		buffer->Unmap(deviceContext, MAP_WRITE, MAP_FLAG_DISCARD);
 	}
 
 }

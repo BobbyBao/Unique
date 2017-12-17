@@ -49,7 +49,6 @@ namespace Unique
 		BufferDesc desc_;
 		ByteArray data_;
 		ByteArray data1_;
-		bool dirty_[2] = { false };
 		uint lockStart_[2];
 		uint lockCount_[2];
 	};
@@ -59,12 +58,34 @@ namespace Unique
 		uRTTI(IndexBuffer, GraphicsBuffer)
 	public:
 		IndexBuffer() : GraphicsBuffer(BIND_INDEX_BUFFER) {}
+
+		IndexBuffer(Vector<uint>&& data, Usage usage = Usage::USAGE_STATIC, uint flags = 0)
+		{
+			Create(data, usage, flags);
+		}
+
+		IndexBuffer(Vector<ushort>&& data, Usage usage = Usage::USAGE_STATIC, uint flags = 0)
+		{
+			Create(data, usage, flags);
+		}
 	};
 
-	class UNIQUE_API ConstBuffer : public GraphicsBuffer
+	class UNIQUE_API UniformBuffer : public GraphicsBuffer
 	{
-		uRTTI(ConstBuffer, GraphicsBuffer)
+		uRTTI(UniformBuffer, GraphicsBuffer)
 	public:
-		ConstBuffer() : GraphicsBuffer(BIND_UNIFORM_BUFFER) {}
+		UniformBuffer() : GraphicsBuffer(BIND_UNIFORM_BUFFER) {}
+
+		template<class T>
+		UniformBuffer(const T& data, Usage usage = Usage::USAGE_DYNAMIC, uint flags = 0)
+		{
+			Create(data, usage, flags);
+		}
+
+		template<class T>
+		void SetData(const T& data)
+		{
+			GraphicsBuffer::SetData((void*)&data);
+		}
 	};
 }

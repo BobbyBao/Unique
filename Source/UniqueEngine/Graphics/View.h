@@ -11,6 +11,13 @@ namespace Unique
 	class Renderer;
 	class Viewport;
 	class RenderPath;
+	class UniformBuffer;
+
+	struct FrameParameter
+	{
+		float deltaTime_;
+		float elapsedTime_;
+	};
 
 	struct ViewParameter
 	{
@@ -220,6 +227,10 @@ namespace Unique
 		Vector<LightBatchQueue> lightQueues_;
 		/// Batch queues by pass index.
 		HashMap<byte, BatchQueue> batchQueues_;
+
+		SPtr<UniformBuffer> frameUniform_;
+
+		SPtr<UniformBuffer> cameraUniform_;
 
 		friend void CheckVisibilityWork(const WorkItem* item, unsigned threadIndex);
 		friend void ProcessLightWork(const WorkItem* item, unsigned threadIndex);

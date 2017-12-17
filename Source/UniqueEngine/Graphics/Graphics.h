@@ -91,6 +91,16 @@ namespace Unique
 
 		static CommandQueue comands_;;
 	};
+
+	template<class T>
+	class DoubleBuffer
+	{
+	public:
+		inline T& currentContext() { return data_[Graphics::currentContext_]; }
+		inline T& renderContext() { return data_[Graphics::GetRenderContext()]; }
+	protected:
+		T data_[2];
+	};
 	
 	extern IRenderDevice* renderDevice;
 	extern IDeviceContext* deviceContext;

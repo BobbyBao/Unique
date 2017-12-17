@@ -9,7 +9,7 @@ namespace Unique
 	class Geometry;
 	class Shader;
 	class PipelineState;
-	class ConstBuffer;
+	class UniformBuffer;
 	class Matrix4;
 
 	class UniqueSample : public Application
@@ -37,7 +37,7 @@ namespace Unique
 		bool m_Animate;              // enable animation
 		float m_AnimationSpeed;      // animation speed
 
-		SPtr<ConstBuffer> constBuffer_;
+		SPtr<UniformBuffer> constBuffer_;
 		SPtr<Geometry> geometry_;
 		SPtr<Shader> shader_;
 		PipelineState* pipeline_;

@@ -85,7 +85,7 @@ namespace Unique
 		auto& cache = GetSubsystem<ResourceCache>();
 		auto& graphics = GetSubsystem<Graphics>();
 		
-		constBuffer_ = new ConstBuffer();
+		constBuffer_ = new UniformBuffer();
 		constBuffer_->Create(ShaderConstants(), USAGE_DYNAMIC, CPU_ACCESS_WRITE);
 		m_pConstantBuffer = *constBuffer_;
 

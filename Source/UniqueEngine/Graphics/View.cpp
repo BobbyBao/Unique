@@ -5,6 +5,7 @@
 #include "View.h"
 #include "Camera.h"
 #include "Graphics.h"
+#include "GraphicsBuffer.h"
 #include "Batch.h"
 #include "Geometry.h"
 #include "Octree.h"
@@ -248,6 +249,8 @@ namespace Unique
 		: graphics_(GetSubsystem<Graphics>()), renderer_(GetSubsystem<Renderer>()), 
 		geometriesUpdated_(false), minInstances_(2)
 	{
+		frameUniform_ = new UniformBuffer(FrameParameter());
+		cameraUniform_ = new UniformBuffer();
 	}
 
 	View::~View()
@@ -283,13 +286,14 @@ namespace Unique
 		rtSize_ = IntVector2(rtWidth, rtHeight);
 
 		// On OpenGL flip the viewport if rendering to a texture for consistent UV addressing with Direct3D9
-#ifdef URHO3D_OPENGL
-		if (renderTarget_)
+		if (graphics_.IsOpenGL())
 		{
-			viewRect_.bottom_ = rtHeight - viewRect_.top_;
-			viewRect_.top_ = viewRect_.bottom_ - viewSize_.y_;
+			if (renderTarget_)
+			{
+				viewRect_.bottom_ = rtHeight - viewRect_.top_;
+				viewRect_.top_ = viewRect_.bottom_ - viewSize_.y_;
+			}
 		}
-#endif
 
 		scene_ = viewport->GetScene();
 		cullCamera_ = viewport->GetCullCamera();
@@ -327,15 +331,16 @@ namespace Unique
 
 	void View::SetGlobalShaderParameters()
 	{
-		//graphics_->SetShaderParameter(VSP_DELTATIME, frame_.timeStep_);
-		//graphics_->SetShaderParameter(PSP_DELTATIME, frame_.timeStep_);
+		FrameParameter frameParam;
+		frameParam.deltaTime_ = frame_.timeStep_;
 
 		if (scene_)
 		{
 			float elapsedTime = scene_->GetElapsedTime();
-		//	graphics_->SetShaderParameter(VSP_ELAPSEDTIME, elapsedTime);
-		//	graphics_->SetShaderParameter(PSP_ELAPSEDTIME, elapsedTime);
+			frameParam.elapsedTime_ = elapsedTime;
 		}
+
+		frameUniform_->SetData(frameParam);
 
 	}
 

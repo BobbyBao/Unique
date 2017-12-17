@@ -4,7 +4,7 @@
 
 namespace Unique
 {
-
+	Vector<GPUObject*> GPUObject::updateQueue_[2];
 	bool GPUObject::Create()
 	{
 		if (Thread::IsMainThread())
@@ -54,5 +54,22 @@ namespace Unique
 			deviceObject_->Release();
 			deviceObject_ = nullptr;
 		}
+	}
+
+	void GPUObject::MarkDirty()
+	{
+		auto& renderContext = updateQueue_[Graphics::currentContext_];
+		renderContext.push_back(this);
+	}
+
+	void GPUObject::UpdateBuffers()
+	{
+		auto& renderContext = updateQueue_[Graphics::GetRenderContext()];
+		for (auto buffer : renderContext)
+		{
+			buffer->UpdateBuffer();
+		}
+
+		renderContext.clear();
 	}
 }

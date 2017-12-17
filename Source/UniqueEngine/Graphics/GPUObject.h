@@ -17,8 +17,6 @@ namespace Unique
 
 		virtual bool Create();
 		virtual void Release();
-		//call in render thread
-		virtual void UpdateBuffer();
 
 		bool IsValid() const { return deviceObject_ != nullptr; }
 
@@ -28,9 +26,14 @@ namespace Unique
 	protected:	
 		virtual bool CreateImpl();
 		virtual void ReleaseImpl();
+		virtual void UpdateBuffer();
+		void MarkDirty();
+		static void UpdateBuffers();
 
 		State state_ = State::None;
 		IDeviceObject* deviceObject_ = nullptr;
+		static Vector<GPUObject*> updateQueue_[2];
+		friend class Graphics;
 	};
 	
 
