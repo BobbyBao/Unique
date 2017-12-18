@@ -33,11 +33,14 @@ namespace Unique
 
 	void Renderer::SetNumViewports(unsigned num)
 	{
+		assert(Thread::IsMainThread());
 		viewports_.resize(num);
 	}
 
 	void Renderer::SetViewport(unsigned index, Viewport* viewport)
 	{
+		assert(Thread::IsMainThread());
+
 		if (index >= viewports_.size())
 			viewports_.resize(index + 1);
 
@@ -53,13 +56,16 @@ namespace Unique
 	{
 	//	URHO3D_PROFILE(UpdateViews);
 
-		views_.clear();
+		views_[Graphics::currentContext_].clear();
 		preparedViews_.clear();
 
 		// Set up the frameinfo structure for this frame
 		frame_.frameNumber_ = GetSubsystem<Time>().GetFrameNumber();
 		frame_.timeStep_ = eventData.timeStep_;
 		frame_.camera_ = 0;
+// 		numShadowCameras_ = 0;
+// 		numOcclusionBuffers_ = 0;
+		updatedOctrees_.clear();
 
 		// Queue update of the main viewports. Use reverse order, as rendering order is also reverse
 		// to render auxiliary views before dependent main views
@@ -94,7 +100,7 @@ namespace Unique
 
 	void Renderer::Render()
 	{
-		for (auto& view : views_)
+		for (auto view : views_[Graphics::GetRenderContext()])
 		{
 			view->Render();
 		}
@@ -108,10 +114,10 @@ namespace Unique
 		/// \todo Because debug geometry is per-scene, if two cameras show views of the same area, occlusion is not shown correctly
 		HashSet<Drawable*> processedGeometries;
 		HashSet<Light*> processedLights;
-
-		for (unsigned i = 0; i < views_.size(); ++i)
+		auto& views = views_[Graphics::currentContext_];
+		for (unsigned i = 0; i < views.size(); ++i)
 		{
-			View* view = views_[i];
+			View* view = views[i];
 			if (!view || !view->GetDrawDebug())
 				continue;
 			Octree* octree = view->GetOctree();
@@ -163,7 +169,7 @@ namespace Unique
 		if (!view->Define(renderTarget, viewport))
 			return;
 
-		views_.push_back(WPtr<View>(view));
+		views_[Graphics::currentContext_].push_back(WPtr<View>(view));
 
 		const IntRect& viewRect = viewport->GetRect();
 		Scene* scene = viewport->GetScene();

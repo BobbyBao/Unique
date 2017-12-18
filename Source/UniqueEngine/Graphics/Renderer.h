@@ -54,7 +54,7 @@ namespace Unique
 		/// Render surface viewports queued for update.
 		Vector<Pair<WPtr<TextureView>, WPtr<Viewport> > > queuedViewports_;
 		/// Views that have been processed this frame.
-		Vector<WPtr<View> > views_;
+		Vector<WPtr<View> > views_[2];
 		/// Prepared views by culling camera.
 		HashMap<Camera*, WPtr<View> > preparedViews_;
 		/// Octrees that have been updated during the frame.

@@ -16,26 +16,29 @@ static const Matrix4 flipMatrix(
     0.0f, 0.0f, 1.0f, 0.0f,
     0.0f, 0.0f, 0.0f, 1.0f
 );
-/*
-BEGIN_OBJECT(Camera, Component)
-TRANSFER_ACCESSOR("Near Clip", GetNearClip, SetNearClip, float)
-TRANSFER_ACCESSOR("Far Clip", GetFarClip, SetFarClip, float)
-TRANSFER_ACCESSOR("FOV", GetFov, SetFov, float)
-TRANSFER_ACCESSOR("Aspect Ratio", GetAspectRatio, SetAspectRatioInternal, float)
-TRANSFER_ENUM("Fill Mode", fillMode_)
-TRANSFER("Auto Aspect Ratio", autoAspectRatio_)
-TRANSFER_ACCESSOR("Orthographic", IsOrthographic, SetOrthographic, bool)
-TRANSFER_ACCESSOR("Orthographic Size", GetOrthoSize, SetOrthoSizeAttr, float)
-TRANSFER_ACCESSOR("Zoom", GetZoom, SetZoom, float)
-TRANSFER_ACCESSOR("LOD Bias", GetLodBias, SetLodBias, float)
-TRANSFER("View Mask", viewMask_);
-TRANSFER("View Override Flags", viewOverrideFlags_)
-TRANSFER_ACCESSOR("Projection Offset", GetProjectionOffset, SetProjectionOffset, Vector2)
-TRANSFER_ACCESSOR("Reflection Plane", GetReflectionPlaneAttr, SetReflectionPlaneAttr, Vector4)
-TRANSFER_ACCESSOR("Clip Plane", GetClipPlaneAttr, SetClipPlaneAttr, Vector4)
-TRANSFER_ACCESSOR("Use Reflection", GetUseReflection, SetUseReflection, bool)
-TRANSFER_ACCESSOR("Use Clipping", GetUseClipping, SetUseClipping, bool)
-END_OBJECT()*/
+
+uObject(Camera)
+{
+	uFactory("Scene")
+	uAccessor("Near Clip", GetNearClip, SetNearClip)
+	uAccessor("Far Clip", GetFarClip, SetFarClip)
+	uAccessor("FOV", GetFov, SetFov)
+	uAccessor("Aspect Ratio", GetAspectRatio, SetAspectRatioInternal)
+	uAttribute("Fill Mode", fillMode_)
+	uAttribute("Auto Aspect Ratio", autoAspectRatio_)
+	uAccessor("Orthographic", IsOrthographic, SetOrthographic)
+	uAccessor("Orthographic Size", GetOrthoSize, SetOrthoSizeAttr)
+	uAccessor("Zoom", GetZoom, SetZoom)
+	uAccessor("LOD Bias", GetLodBias, SetLodBias)
+	uAttribute("View Mask", viewMask_);
+	uAttribute("View Override Flags", viewOverrideFlags_)
+	//uAccessor("Projection Offset", GetProjectionOffset, SetProjectionOffset)
+	//uAccessor("Reflection Plane", GetReflectionPlaneAttr, SetReflectionPlaneAttr)
+	//uAccessor("Clip Plane", GetClipPlaneAttr, SetClipPlaneAttr)
+	uAccessor("Use Reflection", GetUseReflection, SetUseReflection)
+	uAccessor("Use Clipping", GetUseClipping, SetUseClipping)
+
+}
 
 Camera::Camera() :
     viewDirty_(true),
