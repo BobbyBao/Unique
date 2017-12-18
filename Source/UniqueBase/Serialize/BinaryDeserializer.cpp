@@ -198,4 +198,36 @@ namespace Unique
 	{
 		data = mpack_node_double(currentNode_);
 	}
+
+	void BinaryDeserializer::TransferPrimitive(Vector2& data)
+	{
+		TransferBin((void*)data.Data(), sizeof(Vector2));
+	}
+	
+	void BinaryDeserializer::TransferPrimitive(Vector3& data)
+	{
+		TransferBin((void*)data.Data(), sizeof(Vector3));
+	}
+	
+	void BinaryDeserializer::TransferPrimitive(Vector4& data)
+	{
+		TransferBin((void*)data.Data(), sizeof(Vector4));
+	}
+	
+	void BinaryDeserializer::TransferPrimitive(Color& data)
+	{
+		TransferBin((void*)data.Data(), sizeof(Color));
+	}
+	
+	void BinaryDeserializer::TransferPrimitive(Quaternion& data)
+	{
+		TransferBin((void*)data.Data(), sizeof(Quaternion));
+	}
+
+	void BinaryDeserializer::TransferBin(void* data, size_t byteSize)
+	{
+		uint size = mpack_node_data_len(currentNode_);
+		assert(size == byteSize);
+		mpack_node_copy_data(currentNode_, (char*)data, size);
+	}
 }

@@ -71,27 +71,27 @@ namespace Unique
 	};
 	
 	template<>
-	class SerializeTraits<Unique::Vector2> : public SerializeTraitsBase<Unique::Vector2>
+	class SerializeTraits<Unique::Vector2> : public SerializeTraitsPrimitive<Unique::Vector2>
 	{
 	};
 
 	template<>
-	class SerializeTraits<Unique::Vector3> : public SerializeTraitsBase<Unique::Vector3>
+	class SerializeTraits<Unique::Vector3> : public SerializeTraitsPrimitive<Unique::Vector3>
 	{
 	};
 
 	template<>
-	class SerializeTraits<Unique::Vector4> : public SerializeTraitsBase<Unique::Vector4>
+	class SerializeTraits<Unique::Vector4> : public SerializeTraitsPrimitive<Unique::Vector4>
 	{
 	};
 
 	template<>
-	class SerializeTraits<Unique::Color> : public SerializeTraitsBase<Unique::Color>
+	class SerializeTraits<Unique::Color> : public SerializeTraitsPrimitive<Unique::Color>
 	{
 	};
 
 	template<>
-	class SerializeTraits<Unique::Quaternion> : public SerializeTraitsBase<Unique::Quaternion>
+	class SerializeTraits<Unique::Quaternion> : public SerializeTraitsPrimitive<Unique::Quaternion>
 	{
 	};
 

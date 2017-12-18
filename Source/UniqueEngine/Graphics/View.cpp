@@ -513,7 +513,7 @@ namespace Unique
 			//	renderer_->SetBatchShaders(newGroup, tech, allowShadows, queue);
 				newGroup.CalculateSortKey();
 
-				int oldSize = newGroup.instances_.size();
+				size_t oldSize = newGroup.instances_.size();
 				newGroup.AddTransforms(batch);
 				// Convert to using instancing shaders when the instancing limit is reached
 				if (oldSize < minInstances_ && (int)newGroup.instances_.size() >= minInstances_)
@@ -528,7 +528,7 @@ namespace Unique
 			else
 			{
 
-				int oldSize = i->second.instances_.size();
+				size_t oldSize = i->second.instances_.size();
 				i->second.AddTransforms(batch);
 				// Convert to using instancing shaders when the instancing limit is reached
 				if (oldSize < minInstances_ && (int)i->second.instances_.size() >= minInstances_)
@@ -629,7 +629,7 @@ namespace Unique
 				}
 
 				int numWorkItems = queue.GetNumThreads() + 1; // Worker threads + main thread
-				int drawablesPerItem = threadedGeometries_.size() / numWorkItems;
+				size_t drawablesPerItem = threadedGeometries_.size() / numWorkItems;
 
 				auto start = threadedGeometries_.begin();
 				for (int i = 0; i < numWorkItems; ++i)

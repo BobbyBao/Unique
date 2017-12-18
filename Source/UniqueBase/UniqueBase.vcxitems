@@ -83,11 +83,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Resource\ResourceImporter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Resource\ResourceRef.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\Serializer.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\backup\BinaryReader.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\backup\BinaryWriter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\hjson\hjson.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\backup\JsonReader.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\backup\JsonWriter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-common.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-expect.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-node.h" />
@@ -99,7 +95,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\SerializeTraits.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\SerializeTraitsBasic.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\SerializeTraitsStd.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\TransferBase.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\TypeTraits.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Unique.h" />
   </ItemGroup>

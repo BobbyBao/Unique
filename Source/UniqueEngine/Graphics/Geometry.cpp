@@ -197,6 +197,44 @@ namespace Unique
 		deviceContext->Draw(drawAttribs_);
 	}
 
+	void Geometry::DrawInstanced(PipelineState* pipeline)
+	{
+
+		IBuffer *buffer[8] = { nullptr };
+		Uint32 offsets[8] = { 0 };
+		Uint32 strides[8] = { 0 };
+		Uint32 offset = 0;
+		for (size_t i = 0; i < vertexBuffers_.size(); i++)
+		{
+			buffer[i] = *vertexBuffers_[i];
+			offsets[i] = offset;
+			strides[i] = vertexBuffers_[i]->GetStride();
+		}
+
+		deviceContext->SetVertexBuffers(0, (uint)vertexBuffers_.size(), buffer, strides, offsets, SET_VERTEX_BUFFERS_FLAG_RESET);
+
+		if (indexBuffer_ && indexCount_ > 0)
+		{
+			deviceContext->SetIndexBuffer(*indexBuffer_, 0);
+			drawAttribs_.NumIndices = indexCount_;
+		}
+		else if (vertexCount_ > 0)
+		{
+			drawAttribs_.NumVertices = vertexCount_;
+		}
+
+		deviceContext->SetPipelineState(pipeline->GetPipeline());
+
+		auto& graphics = GetSubsystem<Graphics>();
+
+		graphics.BindResources(pipeline->GetShaderResourceBinding(),
+			SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED | BIND_SHADER_RESOURCES_ALL_RESOLVED);
+
+		deviceContext->CommitShaderResources(pipeline->GetShaderResourceBinding(), COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
+
+		deviceContext->Draw(drawAttribs_);
+	}
+
 	VertexBuffer* Geometry::GetVertexBuffer(unsigned index) const
 	{
 		return index < vertexBuffers_.size() ? vertexBuffers_[index] : (VertexBuffer*)0;

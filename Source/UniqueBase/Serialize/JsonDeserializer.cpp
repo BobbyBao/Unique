@@ -177,4 +177,157 @@ namespace Unique
 		assert(currentNode_->IsDouble());
 		data = currentNode_->GetDouble();
 	}
+
+	void JsonDeserializer::TransferPrimitive(Vector2& data)
+	{
+		uint size = 0;
+		if (StartArray(size))
+		{
+			for (uint i = 0; i < size; ++i)
+			{
+				SetElement(i);
+				switch (i)
+				{
+				case 0:
+					SerializeTraits<float>::Transfer(data.x_, *this);
+					break;
+				case 1:
+					SerializeTraits<float>::Transfer(data.y_, *this);
+					break;
+				default:
+					break;
+				}
+				
+			}
+
+			EndArray();
+		}
+		
+	}
+
+	void JsonDeserializer::TransferPrimitive(Vector3& data)
+	{
+		uint size = 0;
+		if (StartArray(size))
+		{
+			for (uint i = 0; i < size; ++i)
+			{
+				SetElement(i);
+				switch (i)
+				{
+				case 0:
+					SerializeTraits<float>::Transfer(data.x_, *this);
+					break;
+				case 1:
+					SerializeTraits<float>::Transfer(data.y_, *this);
+					break;
+				case 2:
+					SerializeTraits<float>::Transfer(data.z_, *this);
+					break;
+				default:
+					break;
+				}
+
+			}
+
+			EndArray();
+		}
+	}
+
+	void JsonDeserializer::TransferPrimitive(Vector4& data)
+	{
+		uint size = 0;
+		if (StartArray(size))
+		{
+			for (uint i = 0; i < size; ++i)
+			{
+				SetElement(i);
+				switch (i)
+				{
+				case 0:
+					SerializeTraits<float>::Transfer(data.x_, *this);
+					break;
+				case 1:
+					SerializeTraits<float>::Transfer(data.y_, *this);
+					break;
+				case 2:
+					SerializeTraits<float>::Transfer(data.z_, *this);
+					break;
+				case 3:
+					SerializeTraits<float>::Transfer(data.w_, *this);
+					break;
+				default:
+					break;
+				}
+
+			}
+
+			EndArray();
+		}
+	}
+
+	void JsonDeserializer::TransferPrimitive(Color& data)
+	{
+		uint size = 0;
+		if (StartArray(size))
+		{
+			for (uint i = 0; i < size; ++i)
+			{
+				SetElement(i);
+				switch (i)
+				{
+				case 0:
+					SerializeTraits<float>::Transfer(data.r_, *this);
+					break;
+				case 1:
+					SerializeTraits<float>::Transfer(data.g_, *this);
+					break;
+				case 2:
+					SerializeTraits<float>::Transfer(data.b_, *this);
+					break;
+				case 3:
+					SerializeTraits<float>::Transfer(data.a_, *this);
+					break;
+				default:
+					break;
+				}
+
+			}
+
+			EndArray();
+		}
+	}
+
+	void JsonDeserializer::TransferPrimitive(Quaternion& data)
+	{
+		uint size = 0;
+		if (StartArray(size))
+		{
+			for (uint i = 0; i < size; ++i)
+			{
+				SetElement(i);
+				switch (i)
+				{
+				case 0:
+					SerializeTraits<float>::Transfer(data.w_, *this);
+					break;
+				case 1:
+					SerializeTraits<float>::Transfer(data.x_, *this);
+					break;
+				case 2:
+					SerializeTraits<float>::Transfer(data.y_, *this);
+					break;
+				case 3:
+					SerializeTraits<float>::Transfer(data.z_, *this);
+					break;
+				default:
+					break;
+				}
+
+			}
+
+			EndArray();
+		}
+
+	}
 }

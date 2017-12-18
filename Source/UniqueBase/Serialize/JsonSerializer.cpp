@@ -150,4 +150,51 @@ namespace Unique
 	{
 		writer_->Double(data);
 	}
+	
+	void JsonSerializer::TransferPrimitive(Vector2& data)
+	{
+		writer_->StartArray();
+		TransferPrimitive(data.x_);
+		TransferPrimitive(data.y_);
+		writer_->EndArray();
+	}
+	
+	void JsonSerializer::TransferPrimitive(Vector3& data)
+	{
+		writer_->StartArray();
+		TransferPrimitive(data.x_);
+		TransferPrimitive(data.y_);
+		TransferPrimitive(data.z_);
+		writer_->EndArray();
+	}
+	
+	void JsonSerializer::TransferPrimitive(Vector4& data)
+	{
+		writer_->StartArray();
+		TransferPrimitive(data.x_);
+		TransferPrimitive(data.y_);
+		TransferPrimitive(data.z_);
+		TransferPrimitive(data.w_);
+		writer_->EndArray();
+	}
+	
+	void JsonSerializer::TransferPrimitive(Color& data)
+	{
+		writer_->StartArray();
+		TransferPrimitive(data.r_);
+		TransferPrimitive(data.g_);
+		TransferPrimitive(data.b_);
+		TransferPrimitive(data.a_);
+		writer_->EndArray();
+	}
+	
+	void JsonSerializer::TransferPrimitive(Quaternion& data)
+	{
+		writer_->StartArray();
+		TransferPrimitive(data.w_);
+		TransferPrimitive(data.x_);
+		TransferPrimitive(data.y_);
+		TransferPrimitive(data.z_);
+		writer_->EndArray();
+	}
 }

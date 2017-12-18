@@ -50,6 +50,13 @@ namespace Unique
 				new Unique::AttributeAccessorImpl<function_traits<GET>::ClassType, function_traits<GET>::RawType, function_traits<GET>>(name, getter, setter, flag));
 		}
 
+		template<typename GET, typename SET>
+		void RegisterMixedAccessor(const char* name, GET getter, SET setter, AttributeFlag flag = AttributeFlag::Default)
+		{
+			RegisterAttribute(
+				new Unique::AttributeAccessorImpl<mixed_function_traits<GET>::ClassType, mixed_function_traits<GET>::RawType, mixed_function_traits<GET>>(name, getter, setter, flag));
+		}
+
 		void RegisterAttribute(Attribute* attr);
 
 		const Vector<SPtr<Attribute>>& GetAttributes() const { return attributes_;}
@@ -88,5 +95,8 @@ namespace Unique
 
 #define uAccessor(name, getFunction, setFunction, ...)\
 	ClassName::GetTypeInfoStatic()->RegisterAccessor(name, &ClassName::getFunction, &ClassName::setFunction, ##__VA_ARGS__);
+
+#define uMixedAccessor(name, getFunction, setFunction, ...)\
+	ClassName::GetTypeInfoStatic()->RegisterMixedAccessor(name, &ClassName::getFunction, &ClassName::setFunction, ##__VA_ARGS__);
 
 }

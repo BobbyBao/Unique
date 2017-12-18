@@ -1,9 +1,16 @@
 #pragma once
-#include "TransferBase.h"
 #include "IO/IFile.h"
+#include "SerializeTraitsBasic.h"
 
 namespace Unique
 {
+	enum class TransferState
+	{
+		Reading,
+		Writing,
+		Resolve
+	};
+
 	// Serializer with virtual functions
 	class Serializer
 	{
@@ -127,6 +134,11 @@ namespace Unique
 		virtual void TransferPrimitive(unsigned long long& data) {}
 		virtual void TransferPrimitive(float& data) {}
 		virtual void TransferPrimitive(double& data) {}
+		virtual void TransferPrimitive(Vector2& data) {}
+		virtual void TransferPrimitive(Vector3& data) {}
+		virtual void TransferPrimitive(Vector4& data) {}
+		virtual void TransferPrimitive(Color& data) {}
+		virtual void TransferPrimitive(Quaternion& data) {}
 	protected:
 		virtual bool StartDocument(const String& fileName) { return true; }
 		virtual void EndDocument() {}

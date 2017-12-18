@@ -32,9 +32,9 @@ uObject(Camera)
 	uAccessor("LOD Bias", GetLodBias, SetLodBias)
 	uAttribute("View Mask", viewMask_);
 	uAttribute("View Override Flags", viewOverrideFlags_)
-	//uAccessor("Projection Offset", GetProjectionOffset, SetProjectionOffset)
-	//uAccessor("Reflection Plane", GetReflectionPlaneAttr, SetReflectionPlaneAttr)
-	//uAccessor("Clip Plane", GetClipPlaneAttr, SetClipPlaneAttr)
+	uAccessor("Projection Offset", GetProjectionOffset, SetProjectionOffset)
+	uMixedAccessor("Reflection Plane", GetReflectionPlaneAttr, SetReflectionPlaneAttr)
+	uMixedAccessor("Clip Plane", GetClipPlaneAttr, SetClipPlaneAttr)
 	uAccessor("Use Reflection", GetUseReflection, SetUseReflection)
 	uAccessor("Use Clipping", GetUseClipping, SetUseClipping)
 

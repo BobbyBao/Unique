@@ -3,12 +3,6 @@
 #include "../Core/CoreDefs.h"
 #include "../Container/refcounted.h"
 #include "../Serialize/Serializer.h"
-#ifdef NO_VIRTUAL
-#include "../Serialize/Backup/BinaryReader.h"
-#include "../Serialize/Backup/BinaryWriter.h"
-#include "../Serialize/Backup/JsonReader.h"
-#include "../Serialize/Backup/JsonWriter.h"
-#endif
 #include "AttributeTraits.h"
 
 namespace Unique
@@ -23,12 +17,6 @@ namespace Unique
 		}
 
 		virtual void Visit(Serializer& serializer, void* obj) {}
-#ifdef NO_VIRTUAL
-		virtual void Visit(BinaryWriter& serializer, void* obj) {}
-		virtual void Visit(BinaryReader& serializer, void* obj) {}
-		virtual void Visit(JsonWriter& serializer, void* obj) {}
-		virtual void Visit(JsonReader& serializer, void* obj) {}
-#endif
 		virtual void Get(const void* ptr, void* dest) const = 0;
 		virtual void Set(void* ptr, const void* value) = 0;
 
@@ -60,27 +48,7 @@ namespace Unique
 		{
 			VisitImpl(serializer, obj);
 		}
-#ifdef NO_VIRTUAL
-		virtual void Visit(BinaryWriter& serializer, void* obj)
-		{
-			VisitImpl(serializer, obj);
-		}
 
-		virtual void Visit(BinaryReader& deserializer, void* obj)
-		{
-			VisitImpl(deserializer, obj);
-		}
-
-		virtual void Visit(JsonWriter& serializer, void* obj)
-		{
-			VisitImpl(serializer, obj);
-		}
-
-		virtual void Visit(JsonReader& deserializer, void* obj)
-		{
-			VisitImpl(deserializer, obj);
-		}
-#endif
 		virtual void Get(const void* ptr, void* dest) const
 		{
 			const void* src = reinterpret_cast<const unsigned char*>(ptr) + offset_;
@@ -134,27 +102,7 @@ namespace Unique
 		{
 			VisitImpl(serializer, obj);
 		}
-#ifdef NO_VIRTUAL
-		virtual void Visit(BinaryWriter& serializer, void* obj)
-		{
-			VisitImpl(serializer, obj);
-		}
 
-		virtual void Visit(BinaryReader& deserializer, void* obj)
-		{
-			VisitImpl(deserializer, obj);
-		}
-
-		virtual void Visit(JsonWriter& serializer, void* obj)
-		{
-			VisitImpl(serializer, obj);
-		}
-
-		virtual void Visit(JsonReader& deserializer, void* obj)
-		{
-			VisitImpl(deserializer, obj);
-		}
-#endif
 		/// Invoke getter function.
 		virtual void Get(const void* ptr, void* dest) const
 		{

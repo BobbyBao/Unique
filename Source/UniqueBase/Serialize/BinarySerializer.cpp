@@ -138,4 +138,29 @@ namespace Unique
 	{
 		mpack_write(&writer_, data);
 	}
+	
+	void BinarySerializer::TransferPrimitive(Vector2& data)
+	{
+		mpack_write_bin(&writer_, (const char*)data.Data(), sizeof(Vector2));
+	}
+	
+	void BinarySerializer::TransferPrimitive(Vector3& data)
+	{
+		mpack_write_bin(&writer_, (const char*)data.Data(), sizeof(Vector3));
+	}
+	
+	void BinarySerializer::TransferPrimitive(Vector4& data)
+	{
+		mpack_write_bin(&writer_, (const char*)data.Data(), sizeof(Vector4));
+	}
+	
+	void BinarySerializer::TransferPrimitive(Color& data)
+	{
+		mpack_write_bin(&writer_, (const char*)data.Data(), sizeof(Color));
+	}
+	
+	void BinarySerializer::TransferPrimitive(Quaternion& data)
+	{
+		mpack_write_bin(&writer_, (const char*)data.Data(), sizeof(Quaternion));
+	}
 }

@@ -648,8 +648,8 @@ namespace Unique
 
 	void BatchGroup::Draw(View* view, Camera* camera, bool allowDepthWrite) const
 	{
-// 		Graphics* graphics = view->GetGraphics();
-		Renderer& renderer = GetSubsystem<Renderer>();
+		auto& graphics = GetSubsystem<Graphics>();
+		auto& renderer = GetSubsystem<Renderer>();
 
 		if (instances_.size() && !geometry_->IsEmpty())
 		{
@@ -658,17 +658,12 @@ namespace Unique
 			if (!instanceBuffer || geometryType_ != GEOM_INSTANCED || startIndex_ == M_MAX_UNSIGNED)
 			{
 				Batch::Prepare(view, camera, false, allowDepthWrite);
-
-				//graphics->SetIndexBuffer(geometry_->GetIndexBuffer());
-				//graphics->SetVertexBuffers(geometry_->GetVertexBuffers());
-
+				
 				for (unsigned i = 0; i < instances_.size(); ++i)
 				{
 // 					if (graphics->NeedParameterUpdate(SP_OBJECT, instances_[i].worldTransform_))
 // 						graphics->SetShaderParameter(VSP_MODEL, *instances_[i].worldTransform_);
-// 
-// 					graphics->Draw(geometry_->GetPrimitiveType(), geometry_->GetIndexStart(), geometry_->GetIndexCount(),
-// 						geometry_->GetVertexStart(), geometry_->GetVertexCount());
+					geometry_->Draw(pipelineState_);
 				}
 			}
 			else
@@ -681,11 +676,10 @@ namespace Unique
 					geometry_->GetVertexBuffers());
 				vertexBuffers.push_back(SPtr<VertexBuffer>(instanceBuffer));
 
-// 				graphics->SetIndexBuffer(geometry_->GetIndexBuffer());
-// 				graphics->SetVertexBuffers(vertexBuffers, startIndex_);
 // 				graphics->DrawInstanced(geometry_->GetPrimitiveType(), geometry_->GetIndexStart(), geometry_->GetIndexCount(),
 // 					geometry_->GetVertexStart(), geometry_->GetVertexCount(), instances_.Size());
-
+				//to do check
+				geometry_->DrawInstanced(pipelineState_);
 				// Remove the instancing buffer & element mask now
 				vertexBuffers.pop_back();
 			}

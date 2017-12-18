@@ -36,8 +36,13 @@ namespace Unique
 		virtual void TransferPrimitive(unsigned long long& data);
 		virtual void TransferPrimitive(float& data);
 		virtual void TransferPrimitive(double& data);
+		virtual void TransferPrimitive(Vector2& data);
+		virtual void TransferPrimitive(Vector3& data);
+		virtual void TransferPrimitive(Vector4& data);
+		virtual void TransferPrimitive(Color& data);
+		virtual void TransferPrimitive(Quaternion& data);
 	private:
-
+		void TransferBin(void* data, size_t size);
 		mpack_tree_t tree_;
 		mpack_node_t currentNode_;
 		Vector<mpack_node_t> parentNode_;

@@ -19,15 +19,6 @@ namespace Unique
 		virtual bool StartObject(uint size);
 		virtual void EndObject();
 		virtual void TransferBin(ByteArray& data);
-	protected:
-		virtual bool StartDocument(const String& fileName);
-		virtual void EndDocument();
-		virtual SPtr<Object> CreateObject();
-		virtual bool StartAttribute(const String& key);
-		virtual void EndAttribute();
-		virtual bool StartArray(uint& size);
-		virtual void SetElement(uint index);
-		virtual void EndArray();
 
 		virtual void TransferPrimitive(std::string& data);
 		virtual void TransferPrimitive(String& data);
@@ -42,6 +33,21 @@ namespace Unique
 		virtual void TransferPrimitive(unsigned long long& data);
 		virtual void TransferPrimitive(float& data);
 		virtual void TransferPrimitive(double& data);
+		virtual void TransferPrimitive(Vector2& data);
+		virtual void TransferPrimitive(Vector3& data);
+		virtual void TransferPrimitive(Vector4& data);
+		virtual void TransferPrimitive(Color& data);
+		virtual void TransferPrimitive(Quaternion& data);
+	protected:
+		virtual bool StartDocument(const String& fileName);
+		virtual void EndDocument();
+		virtual SPtr<Object> CreateObject();
+		virtual bool StartAttribute(const String& key);
+		virtual void EndAttribute();
+		virtual bool StartArray(uint& size);
+		virtual void SetElement(uint index);
+		virtual void EndArray();
+
 	private:
 		UPtr<rapidjson::Document> document = nullptr;
 		rapidjson::Value* currentNode_ = nullptr;
