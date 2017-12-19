@@ -95,9 +95,8 @@ namespace Unique
 		sizeof(unsigned)
 	};
 
-	bool VertexBuffer::CreateByMask(uint elementMask, ByteArray&& data, Usage usage)
+	VertexBuffer::VertexBuffer(uint elementMask, ByteArray&& data, Usage usage)
 	{
-		elementMask_ = elementMask;
 		elements_ = GetElements(elementMask);
 		UpdateOffsets();
 
@@ -106,14 +105,26 @@ namespace Unique
 		desc_.Usage = usage;
 		data_ = data;
 
-		return GPUObject::Create();
+		GPUObject::Create();
+	}
+
+	VertexBuffer::VertexBuffer(const PODVector<VertexElement>& elements, ByteArray&& data, Usage usage)
+	{
+		elements_ = elements;
+		UpdateOffsets();
+
+		desc_.ElementByteStride = GetVertexSize(elements_);
+		desc_.uiSizeInBytes = (uint)data.size();
+		desc_.Usage = usage;
+		data_ = data;
+
+		GPUObject::Create();
 	}
 
 	void VertexBuffer::UpdateOffsets()
 	{
 		unsigned elementOffset = 0;
 		elementHash_ = 0;
-		elementMask_ = 0;
 
 		for (auto i = elements_.begin(); i != elements_.end(); ++i)
 		{
@@ -121,13 +132,6 @@ namespace Unique
 			elementOffset += ELEMENT_TYPESIZES[i->type_];
 			elementHash_ <<= 6;
 			elementHash_ += (((int)i->type_ + 1) * ((int)i->semantic_ + 1) + i->index_);
-
-			for (unsigned j = 0; j < MAX_LEGACY_VERTEX_ELEMENTS; ++j)
-			{
-				const VertexElement& legacy = LEGACY_VERTEXELEMENTS[j];
-				if (i->type_ == legacy.type_ && i->semantic_ == legacy.semantic_ && i->index_ == legacy.index_)
-					elementMask_ |= (1 << j);
-			}
 		}
 
 		desc_.ElementByteStride = elementOffset;

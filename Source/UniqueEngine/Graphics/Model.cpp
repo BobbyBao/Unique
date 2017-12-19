@@ -108,8 +108,6 @@ bool Model::Load(IFile& source)
         morphRangeStarts_[i] = source.Read<uint>();
         morphRangeCounts_[i] = source.Read<uint>();
 
-        SPtr<VertexBuffer> buffer(new VertexBuffer());
-
 		//desc.vertexElements_ = VertexBuffer::GetElements(elementMask);
 		unsigned vertexSize = VertexBuffer::GetVertexSize(elementMask);
         uint dataSize = vertexCount * vertexSize;
@@ -117,9 +115,9 @@ bool Model::Load(IFile& source)
 		ByteArray data;
 		data.resize(dataSize);
 		source.Read(data.data(), (uint)data.size());
-		buffer->CreateByMask(elementMask, std::move(data), USAGE_STATIC);
-
-        memoryUse += sizeof(VertexBuffer) + dataSize;
+		
+		SPtr<VertexBuffer> buffer(new VertexBuffer(elementMask, std::move(data), USAGE_STATIC));
+		memoryUse += sizeof(VertexBuffer) + dataSize;
         vertexBuffers_.push_back(buffer);
     }
 

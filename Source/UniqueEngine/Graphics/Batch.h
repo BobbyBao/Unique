@@ -49,9 +49,9 @@ namespace Unique
 		/// Calculate state sorting key, which consists of base pass flag, light, pass and geometry.
 		void CalculateSortKey();
 		/// Prepare for rendering.
-		void Prepare(View* view, Camera* camera, bool setModelTransform, bool allowDepthWrite) const;
+		void Prepare(View* view, Camera* camera, bool setModelTransform) const;
 		/// Prepare and draw.
-		void Draw(View* view, Camera* camera, bool allowDepthWrite) const;
+		void Draw(View* view, Camera* camera) const;
 
 		/// State sorting key.
 		unsigned long long sortKey_;
@@ -152,7 +152,7 @@ namespace Unique
 		/// Pre-set the instance data. Buffer must be big enough to hold all data.
 		void SetInstancingData(void* lockedData, unsigned stride, unsigned& freeIndex);
 		/// Prepare and draw.
-		void Draw(View* view, Camera* camera, bool allowDepthWrite) const;
+		void Draw(View* view, Camera* camera) const;
 
 		/// Instance data.
 		PODVector<InstanceData> instances_;
@@ -243,7 +243,7 @@ namespace Unique
 		/// Pre-set instance data of all groups. The vertex buffer must be big enough to hold all data.
 		void SetInstancingData(void* lockedData, unsigned stride, unsigned& freeIndex);
 		/// Draw.
-		void Draw(View* view, Camera* camera, bool markToStencil, bool usingLightOptimization, bool allowDepthWrite) const;
+		void Draw(View* view, Camera* camera) const;
 		/// Return the combined amount of instances.
 		size_t GetNumInstances() const;
 

@@ -11,12 +11,12 @@ namespace Unique
 	}
 
 	SPtr<Resource> TextureImporter::Import(const String& filePath)
-	{/*
+	{
 		if (filePath.EndsWith(".raw"))
 		{
 			return loadRaw(filePath);
 		}
-
+/*
 		String cachedAsset = ReplaceExtension(filePath, ".ktx");
 		FileSystem& fileSystem = Subsystem<FileSystem>();
 		SPtr<File> file = cache.GetFile(cachedAsset);

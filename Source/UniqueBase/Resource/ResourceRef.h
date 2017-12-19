@@ -41,9 +41,7 @@ namespace Unique
 		/// Test for inequality with another reference.
 		bool operator !=(const ResourceRef& rhs) const { return type_ == rhs.type_ && name_ != rhs.name_; }
 
-		uClass(ResourceRef, 
-			"Type", type_,
-			"Name", name_);
+		uClass("Type", type_, "Name", name_);
 		
 	};
 
@@ -85,9 +83,7 @@ namespace Unique
 			return ResourceRefList(T::GetTypeStatic(), names);
 		}
 
-		uClass(ResourceRefList,
-			"Type", type_,
-			"Names", names_);
+		uClass("Type", type_, "Names", names_);
 
 	};
 }

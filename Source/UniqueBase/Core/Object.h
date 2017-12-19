@@ -92,6 +92,19 @@ public:
 	void Subscribe(Object* sender, const StringID& eventType, EventHandler* handler);
 
 protected:
+
+	template<class E>
+	void Unsubscribe()
+	{
+		Unsubscribe(E::Type());
+	}
+
+	template<class E>
+	void Unsubscribe(Object* sender)
+	{
+		Unsubscribe(sender, E::Type());
+	}
+
 	/// Unsubscribe from an event.
 	void Unsubscribe(StringID eventType);
 	/// Unsubscribe from a specific sender's event.

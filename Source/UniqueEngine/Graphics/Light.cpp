@@ -2,16 +2,17 @@
 
 #include "Core/Context.h"
 #include "Core/Profiler.h"
+#include "IO/Log.h"
+#include "Resource/ResourceCache.h"
 #include "../Graphics/Camera.h"
 #include "../Graphics/DebugRenderer.h"
 #include "../Graphics/Graphics.h"
 #include "../Graphics/Light.h"
 #include "../Graphics/OctreeQuery.h"
-#include "IO/Log.h"
-#include "Resource/ResourceCache.h"
+
 #include "../Scene/Node.h"
 
-//#include "../DebugNew.h"
+#include "DebugNew.h"
 
 namespace Unique
 {
@@ -66,9 +67,52 @@ void FocusParameters::Validate()
 }
 
 
+uEnumTraits(LightType, "DIRECTIONAL", "SPOT", "POINT")
+
 uObject(Light)
 {
-
+	uFactory("Scene");
+	uAccessor("Is Enabled", IsEnabled, SetEnabled);
+	uAccessor("Light Type", GetLightType, SetLightType);
+	uAccessor("Color", GetColor, SetColor);
+	uAccessor("Specular Intensity", GetSpecularIntensity, SetSpecularIntensity);
+	uAccessor("Brightness Multiplier", GetBrightness, SetBrightness);
+	uAccessor("Temperature", GetTemperature, SetTemperature);
+	uAttribute("Use Physical Values", usePhysicalValues_);
+	uAccessor("Radius", GetRadius, SetRadius);
+	uAccessor("Length", GetLength, SetLength);
+	uAccessor("Range", GetRange, SetRange);
+	uAccessor("Spot FOV", GetFov, SetFov);
+	uAccessor("Spot Aspect Ratio", GetAspectRatio, SetAspectRatio);
+	//     UNIQUE_MIXED_ACCESSOR_ATTRIBUTE("Attenuation Texture", GetRampTextureAttr, SetRampTextureAttr, ResourceRef,
+	//         ResourceRef(Texture2D::GetTypeStatic()), TF_DEFAULT);
+	//     UNIQUE_MIXED_ACCESSOR_ATTRIBUTE("Light Shape Texture", GetShapeTextureAttr, SetShapeTextureAttr, ResourceRef,
+	//         ResourceRef(Texture2D::GetTypeStatic()), TF_DEFAULT);
+	/*
+	uAccessor("Can Be Occluded", IsOccludee, SetOccludee, bool, true, TF_DEFAULT);
+	uAttribute("Cast Shadows", bool, castShadows_, false, TF_DEFAULT);
+	uAttribute("Per Vertex", bool, perVertex_, false, TF_DEFAULT);
+	uAccessor("Draw Distance", GetDrawDistance, SetDrawDistance, float, 0.0f, TF_DEFAULT);
+	uAccessor("Fade Distance", GetFadeDistance, SetFadeDistance, float, 0.0f, TF_DEFAULT);
+	uAccessor("Shadow Distance", GetShadowDistance, SetShadowDistance, float, 0.0f, TF_DEFAULT);
+	uAccessor("Shadow Fade Distance", GetShadowFadeDistance, SetShadowFadeDistance, float, 0.0f, TF_DEFAULT);
+	uAccessor("Shadow Intensity", GetShadowIntensity, SetShadowIntensity, float, 0.0f, TF_DEFAULT);
+	uAccessor("Shadow Resolution", GetShadowResolution, SetShadowResolution, float, 1.0f, TF_DEFAULT);
+	uAttribute("Focus To Scene", bool, shadowFocus_.focus_, true, TF_DEFAULT);
+	uAttribute("Non-uniform View", bool, shadowFocus_.nonUniform_, true, TF_DEFAULT);
+	uAttribute("Auto-Reduce Size", bool, shadowFocus_.autoSize_, true, TF_DEFAULT);
+	uAttribute("CSM Splits", Vector4, shadowCascade_.splits_, Vector4(DEFAULT_SHADOWSPLIT, 0.0f, 0.0f, 0.0f), TF_DEFAULT);
+	uAttribute("CSM Fade Start", float, shadowCascade_.fadeStart_, DEFAULT_SHADOWFADESTART, TF_DEFAULT);
+	uAttribute("CSM Bias Auto Adjust", float, shadowCascade_.biasAutoAdjust_, DEFAULT_BIASAUTOADJUST, TF_DEFAULT);
+	uAttribute("View Size Quantize", float, shadowFocus_.quantize_, DEFAULT_SHADOWQUANTIZE, TF_DEFAULT);
+	uAttribute("View Size Minimum", float, shadowFocus_.minView_, DEFAULT_SHADOWMINVIEW, TF_DEFAULT);
+	uAttribute("Depth Constant Bias", float, shadowBias_.constantBias_, DEFAULT_CONSTANTBIAS, TF_DEFAULT);
+	uAttribute("Depth Slope Bias", float, shadowBias_.slopeScaledBias_, DEFAULT_SLOPESCALEDBIAS, TF_DEFAULT);
+	uAttribute("Normal Offset", float, shadowBias_.normalOffset_, DEFAULT_NORMALOFFSET, TF_DEFAULT);
+	uAttribute("Near/Farclip Ratio", float, shadowNearFarRatio_, DEFAULT_SHADOWNEARFARRATIO, TF_DEFAULT);
+	uAccessor("Max Extrusion", GetShadowMaxExtrusion, SetShadowMaxExtrusion, float, DEFAULT_SHADOWMAXEXTRUSION, TF_DEFAULT);
+	uAttribute("View Mask", int, viewMask_, DEFAULT_VIEWMASK, TF_DEFAULT);
+	uAttribute("Light Mask", int, lightMask_, DEFAULT_LIGHTMASK, TF_DEFAULT);*/
 }
 
 Light::Light() :
@@ -101,53 +145,6 @@ Light::~Light()
 {
 }
 /*
-void Light::RegisterObject()
-{
-    context->RegisterFactory<Light>(SCENE_CATEGORY);
-
-    UNIQUE_ACCESSOR_ATTRIBUTE("Is Enabled", IsEnabled, SetEnabled, bool, true, TF_DEFAULT);
-    UNIQUE_ENUM_ACCESSOR_ATTRIBUTE("Light Type", GetLightType, SetLightType, LightType, typeNames, DEFAULT_LIGHTTYPE, TF_DEFAULT);
-    UNIQUE_ACCESSOR_ATTRIBUTE("Color", GetColor, SetColor, Color, Color::WHITE, TF_DEFAULT);
-    UNIQUE_ACCESSOR_ATTRIBUTE("Specular Intensity", GetSpecularIntensity, SetSpecularIntensity, float, DEFAULT_SPECULARINTENSITY,
-        TF_DEFAULT);
-    UNIQUE_ACCESSOR_ATTRIBUTE("Brightness Multiplier", GetBrightness, SetBrightness, float, DEFAULT_BRIGHTNESS, TF_DEFAULT);
-    UNIQUE_ACCESSOR_ATTRIBUTE("Temperature", GetTemperature, SetTemperature, float, DEFAULT_TEMPERATURE, TF_DEFAULT);
-    UNIQUE_ATTRIBUTE("Use Physical Values", bool, usePhysicalValues_, false, TF_DEFAULT);
-    UNIQUE_ACCESSOR_ATTRIBUTE("Radius", GetRadius, SetRadius, float, DEFAULT_RADIUS, TF_DEFAULT);
-    UNIQUE_ACCESSOR_ATTRIBUTE("Length", GetLength, SetLength, float, DEFAULT_LENGTH, TF_DEFAULT);
-    UNIQUE_ACCESSOR_ATTRIBUTE("Range", GetRange, SetRange, float, DEFAULT_RANGE, TF_DEFAULT);
-    UNIQUE_ACCESSOR_ATTRIBUTE("Spot FOV", GetFov, SetFov, float, DEFAULT_LIGHT_FOV, TF_DEFAULT);
-    UNIQUE_ACCESSOR_ATTRIBUTE("Spot Aspect Ratio", GetAspectRatio, SetAspectRatio, float, 1.0f, TF_DEFAULT);
-//     UNIQUE_MIXED_ACCESSOR_ATTRIBUTE("Attenuation Texture", GetRampTextureAttr, SetRampTextureAttr, ResourceRef,
-//         ResourceRef(Texture2D::GetTypeStatic()), TF_DEFAULT);
-//     UNIQUE_MIXED_ACCESSOR_ATTRIBUTE("Light Shape Texture", GetShapeTextureAttr, SetShapeTextureAttr, ResourceRef,
-//         ResourceRef(Texture2D::GetTypeStatic()), TF_DEFAULT);
-    UNIQUE_ACCESSOR_ATTRIBUTE("Can Be Occluded", IsOccludee, SetOccludee, bool, true, TF_DEFAULT);
-    UNIQUE_ATTRIBUTE("Cast Shadows", bool, castShadows_, false, TF_DEFAULT);
-    UNIQUE_ATTRIBUTE("Per Vertex", bool, perVertex_, false, TF_DEFAULT);
-    UNIQUE_ACCESSOR_ATTRIBUTE("Draw Distance", GetDrawDistance, SetDrawDistance, float, 0.0f, TF_DEFAULT);
-    UNIQUE_ACCESSOR_ATTRIBUTE("Fade Distance", GetFadeDistance, SetFadeDistance, float, 0.0f, TF_DEFAULT);
-    UNIQUE_ACCESSOR_ATTRIBUTE("Shadow Distance", GetShadowDistance, SetShadowDistance, float, 0.0f, TF_DEFAULT);
-    UNIQUE_ACCESSOR_ATTRIBUTE("Shadow Fade Distance", GetShadowFadeDistance, SetShadowFadeDistance, float, 0.0f, TF_DEFAULT);
-    UNIQUE_ACCESSOR_ATTRIBUTE("Shadow Intensity", GetShadowIntensity, SetShadowIntensity, float, 0.0f, TF_DEFAULT);
-    UNIQUE_ACCESSOR_ATTRIBUTE("Shadow Resolution", GetShadowResolution, SetShadowResolution, float, 1.0f, TF_DEFAULT);
-    UNIQUE_ATTRIBUTE("Focus To Scene", bool, shadowFocus_.focus_, true, TF_DEFAULT);
-    UNIQUE_ATTRIBUTE("Non-uniform View", bool, shadowFocus_.nonUniform_, true, TF_DEFAULT);
-    UNIQUE_ATTRIBUTE("Auto-Reduce Size", bool, shadowFocus_.autoSize_, true, TF_DEFAULT);
-    UNIQUE_ATTRIBUTE("CSM Splits", Vector4, shadowCascade_.splits_, Vector4(DEFAULT_SHADOWSPLIT, 0.0f, 0.0f, 0.0f), TF_DEFAULT);
-    UNIQUE_ATTRIBUTE("CSM Fade Start", float, shadowCascade_.fadeStart_, DEFAULT_SHADOWFADESTART, TF_DEFAULT);
-    UNIQUE_ATTRIBUTE("CSM Bias Auto Adjust", float, shadowCascade_.biasAutoAdjust_, DEFAULT_BIASAUTOADJUST, TF_DEFAULT);
-    UNIQUE_ATTRIBUTE("View Size Quantize", float, shadowFocus_.quantize_, DEFAULT_SHADOWQUANTIZE, TF_DEFAULT);
-    UNIQUE_ATTRIBUTE("View Size Minimum", float, shadowFocus_.minView_, DEFAULT_SHADOWMINVIEW, TF_DEFAULT);
-    UNIQUE_ATTRIBUTE("Depth Constant Bias", float, shadowBias_.constantBias_, DEFAULT_CONSTANTBIAS, TF_DEFAULT);
-    UNIQUE_ATTRIBUTE("Depth Slope Bias", float, shadowBias_.slopeScaledBias_, DEFAULT_SLOPESCALEDBIAS, TF_DEFAULT);
-    UNIQUE_ATTRIBUTE("Normal Offset", float, shadowBias_.normalOffset_, DEFAULT_NORMALOFFSET, TF_DEFAULT);
-    UNIQUE_ATTRIBUTE("Near/Farclip Ratio", float, shadowNearFarRatio_, DEFAULT_SHADOWNEARFARRATIO, TF_DEFAULT);
-    UNIQUE_ACCESSOR_ATTRIBUTE("Max Extrusion", GetShadowMaxExtrusion, SetShadowMaxExtrusion, float, DEFAULT_SHADOWMAXEXTRUSION, TF_DEFAULT);
-    UNIQUE_ATTRIBUTE("View Mask", int, viewMask_, DEFAULT_VIEWMASK, TF_DEFAULT);
-    UNIQUE_ATTRIBUTE("Light Mask", int, lightMask_, DEFAULT_LIGHTMASK, TF_DEFAULT);
-}
-
 void Light::OnSetAttribute(const AttributeInfo& attr, const Variant& src)
 {
 	Object::OnSetAttribute(attr, src);

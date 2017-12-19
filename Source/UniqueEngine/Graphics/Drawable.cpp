@@ -146,7 +146,6 @@ void Drawable::UpdateBatches(const FrameInfo& frame)
         batches_[i].worldTransform_ = &worldTransform;
     }
 
-	Vector3 DOT_SCALE(1 / 3.0f, 1 / 3.0f, 1 / 3.0f);
     float scale = worldBoundingBox.Size().DotProduct(DOT_SCALE);
     float newLodDistance = frame.camera_->GetLodDistance(distance_, scale, lodBias_);
 

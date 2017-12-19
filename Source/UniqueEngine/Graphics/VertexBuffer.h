@@ -53,8 +53,8 @@ namespace Unique
 
 	public:
 		VertexBuffer() : GraphicsBuffer(BIND_VERTEX_BUFFER) {}
-
-		bool CreateByMask(uint elementMask, ByteArray&& data, Usage usage = Usage::USAGE_STATIC);
+		VertexBuffer(uint elementMask, ByteArray&& data, Usage usage = Usage::USAGE_STATIC);
+		VertexBuffer(const PODVector<VertexElement>& elements, ByteArray&& data, Usage usage = Usage::USAGE_STATIC);
 
 		/// Return vertex elements.
 		const PODVector<VertexElement>& GetElements() const { return elements_; }
@@ -76,10 +76,7 @@ namespace Unique
 
 		/// Return offset of a element with specific type within vertex, or M_MAX_UNSIGNED if element does not exist.
 		unsigned GetElementOffset(VertexElementType type, VertexElementSemantic semantic, unsigned char index = 0) const { const VertexElement* element = GetElement(type, semantic, index); return element ? element->offset_ : M_MAX_UNSIGNED; }
-
-		/// Return legacy vertex element mask. Note that both semantic and type must match the legacy element for a mask bit to be set.
-		unsigned GetElementMask() const { return elementMask_; }
-
+		
 		/// Return buffer hash for building vertex declarations. Used internally.
 		unsigned long long GetBufferHash(unsigned streamIndex) { return elementHash_ << (streamIndex * 16); }
 
@@ -111,8 +108,6 @@ namespace Unique
 		PODVector<VertexElement> elements_;
 		/// Vertex element hash.
 		unsigned long long elementHash_;
-		/// Vertex element legacy bitmask.
-		unsigned elementMask_;
 	};
 
 	/// Sizes of vertex element types.

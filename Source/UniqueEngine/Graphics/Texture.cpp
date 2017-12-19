@@ -20,6 +20,12 @@ namespace Unique
 		return GPUObject::Create();
 	}
 
+	bool Texture::Create(Image& img)
+	{
+
+		return deviceObject_ != nullptr;
+	}
+
 	bool Texture::CreateImpl()
 	{
 		ITexture* textureObject = nullptr;
@@ -63,12 +69,5 @@ namespace Unique
 		unorderedAccessView_ = nullptr;
 	}
 
-	bool Texture::Create(Image& img)
-	{
-
-
-		return deviceObject_ != nullptr;
-	}
-	
 	
 }

@@ -3,7 +3,6 @@
 #include "Core/Context.h"
 #include "Core/Profiler.h"
 #include "IO/Log.h"
-//#include "IO/MemoryBuffer.h"
 #include "../Scene/Component.h"
 //#include "../Scene/ObjectAnimation.h"
 #include "../Scene/Scene.h"
@@ -11,7 +10,7 @@
 #include "../Scene/SmoothedTransform.h"
 //#include "../Scene/UnknownComponent.h"
 
-//#include "../DebugNew.h"
+#include "DebugNew.h"
 
 #ifdef _MSC_VER
 #pragma warning(disable:6293)
@@ -19,18 +18,20 @@
 
 namespace Unique
 {
-/*
-BEGIN_OBJECT(Node, Object)
-	TRANSFER_ACCESSOR("Is Enabled", IsEnabled, SetEnabled, bool)
-	TRANSFER_ACCESSOR("Name", GetName, SetName, StringID)
-	TRANSFER_ACCESSOR("Tags", GetTags, SetTags, StringVector)
-	TRANSFER_ACCESSOR("Position", GetPosition, SetPosition, Vector3)
-	TRANSFER_ACCESSOR("Rotation", GetRotation, SetRotation, Quaternion)
-	TRANSFER_ACCESSOR("Scale", GetScale, SetScale, Vector3)
-	TRANSFER("Components", components_)
-	TRANSFER("Children", children_)
-END_OBJECT()
-*/
+
+	uObject(Node)
+	{
+		uAccessor("Is Enabled", IsEnabled, SetEnabled)
+			uAccessor("Name", GetName, SetName)
+			uAccessor("Tags", GetTags, SetTags)
+			uAccessor("Position", GetPosition, SetPosition)
+			uAccessor("Rotation", GetRotation, SetRotation)
+			uAccessor("Scale", GetScale, SetScale)
+			uAttribute("Components", components_)
+			uAttribute("Children", children_)
+
+	}
+
 Node::Node() :
     worldTransform_(Matrix3x4::IDENTITY),
     dirty_(false),
@@ -174,11 +175,6 @@ void Node::SetRotation(const Quaternion& rotation)
 void Node::SetDirection(const Vector3& direction)
 {
     SetRotation(Quaternion(Vector3::FORWARD, direction));
-}
-
-void Node::SetScale(float scale)
-{
-    SetScale(Vector3(scale, scale, scale));
 }
 
 void Node::SetScale(const Vector3& scale)
@@ -418,17 +414,17 @@ void Node::Scale(const Vector3& scale)
 
 void Node::SetEnabled(bool enable)
 {
-    SetEnabled(enable, false, true);
+	SetEnabledImpl(enable, false, true);
 }
 
 void Node::SetDeepEnabled(bool enable)
 {
-    SetEnabled(enable, true, false);
+	SetEnabledImpl(enable, true, false);
 }
 
 void Node::ResetDeepEnabled()
 {
-    SetEnabled(enabledPrev_, false, false);
+	SetEnabledImpl(enabledPrev_, false, false);
 
     for (Vector<SPtr<Node> >::const_iterator i = children_.begin(); i != children_.end(); ++i)
         (*i)->ResetDeepEnabled();
@@ -436,7 +432,7 @@ void Node::ResetDeepEnabled()
 
 void Node::SetEnabledRecursive(bool enable)
 {
-    SetEnabled(enable, true, true);
+	SetEnabledImpl(enable, true, true);
 }
 
 void Node::MarkDirty()
@@ -1153,7 +1149,7 @@ void Node::SetTransformSilent(const Vector3& position, const Quaternion& rotatio
     scale_ = scale;
 }
 
-void Node::SetEnabled(bool enable, bool recursive, bool storeSelf)
+void Node::SetEnabledImpl(bool enable, bool recursive, bool storeSelf)
 {
     // The enabled state of the whole scene can not be changed. SetUpdateEnabled() is used instead to start/stop updates.
     if (GetType() == Scene::GetTypeStatic())
@@ -1210,7 +1206,7 @@ void Node::SetEnabled(bool enable, bool recursive, bool storeSelf)
     if (recursive)
     {
         for (Vector<SPtr<Node> >::iterator i = children_.begin(); i != children_.end(); ++i)
-            (*i)->SetEnabled(enable, recursive, storeSelf);
+            (*i)->SetEnabledImpl(enable, recursive, storeSelf);
     }
 }
 

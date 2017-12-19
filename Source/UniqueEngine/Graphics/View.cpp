@@ -322,11 +322,19 @@ namespace Unique
 
 		GetDrawables();
 		GetBatches();
+
+		UpdateGeometries();
 	}
 
 	void View::Render()
 	{
+		//PrepareInstancingBuffer();
 
+		BatchQueue& queue = batchQueues_[0];
+		if (!queue.IsEmpty())
+		{
+			queue.Draw(this, camera_);
+		}
 	}
 
 	void View::SetGlobalShaderParameters()

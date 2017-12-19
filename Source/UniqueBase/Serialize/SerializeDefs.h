@@ -26,7 +26,6 @@ ENABLE_BITMASK_OPERATORS(AttributeFlag)
 }
 
 #define uClass(...) \
-	inline static bool AllowTransferOptimization ()	{ return false; } \
 	template<class TransferFunction> \
 	void Transfer(TransferFunction& transfer)\
 {\

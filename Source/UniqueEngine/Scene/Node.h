@@ -62,8 +62,7 @@ public:
 
     /// Set forward direction in parent space. Positive Z axis equals identity rotation.
     void SetDirection(const Vector3& direction);
-    /// Set uniform scale in parent space.
-    void SetScale(float scale);
+
     /// Set scale in parent space.
     void SetScale(const Vector3& scale);
 
@@ -451,10 +450,7 @@ public:
     bool HasComponent(StringID type) const;
     /// Return listener components.
     const Vector<WPtr<Component> > GetListeners() const { return listeners_; }
-
-    /// Return a user variable.
-    //const Variant& GetVar(StringID key) const;
-
+	
     /// Return first component derived from class.
     template <class T> T* GetDerivedComponent(bool recursive = false) const;
     /// Return first component derived from class in the parent node, or if fully traversing then the first node up the tree with one.
@@ -506,7 +502,7 @@ public:
 
 private:
     /// Set enabled/disabled state with optional recursion. Optionally affect the remembered enable state.
-    void SetEnabled(bool enable, bool recursive, bool storeSelf);
+    void SetEnabledImpl(bool enable, bool recursive, bool storeSelf);
     /// Recalculate the world transform.
     void UpdateWorldTransform() const;
     /// Remove child node by iterator.

@@ -151,7 +151,7 @@ namespace Unique
 			(((unsigned long long)materialID) << 16) | geometryID;
 	}
 
-	void Batch::Prepare(View* view, Camera* camera, bool setModelTransform, bool allowDepthWrite) const
+	void Batch::Prepare(View* view, Camera* camera, bool setModelTransform) const
 	{
 		//if (!vertexShader_ || !pixelShader_)
 		//	return;
@@ -613,11 +613,11 @@ namespace Unique
 #endif
 	}
 
-	void Batch::Draw(View* view, Camera* camera, bool allowDepthWrite) const
+	void Batch::Draw(View* view, Camera* camera) const
 	{
 		if (!geometry_->IsEmpty())
 		{
-			Prepare(view, camera, true, allowDepthWrite);
+			Prepare(view, camera, true);
 			geometry_->Draw(pipelineState_);
 		}
 	}
@@ -646,7 +646,7 @@ namespace Unique
 		freeIndex += (uint)instances_.size();
 	}
 
-	void BatchGroup::Draw(View* view, Camera* camera, bool allowDepthWrite) const
+	void BatchGroup::Draw(View* view, Camera* camera) const
 	{
 		auto& graphics = GetSubsystem<Graphics>();
 		auto& renderer = GetSubsystem<Renderer>();
@@ -657,7 +657,7 @@ namespace Unique
 			VertexBuffer* instanceBuffer = renderer.GetInstancingBuffer();
 			if (!instanceBuffer || geometryType_ != GEOM_INSTANCED || startIndex_ == M_MAX_UNSIGNED)
 			{
-				Batch::Prepare(view, camera, false, allowDepthWrite);
+				Batch::Prepare(view, camera, false);
 				
 				for (unsigned i = 0; i < instances_.size(); ++i)
 				{
@@ -668,7 +668,7 @@ namespace Unique
 			}
 			else
 			{
-				Batch::Prepare(view, camera, false, allowDepthWrite);
+				Batch::Prepare(view, camera, false);
 
 				// Get the geometry vertex buffers, then add the instancing stream buffer
 				// Hack: use a const_cast to avoid dynamic allocation of new temp vectors
@@ -820,19 +820,19 @@ namespace Unique
 			i->second.SetInstancingData(lockedData, stride, freeIndex);
 	}
 
-	void BatchQueue::Draw(View* view, Camera* camera, bool markToStencil, bool usingLightOptimization, bool allowDepthWrite) const
+	void BatchQueue::Draw(View* view, Camera* camera) const
 	{
 		// Instanced
 		for (auto i = sortedBatchGroups_.begin(); i != sortedBatchGroups_.end(); ++i)
 		{
 			BatchGroup* group = *i;
-			group->Draw(view, camera, allowDepthWrite);
+			group->Draw(view, camera);
 		}
 		// Non-instanced
 		for (auto i = sortedBatches_.begin(); i != sortedBatches_.end(); ++i)
 		{
 			Batch* batch = *i;
-			batch->Draw(view, camera, allowDepthWrite);
+			batch->Draw(view, camera);
 		}
 	}
 

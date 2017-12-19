@@ -20,8 +20,8 @@ namespace Unique
 			return nullptr;
 		}
 
-		SPtr<Model> model;
-
+		SPtr<Model> model(new Model());
+		model->Load(*file);
 		return model;
 	}
 }
