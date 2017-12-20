@@ -1,2 +1,2 @@
 # Unique
-A multi-thread rendering engine,write with C#7.0, and support .netcore2.0.
+A multi-thread rendering engine,write in C#7.0 and C++11.

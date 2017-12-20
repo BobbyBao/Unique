@@ -2,6 +2,7 @@
 #include "Resource/Resource.h"
 #include "GraphicsDefs.h"
 #include "ShaderVariation.h"
+#include "ShaderVariable.h"
 #include <DepthStencilState.h>
 #include <BlendState.h>
 #include <RasterizerState.h>
@@ -45,28 +46,6 @@ namespace Unique
 		friend class Shader;
 		friend class ShaderVariation;
 		friend class PipelineState;
-	};
-
-	enum ShaderVariableType
-	{
-		INT,
-		FLOAT,
-		FLOAT2,
-		FLOAT3,
-		FLOAT4,
-		MATRIX,
-		ARRAY
-	};
-
-	class ShaderVariable
-	{
-	public:
-		StringID name_;
-		ShaderVariableType type_;
-		Vector4 value_;
-		RefCntWeakPtr<IShaderVariable> handle_;
-
-		uClass(ShaderVariable, "Name", name_, "Value", value_)
 	};
 
 	class Shader : public Resource

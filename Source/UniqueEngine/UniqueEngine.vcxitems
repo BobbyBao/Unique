@@ -51,6 +51,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Scene\SceneResolver.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Scene\SmoothedTransform.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\TransientBuffer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\ShaderVariable.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)UniquePCH.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\VertexBuffer.h" />
   </ItemGroup>
@@ -92,6 +93,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Scene\SceneResolver.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Scene\SmoothedTransform.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\TransientBuffer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\ShaderVariable.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)UniquePCH.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\VertexBuffer.cpp" />
   </ItemGroup>

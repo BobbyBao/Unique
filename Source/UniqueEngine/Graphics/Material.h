@@ -16,10 +16,15 @@ namespace Unique
 		Material();
 		~Material();
 
+		const ResourceRef& GetShader() const { return shaderRes_; }
+		void SetShader(const ResourceRef& shader);
+
 		Shader* GetShader() { return shader_; }
 
 	private:
 		SPtr<Shader> shader_;
+		String shaderDefines_;
+		ResourceRef shaderRes_;
 		Vector<ShaderVariable> shaderVaribles_;
 	};
 
