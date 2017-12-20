@@ -3,6 +3,8 @@
 #include "Scene/Scene.h"
 #include "Graphics/Octree.h"
 #include "Graphics/Camera.h"
+#include "Graphics/Model.h"
+#include "Graphics/StaticModel.h"
 
 UNIQUE_IMPLEMENT_MAIN(Unique::SceneSample)
 
@@ -25,6 +27,8 @@ namespace Unique
 		scene_->CreateComponent<Octree>();
 		camera_ = scene_->CreateChild("Camera")->CreateComponent<Camera>();
 
+		StaticModel* model = scene_->CreateChild("Model")->CreateComponent<StaticModel>();
+		model->SetModelAttr(ResourceRef::Create<Model>("Models/Kachujin/Kachujin.mdl"));
 		auto& renderer = GetSubsystem<Renderer>();
 		Viewport* viewport = new Viewport(scene_, camera_);
 		renderer.SetViewport(0, viewport);

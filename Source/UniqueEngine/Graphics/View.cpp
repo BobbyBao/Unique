@@ -251,6 +251,7 @@ namespace Unique
 	{
 		frameUniform_ = new UniformBuffer(FrameParameter());
 		cameraUniform_ = new UniformBuffer();
+		tempDrawables_.resize(1);
 	}
 
 	View::~View()
@@ -296,6 +297,8 @@ namespace Unique
 		}
 
 		scene_ = viewport->GetScene();
+		octree_ = scene_->GetComponent<Octree>();
+
 		cullCamera_ = viewport->GetCullCamera();
 		camera_ = viewport->GetCamera();
 		if (!cullCamera_)
@@ -319,7 +322,7 @@ namespace Unique
 
 		if (cullCamera_ && cullCamera_->GetAutoAspectRatio())
 			cullCamera_->SetAspectRatioInternal((float)frame_.viewSize_.x_ / (float)frame_.viewSize_.y_);
-
+				
 		GetDrawables();
 		GetBatches();
 
@@ -424,6 +427,7 @@ namespace Unique
 
 		FrustumOctreeQuery query(tempDrawables, cullCamera_->GetFrustum(), DRAWABLE_GEOMETRY | DRAWABLE_LIGHT, cullCamera_->GetViewMask());
 		octree_->GetDrawables(query);
+		std::swap(geometries_, tempDrawables);
 	}
 
 	void View::GetBatches()

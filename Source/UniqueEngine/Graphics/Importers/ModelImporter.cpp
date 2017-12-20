@@ -15,7 +15,7 @@ namespace Unique
 	SPtr<Resource> ModelImporter::Import(const String& path)
 	{
 		SPtr<File> file = cache.GetFile(path);
-		if (file)
+		if (!file)
 		{
 			return nullptr;
 		}

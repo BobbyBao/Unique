@@ -382,7 +382,7 @@ void Octree::Update(const FrameInfo& frame)
         int numWorkItems = queue.GetNumThreads() + 1; // Worker threads + main thread
         int drawablesPerItem = Max((int)(drawableUpdates_.size() / numWorkItems), 1);
 
-        PODVector<Drawable*>::iterator start = drawableUpdates_.begin();
+        auto start = &drawableUpdates_.front();
         // Create a work item for each thread
         for (int i = 0; i < numWorkItems; ++i)
         {
@@ -391,12 +391,12 @@ void Octree::Update(const FrameInfo& frame)
             item->workFunction_ = UpdateDrawablesWork;
             item->aux_ = const_cast<FrameInfo*>(&frame);
 
-            PODVector<Drawable*>::iterator end = drawableUpdates_.end();
+            auto end = &drawableUpdates_.back() + 1;
             if (i < numWorkItems - 1 && end - start > drawablesPerItem)
                 end = start + drawablesPerItem;
 
-            item->start_ = &(*start);
-            item->end_ = &(*end);
+            item->start_ =start;
+            item->end_ = end;
             queue.AddWorkItem(item);
 
             start = end;
