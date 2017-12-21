@@ -23,7 +23,6 @@
 #include "Precompiled.h"
 
 #include "Core/Context.h"
-#include "../Graphics/Batch.h"
 #include "../Graphics/Camera.h"
 #include "../Graphics/Geometry.h"
 #include "../Graphics/Material.h"

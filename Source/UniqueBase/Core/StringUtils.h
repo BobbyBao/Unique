@@ -4,9 +4,8 @@
 namespace Unique
 {
 	String FormatString(const char* formatString, ...);
-	
+	bool Match(const String& str, const String& pattern, bool caseSensitive);
 	ByteArray ToBase64(ByteArray& v);
-
 	ByteArray FromBase64(const char* base64, size_t size);
 
 	template<typename T>

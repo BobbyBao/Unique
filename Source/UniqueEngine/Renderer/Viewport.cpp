@@ -20,14 +20,12 @@
 // THE SOFTWARE.
 //
 
-#include "Precompiled.h"
-#include "../Graphics/Viewport.h"
-#include "../Graphics/Camera.h"
-#include "../Graphics/Graphics.h"
-#include "../Graphics/Renderer.h"
-//#include "../Graphics/RenderPath.h"
-#include "../Graphics/View.h"
+#include "UniquePCH.h"
 #include "Resource/ResourceCache.h"
+#include "../Graphics/Camera.h"
+#include "../Renderer/Viewport.h"
+//#include "../Graphics/RenderPath.h"
+#include "../Renderer/View.h"
 #include "../Scene/Scene.h"
 
 //#include "../DebugNew.h"

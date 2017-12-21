@@ -538,7 +538,7 @@ String String::ToUpper() const
     return ret;
 }
 
-Vector<String>/*&&*/ String::Split(char separator, bool keepEmptyStrings) const
+Vector<String> String::Split(char separator, bool keepEmptyStrings) const
 {
     return Split(CString(), separator, keepEmptyStrings);
 }

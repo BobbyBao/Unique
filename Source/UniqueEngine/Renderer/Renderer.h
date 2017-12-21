@@ -1,8 +1,8 @@
 #pragma once
 #include "Core/Object.h"
-#include "../Graphics/View.h"
 #include "../Graphics/Drawable.h"
-#include "../Graphics/Viewport.h"
+#include "../Renderer/View.h"
+#include "../Renderer/Viewport.h"
 
 #include "../Graphics/VertexBuffer.h"
 

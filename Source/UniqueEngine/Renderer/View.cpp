@@ -1,15 +1,14 @@
-#include "Precompiled.h"
+#include "UniquePCH.h"
 #include "Core/WorkQueue.h"
 #include "../Scene/Scene.h"
+#include "../Graphics/GraphicsBuffer.h"
+#include "../Graphics/Geometry.h"
+#include "../Graphics/Octree.h"
+#include "../Graphics/OctreeQuery.h"
+#include "../Graphics/Camera.h"
 #include "Viewport.h"
 #include "View.h"
-#include "Camera.h"
-#include "Graphics.h"
-#include "GraphicsBuffer.h"
 #include "Batch.h"
-#include "Geometry.h"
-#include "Octree.h"
-#include "OctreeQuery.h"
 
 namespace Unique
 {

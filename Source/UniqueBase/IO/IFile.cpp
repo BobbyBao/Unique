@@ -89,7 +89,6 @@ namespace Unique
 		return ret;
 	}
 
-
 	ByteArray IFile::ReadAll()
 	{
 		uint size = GetSize();
@@ -97,6 +96,18 @@ namespace Unique
 		if (Read(byteArray.data(), size) != size)
 		{
 			return ByteArray();
+		}
+
+		return byteArray;
+	}
+
+	String IFile::ReadAllText()
+	{
+		uint size = GetSize();
+		String byteArray(size);
+		if (Read(&byteArray.At(0), size) != size)
+		{
+			return String();
 		}
 
 		return byteArray;

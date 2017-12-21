@@ -1,7 +1,7 @@
 #pragma once
 #include "Core/Object.h"
 #include "Batch.h"
-#include "Light.h"
+#include "../Graphics/Light.h"
 
 namespace Unique
 {

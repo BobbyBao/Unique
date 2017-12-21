@@ -3,7 +3,7 @@
 #include "RefCntAutoPtr.h"
 #include "RenderDevice.h"
 #include "DeviceContext.h"
-#include "Graphics/View.h"
+#include "Renderer/View.h"
 
 namespace Unique
 {

@@ -15,6 +15,81 @@ namespace Unique
 		return ret;
 	}
 
+	//-----------------------------------------------------------------------
+	bool Match(const String& str, const String& pattern, bool caseSensitive)
+	{
+		String tmpStr;
+		String tmpPattern;
+		if (!caseSensitive)
+		{
+			tmpStr = str.ToLower();
+			tmpPattern = pattern.ToLower();
+		}
+		else
+		{
+			tmpStr = str;
+			tmpPattern = pattern;
+		}
+
+		String::const_iterator strIt = tmpStr.Begin();
+		String::const_iterator patIt = tmpPattern.Begin();
+		String::const_iterator lastWildCardIt = tmpPattern.End();
+		while (strIt != tmpStr.End() && patIt != tmpPattern.End())
+		{
+			if (*patIt == '*')
+			{
+				lastWildCardIt = patIt;
+				// Skip over looking for next character
+				++patIt;
+				if (patIt == tmpPattern.End())
+				{
+					// Skip right to the end since * matches the entire rest of the string
+					strIt = tmpStr.End();
+				}
+				else
+				{
+					// scan until we find next pattern character
+					while (strIt != tmpStr.End() && *strIt != *patIt)
+						++strIt;
+				}
+			}
+			else
+			{
+				if (*patIt != *strIt)
+				{
+					if (lastWildCardIt != tmpPattern.End())
+					{
+						// The last wildcard can match this incorrect sequence
+						// rewind pattern to wildcard and keep searching
+						patIt = lastWildCardIt;
+						lastWildCardIt = tmpPattern.End();
+					}
+					else
+					{
+						// no wildwards left
+						return false;
+					}
+				}
+				else
+				{
+					++patIt;
+					++strIt;
+				}
+			}
+
+		}
+		// If we reached the end of both the pattern and the string, we succeeded
+		if ((patIt == tmpPattern.End() || (*patIt == '*' && patIt + 1 == tmpPattern.End())) && strIt == tmpStr.End())
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+
+	}
+
 	ByteArray ToBase64(ByteArray& v)
 	{
 		const char alphabet[] = "ABCDEFGH" "IJKLMNOP" "QRSTUVWX" "YZabcdef"

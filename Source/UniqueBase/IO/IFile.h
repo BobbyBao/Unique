@@ -73,6 +73,7 @@ public:
 	String ReadLine();
 
 	ByteArray ReadAll();
+	String ReadAllText();
 	
 	template<class T>
 	bool Write(const T& value)

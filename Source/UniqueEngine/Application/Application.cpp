@@ -2,8 +2,6 @@
 #include "UniquePCH.h"
 #include "Application.h"
 #include "Input.h"
-#include "../Graphics/Graphics.h"
-#include "../Graphics/Renderer.h"
 #include "Core/CoreEvents.h"
 #include "Core/WorkQueue.h"
 #include "Graphics/Importers/ShaderImporter.h"
