@@ -46,6 +46,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Renderer\Viewport.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Renderer\RenderPass.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Renderer\RenderPath.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Renderer\ScenePass.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Scene\Component.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Scene\LogicComponent.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Scene\Node.h" />
@@ -92,6 +93,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\PipelineState.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Renderer\RenderPass.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Renderer\RenderPath.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Renderer\ScenePass.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Scene\Component.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Scene\LogicComponent.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Scene\Node.cpp" />

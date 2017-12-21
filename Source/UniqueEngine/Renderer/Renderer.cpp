@@ -5,6 +5,7 @@
 #include "Core/CoreEvents.h"
 #include "../Graphics/DebugRenderer.h"
 #include "../Scene/Scene.h"
+#include "RenderPath.h"
 
 namespace Unique
 {
@@ -23,12 +24,26 @@ namespace Unique
 
 	Renderer::Renderer() : graphics_(GetSubsystem<Graphics>()), numExtraInstancingBufferElements_(3)
 	{
-		Subscribe(&Renderer::HandleRenderUpdate);
-		Subscribe(&Renderer::HandleEndFrame);
+		Initialize();
 	}
 
 	Renderer::~Renderer()
 	{
+	}
+
+	/// Initialize when screen mode initially set.
+	void Renderer::Initialize()
+	{
+		defaultRenderPath_ = new RenderPath();
+
+
+		Subscribe(&Renderer::HandleRenderUpdate);
+		Subscribe(&Renderer::HandleEndFrame);
+	}
+
+	void Renderer::LoadShaders()
+	{
+
 	}
 
 	void Renderer::SetNumViewports(unsigned num)

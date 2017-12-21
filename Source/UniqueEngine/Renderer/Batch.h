@@ -252,13 +252,6 @@ namespace Unique
 
 		/// Instanced draw calls.
 		HashMap<BatchGroupKey, BatchGroup> batchGroups_;
-		/// Shader remapping table for 2-pass state and distance sort.
-		HashMap<unsigned, unsigned> shaderRemapping_;
-		/// Material remapping table for 2-pass state and distance sort.
-		HashMap<unsigned short, unsigned short> materialRemapping_;
-		/// Geometry remapping table for 2-pass state and distance sort.
-		HashMap<unsigned short, unsigned short> geometryRemapping_;
-
 		/// Unsorted non-instanced draw calls.
 		PODVector<Batch> batches_;
 		/// Sorted non-instanced draw calls.

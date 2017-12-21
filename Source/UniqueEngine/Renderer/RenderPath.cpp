@@ -14,9 +14,23 @@ namespace Unique
 	{
 	}
 
-
 	RenderPath::~RenderPath()
 	{
 	}
-
+	
+	void RenderPath::Update(View* view)
+	{
+		for (auto& pass : renderPass_)
+		{
+			pass->Update(view);
+		}
+	}
+	
+	void RenderPath::Render(View* view)
+	{
+		for (auto& pass : renderPass_)
+		{
+			pass->Render(view);
+		}
+	}
 }

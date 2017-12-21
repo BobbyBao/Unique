@@ -1,12 +1,15 @@
 #include "UniquePCH.h"
 #include "FrameBuffer.h"
 
-
-FrameBuffer::FrameBuffer()
+namespace Unique
 {
-}
+	FrameBuffer::FrameBuffer()
+	{
+	}
 
 
-FrameBuffer::~FrameBuffer()
-{
+	FrameBuffer::~FrameBuffer()
+	{
+	}
+
 }

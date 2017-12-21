@@ -2,23 +2,25 @@
 
 namespace Unique
 {
-	enum RenderCommandType
+	enum class RenderPassType
 	{
-		CMD_NONE = 0,
-		CMD_CLEAR,
-		CMD_SCENEPASS,
-		CMD_QUAD,
-		CMD_FORWARDLIGHTS,
-		CMD_LIGHTVOLUMES,
-		CMD_RENDERUI,
-		CMD_SENDEVENT
+		NONE = 0,
+		CLEAR,
+		SCENEPASS,
+		QUAD,
+		FORWARDLIGHTS,
+		LIGHTVOLUMES,
+		RENDERUI,
+		SENDEVENT
 	};
 
-	enum RenderCommandSortMode
+	enum class RenderPassSortMode
 	{
-		SORT_FRONTTOBACK = 0,
-		SORT_BACKTOFRONT
+		FRONTTOBACK = 0,
+		BACKTOFRONT
 	};
+
+	class View;
 
 	class RenderPass : public Object
 	{
@@ -27,19 +29,36 @@ namespace Unique
 		RenderPass();
 		~RenderPass();
 
-		virtual void Begin() {}
-		virtual void End() {}
+		virtual void Update(View* view);
+		virtual void Render(View* view);
 
 	protected:
 		/// Command type.
-		RenderCommandType type_;
+		RenderPassType type_;
 		/// Sorting mode.
-		RenderCommandSortMode sortMode_;
+		RenderPassSortMode sortMode_;
 		/// Scene pass name.
 		String pass_;
 		/// Scene pass index. Filled by View.
 		unsigned passIndex_;
+
 	};
 
+	class ClearPass : public RenderPass
+	{
+		uRTTI(ClearPass, RenderPass)
+	public:
+		virtual void Render();
+
+	protected:
+		/// Clear flags. Affects clear command only.
+		unsigned clearFlags_;
+		/// Clear color. Affects clear command only.
+		Color clearColor_;
+		/// Clear depth. Affects clear command only.
+		float clearDepth_;
+		/// Clear stencil value. Affects clear command only.
+		unsigned clearStencil_;
+	};
 
 }

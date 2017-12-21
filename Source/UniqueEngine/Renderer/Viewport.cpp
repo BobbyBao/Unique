@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2008-2017 the Urho3D project.
+// Copyright (c) 2008-2017 the Unique project.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,13 +22,14 @@
 
 #include "UniquePCH.h"
 #include "Resource/ResourceCache.h"
+#include "../Scene/Scene.h"
 #include "../Graphics/Camera.h"
 #include "../Renderer/Viewport.h"
-//#include "../Graphics/RenderPath.h"
+#include "../Renderer/RenderPath.h"
 #include "../Renderer/View.h"
-#include "../Scene/Scene.h"
 
-//#include "../DebugNew.h"
+
+#include "DebugNew.h"
 
 namespace Unique
 {
@@ -86,14 +87,14 @@ void Viewport::SetDrawDebug(bool enable)
 }
 
 void Viewport::SetRenderPath(RenderPath* renderPath)
-{/*
+{
     if (renderPath)
         renderPath_ = renderPath;
     else
     {
         Renderer& renderer = GetSubsystem<Renderer>();
         renderPath_ = renderer.GetDefaultRenderPath();
-    }*/
+    }
 }
 
 Scene* Viewport::GetScene() const
@@ -118,8 +119,7 @@ View* Viewport::GetView() const
 
 RenderPath* Viewport::GetRenderPath() const
 {
-	return nullptr;
-//    return renderPath_;
+	return renderPath_;
 }
 
 Ray Viewport::GetScreenRay(int x, int y) const

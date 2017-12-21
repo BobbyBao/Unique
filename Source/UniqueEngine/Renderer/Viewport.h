@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2008-2017 the Urho3D project.
+// Copyright (c) 2008-2017 the Unique project.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,6 @@ namespace Unique
 class Camera;
 class RenderPath;
 class Scene;
-class XMLFile;
 class View;
 
 /// %Viewport definition either for a render surface or the backbuffer.
@@ -104,7 +103,7 @@ private:
     /// Viewport rectangle.
     IntRect rect_;
     /// Rendering path.
-   // SPtr<RenderPath> renderPath_;
+	SPtr<RenderPath> renderPath_;
     /// Internal rendering structure.
     SPtr<View> view_;
     /// Debug draw flag.

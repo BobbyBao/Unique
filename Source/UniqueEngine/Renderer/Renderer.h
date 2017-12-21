@@ -33,13 +33,20 @@ namespace Unique
 		/// Return the instancing vertex buffer
 		VertexBuffer* GetInstancingBuffer() const { return instancingBuffer_.Get(); }
 
+		RenderPath* GetDefaultRenderPath() { return defaultRenderPath_; }
+
 		void Begin();
 		void Render();
 		void End();
 		void Stop();
 
 		void DrawDebugGeometry(bool depthTest);
+
 	private:
+		/// Initialize when screen mode initially set.
+		void Initialize();
+		/// Reload shaders.
+		void LoadShaders();
 		void HandleEndFrame(const EndFrame& eventData);
 		void HandleRenderUpdate(const RenderUpdate& eventData);
 		void UpdateQueuedViewport(unsigned index);
@@ -49,6 +56,10 @@ namespace Unique
 
 		class Graphics& graphics_;
 
+		/// Default renderpath.
+		SPtr<RenderPath> defaultRenderPath_;
+		/// Default non-textured material technique.
+		SPtr<Shader> defaultTechnique_;
 		/// Backbuffer viewports.
 		Vector<SPtr<Viewport> > viewports_;
 		/// Render surface viewports queued for update.

@@ -1,8 +1,12 @@
 #pragma once
-class FrameBuffer
-{
-public:
-	FrameBuffer();
-	~FrameBuffer();
-};
 
+namespace Unique
+{
+	class FrameBuffer : public Object
+	{
+	public:
+		FrameBuffer();
+		~FrameBuffer();
+	};
+
+}

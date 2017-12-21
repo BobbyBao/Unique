@@ -755,62 +755,7 @@ namespace Unique
 
 	void BatchQueue::SortFrontToBack2Pass(PODVector<Batch*>& batches)
 	{
-		// Mobile devices likely use a tiled deferred approach, with which front-to-back sorting is irrelevant. The 2-pass
-		// method is also time consuming, so just sort with state having priority
-#ifdef GL_ES_VERSION_2_0
 		std::sort(batches.begin(), batches.end(), CompareBatchesState);
-#else
-		// For desktop, first sort by distance and remap shader/material/geometry IDs in the sort key
-		std::sort(batches.begin(), batches.end(), CompareBatchesFrontToBack);
-
-		unsigned freeShaderID = 0;
-		unsigned short freeMaterialID = 0;
-		unsigned short freeGeometryID = 0;
-
-		for (auto i = batches.begin(); i != batches.end(); ++i)
-		{
-			Batch* batch = *i;
-
-			unsigned shaderID = (unsigned)(batch->sortKey_ >> 32);
-			auto j = shaderRemapping_.find(shaderID);
-			if (j != shaderRemapping_.end())
-				shaderID = j->second;
-			else
-			{
-				shaderID = shaderRemapping_[shaderID] = freeShaderID | (shaderID & 0x80000000);
-				++freeShaderID;
-			}
-
-			unsigned short materialID = (unsigned short)(batch->sortKey_ & 0xffff0000);
-			auto k = materialRemapping_.find(materialID);
-			if (k != materialRemapping_.end())
-				materialID = k->second;
-			else
-			{
-				materialID = materialRemapping_[materialID] = freeMaterialID;
-				++freeMaterialID;
-			}
-
-			unsigned short geometryID = (unsigned short)(batch->sortKey_ & 0xffff);
-			auto l = geometryRemapping_.find(geometryID);
-			if (l != geometryRemapping_.end())
-				geometryID = l->second;
-			else
-			{
-				geometryID = geometryRemapping_[geometryID] = freeGeometryID;
-				++freeGeometryID;
-			}
-
-			batch->sortKey_ = (((unsigned long long)shaderID) << 32) | (((unsigned long long)materialID) << 16) | geometryID;
-		}
-
-		shaderRemapping_.clear();
-		materialRemapping_.clear();
-		geometryRemapping_.clear();
-
-		// Finally sort again with the rewritten ID's
-		std::sort(batches.begin(), batches.end(), CompareBatchesState);
-#endif
 	}
 
 	void BatchQueue::SetInstancingData(void* lockedData, unsigned stride, unsigned& freeIndex)

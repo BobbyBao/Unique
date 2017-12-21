@@ -1,15 +1,17 @@
 #pragma once
+#include "RenderPass.h"
 
 namespace Unique
 {
-	class RenderPass;
-
-	class RenderPath : public Object
+	class RenderPath : public Resource
 	{
-		uRTTI(RenderPath, Object)
+		uRTTI(RenderPath, Resource)
 	public:
 		RenderPath();
 		~RenderPath();
+
+		void Update(View* view);
+		void Render(View* view);
 	protected:
 		Vector<SPtr<RenderPass>> renderPass_;
 	};
