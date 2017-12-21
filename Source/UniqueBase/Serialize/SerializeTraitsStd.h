@@ -10,13 +10,7 @@
 
 namespace Unique
 {
-
-	template<>
-	class SerializeTraits<std::string> : public SerializeTraitsPrimitive<std::string>
-	{
-	public:
-		static bool IsContinousMemoryArray() { return true; }
-	};
+	uPrimitiveTraits(std::string)
 
 	template<class T, class Allocator>
 	class SerializeTraits<std::vector<T, Allocator> > : public SerializeTraitsArray<std::vector<T, Allocator> >
@@ -45,7 +39,6 @@ namespace Unique
 	{
 	public:
 		typedef std::pair<FirstClass, SecondClass>	value_type;
-		inline static bool IsBasicType() { return true; }
 
 		template<class TransferFunction>
 		inline static void Transfer(value_type& data, TransferFunction& transfer)
@@ -99,7 +92,6 @@ namespace Unique
 	class SerializeTraits<std::set<T, Compare, Allocator> > : public SerializeTraitsArray<std::set<T, Compare, Allocator> >
 	{
 	public:
-
 		template<class TransferFunction> 
 		inline static void Transfer(value_type& data, TransferFunction& transfer)
 		{

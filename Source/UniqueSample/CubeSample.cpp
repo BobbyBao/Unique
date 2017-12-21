@@ -57,8 +57,7 @@ namespace Unique
 		auto& cache = GetSubsystem<ResourceCache>();
 		auto& graphics = GetSubsystem<Graphics>();
 
-		constBuffer_ = new UniformBuffer();
-		constBuffer_->Create(ShaderConstants(), USAGE_DYNAMIC, CPU_ACCESS_WRITE);
+		constBuffer_ = new UniformBuffer(ShaderConstants(), USAGE_DYNAMIC, CPU_ACCESS_WRITE);
 
 		// Create vertex and index buffers
 		geometry_ = UniqueSample::BuildSponge(m_SpongeLevel, m_SpongeAO);

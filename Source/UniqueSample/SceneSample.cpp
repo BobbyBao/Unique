@@ -29,6 +29,13 @@ namespace Unique
 
 		StaticModel* model = scene_->CreateChild("Model")->CreateComponent<StaticModel>();
 		model->SetModelAttr(ResourceRef::Create<Model>("Models/Kachujin/Kachujin.mdl"));
+
+		SPtr<Material> mat(new Material());
+		mat->SetShader(ResourceRef::Create<Shader>("Shaders/Basic.shader"));
+		model->SetMaterial(mat);
+		
+		
+		
 		auto& renderer = GetSubsystem<Renderer>();
 		Viewport* viewport = new Viewport(scene_, camera_);
 		renderer.SetViewport(0, viewport);

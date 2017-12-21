@@ -37,8 +37,6 @@ namespace Unique
 		{
 			transfer.TransferArray(data);
 		}
-
-		static bool IsContinousMemoryArray() { return true; }
 	};
 
 	template<>
@@ -68,7 +66,6 @@ namespace Unique
 	class SerializeTraitsEnum : public SerializeTraitsBase<T>
 	{
 	public:
-
 		static int GetEnum(const char* enumNames[], int count, const Unique::String& val)
 		{
 			for (int i = 0; i < count; i++)
@@ -104,7 +101,7 @@ namespace Unique
 	{
 	public:
 		template<class TransferFunction>
-		inline static void TransferFlags(value_type& data, Map<const char*, value_type> flags, TransferFunction& transfer)
+		inline static void TransferFlags(value_type& data, const HashMap<String, value_type>& flags, TransferFunction& transfer)
 		{
 			Unique::String str;
 			if (transfer.IsReading())
@@ -166,11 +163,10 @@ template<>\
 class SerializeTraits<CLASS> : public SerializeTraitsFlags<CLASS>\
 {\
 public:\
-	typedef CLASS value_type; \
 	template<class TransferFunction>\
 	inline static void Transfer(value_type& data, TransferFunction& transfer)\
 	{\
-		static Map<const char*, value_type> flags = \
+		static HashMap<String, value_type> flags = \
 		{\
 			__VA_ARGS__\
 		};\
@@ -183,7 +179,6 @@ template<>\
 class SerializeTraits<CLASS> : public SerializeTraitsEnum<CLASS>\
 {\
 public:\
-	typedef CLASS value_type; \
 	template<class TransferFunction>\
 	inline static void Transfer(value_type& data, TransferFunction& transfer)\
 	{\
@@ -200,7 +195,6 @@ template<>\
 class SerializeTraits<CLASS> : public SerializeTraitsBase<CLASS>\
 {\
 public:\
-	typedef CLASS value_type; \
 	template<class TransferFunction>\
 	inline static void Transfer(value_type& self, TransferFunction& transfer)\
 	{\

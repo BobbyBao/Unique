@@ -21,17 +21,17 @@
 //
 
 #include "Precompiled.h"
-
 #include "Core/Context.h"
 #include "Core/Profiler.h"
-#include "../Graphics/Geometry.h"
-#include "../Graphics/VertexBuffer.h"
-#include "../Graphics/Model.h"
-#include "../Graphics/Graphics.h"
 #include "IO/Log.h"
 #include "IO/File.h"
 #include "IO/FileSystem.h"
 #include "Resource/ResourceCache.h"
+#include "Serialize/SerializeTraitsMath.h"
+#include "../Graphics/Geometry.h"
+#include "../Graphics/VertexBuffer.h"
+#include "../Graphics/Model.h"
+#include "../Graphics/Graphics.h"
 
 
 namespace Unique
@@ -60,6 +60,10 @@ unsigned LookupIndexBuffer(IndexBuffer* buffer, const Vector<SPtr<IndexBuffer> >
 
 uObject(Model)
 {
+	uFactory();
+	uAttribute("Bounding Box", boundingBox_);
+	uAttribute("VertexBuffers", vertexBuffers_);
+	uAttribute("IndexBuffers", indexBuffers_);
 
 }
 
@@ -75,13 +79,13 @@ bool Model::Load(IFile& source)
 {
     // Check ID
     String fileID = source.ReadFileID();
-    if (fileID != "UMDL" /*&& fileID != "UMD2"*/)
+    if (fileID != "UMDL" && fileID != "UMD2")
     {
         UNIQUE_LOGERROR(source.GetName() + " is not a valid model file");
         return false;
     }
 
-    //bool hasVertexDeclarations = (fileID == "UMD2");
+    bool hasVertexDeclarations = (fileID == "UMD2");
 
     geometries_.clear();
     geometryBoneMappings_.clear();

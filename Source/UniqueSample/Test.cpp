@@ -30,6 +30,8 @@ namespace Unique
 		TestPerf();
 		return;
 
+		HashMap<String, int> a= { {"", 0} };
+
 		SPtr<Shader> shader(new Shader());
 		HjsonDeserializer jsonReader(true);
 		jsonReader.Load("Shaders/Test.shader", shader);

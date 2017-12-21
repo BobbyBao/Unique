@@ -18,12 +18,19 @@ namespace Unique
 		float deltaTime_;
 		float elapsedTime_;
 	};
-
-	struct ViewParameter
+	
+	struct CameraVS
 	{
-		Matrix4 view_;
-		Matrix4 viewInv_;
+		Vector3 cameraPos_;
+		float nearClip_;
+		float farClip_;
+		Vector4 depthMode_;
+		Vector3 frustumSize_;
+		Vector4 gBufferOffsets_;
+		Matrix3x4 view_;
+		Matrix3x4 viewInv_;
 		Matrix4 viewProj_;
+		Vector4 clipPlane_;
 	};
 
 	struct ObjectVS
@@ -60,7 +67,7 @@ namespace Unique
 	struct ScenePassInfo
 	{
 		/// Pass index.
-		StringID passIndex_;
+		unsigned passIndex_ = 0;
 		/// Allow instancing flag.
 		bool allowInstancing_;
 		/// Mark to stencil flag.

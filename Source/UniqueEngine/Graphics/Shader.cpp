@@ -108,8 +108,6 @@ namespace Unique
 		uAttribute("Pass", passes_)	
 	}
 
-	StringID Pass::MAIN("MAIN");
-
 	Pass::Pass(const String& name) : name_(name)
 	{
 		for (int i = 0; i < 6; i++)
@@ -161,6 +159,8 @@ namespace Unique
 
 	bool Pass::Prepare()
 	{
+		passIndex_ = Shader::GetPassIndex(name_);
+
 		for (size_t i = 0; i < inputLayout_.size(); i++)
 		{
 			inputLayout_[i].InputIndex = (uint)i;
@@ -218,6 +218,16 @@ namespace Unique
 		return true;
 	}
 
+	unsigned Shader::basePassIndex = 0;
+	unsigned Shader::alphaPassIndex = 0;
+	unsigned Shader::materialPassIndex = 0;
+	unsigned Shader::deferredPassIndex = 0;
+	unsigned Shader::lightPassIndex = 0;
+	unsigned Shader::litBasePassIndex = 0;
+	unsigned Shader::litAlphaPassIndex = 0;
+	unsigned Shader::shadowPassIndex = 0;
+	HashMap<String, unsigned> Shader::passIndices;
+
 	Shader::Shader()
 	{
 	}
@@ -247,27 +257,17 @@ namespace Unique
 		return &(passes_.back());
 	}
 
-	Pass* Shader::GetShaderPass(const StringID& passName)
+	Pass* Shader::GetShaderPass(const String& passName)
+	{
+		unsigned index = GetPassIndex(passName);
+		return GetShaderPass(index);
+	}
+
+	Pass* Shader::GetShaderPass(unsigned passIndex)
 	{
 		for (auto& p : passes_)
 		{
-			if (p.name_ == StringID::EMPTY)
-			{
-				if (passName == Pass::MAIN)
-				{
-					return &p;
-				}
-			}
-
-			if (p.name_ == Pass::MAIN)
-			{
-				if (passName == StringID::EMPTY)
-				{
-					return &p;
-				}
-			}
-
-			if (p.name_ == passName)
+			if (p.passIndex_ == passIndex)
 			{
 				return &p;
 			}
@@ -276,7 +276,7 @@ namespace Unique
 		return nullptr;
 	}
 
-	uint Shader::GetMask(const StringID & passName, const String& defs)
+	uint Shader::GetMask(const String & passName, const String& defs)
 	{
 		Pass* pass = GetShaderPass(passName);
 		if (pass == nullptr)
@@ -287,7 +287,7 @@ namespace Unique
 		return pass->GetMask(this, defs);
 	}
 
-	PipelineState* Shader::GetPipeline(const StringID& passName, uint defMask)
+	PipelineState* Shader::GetPipeline(const String& passName, uint defMask)
 	{
 		Pass* pass = GetShaderPass(passName);
 		if (pass == nullptr)
@@ -298,7 +298,7 @@ namespace Unique
 		return pass->GetPipeline(this, defMask);
 	}
 
-	PipelineState* Shader::GetPipeline(const StringID& passName, const String& defs)
+	PipelineState* Shader::GetPipeline(const String& passName, const String& defs)
 	{
 		Pass* pass = GetShaderPass(passName);
 		if (pass == nullptr)
@@ -307,6 +307,38 @@ namespace Unique
 		}
 
 		return pass->GetPipeline(this, defs);
+	}
+
+	unsigned Shader::GetPassIndex(const String& passName)
+	{
+		// Initialize built-in pass indices on first call
+		if (passIndices.empty())
+		{
+			basePassIndex = passIndices["base"] = 0;
+			alphaPassIndex = passIndices["alpha"] = 1;
+			materialPassIndex = passIndices["material"] = 2;
+			deferredPassIndex = passIndices["deferred"] = 3;
+			lightPassIndex = passIndices["light"] = 4;
+			litBasePassIndex = passIndices["litbase"] = 5;
+			litAlphaPassIndex = passIndices["litalpha"] = 6;
+			shadowPassIndex = passIndices["shadow"] = 7;
+		}
+
+		if (passName.Empty())
+		{
+			return 0;
+		}
+
+		String nameLower = passName.ToLower();
+		auto i = passIndices.find(nameLower);
+		if (i != passIndices.end())
+			return i->second;
+		else
+		{
+			unsigned newPassIndex = (uint)passIndices.size();
+			passIndices[nameLower] = newPassIndex;
+			return newPassIndex;
+		}
 	}
 
 	Vector<String> Shader::SplitDef(const String& defs)

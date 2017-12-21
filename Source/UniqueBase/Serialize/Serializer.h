@@ -11,7 +11,6 @@ namespace Unique
 		Resolve
 	};
 
-	// Serializer with virtual functions
 	class Serializer
 	{
 	public:
