@@ -130,6 +130,11 @@ namespace Unique
 		return tmp;
 	}
 
+	ByteArray FromBase64(const String& base64)
+	{
+		return FromBase64(base64.CString(), base64.Length());
+	}
+
 	ByteArray FromBase64(const char* base64, size_t size)
 	{
 		unsigned int buf = 0;
@@ -170,4 +175,368 @@ namespace Unique
 		return tmp;
 	}
 
+	unsigned CountElements(const char* buffer, char separator)
+	{
+		if (!buffer)
+			return 0;
+
+		const char* endPos = buffer + String::CStringLength(buffer);
+		const char* pos = buffer;
+		unsigned ret = 0;
+
+		while (pos < endPos)
+		{
+			if (*pos != separator)
+				break;
+			++pos;
+		}
+
+		while (pos < endPos)
+		{
+			const char* start = pos;
+
+			while (start < endPos)
+			{
+				if (*start == separator)
+					break;
+
+				++start;
+			}
+
+			if (start == endPos)
+			{
+				++ret;
+				break;
+			}
+
+			const char* end = start;
+
+			while (end < endPos)
+			{
+				if (*end != separator)
+					break;
+
+				++end;
+			}
+
+			++ret;
+			pos = end;
+		}
+
+		return ret;
+	}
+
+	Color ToColor(const String& source)
+	{
+		return ToColor(source.CString());
+	}
+
+	Color ToColor(const char* source)
+	{
+		Color ret;
+
+		unsigned elements = CountElements(source, ' ');
+		if (elements < 3)
+			return ret;
+
+		char* ptr = (char*)source;
+		ret.r_ = (float)strtod(ptr, &ptr);
+		ret.g_ = (float)strtod(ptr, &ptr);
+		ret.b_ = (float)strtod(ptr, &ptr);
+		if (elements > 3)
+			ret.a_ = (float)strtod(ptr, &ptr);
+
+		return ret;
+	}
+
+	IntRect ToIntRect(const String& source)
+	{
+		return ToIntRect(source.CString());
+	}
+
+	IntRect ToIntRect(const char* source)
+	{
+		IntRect ret(IntRect::ZERO);
+
+		unsigned elements = CountElements(source, ' ');
+		if (elements < 4)
+			return ret;
+
+		char* ptr = (char*)source;
+		ret.left_ = (int)strtol(ptr, &ptr, 10);
+		ret.top_ = (int)strtol(ptr, &ptr, 10);
+		ret.right_ = (int)strtol(ptr, &ptr, 10);
+		ret.bottom_ = (int)strtol(ptr, &ptr, 10);
+
+		return ret;
+	}
+
+	IntVector2 ToIntVector2(const String& source)
+	{
+		return ToIntVector2(source.CString());
+	}
+
+	IntVector2 ToIntVector2(const char* source)
+	{
+		IntVector2 ret(IntVector2::ZERO);
+
+		unsigned elements = CountElements(source, ' ');
+		if (elements < 2)
+			return ret;
+
+		char* ptr = (char*)source;
+		ret.x_ = (int)strtol(ptr, &ptr, 10);
+		ret.y_ = (int)strtol(ptr, &ptr, 10);
+
+		return ret;
+	}
+
+	IntVector3 ToIntVector3(const String& source)
+	{
+		return ToIntVector3(source.CString());
+	}
+
+	IntVector3 ToIntVector3(const char* source)
+	{
+		IntVector3 ret(IntVector3::ZERO);
+
+		unsigned elements = CountElements(source, ' ');
+		if (elements < 3)
+			return ret;
+
+		char* ptr = (char*)source;
+		ret.x_ = (int)strtol(ptr, &ptr, 10);
+		ret.y_ = (int)strtol(ptr, &ptr, 10);
+		ret.z_ = (int)strtol(ptr, &ptr, 10);
+
+		return ret;
+	}
+
+	Rect ToRect(const String& source)
+	{
+		return ToRect(source.CString());
+	}
+
+	Rect ToRect(const char* source)
+	{
+		Rect ret(Rect::ZERO);
+
+		unsigned elements = CountElements(source, ' ');
+		if (elements < 4)
+			return ret;
+
+		char* ptr = (char*)source;
+		ret.min_.x_ = (float)strtod(ptr, &ptr);
+		ret.min_.y_ = (float)strtod(ptr, &ptr);
+		ret.max_.x_ = (float)strtod(ptr, &ptr);
+		ret.max_.y_ = (float)strtod(ptr, &ptr);
+
+		return ret;
+	}
+
+	Quaternion ToQuaternion(const String& source)
+	{
+		return ToQuaternion(source.CString());
+	}
+
+	Quaternion ToQuaternion(const char* source)
+	{
+		unsigned elements = CountElements(source, ' ');
+		char* ptr = (char*)source;
+
+		if (elements < 3)
+			return Quaternion::IDENTITY;
+		else if (elements < 4)
+		{
+			// 3 coords specified: conversion from Euler angles
+			float x, y, z;
+			x = (float)strtod(ptr, &ptr);
+			y = (float)strtod(ptr, &ptr);
+			z = (float)strtod(ptr, &ptr);
+
+			return Quaternion(x, y, z);
+		}
+		else
+		{
+			// 4 coords specified: full quaternion
+			Quaternion ret;
+			ret.w_ = (float)strtod(ptr, &ptr);
+			ret.x_ = (float)strtod(ptr, &ptr);
+			ret.y_ = (float)strtod(ptr, &ptr);
+			ret.z_ = (float)strtod(ptr, &ptr);
+
+			return ret;
+		}
+	}
+
+	Vector2 ToVector2(const String& source)
+	{
+		return ToVector2(source.CString());
+	}
+
+	Vector2 ToVector2(const char* source)
+	{
+		Vector2 ret(Vector2::ZERO);
+
+		unsigned elements = CountElements(source, ' ');
+		if (elements < 2)
+			return ret;
+
+		char* ptr = (char*)source;
+		ret.x_ = (float)strtod(ptr, &ptr);
+		ret.y_ = (float)strtod(ptr, &ptr);
+
+		return ret;
+	}
+
+	Vector3 ToVector3(const String& source)
+	{
+		return ToVector3(source.CString());
+	}
+
+	Vector3 ToVector3(const char* source)
+	{
+		Vector3 ret(Vector3::ZERO);
+
+		unsigned elements = CountElements(source, ' ');
+		if (elements < 3)
+			return ret;
+
+		char* ptr = (char*)source;
+		ret.x_ = (float)strtod(ptr, &ptr);
+		ret.y_ = (float)strtod(ptr, &ptr);
+		ret.z_ = (float)strtod(ptr, &ptr);
+
+		return ret;
+	}
+
+	Vector4 ToVector4(const String& source, bool allowMissingCoords)
+	{
+		return ToVector4(source.CString(), allowMissingCoords);
+	}
+
+	Vector4 ToVector4(const char* source, bool allowMissingCoords)
+	{
+		Vector4 ret(Vector4::ZERO);
+
+		unsigned elements = CountElements(source, ' ');
+		char* ptr = (char*)source;
+
+		if (!allowMissingCoords)
+		{
+			if (elements < 4)
+				return ret;
+
+			ret.x_ = (float)strtod(ptr, &ptr);
+			ret.y_ = (float)strtod(ptr, &ptr);
+			ret.z_ = (float)strtod(ptr, &ptr);
+			ret.w_ = (float)strtod(ptr, &ptr);
+
+			return ret;
+		}
+		else
+		{
+			if (elements > 0)
+				ret.x_ = (float)strtod(ptr, &ptr);
+			if (elements > 1)
+				ret.y_ = (float)strtod(ptr, &ptr);
+			if (elements > 2)
+				ret.z_ = (float)strtod(ptr, &ptr);
+			if (elements > 3)
+				ret.w_ = (float)strtod(ptr, &ptr);
+
+			return ret;
+		}
+	}
+
+	Matrix3 ToMatrix3(const String& source)
+	{
+		return ToMatrix3(source.CString());
+	}
+
+	Matrix3 ToMatrix3(const char* source)
+	{
+		Matrix3 ret(Matrix3::ZERO);
+
+		unsigned elements = CountElements(source, ' ');
+		if (elements < 9)
+			return ret;
+
+		char* ptr = (char*)source;
+		ret.m00_ = (float)strtod(ptr, &ptr);
+		ret.m01_ = (float)strtod(ptr, &ptr);
+		ret.m02_ = (float)strtod(ptr, &ptr);
+		ret.m10_ = (float)strtod(ptr, &ptr);
+		ret.m11_ = (float)strtod(ptr, &ptr);
+		ret.m12_ = (float)strtod(ptr, &ptr);
+		ret.m20_ = (float)strtod(ptr, &ptr);
+		ret.m21_ = (float)strtod(ptr, &ptr);
+		ret.m22_ = (float)strtod(ptr, &ptr);
+
+		return ret;
+	}
+
+	Matrix3x4 ToMatrix3x4(const String& source)
+	{
+		return ToMatrix3x4(source.CString());
+	}
+
+	Matrix3x4 ToMatrix3x4(const char* source)
+	{
+		Matrix3x4 ret(Matrix3x4::ZERO);
+
+		unsigned elements = CountElements(source, ' ');
+		if (elements < 12)
+			return ret;
+
+		char* ptr = (char*)source;
+		ret.m00_ = (float)strtod(ptr, &ptr);
+		ret.m01_ = (float)strtod(ptr, &ptr);
+		ret.m02_ = (float)strtod(ptr, &ptr);
+		ret.m03_ = (float)strtod(ptr, &ptr);
+		ret.m10_ = (float)strtod(ptr, &ptr);
+		ret.m11_ = (float)strtod(ptr, &ptr);
+		ret.m12_ = (float)strtod(ptr, &ptr);
+		ret.m13_ = (float)strtod(ptr, &ptr);
+		ret.m20_ = (float)strtod(ptr, &ptr);
+		ret.m21_ = (float)strtod(ptr, &ptr);
+		ret.m22_ = (float)strtod(ptr, &ptr);
+		ret.m23_ = (float)strtod(ptr, &ptr);
+
+		return ret;
+	}
+
+	Matrix4 ToMatrix4(const String& source)
+	{
+		return ToMatrix4(source.CString());
+	}
+
+	Matrix4 ToMatrix4(const char* source)
+	{
+		Matrix4 ret(Matrix4::ZERO);
+
+		unsigned elements = CountElements(source, ' ');
+		if (elements < 16)
+			return ret;
+
+		char* ptr = (char*)source;
+		ret.m00_ = (float)strtod(ptr, &ptr);
+		ret.m01_ = (float)strtod(ptr, &ptr);
+		ret.m02_ = (float)strtod(ptr, &ptr);
+		ret.m03_ = (float)strtod(ptr, &ptr);
+		ret.m10_ = (float)strtod(ptr, &ptr);
+		ret.m11_ = (float)strtod(ptr, &ptr);
+		ret.m12_ = (float)strtod(ptr, &ptr);
+		ret.m13_ = (float)strtod(ptr, &ptr);
+		ret.m20_ = (float)strtod(ptr, &ptr);
+		ret.m21_ = (float)strtod(ptr, &ptr);
+		ret.m22_ = (float)strtod(ptr, &ptr);
+		ret.m23_ = (float)strtod(ptr, &ptr);
+		ret.m30_ = (float)strtod(ptr, &ptr);
+		ret.m31_ = (float)strtod(ptr, &ptr);
+		ret.m32_ = (float)strtod(ptr, &ptr);
+		ret.m33_ = (float)strtod(ptr, &ptr);
+
+		return ret;
+	}
 }

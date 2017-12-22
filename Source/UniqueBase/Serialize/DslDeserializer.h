@@ -42,8 +42,13 @@ namespace Unique
 		virtual void TransferPrimitive(Color& data);
 		virtual void TransferPrimitive(Quaternion& data);
 	private:
-		void TransferBin(void* data, size_t size);
+		AstParser parser_;
 
+		AstNode* currentNode_ = nullptr;
+		Vector<AstNode*> parentNode_;
+		ChildMap::_Pairii childIterator_;
+		ChildMap::iterator currentPos_;
+		size_t arraySize_ = 0;
 	};
 
 }

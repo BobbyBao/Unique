@@ -74,20 +74,30 @@ namespace Unique
 	{
 	}
 
-	bool AstParser::Parse(const String& buf)
+	bool AstParser::Parse(const String& str)
 	{
-		Tokenize(buf);
-		
+		return Parse(str.CString(), str.Length());
+	}
+
+	void AstParser::Print()
+	{
 		for (auto& n : root_)
 		{
 			n->Print(0);
 		}
-
-		return true;
 	}
 
+	bool AstParser::Parse(const char* buf, size_t size)
+	{
+		if (!Tokenize(buf, size))
+		{
+			return false;
+		}
 
-	bool AstParser::Tokenize(const String &str)
+		return !root_.empty();
+	}
+
+	bool AstParser::Tokenize(const char* buf, size_t size)
 	{
 		// State enums
 		enum { READY = 0, COMMENT, MULTICOMMENT, WORD, QUOTE, POSSIBLECOMMENT };
@@ -100,7 +110,7 @@ namespace Unique
 		uint line = 1, state = READY, lastQuote = 0;
 
 		// Iterate over the input
-		auto i = str.Begin(), end = str.End();
+		auto i = buf, end = buf + size;
 		while (i != end)
 		{
 			lastc = c;
@@ -257,15 +267,12 @@ namespace Unique
 		if (lexeme.Length() == 1 && isNewline(lexeme[0]))
 		{
 			//tokenType = TID_NEWLINE;
-
 		}
 		else if (lexeme.Length() == 1 && lexeme[0] == openBracket)
 		{
-			//start
 			//tokenType = TID_LBRACKET;
 			assert(current_ != nullptr);
 			parents_.push_back(current_);
-	
 		}
 		else if (lexeme.Length() == 1 && lexeme[0] == closeBracket)
 		{

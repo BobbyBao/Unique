@@ -17,6 +17,9 @@ namespace Unique
 
 		void AddChild(AstNode* node);
 		AstNode* GetChild(const String& name);
+		size_t GetChildCount() const { return children_->size(); }
+		size_t GetChildCount(const String& key) { return children_->count(key); }
+		ChildMap::_Pairii GetIterator(const String& key) { return children_->equal_range(key); }
 		void VisitChild(const String& key, const std::function<void(AstNode*)>& fn);
 		void Print(int depth);
 
@@ -33,11 +36,12 @@ namespace Unique
 	public:
 		AstParser();
 
-		bool Parse(const String& buf);
-
+		bool Parse(const String& str);
+		bool Parse(const char* buf, size_t size);
+		void Print();
 		Vector<UPtr<AstNode>> root_;
 	private:
-		bool Tokenize(const String &str);
+		bool Tokenize(const char* buf, size_t size);
 		void SetToken(const String &lexeme, uint line);
 		void CreateNode(const String& type, uint line);
 		AstNode* GetParent() { return parents_.empty() ? nullptr : parents_.back(); }
