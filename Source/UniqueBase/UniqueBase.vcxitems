@@ -15,7 +15,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)IO\MemoryStream.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\DSL\Tokenizer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\DslDeserializer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\DSL\AstParser.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\SerializeTraitsMath.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\BinaryDeserializer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\BinarySerializer.h" />
@@ -105,7 +106,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)IO\MemoryStream.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\BinaryDeserializer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\BinarySerializer.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\DSL\Tokenizer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\DslDeserializer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\DSL\AstParser.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\HjsonDeserializer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\HjsonSerializer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\JsonDeserializer.cpp" />

@@ -1,8 +1,7 @@
 #include "Precompiled.h"
-#include "tokenizer.h"
+#include "AstParser.h"
 #include <cassert>
 #include <iostream>
-
 
 namespace Unique
 {
@@ -71,11 +70,11 @@ namespace Unique
 
 	}
 
-	Tokenizer::Tokenizer()
+	AstParser::AstParser()
 	{
 	}
 
-	bool Tokenizer::Parse(const String& buf)
+	bool AstParser::Parse(const String& buf)
 	{
 		Tokenize(buf);
 		
@@ -88,7 +87,7 @@ namespace Unique
 	}
 
 
-	bool Tokenizer::Tokenize(const String &str)
+	bool AstParser::Tokenize(const String &str)
 	{
 		// State enums
 		enum { READY = 0, COMMENT, MULTICOMMENT, WORD, QUOTE, POSSIBLECOMMENT };
@@ -250,7 +249,7 @@ namespace Unique
 		return true;
 	}
 
-	void Tokenizer::SetToken(const String &lexeme, uint line)
+	void AstParser::SetToken(const String &lexeme, uint line)
 	{
 		const char openBracket = '{', closeBracket = '}', quote = '\"';
 
@@ -307,7 +306,7 @@ namespace Unique
 
 	}
 
-	void Tokenizer::CreateNode(const String& type, uint line)
+	void AstParser::CreateNode(const String& type, uint line)
 	{
 		current_ = new AstNode(type);
 		AstNode* parent = GetParent();

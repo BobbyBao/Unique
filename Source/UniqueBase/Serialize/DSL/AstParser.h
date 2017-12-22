@@ -28,24 +28,22 @@ namespace Unique
 	};
 
 
-	class Tokenizer
+	class AstParser
 	{
 	public:
-		Tokenizer();
+		AstParser();
 
 		bool Parse(const String& buf);
-		
+
+		Vector<UPtr<AstNode>> root_;
 	private:
 		bool Tokenize(const String &str);
 		void SetToken(const String &lexeme, uint line);
 		void CreateNode(const String& type, uint line);
 		AstNode* GetParent() { return parents_.empty() ? nullptr : parents_.back(); }
 		String sourceFile_;
-		Vector<UPtr<AstNode>> root_;
 		Vector<AstNode*> parents_;
-		AstNode* current_;
-	
-		friend class State;
+		AstNode* current_;	
 	};
 
 	

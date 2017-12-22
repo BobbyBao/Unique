@@ -4,7 +4,7 @@
 #include "Serialize/JsonDeserializer.h"
 #include "Serialize/HjsonDeserializer.h"
 #include <Timer.h>
-#include "Serialize/DSL/Tokenizer.h"
+#include "Serialize/DSL/AstParser.h"
 #include "Serialize/DSL/ScriptLexer.h"
 #include <iostream>
 
@@ -65,7 +65,7 @@ namespace Unique
 		SPtr<File> file = cache.GetFile("Shaders/Basic.shader");
 		if (file)
 		{
-			Tokenizer tok;
+			AstParser tok;
 			tok.Parse(file->ReadAllText());
 
 		}
