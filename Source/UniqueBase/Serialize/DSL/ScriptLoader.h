@@ -72,7 +72,7 @@ namespace Unique
         @param groupName The name of a resource group which should be used if any resources
             are created during the parse of this script.
         */
-        virtual void parseScript(IFile& stream, const String& groupName) = 0;
+        virtual void parseScript(IStream& stream, const String& groupName) = 0;
 
         /** Gets the relative loading order of scripts of this type.
         @remarks

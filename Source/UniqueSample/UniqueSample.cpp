@@ -64,7 +64,6 @@ namespace Unique
 	{
 	}
 
-	extern void TestIO();
 
 	void UniqueSample::Initialize()
 	{
@@ -72,7 +71,6 @@ namespace Unique
 
 		CreateResource();
 
-	//	TestIO();
 	}
 
 	void UniqueSample::Terminate()

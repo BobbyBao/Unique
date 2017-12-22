@@ -2,6 +2,7 @@
 #define __SCRIPTCOMPILER_H_
 
 #include "ScriptLoader.h"
+#include "ScriptParser.h"
 
 namespace Unique
 {
@@ -11,33 +12,7 @@ namespace Unique
     /** \addtogroup General
     *  @{
     */
-    /** These enums hold the types of the concrete parsed nodes */
-    enum ConcreteNodeType
-    {
-        CNT_VARIABLE,
-        CNT_VARIABLE_ASSIGN,
-        CNT_WORD,
-        CNT_IMPORT,
-        CNT_QUOTE,
-        CNT_LBRACE,
-        CNT_RBRACE,
-        CNT_COLON
-    };
-
-    /** The ConcreteNode is the struct that holds an un-conditioned sub-tree of parsed input */
-    struct ConcreteNode;
-    typedef std::shared_ptr<ConcreteNode> ConcreteNodePtr;
-    typedef List<ConcreteNodePtr> ConcreteNodeList;
-    typedef std::shared_ptr<ConcreteNodeList> ConcreteNodeListPtr;
-    struct ConcreteNode
-    {
-        String token, file;
-        unsigned int line;
-        ConcreteNodeType type;
-        ConcreteNodeList children;
-        ConcreteNode *parent;
-    };
-
+    
     /** This enum holds the types of the possible abstract nodes */
     enum AbstractNodeType
     {
@@ -419,7 +394,7 @@ namespace Unique
         /// @copydoc ScriptLoader::getScriptPatterns
         const StringVector& getScriptPatterns(void) const;
         /// @copydoc ScriptLoader::parseScript
-        void parseScript(IFile& stream, const String& groupName);
+        void parseScript(IStream& stream, const String& groupName);
         /// @copydoc ScriptLoader::getLoadingOrder
         float getLoadingOrder(void) const;
 

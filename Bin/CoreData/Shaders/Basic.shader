@@ -1,56 +1,56 @@
 
-Shader("Basic"):
+
+Shader "Basic"
 {
-    Pass("Main"):
+	Pass base
 	{
-		DepthState: 
+		DepthState
 		{
-			DepthEnable: true
-			DepthWriteEnable: true
+			DepthEnable true
+			DepthWriteEnable true
 		}
 		
-		RasterizerState: 
+		RasterizerState 
 		{
-			FillMode: SOLID
-			CullMode: NONE
+			FillMode SOLID
+			CullMode NONE
 		}
 
-		InputLayout:
-		[
-			{
-				NumComponents: 3
-				ValueType: FLOAT32
-				IsNormalized: false
-			}
-			{
-				NumComponents: 3
-				ValueType: FLOAT32
-				IsNormalized: false
-			}
-			{
-				NumComponents: 4
-				ValueType: UINT8
-				IsNormalized: true
-			}
-		]
+		InputLayout
+		{
+			NumComponents 3
+			ValueType FLOAT32
+			IsNormalized false
+		}
 		
-		VertexShader:
+		InputLayout
+		{
+			NumComponents 3
+			ValueType FLOAT32
+			IsNormalized false
+		}
+		
+		InputLayout
+		{
+			NumComponents 4
+			ValueType UINT8
+			IsNormalized true
+		}
+	
+		VertexShader
 		{ 
-			EntryPoint: "VS" 
-			ShaderProfile: "DX_4_0"
-			Defines: ""
-			Source: "HLSL/Basic.hlsl"
+			EntryPoint "VS" 
+			ShaderProfile "DX_4_0"
+			Defines ""
+			Source "Default.hlsl"
 		}
 		
-		PixelShader:
+		PixelShader
 		{
-			EntryPoint: "PS"
-			ShaderProfile: "DX_4_0"
-			Defines: ""
-			Source: "HLSL/Basic.hlsl"
+			EntryPoint "PS"
+			ShaderProfile "DX_4_0"
+			Defines ""
+			Source "Default.hlsl"
 		}
-		
 	}
-   
-
 }

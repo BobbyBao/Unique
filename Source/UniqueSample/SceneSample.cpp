@@ -10,11 +10,14 @@ UNIQUE_IMPLEMENT_MAIN(Unique::SceneSample)
 
 namespace Unique
 {
+	extern void Test();
+
 	SceneSample::SceneSample(Context* context) : Application(context)
 	{
 		Subscribe(&SceneSample::HandleStartup);
 		Subscribe(&SceneSample::HandleShutdown);
 		Subscribe(&SceneSample::HandleUpdate);
+
 	}
 
 	SceneSample::~SceneSample()
@@ -23,6 +26,8 @@ namespace Unique
 
 	void SceneSample::HandleStartup(const struct Startup& eventData)
 	{
+		Test();
+
 		scene_ = new Scene();
 		scene_->CreateComponent<Octree>();
 		camera_ = scene_->CreateChild("Camera")->CreateComponent<Camera>();

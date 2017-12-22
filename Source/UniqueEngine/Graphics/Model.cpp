@@ -75,7 +75,7 @@ Model::~Model()
 {
 }
 
-bool Model::Load(IFile& source)
+bool Model::Load(IStream& source)
 {
     // Check ID
     String fileID = source.ReadFileID();

@@ -33,14 +33,14 @@ namespace Unique
     struct ScriptToken
     {
         /// This is the lexeme for this token
-        String lexeme, file;
+		String lexeme;//, file;
         /// This is the id associated with the lexeme, which comes from a lexeme-token id mapping
         uint type;
         /// This holds the line number of the input stream where the token was found.
         uint line;
     };
-    typedef std::shared_ptr<ScriptToken> ScriptTokenPtr;
-    typedef Vector<ScriptTokenPtr> ScriptTokenList;
+
+    typedef Vector<ScriptToken> ScriptTokenList;
     typedef std::shared_ptr<ScriptTokenList> ScriptTokenListPtr;
 
     class UNIQUE_API ScriptLexer

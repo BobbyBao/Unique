@@ -1632,7 +1632,7 @@ namespace Unique
         return 90.0f;
     }
     //-----------------------------------------------------------------------
-    void ScriptCompilerManager::parseScript(IFile& stream, const String& groupName)
+    void ScriptCompilerManager::parseScript(IStream& stream, const String& groupName)
     {
 #if OGRE_THREAD_SUPPORT
         // check we have an instance for this thread (should always have one for main thread)

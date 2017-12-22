@@ -1020,7 +1020,7 @@ unsigned String::DecodeUTF16(const wchar_t*& src)
 }
 #endif
 
-Vector<String>/*&&*/ String::Split(const char* str, char separator, bool keepEmptyStrings)
+Vector<String> String::Split(const char* str, char separator, bool keepEmptyStrings)
 {
     Vector<String> ret;
     const char* strEnd = str + String::CStringLength(str);
@@ -1040,7 +1040,7 @@ Vector<String>/*&&*/ String::Split(const char* str, char separator, bool keepEmp
     if (splitLen > 0 || keepEmptyStrings)
         ret.push_back(String(str, (uint)splitLen));
     
-    return /*std::move*/(ret);
+    return ret;
 }
 
 String String::Joined(const Vector<String>& subStrings, const String& glue)

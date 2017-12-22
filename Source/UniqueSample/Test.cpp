@@ -4,6 +4,9 @@
 #include "Serialize/JsonDeserializer.h"
 #include "Serialize/HjsonDeserializer.h"
 #include <Timer.h>
+#include "Serialize/DSL/Tokenizer.h"
+#include "Serialize/DSL/ScriptLexer.h"
+#include <iostream>
 
 namespace Unique
 {
@@ -24,9 +27,12 @@ namespace Unique
 	};
 
 	void TestPerf();
+	void TestParse();
 
-	void TestIO()
+	void Test()
 	{
+		TestParse();
+		return;
 		TestPerf();
 		return;
 
@@ -51,6 +57,18 @@ namespace Unique
 			jsonSer.Save("test3.json", newShader);
 		}
 
+	}
+
+	void TestParse()
+	{
+		auto& cache = GetSubsystem<ResourceCache>();
+		SPtr<File> file = cache.GetFile("Shaders/Basic.shader");
+		if (file)
+		{
+			Tokenizer tok;
+			tok.Parse(file->ReadAllText());
+
+		}
 	}
 
 	void TestPerf()

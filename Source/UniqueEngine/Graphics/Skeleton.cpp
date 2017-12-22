@@ -39,7 +39,7 @@ Skeleton::~Skeleton()
 {
 }
 
-bool Skeleton::Load(IFile& source)
+bool Skeleton::Load(IStream& source)
 {
     ClearBones();
 

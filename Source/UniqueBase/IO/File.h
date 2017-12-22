@@ -24,7 +24,7 @@
 
 #include "../Container/ArrayPtr.h"
 #include "../Core/Object.h"
-#include "IFile.h"
+#include "IStream.h"
 
 #ifdef __ANDROID__
 struct SDL_RWops;
@@ -46,18 +46,10 @@ extern const char* APK;
 #endif
 #endif
 
-/// File open mode.
-enum FileMode
-{
-    FILE_READ = 0,
-    FILE_WRITE,
-    FILE_READWRITE
-};
-
 class PackageFile;
 
 /// %File opened either through the filesystem or from within a package file.
-class UNIQUE_API File : public Object, public IFile
+class UNIQUE_API File : public Object, public IStream
 {
     uRTTI(File, Object)
 

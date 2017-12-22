@@ -19,7 +19,7 @@ namespace Unique
 		Image();
 		~Image();
 
-		bool Load(IFile& file);
+		bool Load(IStream& file);
 
 		static SPtr<Image> LoadImage(const char* filename);
 		

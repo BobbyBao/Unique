@@ -1,32 +1,32 @@
 
 #include "Precompiled.h"
-#include "../IO/IFile.h"
+#include "../IO/IStream.h"
 
 namespace Unique
 { 
-	IFile::IFile()
+	IStream::IStream()
 	{
 	}
 
-	IFile::IFile(unsigned int size) : size_(size)
+	IStream::IStream(unsigned int size) : size_(size)
 	{
 	}
 
-	IFile::~IFile()
+	IStream::~IStream()
 	{
 	}
 
-	const String& IFile::GetName() const
+	const String& IStream::GetName() const
 	{
 		return String::EMPTY;
 	}
 
-	unsigned IFile::GetChecksum()
+	unsigned IStream::GetChecksum()
 	{
 		return 0;
 	}
 
-	String IFile::ReadString()
+	String IStream::ReadString()
 	{
 		String str;
 
@@ -42,7 +42,7 @@ namespace Unique
 		return str;
 	}
 
-	ByteArray IFile::ReadBytes()
+	ByteArray IStream::ReadBytes()
 	{
 		ByteArray bytes;
 		uint sz = Read<uint>();
@@ -54,7 +54,7 @@ namespace Unique
 		return bytes;
 	}
 
-	String IFile::ReadFileID()
+	String IStream::ReadFileID()
 	{
 		String ret;
 		ret.Resize(4);
@@ -62,7 +62,7 @@ namespace Unique
 		return ret;
 	}
 
-	String IFile::ReadLine()
+	String IStream::ReadLine()
 	{
 		String ret;
 
@@ -89,7 +89,7 @@ namespace Unique
 		return ret;
 	}
 
-	ByteArray IFile::ReadAll()
+	ByteArray IStream::ReadAll()
 	{
 		uint size = GetSize();
 		ByteArray byteArray(size);
@@ -101,19 +101,20 @@ namespace Unique
 		return byteArray;
 	}
 
-	String IFile::ReadAllText()
+	String IStream::ReadAllText()
 	{
 		uint size = GetSize();
-		String byteArray(size);
-		if (Read(&byteArray.At(0), size) != size)
+		String str;
+		str.Resize(size);
+		if (Read(&str.At(0), size) != size)
 		{
 			return String();
 		}
 
-		return byteArray;
+		return str;
 	}
 
-	bool IFile::Write(const String& value)
+	bool IStream::Write(const String& value)
 	{
 		const char* chars = value.CString();
 		// Count length to the first zero, because ReadString() does the same
@@ -121,7 +122,7 @@ namespace Unique
 		return Write(chars, length + 1) == length + 1;
 	}
 
-	bool IFile::WriteFileID(const String& value)
+	bool IStream::WriteFileID(const String& value)
 	{
 		bool success = true;
 		unsigned length = std::min(value.Length(), 4U);
@@ -132,7 +133,7 @@ namespace Unique
 		return success;
 	}
 
-	bool IFile::WriteLine(const String& value)
+	bool IStream::WriteLine(const String& value)
 	{
 		bool success = true;
 		success &= Write(value.CString(), value.Length()) == value.Length();
@@ -142,7 +143,7 @@ namespace Unique
 	}
 
 
-	bool IFile::Write(const ByteArray& bytes)
+	bool IStream::Write(const ByteArray& bytes)
 	{
 		Write(bytes.size());
 		return Write(bytes.data(), (uint)bytes.size()) == (uint)bytes.size();

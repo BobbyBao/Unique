@@ -23,7 +23,7 @@ namespace Unique
 		}
 	}
 
-	bool Image::Load(IFile& file)
+	bool Image::Load(IStream& file)
 	{
 		ByteArray data = file.ReadAll();
 		if(data.empty())

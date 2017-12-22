@@ -88,7 +88,7 @@ public:
     /// Destruct.
     virtual ~Model();
     /// Load resource from stream. May be called from a worker thread. Return true if successful.
-    virtual bool Load(IFile& source);
+    virtual bool Load(IStream& source);
 
     /// Set local-space bounding box.
     void SetBoundingBox(const BoundingBox& box);

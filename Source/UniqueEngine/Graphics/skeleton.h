@@ -87,7 +87,7 @@ public:
     ~Skeleton();
 
     /// Read from a stream. Return true if successful.
-    bool Load(IFile& source);
+    bool Load(IStream& source);
     /// Define from another skeleton.
     void Define(const Skeleton& src);
     /// Set root bone's index.

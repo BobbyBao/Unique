@@ -14,10 +14,8 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\DSL\ScriptCompiler.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\DSL\ScriptLexer.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\DSL\ScriptLoader.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\DSL\ScriptParser.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IO\MemoryStream.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\DSL\Tokenizer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\SerializeTraitsMath.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\BinaryDeserializer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\BinarySerializer.h" />
@@ -53,7 +51,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\TypeInfo.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\WorkQueue.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)DebugNew.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)IO\IFile.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IO\IStream.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)IO\File.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)IO\FileSystem.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)IO\FileWatcher.h" />
@@ -104,11 +102,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Unique.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)IO\MemoryStream.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\BinaryDeserializer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\BinarySerializer.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\DSL\ScriptCompiler.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\DSL\ScriptLexer.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\DSL\ScriptParser.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\DSL\Tokenizer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\HjsonDeserializer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\HjsonSerializer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\JsonDeserializer.cpp" />
@@ -127,7 +124,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\Timer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\TypeInfo.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\WorkQueue.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)IO\IFile.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)IO\IStream.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)IO\File.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)IO\FileSystem.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)IO\FileWatcher.cpp" />

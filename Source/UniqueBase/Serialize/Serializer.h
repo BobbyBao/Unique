@@ -1,5 +1,5 @@
 #pragma once
-#include "IO/IFile.h"
+#include "IO/IStream.h"
 #include "SerializeTraitsBasic.h"
 
 namespace Unique
@@ -52,7 +52,7 @@ namespace Unique
 		}
 
 		template<class T>
-		bool Load(IFile& source, T& data)
+		bool Load(IStream& source, T& data)
 		{
 			data_ = source.ReadAll();
 
