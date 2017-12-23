@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="UniqueSample.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Test.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -29,9 +26,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="UniqueSample.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="CubeSample.h">
       <Filter>头文件</Filter>
     </ClInclude>

@@ -1,12 +1,10 @@
 #pragma once
 #include "../Container/StringID.h"
 #include "../Container/Container.h"
-#include "AttributeTraits.h"
+#include "Attribute.h"
 
 namespace Unique
 {
-	class Attribute;
-
 	/// Type info.
 	class UNIQUE_API TypeInfo
 	{

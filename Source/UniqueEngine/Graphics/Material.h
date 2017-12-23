@@ -26,6 +26,7 @@ namespace Unique
 		String shaderDefines_;
 		ResourceRef shaderRes_;
 		Vector<ShaderVariable> shaderVaribles_;
+		Vector3 test[4];
 	};
 
 

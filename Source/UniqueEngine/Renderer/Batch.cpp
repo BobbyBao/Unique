@@ -6,6 +6,7 @@
 #include "../Graphics/Texture.h"
 #include "Renderer.h"
 #include "Scene/Node.h"
+#include "../Graphics/PipelineState.h"
 
 namespace Unique
 {
@@ -133,12 +134,13 @@ namespace Unique
 
 		dest = texAdjust * spotProj * spotView;
 	}
-
+	
 	void Batch::CalculateSortKey()
 	{
-		unsigned shaderID = (unsigned)(
-			((*((unsigned*)&vertexShader_) / sizeof(ShaderVariation)) + (*((unsigned*)&pixelShader_) / sizeof(ShaderVariation))) &
-			0x7fff);
+		unsigned shaderID = *((unsigned*)&pipelineState_) / sizeof(PipelineState);
+			//(unsigned)(
+			//((*((unsigned*)&vertexShader_) / sizeof(ShaderVariation)) 
+			//	+ (*((unsigned*)&pixelShader_) / sizeof(ShaderVariation))) & 0x7fff);
 		if (!isBase_)
 			shaderID |= 0x8000;
 

@@ -38,9 +38,9 @@ namespace UniqueStudio
         }
 
 #if DEBUG
-        public const string DllName = "UniqueD.dll";
+        public const string DllName = "UniqueNativeD.dll";
 #else
-        public const string DllName = "Unique.dll";
+        public const string DllName = "UniqueNative.dll";
 #endif
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]

@@ -6,7 +6,7 @@
 #include "Graphics/Model.h"
 #include "Graphics/StaticModel.h"
 
-UNIQUE_IMPLEMENT_MAIN(Unique::SceneSample)
+//UNIQUE_IMPLEMENT_MAIN(Unique::SceneSample)
 
 namespace Unique
 {
@@ -38,8 +38,6 @@ namespace Unique
 		SPtr<Material> mat(new Material());
 		mat->SetShader(ResourceRef::Create<Shader>("Shaders/Basic.shader"));
 		model->SetMaterial(mat);
-		
-		
 		
 		auto& renderer = GetSubsystem<Renderer>();
 		Viewport* viewport = new Viewport(scene_, camera_);

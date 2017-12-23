@@ -82,9 +82,9 @@ namespace Unique
 
 		PipelineState*  pipelineState_;
 		/// Vertex shader.
-		ShaderVariation* vertexShader_;
+		//ShaderVariation* vertexShader_;
 		/// Pixel shader.
-		ShaderVariation* pixelShader_;
+		//ShaderVariation* pixelShader_;
 		/// %Geometry type.
 		GeometryType geometryType_;
 	};

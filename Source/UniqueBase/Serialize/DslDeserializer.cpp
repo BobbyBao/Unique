@@ -4,7 +4,7 @@
 
 namespace Unique
 {
-	DslDeserializer::DslDeserializer() : Serializer(TransferState::Reading)
+	DslDeserializer::DslDeserializer() : Serializer(TransferState::Reading), nameNode_("")
 	{
 	}
 
@@ -49,6 +49,14 @@ namespace Unique
 
 	bool DslDeserializer::StartAttribute(const String& key)
 	{
+		if (0 == key.Compare("Name", false))
+		{
+			nameNode_.value_ = currentNode_->value_;
+			parentNode_.push_back(currentNode_);			
+			currentNode_ = &nameNode_;
+			return true;
+		}
+
 		AstNode* node = currentNode_->GetChild(key);
 		if (node == nullptr)
 		{
@@ -56,7 +64,6 @@ namespace Unique
 		}
 
 		bool isCollection = (attributeFlag_ & AttributeFlag::Vector) || (attributeFlag_ & AttributeFlag::Map);
-
 		if (isCollection)
 		{
 			childIterator_ = currentNode_->GetIterator(key);
@@ -67,6 +74,7 @@ namespace Unique
 			parentNode_.push_back(currentNode_);
 			currentNode_ = node;
 		}
+
 		return true;
 	}
 
@@ -87,7 +95,7 @@ namespace Unique
 
 	bool DslDeserializer::StartArray(uint& size)
 	{
-		size = arraySize_;// (uint)currentNode_->GetChildCount();
+		size = (uint)arraySize_;
 		parentNode_.push_back(currentNode_);
 		return true;
 	}

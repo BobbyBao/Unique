@@ -43,7 +43,7 @@ namespace Unique
 		virtual void TransferPrimitive(Quaternion& data);
 	private:
 		AstParser parser_;
-
+		AstNode nameNode_;
 		AstNode* currentNode_ = nullptr;
 		Vector<AstNode*> parentNode_;
 		ChildMap::_Pairii childIterator_;

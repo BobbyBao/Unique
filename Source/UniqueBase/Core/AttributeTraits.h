@@ -2,9 +2,40 @@
 
 namespace Unique
 {
+	// TEMPLATE CLASS remove_reference
+	template<class _Ty>
+	struct remove_reference
+	{	// remove reference
+		typedef _Ty type;
+	};
+
+	template<class _Ty>
+	struct remove_reference<_Ty&>
+	{	// remove reference
+		typedef _Ty type;
+	};
+
+	template<class _Ty>
+	struct remove_reference<_Ty&&>
+	{	// remove rvalue reference
+		typedef _Ty type;
+	};
+
 	/// Attribute trait (default use const reference for object type).
 	template <typename T> struct AttributeTrait
 	{
+		/// Get function return type.
+		typedef T RawType;
+		/// Get function return type.
+		typedef const T& ReturnType;
+		/// Set function parameter type.
+		typedef const T& ParameterType;
+	};
+
+	template <typename T> struct AttributeTrait<T&>
+	{
+		/// Get function return type.
+		typedef T RawType;
 		/// Get function return type.
 		typedef const T& ReturnType;
 		/// Set function parameter type.

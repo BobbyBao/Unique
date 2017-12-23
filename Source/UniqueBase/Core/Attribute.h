@@ -1,9 +1,9 @@
 #pragma once
-//#define NO_VIRTUAL
 #include "../Core/CoreDefs.h"
 #include "../Container/refcounted.h"
 #include "../Serialize/Serializer.h"
 #include "AttributeTraits.h"
+#include <type_traits>
 
 namespace Unique
 {
@@ -30,18 +30,11 @@ namespace Unique
 	class TAttribute : public Attribute
 	{
 	public:
+		using RawType = typename remove_reference<T>::type;
+
 		TAttribute(const String& name, size_t offset, AttributeFlag flag)
 			: Attribute(name, flag), offset_(offset)
 		{
-			if (SerializeTraits<T>::IsArray())
-			{
-				flag_ |= AttributeFlag::Vector;
-			}
-
-			if (SerializeTraits<T>::IsMap())
-			{
-				flag_ |= AttributeFlag::Map;
-			}
 		}
 
 		virtual void Visit(Serializer& serializer, void* obj)
@@ -52,24 +45,25 @@ namespace Unique
 		virtual void Get(const void* ptr, void* dest) const
 		{
 			const void* src = reinterpret_cast<const unsigned char*>(ptr) + offset_;
-			std::memcpy(dest, src, sizeof(T));
+			std::memcpy(dest, src, sizeof(RawType));
 		}
 
 		virtual void Set(void* ptr, const void* value)
 		{
 			void* dest = reinterpret_cast<unsigned char*>(ptr) + offset_;
-			std::memcpy(dest, value, sizeof(T));
+			std::memcpy(dest, value, sizeof(RawType));
 		}
 
 	protected:
 		template<class Visitor>
 		void VisitImpl(Visitor& visitor, void* ptr)
 		{
-			T* dest = (T*)(reinterpret_cast<unsigned char*>(ptr) + offset_);
+			RawType* dest = (RawType*)(reinterpret_cast<unsigned char*>(ptr) + offset_);
 			visitor.TransferAttribute(name_.CString(), *dest, flag_);
 		}
 
 		size_t offset_;
+		RawType defaultVal_;
 	};
 	
 	/// Template implementation of the attribute accessor invoke helper class.
@@ -85,15 +79,6 @@ namespace Unique
 			setFunction_(setFunction),
 			Attribute(name, flag)
 		{
-			if (SerializeTraits<T>::IsArray())
-			{
-				flag_ |= AttributeFlag::Vector;
-			}
-
-			if (SerializeTraits<T>::IsMap())
-			{
-				flag_ |= AttributeFlag::Map;
-			}
 			assert(getFunction_);
 			assert(setFunction_);
 		}
@@ -141,6 +126,7 @@ namespace Unique
 
 		GetFunctionPtr getFunction_;
 		SetFunctionPtr setFunction_;
+		typename remove_reference<U>::type defaultVal_;
 	};
 
 

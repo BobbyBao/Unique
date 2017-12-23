@@ -11,32 +11,38 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UniqueEngine", "..\Source\U
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UniqueSample", "..\Source\UniqueSample\UniqueSample.vcxproj", "{1F984CB6-33D2-4F90-9E07-1DD5C0B83D8C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "..\build\Common\Common.vcxproj", "{F2686E24-81E6-34E8-AEC3-4C2E3A1D63A7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "..\Build\Common\Common.vcxproj", "{F2686E24-81E6-34E8-AEC3-4C2E3A1D63A7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Diligent", "Diligent", "{6BB94CB3-DB80-4546-BD48-F0524E8F3568}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glew-static", "..\build\External\glew\glew-static.vcxproj", "{5E5F5050-85E9-3AA9-8136-ACE27F710CF6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glew-static", "..\Build\External\glew\glew-static.vcxproj", "{5E5F5050-85E9-3AA9-8136-ACE27F710CF6}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphicsEngine", "..\build\Graphics\GraphicsEngine\GraphicsEngine.vcxproj", "{01D3328F-F74A-30B9-BC7F-989B7FDC0418}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphicsEngine", "..\Build\Graphics\GraphicsEngine\GraphicsEngine.vcxproj", "{01D3328F-F74A-30B9-BC7F-989B7FDC0418}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphicsEngineD3DBase", "..\build\Graphics\GraphicsEngineD3DBase\GraphicsEngineD3DBase.vcxproj", "{5B0677D4-E2BB-389D-AEA0-D3BC5E895DD2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphicsEngineD3DBase", "..\Build\Graphics\GraphicsEngineD3DBase\GraphicsEngineD3DBase.vcxproj", "{5B0677D4-E2BB-389D-AEA0-D3BC5E895DD2}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BasicPlatform", "..\build\Platforms\Basic\BasicPlatform.vcxproj", "{BB4321F7-4D2B-3C06-BACB-DF8571571E1D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BasicPlatform", "..\Build\Platforms\Basic\BasicPlatform.vcxproj", "{BB4321F7-4D2B-3C06-BACB-DF8571571E1D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphicsTools", "..\build\Graphics\GraphicsTools\GraphicsTools.vcxproj", "{6E965519-ABF1-3D73-819B-C1A975DEFDA8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphicsTools", "..\Build\Graphics\GraphicsTools\GraphicsTools.vcxproj", "{6E965519-ABF1-3D73-819B-C1A975DEFDA8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32Platform", "..\build\Platforms\Win32\Win32Platform.vcxproj", "{CD544DEA-2728-3A72-A3BF-427DE68E654D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32Platform", "..\Build\Platforms\Win32\Win32Platform.vcxproj", "{CD544DEA-2728-3A72-A3BF-427DE68E654D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HLSL2GLSLConverterLib", "..\build\Graphics\HLSL2GLSLConverterLib\HLSL2GLSLConverterLib.vcxproj", "{C161C90F-F6E1-3906-A7AC-11EE0FA2116E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HLSL2GLSLConverterLib", "..\Build\Graphics\HLSL2GLSLConverterLib\HLSL2GLSLConverterLib.vcxproj", "{C161C90F-F6E1-3906-A7AC-11EE0FA2116E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphicsEngineD3D11-static", "..\build\Graphics\GraphicsEngineD3D11\GraphicsEngineD3D11-static.vcxproj", "{C3770C17-3222-3DAE-BB1E-9B84A4AC9428}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphicsEngineD3D11-static", "..\Build\Graphics\GraphicsEngineD3D11\GraphicsEngineD3D11-static.vcxproj", "{C3770C17-3222-3DAE-BB1E-9B84A4AC9428}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphicsEngineOpenGL-static", "..\build\Graphics\GraphicsEngineOpenGL\GraphicsEngineOpenGL-static.vcxproj", "{BCA676FA-2E8F-378A-B55A-8DE49515942E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphicsEngineOpenGL-static", "..\Build\Graphics\GraphicsEngineOpenGL\GraphicsEngineOpenGL-static.vcxproj", "{BCA676FA-2E8F-378A-B55A-8DE49515942E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{C1C988FB-0CE3-4A8C-9CFB-EBEE4419AF71}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UniqueNative", "Windows\UniqueNative.vcxproj", "{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		..\Source\UniqueBase\UniqueBase.vcxitems*{1f984cb6-33d2-4f90-9e07-1dd5c0b83d8c}*SharedItemsImports = 4
 		..\Source\UniqueEngine\UniqueEngine.vcxitems*{1f984cb6-33d2-4f90-9e07-1dd5c0b83d8c}*SharedItemsImports = 4
+		..\Source\UniqueBase\UniqueBase.vcxitems*{494b184a-3fb8-4244-9cfc-f5b3bcc36cf2}*SharedItemsImports = 4
+		..\Source\UniqueEngine\UniqueEngine.vcxitems*{494b184a-3fb8-4244-9cfc-f5b3bcc36cf2}*SharedItemsImports = 4
 		..\Source\UniqueEngine\UniqueEngine.vcxitems*{4a515684-0697-4834-9d80-8deeec14aeb7}*SharedItemsImports = 9
 		..\Source\UniqueBase\UniqueBase.vcxitems*{4a6b9a4e-845f-43db-8292-6ead5c7630ce}*SharedItemsImports = 9
 	EndGlobalSection
@@ -319,11 +325,41 @@ Global
 		{BCA676FA-2E8F-378A-B55A-8DE49515942E}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|x64
 		{BCA676FA-2E8F-378A-B55A-8DE49515942E}.RelWithDebInfo|x64.Build.0 = RelWithDebInfo|x64
 		{BCA676FA-2E8F-378A-B55A-8DE49515942E}.RelWithDebInfo|x86.ActiveCfg = RelWithDebInfo|x64
+		{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}.Debug|ARM.ActiveCfg = Debug|Win32
+		{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}.Debug|x64.ActiveCfg = Debug|x64
+		{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}.Debug|x64.Build.0 = Debug|x64
+		{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}.Debug|x86.ActiveCfg = Debug|Win32
+		{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}.Debug|x86.Build.0 = Debug|Win32
+		{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}.MinSizeRel|Any CPU.ActiveCfg = Release|x64
+		{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}.MinSizeRel|Any CPU.Build.0 = Release|x64
+		{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}.MinSizeRel|ARM.ActiveCfg = Release|x64
+		{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}.MinSizeRel|ARM.Build.0 = Release|x64
+		{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}.MinSizeRel|x64.ActiveCfg = Release|x64
+		{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}.MinSizeRel|x64.Build.0 = Release|x64
+		{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}.MinSizeRel|x86.ActiveCfg = Release|Win32
+		{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}.MinSizeRel|x86.Build.0 = Release|Win32
+		{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}.Release|Any CPU.ActiveCfg = Release|Win32
+		{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}.Release|ARM.ActiveCfg = Release|Win32
+		{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}.Release|x64.ActiveCfg = Release|x64
+		{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}.Release|x64.Build.0 = Release|x64
+		{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}.Release|x86.ActiveCfg = Release|Win32
+		{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}.Release|x86.Build.0 = Release|Win32
+		{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}.RelWithDebInfo|Any CPU.ActiveCfg = Release|x64
+		{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}.RelWithDebInfo|Any CPU.Build.0 = Release|x64
+		{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}.RelWithDebInfo|ARM.ActiveCfg = Release|x64
+		{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}.RelWithDebInfo|ARM.Build.0 = Release|x64
+		{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}.RelWithDebInfo|x64.ActiveCfg = Release|x64
+		{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}.RelWithDebInfo|x64.Build.0 = Release|x64
+		{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}.RelWithDebInfo|x86.ActiveCfg = Release|Win32
+		{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}.RelWithDebInfo|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{4A6B9A4E-845F-43DB-8292-6EAD5C7630CE} = {C1C988FB-0CE3-4A8C-9CFB-EBEE4419AF71}
+		{4A515684-0697-4834-9D80-8DEEEC14AEB7} = {C1C988FB-0CE3-4A8C-9CFB-EBEE4419AF71}
 		{F2686E24-81E6-34E8-AEC3-4C2E3A1D63A7} = {6BB94CB3-DB80-4546-BD48-F0524E8F3568}
 		{5E5F5050-85E9-3AA9-8136-ACE27F710CF6} = {6BB94CB3-DB80-4546-BD48-F0524E8F3568}
 		{01D3328F-F74A-30B9-BC7F-989B7FDC0418} = {6BB94CB3-DB80-4546-BD48-F0524E8F3568}

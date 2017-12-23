@@ -3,7 +3,7 @@
 
 namespace Unique
 {
-	class GPUObject
+	class UNIQUE_API GPUObject
 	{
 	public:
 		enum class State

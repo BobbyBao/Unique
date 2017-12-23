@@ -9,6 +9,7 @@ namespace Unique
 		uFactory("Graphics");
 		uAttribute("Shader", shaderRes_);
 		uAttribute("ShaderDefines", shaderDefines_);
+		uAttribute("test", test[0]);
 	}
 
 	Material::Material()

@@ -11,6 +11,8 @@ namespace Unique
 		Resolve
 	};
 
+	class Object;
+
 	class Serializer
 	{
 	public:
