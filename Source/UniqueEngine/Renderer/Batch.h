@@ -18,7 +18,6 @@ namespace Unique
 	class Texture;
 	class VertexBuffer;
 	class View;
-	class Zone;
 	struct LightBatchQueue;
 
 	/// Queued 3D geometry draw call.
@@ -74,7 +73,7 @@ namespace Unique
 		/// Per-instance data. If not null, must contain enough data to fill instancing buffer.
 		void* instancingData_;
 		/// Zone.
-		Zone* zone_;
+		//Zone* zone_;
 		/// Light properties.
 		LightBatchQueue* lightQueue_;
 		/// Material pass.
@@ -170,7 +169,7 @@ namespace Unique
 
 		/// Construct from a batch.
 		BatchGroupKey(const Batch& batch) :
-			zone_(batch.zone_),
+			//zone_(batch.zone_),
 			lightQueue_(batch.lightQueue_),
 			pass_(batch.pass_),
 			material_(batch.material_),
@@ -180,9 +179,9 @@ namespace Unique
 		}
 
 		/// Zone.
-		Zone* zone_;
+		//Zone* zone_;
 		/// Light properties.
-		LightBatchQueue* lightQueue_;
+		LightBatchQueue* lightQueue_ = nullptr;
 		/// Material pass.
 		Pass* pass_;
 		/// Material.
@@ -195,14 +194,14 @@ namespace Unique
 		/// Test for equality with another batch group key.
 		bool operator ==(const BatchGroupKey& rhs) const
 		{
-			return zone_ == rhs.zone_ && lightQueue_ == rhs.lightQueue_ && pass_ == rhs.pass_ && material_ == rhs.material_ &&
+			return /*zone_ == rhs.zone_ &&*/ lightQueue_ == rhs.lightQueue_ && pass_ == rhs.pass_ && material_ == rhs.material_ &&
 				geometry_ == rhs.geometry_ && renderOrder_ == rhs.renderOrder_;
 		}
 
 		/// Test for inequality with another batch group key.
 		bool operator !=(const BatchGroupKey& rhs) const
 		{
-			return zone_ != rhs.zone_ || lightQueue_ != rhs.lightQueue_ || pass_ != rhs.pass_ || material_ != rhs.material_ ||
+			return /*zone_ != rhs.zone_ ||*/ lightQueue_ != rhs.lightQueue_ || pass_ != rhs.pass_ || material_ != rhs.material_ ||
 				geometry_ != rhs.geometry_ || renderOrder_ != rhs.renderOrder_;
 		}
 

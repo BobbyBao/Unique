@@ -23,7 +23,7 @@
 #include "Precompiled.h"
 
 #include "IO/Log.h"
-#if defined(UNIQUE_PHYSICS) || defined(UNIQUE_URHO2D)
+#if defined(UNIQUE_PHYSICS)
 #include "../Physics/PhysicsEvents.h"
 #endif
 #include "../Scene/LogicComponent.h"
@@ -96,7 +96,7 @@ void LogicComponent::OnSceneSet(Scene* scene)
     {
         Unsubscribe(SceneUpdate::Type());
         Unsubscribe(ScenePostUpdate::Type());
-#if defined(UNIQUE_PHYSICS) || defined(UNIQUE_URHO2D)
+#if defined(UNIQUE_PHYSICS)
         Unsubscribe(E_PHYSICSPRESTEP);
         Unsubscribe(E_PHYSICSPOSTSTEP);
 #endif
@@ -136,7 +136,7 @@ void LogicComponent::UpdateEventSubscription()
         currentEventMask_ &= ~USE_POSTUPDATE;
     }
 
-#if defined(UNIQUE_PHYSICS) || defined(UNIQUE_URHO2D)
+#if defined(UNIQUE_PHYSICS)
     Component* world = GetFixedUpdateSource();
     if (!world)
         return;
@@ -190,13 +190,11 @@ void LogicComponent::HandleSceneUpdate(const SceneUpdate& eventData)
 
 void LogicComponent::HandleScenePostUpdate(const ScenePostUpdate& eventData)
 {
- //   using namespace ScenePostUpdate;
-
     // Execute user-defined post-update function
-	PostUpdate(eventData.timeStep_);// [P_TIMESTEP].GetFloat());
+	PostUpdate(eventData.timeStep_);
 }
 
-#if defined(UNIQUE_PHYSICS) || defined(UNIQUE_URHO2D)
+#if defined(UNIQUE_PHYSICS)
 
 void LogicComponent::HandlePhysicsPreStep(VariantMap& eventData)
 {

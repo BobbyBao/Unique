@@ -19,6 +19,8 @@ namespace Unique
 		virtual void Visit(Serializer& serializer, void* obj) {}
 		virtual void Get(const void* ptr, void* dest) const = 0;
 		virtual void Set(void* ptr, const void* value) = 0;
+		virtual bool IsDefault(void* ptr) const { return false; }
+		virtual void SetDefault(void* ptr) const { }
 
 		/// Name.
 		String name_;
@@ -54,6 +56,17 @@ namespace Unique
 			std::memcpy(dest, value, sizeof(RawType));
 		}
 
+		virtual bool IsDefault(void* ptr) const
+		{
+			void* dest = reinterpret_cast<unsigned char*>(ptr) + offset_;
+			return 0 == std::memcmp(dest, &defaultVal_, sizeof(RawType));
+		}
+		
+		virtual void SetDefault(void* ptr) const
+		{
+			void* dest = reinterpret_cast<unsigned char*>(ptr) + offset_;
+			std::memcpy(dest, &defaultVal_, sizeof(RawType));
+		}
 	protected:
 		template<class Visitor>
 		void VisitImpl(Visitor& visitor, void* ptr)
@@ -69,7 +82,8 @@ namespace Unique
 	/// Template implementation of the attribute accessor invoke helper class.
 	template <typename T, typename U, typename Trait> class AttributeAccessorImpl : public Attribute
 	{
-	public:
+	public:		
+		using RawType = typename remove_reference<U>::type;
 		typedef typename Trait::ReturnType(T::*GetFunctionPtr)() const;
 		typedef void (T::*SetFunctionPtr)(typename Trait::ParameterType);
 
@@ -93,7 +107,7 @@ namespace Unique
 		{
 			assert(ptr);
 			const T* classPtr = static_cast<const T*>(ptr);
-			*(U*)dest = (classPtr->*getFunction_)();
+			*(RawType*)dest = (classPtr->*getFunction_)();
 		}
 
 		/// Invoke setter function.
@@ -101,7 +115,19 @@ namespace Unique
 		{
 			assert(ptr);
 			T* classPtr = static_cast<T*>(ptr);
-			(classPtr->*setFunction_)(*(U*)value);
+			(classPtr->*setFunction_)(*(RawType*)value);
+		}
+
+		virtual bool IsDefault(void* ptr) const
+		{
+			const T* classPtr = static_cast<const T*>(ptr);
+			return defaultVal_ == (classPtr->*getFunction_)();
+		}
+
+		virtual void SetDefault(void* ptr) const
+		{
+			T* classPtr = static_cast<T*>(ptr);
+			(classPtr->*setFunction_)(defaultVal_);
 		}
 	protected:
 		template<class Visitor>
@@ -112,21 +138,21 @@ namespace Unique
 
 			if (visitor.IsReading())
 			{
-				U value;
+				RawType value;
 				visitor.TransferAttribute(name_.CString(), value, flag_);
 				(classPtr->*setFunction_)(value);
 			}
 
 			if (visitor.IsWriting())
 			{
-				U value = (classPtr->*getFunction_)();
+				RawType value = (classPtr->*getFunction_)();
 				visitor.TransferAttribute(name_.CString(), value, flag_);
 			}
 		}
 
 		GetFunctionPtr getFunction_;
 		SetFunctionPtr setFunction_;
-		typename remove_reference<U>::type defaultVal_;
+		RawType defaultVal_;
 	};
 
 

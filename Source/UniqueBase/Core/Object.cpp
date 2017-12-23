@@ -72,13 +72,6 @@ void Object::Transfer(TransferFunction& transfer)
 
 template UNIQUE_API void Object::Transfer(Serializer&);
 
-#ifdef NO_VIRTUAL
-template UNIQUE_API void Object::Transfer(BinaryWriter&);
-template UNIQUE_API void Object::Transfer(BinaryReader&);
-template UNIQUE_API void Object::Transfer(JsonWriter&);
-template UNIQUE_API void Object::Transfer(JsonReader&);
-#endif
-
 void Object::OnEvent(Object* sender, StringID eventType, const Event& eventData)
 {
     // Make a copy of the context pointer in case the object is destroyed during event handler invocation

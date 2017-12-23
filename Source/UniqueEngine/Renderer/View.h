@@ -239,6 +239,8 @@ namespace Unique
 
 		SPtr<UniformBuffer> cameraUniform_;
 
+		Vector<Matrix3x4>	geometryInst_[2];
+
 		friend void CheckVisibilityWork(const WorkItem* item, unsigned threadIndex);
 		friend void ProcessLightWork(const WorkItem* item, unsigned threadIndex);
 

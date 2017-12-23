@@ -154,9 +154,6 @@ namespace Unique
 
 	void Batch::Prepare(View* view, Camera* camera, bool setModelTransform) const
 	{
-		//if (!vertexShader_ || !pixelShader_)
-		//	return;
-
 		auto& graphics = GetSubsystem<Graphics>();
 		auto& renderer = GetSubsystem<Renderer>();
 
@@ -164,8 +161,6 @@ namespace Unique
 		Light* light = lightQueue_ ? lightQueue_->light_ : 0;
 		Texture* shadowMap = lightQueue_ ? lightQueue_->shadowMap_ : 0;
 
-		// Set shaders first. The available shader parameters and their register/uniform positions depend on the currently set shaders
-		//graphics->SetShaders(vertexShader_, pixelShader_);
 #if false
 		// Set pass / material-specific renderstates
 		if (pass_ && material_)
@@ -511,56 +506,7 @@ namespace Unique
 					}
 				}
 			}
-			else if (lightQueue_->vertexLights_.Size() && graphics->HasShaderParameter(VSP_VERTEXLIGHTS) &&
-				graphics->NeedParameterUpdate(SP_LIGHT, lightQueue_))
-			{
-				Vector4 vertexLights[MAX_VERTEX_LIGHTS * 3];
-				const PODVector<Light*>& lights = lightQueue_->vertexLights_;
-
-				for (unsigned i = 0; i < lights.Size(); ++i)
-				{
-					Light* vertexLight = lights[i];
-					Node* vertexLightNode = vertexLight->GetNode();
-					LightType type = vertexLight->GetLightType();
-
-					// Attenuation
-					float invRange, cutoff, invCutoff;
-					if (type == LIGHT_DIRECTIONAL)
-						invRange = 0.0f;
-					else
-						invRange = 1.0f / Max(vertexLight->GetRange(), M_EPSILON);
-					if (type == LIGHT_SPOT)
-					{
-						cutoff = Cos(vertexLight->GetFov() * 0.5f);
-						invCutoff = 1.0f / (1.0f - cutoff);
-					}
-					else
-					{
-						cutoff = -1.0f;
-						invCutoff = 1.0f;
-					}
-
-					// Color
-					float fade = 1.0f;
-					float fadeEnd = vertexLight->GetDrawDistance();
-					float fadeStart = vertexLight->GetFadeDistance();
-
-					// Do fade calculation for light if both fade & draw distance defined
-					if (vertexLight->GetLightType() != LIGHT_DIRECTIONAL && fadeEnd > 0.0f && fadeStart > 0.0f && fadeStart < fadeEnd)
-						fade = Min(1.0f - (vertexLight->GetDistance() - fadeStart) / (fadeEnd - fadeStart), 1.0f);
-
-					Color color = vertexLight->GetEffectiveColor() * fade;
-					vertexLights[i * 3] = Vector4(color.r_, color.g_, color.b_, invRange);
-
-					// Direction
-					vertexLights[i * 3 + 1] = Vector4(-(vertexLightNode->GetWorldDirection()), cutoff);
-
-					// Position
-					vertexLights[i * 3 + 2] = Vector4(vertexLightNode->GetWorldPosition(), invCutoff);
-				}
-
-				graphics->SetShaderParameter(VSP_VERTEXLIGHTS, vertexLights[0].Data(), lights.Size() * 3 * 4);
-			}
+			
 		}
 
 		// Set zone texture if necessary

@@ -48,9 +48,7 @@ static const StringVector instanceNodesStructureElementNames =
 uObject(StaticModelGroup)
 {
 	uFactory("Geometry")
-// 	URHO3D_ACCESSOR_ATTRIBUTE("Instance Nodes", GetNodeIDsAttr, SetNodeIDsAttr,
-// 		VariantVector, Variant::emptyVariantVector, AM_DEFAULT | AM_NODEIDVECTOR)
-// 		.SetMetadata(AttributeMetadata::P_VECTOR_STRUCT_ELEMENTS, instanceNodesStructureElementNames);
+	uAccessor("Instance Nodes", GetNodeIDsAttr, SetNodeIDsAttr);
 }
 
 StaticModelGroup::StaticModelGroup()
@@ -317,48 +315,48 @@ Node* StaticModelGroup::GetInstanceNode(unsigned index) const
 {
     return index < instanceNodes_.size() ? instanceNodes_[index] : nullptr;
 }
-/*
-void StaticModelGroup::SetNodeIDsAttr(const VariantVector& value)
+
+void StaticModelGroup::SetNodeIDsAttr(const Vector<uint>& value)
 {
     // Just remember the node IDs. They need to go through the SceneResolver, and we actually find the nodes during
     // ApplyAttributes()
-    if (value.Size())
+    if (value.size())
     {
-        nodeIDsAttr_.Clear();
+        nodeIDsAttr_.clear();
 
         unsigned index = 0;
-        unsigned numInstances = value[index++].GetUInt();
+        unsigned numInstances = value[index++];
         // Prevent crash on entering negative value in the editor
         if (numInstances > M_MAX_INT)
             numInstances = 0;
 
-        nodeIDsAttr_.Push(numInstances);
+        nodeIDsAttr_.push_back(numInstances);
         while (numInstances--)
         {
             // If vector contains less IDs than should, fill the rest with zeroes
-            if (index < value.Size())
-                nodeIDsAttr_.Push(value[index++].GetUInt());
+            if (index < value.size())
+                nodeIDsAttr_.push_back(value[index++]);
             else
-                nodeIDsAttr_.Push(0);
+                nodeIDsAttr_.push_back(0);
         }
     }
     else
     {
-        nodeIDsAttr_.Clear();
-        nodeIDsAttr_.Push(0);
+        nodeIDsAttr_.clear();
+        nodeIDsAttr_.push_back(0);
     }
 
     nodesDirty_ = true;
     nodeIDsDirty_ = false;
 }
 
-const VariantVector& StaticModelGroup::GetNodeIDsAttr() const
+const Vector<uint>& StaticModelGroup::GetNodeIDsAttr() const
 {
     if (nodeIDsDirty_)
         UpdateNodeIDs();
 
     return nodeIDsAttr_;
-}*/
+}
 
 void StaticModelGroup::OnNodeSetEnabled(Node* node)
 {
@@ -402,7 +400,7 @@ void StaticModelGroup::UpdateNumTransforms()
 
 void StaticModelGroup::UpdateNodeIDs() const
 {
-    unsigned numInstances = instanceNodes_.size();
+    unsigned numInstances = (uint)instanceNodes_.size();
 
     nodeIDsAttr_.clear();
     nodeIDsAttr_.push_back(numInstances);

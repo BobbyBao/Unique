@@ -295,8 +295,6 @@ public:
         vertexLights_.push_back(light);
     }
 
-	virtual void Draw(Graphics& graphics, RenderPass& pass);
-
 protected:
     /// Handle node being assigned.
     virtual void OnNodeSet(Node* node);

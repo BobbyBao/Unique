@@ -17,7 +17,8 @@ namespace Unique
 	{
 	}
 
-	void ScenePass::Render()
+	void ScenePass::Render(View* view)
 	{
+		batchQueue_[Graphics::currentContext_].Draw(view, view->GetCamera());
 	}
 }

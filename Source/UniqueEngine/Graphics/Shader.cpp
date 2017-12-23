@@ -85,21 +85,21 @@ namespace Unique
 		"InstanceDataStepRate", self.InstanceDataStepRate
 	)
 
-	uClassTraits
-	(
-		Pass,
-		"Name", self.name_,
-		"DepthState", self.depthState_,
-		"RasterizerState", self.rasterizerState_,
-		"BlendStateDesc", self.blendState_,
-		"InputLayout", self.inputLayout_,
-		"VertexShader", self.shaderStage_[0],
-		"PixelShader", self.shaderStage_[1],
-		"GeometryShader", self.shaderStage_[2],
-		"HullShader", self.shaderStage_[3],
-		"DomainShader", self.shaderStage_[4],
-		"ComputeShader", self.shaderStage_[5]
-	)
+	uObject(Pass)
+	{
+		uFactory("Graphics")
+			uAttribute("Name", name_)
+			uAttribute("DepthState", depthState_)
+			uAttribute("RasterizerState", rasterizerState_)
+			uAttribute("BlendStateDesc", blendState_)
+			uAttribute("InputLayout", inputLayout_)
+			uAttribute("VertexShader", shaderStage_[0])
+			uAttribute("PixelShader", shaderStage_[1])
+			uAttribute("GeometryShader", shaderStage_[2])
+			uAttribute("HullShader", shaderStage_[3])
+			uAttribute("DomainShader", shaderStage_[4])
+			uAttribute("ComputeShader", shaderStage_[5])
+	}
 
 	uObject(Shader)
 	{
@@ -107,6 +107,10 @@ namespace Unique
 		uAttribute("Name", shaderName_)
 		uAttribute("Pass", passes_)	
 	}
+
+
+	uExport(Pass, PipelineState*, GetPipeline, Shader*, const String&)
+
 
 	Pass::Pass(const String& name) : name_(name)
 	{
@@ -240,7 +244,7 @@ namespace Unique
 	{
 		for (auto& pass : passes_)
 		{
-			pass.Prepare();
+			pass->Prepare();
 		}
 
 		return true;
@@ -253,8 +257,8 @@ namespace Unique
 
 	Pass* Shader::AddPass(const String& name)
 	{
-		passes_.emplace_back(name);
-		return &(passes_.back());
+		passes_.emplace_back(new Pass(name));
+		return (passes_.back());
 	}
 
 	Pass* Shader::GetShaderPass(const String& passName)
@@ -267,9 +271,9 @@ namespace Unique
 	{
 		for (auto& p : passes_)
 		{
-			if (p.passIndex_ == passIndex)
+			if (p->passIndex_ == passIndex)
 			{
-				return &p;
+				return p;
 			}
 		}
 

@@ -22,8 +22,9 @@ namespace Unique
 		uClass("LayoutElement", layoutElements_)
 	};
 
-	class Pass
+	class Pass : public Object
 	{
+		uRTTI(Pass, Object)
 	public:
 		Pass(const String& name = "");
 		~Pass();
@@ -106,7 +107,7 @@ namespace Unique
 	private:
 		String shaderName_;
 		Vector<ShaderVariable> shaderVaribles_;
-		Vector<Pass> passes_;
+		Vector<SPtr<Pass>> passes_;
 
 		/// Pass index assignments.
 		static HashMap<String, unsigned> passIndices;

@@ -44,7 +44,6 @@ namespace Unique
 		m_LightDir.y_ = -0.2f;
 		m_LightDir.z_ = 1;
 		m_CamDistance = 0.7f;                  // camera distance
-		m_Animate = false;                     // enable animation
 		m_AnimationSpeed = 0.2f;               // animation speed
 
 		Subscribe(&CubeSample::HandleStartup);
@@ -117,7 +116,6 @@ namespace Unique
 		view.SetTranslation(camPosInv);
 
 		Matrix4 world = Matrix4::IDENTITY;
-
 
 		Vector<Batch>& batches = geometries_[graphics.GetRenderContext()];
 		for (auto& batch : batches)

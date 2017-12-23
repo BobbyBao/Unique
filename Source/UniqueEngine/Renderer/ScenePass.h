@@ -4,14 +4,14 @@
 
 namespace Unique
 {
-	class ScenePass : RenderPass
+	class ScenePass : public RenderPass
 	{
 		uRTTI(ScenePass, RenderPass)
 	public:
 		ScenePass();
 		~ScenePass();
 
-		virtual void Render();
+		virtual void Render(View* view);
 	protected:
 		BatchQueue batchQueue_[2];
 	};

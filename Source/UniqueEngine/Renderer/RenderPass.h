@@ -48,7 +48,7 @@ namespace Unique
 	{
 		uRTTI(ClearPass, RenderPass)
 	public:
-		virtual void Render();
+		virtual void Render(View* view);
 
 	protected:
 		/// Clear flags. Affects clear command only.

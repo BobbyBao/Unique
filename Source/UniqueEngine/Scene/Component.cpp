@@ -29,11 +29,8 @@
 #ifdef UNIQUE_PHYSICS
 #include "../Physics/PhysicsWorld.h"
 #endif
-#ifdef UNIQUE_URHO2D
-#include "../Urho2D/PhysicsWorld2D.h"
-#endif
 
-//#include "../DebugNew.h"
+#include "DebugNew.h"
 
 #ifdef _MSC_VER
 #pragma warning(disable:6293)

@@ -37,6 +37,16 @@ template <class T> inline void Swap(T& first, T& second)
     second = temp;
 }
 
+template<typename T, typename U> constexpr size_t OffsetOf(U T::*member)
+{
+	return (char*)&((T*)nullptr->*member) - (char*)nullptr;
+}
+
+template <typename T, int count> int LengthOf(const T(&)[count])
+{
+	return count;
+}
+
 template<class C, class V>
 typename C::iterator Find(C& c, const V& value)
 {

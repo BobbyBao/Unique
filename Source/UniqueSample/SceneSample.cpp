@@ -26,6 +26,8 @@ namespace Unique
 
 	void SceneSample::HandleStartup(const struct Startup& eventData)
 	{
+		UNIQUE_UNUSED(eventData);
+
 		Test();
 
 		scene_ = new Scene();

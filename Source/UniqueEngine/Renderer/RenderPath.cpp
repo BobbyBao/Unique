@@ -17,6 +17,11 @@ namespace Unique
 	RenderPath::~RenderPath()
 	{
 	}
+
+	void RenderPath::AddPass(RenderPass* pass)
+	{
+		renderPass_.push_back(SPtr<RenderPass>(pass));
+	}
 	
 	void RenderPath::Update(View* view)
 	{

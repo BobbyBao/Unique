@@ -28,7 +28,7 @@ namespace Unique
 		uFactory()
 	}
 
-	void ClearPass::Render()
+	void ClearPass::Render(View* view)
 	{
 		deviceContext->ClearRenderTarget(nullptr, clearColor_);
 		deviceContext->ClearDepthStencil(nullptr, clearFlags_, clearDepth_, clearStencil_);

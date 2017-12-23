@@ -14,7 +14,7 @@ namespace Unique
 class Context;
 class EventHandler;
 	
-/// Base class for objects with type identification, subsystem access and event sending/receiving capability.
+/// Base class for objects with type identification, serialize and event sending/receiving capability.
 class UNIQUE_API Object : public RefCounted
 {
 public:

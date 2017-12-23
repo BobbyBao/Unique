@@ -10,6 +10,8 @@ namespace Unique
 		RenderPath();
 		~RenderPath();
 
+		void AddPass(RenderPass* pass);
+
 		void Update(View* view);
 		void Render(View* view);
 	protected:

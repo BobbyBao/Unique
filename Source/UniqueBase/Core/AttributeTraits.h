@@ -32,16 +32,6 @@ namespace Unique
 		typedef const T& ParameterType;
 	};
 
-	template <typename T> struct AttributeTrait<T&>
-	{
-		/// Get function return type.
-		typedef T RawType;
-		/// Get function return type.
-		typedef const T& ReturnType;
-		/// Set function parameter type.
-		typedef const T& ParameterType;
-	};
-
 	/// Int attribute trait.
 	template <> struct AttributeTrait<int>
 	{

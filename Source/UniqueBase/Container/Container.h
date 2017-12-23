@@ -6,7 +6,6 @@
 #include <functional>
 #include <algorithm>
 #include <list>
-//#include <map>
 #include <unordered_map>
 #include <unordered_set>
 #include <assert.h>
@@ -29,9 +28,6 @@ namespace Unique
 	template<class K, class V>
 	using Pair = std::pair<K, V>;
 
-	//template<class K, class V>
-	//using Map = std::map<K, V>;
-
 	template<class K, class V>
 	using HashMap = std::unordered_map<K, V>;
 
@@ -41,4 +37,4 @@ namespace Unique
 	using ByteArray = Vector<char>;
 }
 
-#include "Container/Algorithm.h"
+#include "Container/ContainerUtils.h"

@@ -52,16 +52,54 @@
 
 #ifndef UNIQUE_CHECK
 #	define UNIQUE_CHECK(_condition, ...) UNIQUE_NOOP()
-#endif // BX_CHECK
+#endif // UNIQUE_CHECK
 
-#define UNIQUE_UNUSED(x) (void)(sizeof((x), 0))
+///
+#if UNIQUE_COMPILER_MSVC
+// Workaround MSVS bug...
+#	define UNIQUE_VA_ARGS_PASS(...) UNIQUE_VA_ARGS_PASS_1_ __VA_ARGS__ UNIQUE_VA_ARGS_PASS_2_
+#	define UNIQUE_VA_ARGS_PASS_1_ (
+#	define UNIQUE_VA_ARGS_PASS_2_ )
+#else
+#	define UNIQUE_VA_ARGS_PASS(...) (__VA_ARGS__)
+#endif // UNIQUE_COMPILER_MSVC
 
-template<typename T, typename U> constexpr size_t OffsetOf(U T::*member)
-{
-	return (char*)&((T*)nullptr->*member) - (char*)nullptr;
-}
+#define UNIQUE_VA_ARGS_COUNT(...) UNIQUE_VA_ARGS_COUNT_ UNIQUE_VA_ARGS_PASS(__VA_ARGS__, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
+#define UNIQUE_VA_ARGS_COUNT_(_a1, _a2, _a3, _a4, _a5, _a6, _a7, _a8, _a9, _a10, _a11, _a12, _a13, _a14, _a15, _a16, _last, ...) _last
 
-template <typename T, int count> int LengthOf(const T(&)[count])
-{
-	return count;
-};
+///
+#define UNIQUE_MACRO_DISPATCHER(_func, ...) UNIQUE_MACRO_DISPATCHER_1_(_func, UNIQUE_VA_ARGS_COUNT(__VA_ARGS__) )
+#define UNIQUE_MACRO_DISPATCHER_1_(_func, _argCount) UNIQUE_MACRO_DISPATCHER_2_(_func, _argCount)
+#define UNIQUE_MACRO_DISPATCHER_2_(_func, _argCount) UNIQUE_CONCATENATE(_func, _argCount)
+
+///
+#define UNIQUE_STRINGIZE(_x) UNIQUE_STRINGIZE_(_x)
+#define UNIQUE_STRINGIZE_(_x) #_x
+
+///
+#define UNIQUE_CONCATENATE(_x, _y) UNIQUE_CONCATENATE_(_x, _y)
+#define UNIQUE_CONCATENATE_(_x, _y) _x ## _y
+
+///
+#define UNIQUE_UNUSED_1(_a1) (void)(sizeof((_a1), 0))
+
+#define UNIQUE_UNUSED_2(_a1, _a2) UNIQUE_UNUSED_1(_a1); UNIQUE_UNUSED_1(_a2)
+#define UNIQUE_UNUSED_3(_a1, _a2, _a3) UNIQUE_UNUSED_2(_a1, _a2); UNIQUE_UNUSED_1(_a3)
+#define UNIQUE_UNUSED_4(_a1, _a2, _a3, _a4) UNIQUE_UNUSED_3(_a1, _a2, _a3); UNIQUE_UNUSED_1(_a4)
+#define UNIQUE_UNUSED_5(_a1, _a2, _a3, _a4, _a5) UNIQUE_UNUSED_4(_a1, _a2, _a3, _a4); UNIQUE_UNUSED_1(_a5)
+#define UNIQUE_UNUSED_6(_a1, _a2, _a3, _a4, _a5, _a6) UNIQUE_UNUSED_5(_a1, _a2, _a3, _a4, _a5); UNIQUE_UNUSED_1(_a6)
+#define UNIQUE_UNUSED_7(_a1, _a2, _a3, _a4, _a5, _a6, _a7) UNIQUE_UNUSED_6(_a1, _a2, _a3, _a4, _a5, _a6); UNIQUE_UNUSED_1(_a7)
+#define UNIQUE_UNUSED_8(_a1, _a2, _a3, _a4, _a5, _a6, _a7, _a8) UNIQUE_UNUSED_7(_a1, _a2, _a3, _a4, _a5, _a6, _a7); UNIQUE_UNUSED_1(_a8)
+#define UNIQUE_UNUSED_9(_a1, _a2, _a3, _a4, _a5, _a6, _a7, _a8, _a9) UNIQUE_UNUSED_8(_a1, _a2, _a3, _a4, _a5, _a6, _a7, _a8); UNIQUE_UNUSED_1(_a9)
+#define UNIQUE_UNUSED_10(_a1, _a2, _a3, _a4, _a5, _a6, _a7, _a8, _a9, _a10) UNIQUE_UNUSED_9(_a1, _a2, _a3, _a4, _a5, _a6, _a7, _a8, _a9); UNIQUE_UNUSED_1(_a10)
+#define UNIQUE_UNUSED_11(_a1, _a2, _a3, _a4, _a5, _a6, _a7, _a8, _a9, _a10, _a11) UNIQUE_UNUSED_10(_a1, _a2, _a3, _a4, _a5, _a6, _a7, _a8, _a9, _a10); UNIQUE_UNUSED_1(_a11)
+#define UNIQUE_UNUSED_12(_a1, _a2, _a3, _a4, _a5, _a6, _a7, _a8, _a9, _a10, _a11, _a12) UNIQUE_UNUSED_11(_a1, _a2, _a3, _a4, _a5, _a6, _a7, _a8, _a9, _a10, _a11); UNIQUE_UNUSED_1(_a12)
+
+#if UNIQUE_COMPILER_MSVC
+// Workaround MSVS bug...
+#	define UNIQUE_UNUSED(...) UNIQUE_MACRO_DISPATCHER(UNIQUE_UNUSED_, __VA_ARGS__) UNIQUE_VA_ARGS_PASS(__VA_ARGS__)
+#else
+#	define UNIQUE_UNUSED(...) UNIQUE_MACRO_DISPATCHER(UNIQUE_UNUSED_, __VA_ARGS__)(__VA_ARGS__)
+#endif // UNIQUE_COMPILER_MSVC
+
+#include "Export.h"

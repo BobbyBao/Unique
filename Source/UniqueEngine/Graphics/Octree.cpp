@@ -315,19 +315,15 @@ uObject(Octree)
 {
 	uFactory("Graphics")
 
-	//uAttribute("Bounding Box Min", worldBoundingBox_.min_)
-	//	uAttribute("Bounding Box Max", worldBoundingBox_.max_)
-		uAttribute("Number of Levels", numLevels_)
+	uAttribute("Bounding Box Min", worldBoundingBox_.min_)
+	uAttribute("Bounding Box Max", worldBoundingBox_.max_)
+	uAttribute("Number of Levels", numLevels_)
 
 }
 
 Octree::Octree() : Octant(BoundingBox(-DEFAULT_OCTREE_SIZE, DEFAULT_OCTREE_SIZE), 0, 0, this),
     numLevels_(DEFAULT_OCTREE_LEVELS)
 {
-    // If the engine is running headless, subscribe to RenderUpdate events for manually updating the octree
-    // to allow raycasts and animation update
-//     if (!GetSubsystem<Graphics>())
-//         SubscribeToEvent(E_RENDERUPDATE, UNIQUE_HANDLER(Octree, HandleRenderUpdate));
 }
 
 Octree::~Octree()
@@ -379,7 +375,7 @@ void Octree::Update(const FrameInfo& frame)
         WorkQueue& queue = GetSubsystem<WorkQueue>();
         scene->BeginThreadedUpdate();
 
-        int numWorkItems = queue.GetNumThreads() + 1; // Worker threads + main thread
+        size_t numWorkItems = queue.GetNumThreads() + 1; // Worker threads + main thread
         int drawablesPerItem = Max((int)(drawableUpdates_.size() / numWorkItems), 1);
 
         auto start = &drawableUpdates_.front();

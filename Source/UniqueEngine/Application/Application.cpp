@@ -10,7 +10,6 @@
 
 namespace Unique
 {
-
 	Vector<String> Application::argv_;
 	bool Application::quit_ = false;
 	Application::Application(Context* context) :

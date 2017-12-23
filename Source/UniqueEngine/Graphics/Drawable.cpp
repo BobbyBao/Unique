@@ -424,22 +424,4 @@ void Drawable::RemoveFromOctree()
     }
 }
 
-void Drawable::Draw(Graphics& graphics, RenderPass& pass)
-{
-	for (const SourceBatch& sb : batches_)
-	{
-		Material* mat = sb.material_;
-		/*
-		SPtr<ShaderInstance> shaderInstance = mat->GetShaderInstance(pass.passIndex_, "");
-		ProgramHandle prog = shaderInstance->GetProgram();
-
-		bgfx::setState(pass.state_ | mat->GetRenderState());
-
-		mat->Apply();
-
-		graphics.SetTransform(sb.worldTransform_, sb.numWorldTransforms_);
-
-		sb.geometry_->Submit(pass.viewID_, prog);*/
-	}
-}
 }

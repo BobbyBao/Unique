@@ -66,11 +66,6 @@ namespace Unique
 		SPtr<File> file = cache.GetFile("Shaders/Basic.shader");
 		if (file)
 		{
-			/*
-			AstParser tok;
-			tok.Parse(file->ReadAllText());
-			tok.Print();
-			 */
 			SPtr<Shader> shader(new Shader());
 			DslDeserializer reader;
 			reader.Load(*file, shader);

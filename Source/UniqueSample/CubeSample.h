@@ -33,7 +33,7 @@ namespace Unique
 		Vector3 m_LightDir;          // light direction vector
 		float m_CamDistance;         // camera distance
 		Color backgroundColor_;	// background color
-		bool m_Animate;              // enable animation
+		bool m_Animate = true;              // enable animation
 		float m_AnimationSpeed;      // animation speed
 
 		SPtr<UniformBuffer> constBuffer_;

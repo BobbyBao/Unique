@@ -9,6 +9,7 @@
 #include "Viewport.h"
 #include "View.h"
 #include "Batch.h"
+#include "RenderPath.h"
 
 namespace Unique
 {
@@ -49,99 +50,23 @@ namespace Unique
 			}
 		}
 	};
-#if false
-	/// %Frustum octree query for zones and occluders.
-	class ZoneOccluderOctreeQuery : public FrustumOctreeQuery
-	{
-	public:
-		/// Construct with frustum and query parameters.
-		ZoneOccluderOctreeQuery(PODVector<Drawable*>& result, const Frustum& frustum, unsigned char drawableFlags = DRAWABLE_ANY,
-			unsigned viewMask = DEFAULT_VIEWMASK) :
-			FrustumOctreeQuery(result, frustum, drawableFlags, viewMask)
-		{
-		}
 
-		/// Intersection test for drawables.
-		virtual void TestDrawables(Drawable** start, Drawable** end, bool inside)
-		{
-			while (start != end)
-			{
-				Drawable* drawable = *start++;
-				unsigned char flags = drawable->GetDrawableFlags();
-
-				if ((flags == DRAWABLE_ZONE || (flags == DRAWABLE_GEOMETRY && drawable->IsOccluder())) &&
-					(drawable->GetViewMask() & viewMask_))
-				{
-					if (inside || frustum_.IsInsideFast(drawable->GetWorldBoundingBox()))
-						result_.push_back(drawable);
-				}
-			}
-		}
-	};
-
-	/// %Frustum octree query with occlusion.
-	class OccludedFrustumOctreeQuery : public FrustumOctreeQuery
-	{
-	public:
-		/// Construct with frustum, occlusion buffer and query parameters.
-		OccludedFrustumOctreeQuery(PODVector<Drawable*>& result, const Frustum& frustum, OcclusionBuffer* buffer,
-			unsigned char drawableFlags = DRAWABLE_ANY, unsigned viewMask = DEFAULT_VIEWMASK) :
-			FrustumOctreeQuery(result, frustum, drawableFlags, viewMask),
-			buffer_(buffer)
-		{
-		}
-
-		/// Intersection test for an octant.
-		virtual Intersection TestOctant(const BoundingBox& box, bool inside)
-		{
-			if (inside)
-				return buffer_->IsVisible(box) ? INSIDE : OUTSIDE;
-			else
-			{
-				Intersection result = frustum_.IsInside(box);
-				if (result != OUTSIDE && !buffer_->IsVisible(box))
-					result = OUTSIDE;
-				return result;
-			}
-		}
-
-		/// Intersection test for drawables. Note: drawable occlusion is performed later in worker threads.
-		virtual void TestDrawables(Drawable** start, Drawable** end, bool inside)
-		{
-			while (start != end)
-			{
-				Drawable* drawable = *start++;
-
-				if ((drawable->GetDrawableFlags() & drawableFlags_) && (drawable->GetViewMask() & viewMask_))
-				{
-					if (inside || frustum_.IsInsideFast(drawable->GetWorldBoundingBox()))
-						result_.push_back(drawable);
-				}
-			}
-		}
-
-		/// Occlusion buffer.
-		OcclusionBuffer* buffer_;
-	};
-#endif
 	void CheckVisibilityWork(const WorkItem* item, unsigned threadIndex)
 	{
 		View* view = reinterpret_cast<View*>(item->aux_);
 		Drawable** start = reinterpret_cast<Drawable**>(item->start_);
 		Drawable** end = reinterpret_cast<Drawable**>(item->end_);
-//		OcclusionBuffer* buffer = view->occlusionBuffer_;
 		const Matrix3x4& viewMatrix = view->cullCamera_->GetView();
 		Vector3 viewZ = Vector3(viewMatrix.m20_, viewMatrix.m21_, viewMatrix.m22_);
 		Vector3 absViewZ = viewZ.Abs();
 		unsigned cameraViewMask = view->cullCamera_->GetViewMask();
-//		bool cameraZoneOverride = view->cameraZoneOverride_;
 		PerThreadSceneResult& result = view->sceneResults_[threadIndex];
 
 		while (start != end)
 		{
 			Drawable* drawable = *start++;
 
-			if (/*!buffer ||*/ !drawable->IsOccludee() /*|| buffer->IsVisible(drawable->GetWorldBoundingBox())*/)
+			//if (!drawable->IsOccludee())
 			{
 				drawable->UpdateBatches(view->frame_);
 				// If draw distance non-zero, update and check it
@@ -157,11 +82,6 @@ namespace Unique
 				// For geometries, find zone, clear lights and calculate view space Z range
 				if (drawable->GetDrawableFlags() & DRAWABLE_GEOMETRY)
 				{
-					Zone* drawableZone = drawable->GetZone();
-// 					if (!cameraZoneOverride &&
-// 						(drawable->IsZoneDirty() || !drawableZone || (drawableZone->GetViewMask() & cameraViewMask) == 0))
-// 						view->FindZone(drawable);
-
 					const BoundingBox& geomBox = drawable->GetWorldBoundingBox();
 					Vector3 center = geomBox.Center();
 					Vector3 edge = geomBox.Size() * 0.5f;
@@ -245,11 +165,12 @@ namespace Unique
 	}
 
 	View::View() 
-		: graphics_(GetSubsystem<Graphics>()), renderer_(GetSubsystem<Renderer>()), 
+		: graphics_(GetSubsystem<Graphics>()),
+		renderer_(GetSubsystem<Renderer>()), 
 		geometriesUpdated_(false), minInstances_(2)
 	{
 		frameUniform_ = new UniformBuffer(FrameParameter());
-		cameraUniform_ = new UniformBuffer();
+		cameraUniform_ = new UniformBuffer(CameraVS());
 		tempDrawables_.resize(1);
 	}
 
@@ -259,10 +180,9 @@ namespace Unique
 
 	bool View::Define(TextureView* renderTarget, Unique::Viewport* viewport)
 	{
-// 		sourceView_ = nullptr;
-// 		renderPath_ = viewport->GetRenderPath();
-// 		if (!renderPath_)
-// 			return false;
+ 		renderPath_ = viewport->GetRenderPath();
+ 		if (!renderPath_)
+ 			return false;
 
 		renderTarget_ = renderTarget;
 		drawDebug_ = viewport->GetDrawDebug();
@@ -332,11 +252,13 @@ namespace Unique
 	{
 		//PrepareInstancingBuffer();
 
-		BatchQueue& queue = batchQueues_[0];
-		if (!queue.IsEmpty())
-		{
-			queue.Draw(this, camera_);
-		}
+		renderPath_->Render(this);
+
+// 		BatchQueue& queue = batchQueues_[0];
+// 		if (!queue.IsEmpty())
+// 		{
+// 			queue.Draw(this, camera_);
+// 		}
 	}
 
 	void View::SetGlobalShaderParameters()
@@ -574,14 +496,7 @@ namespace Unique
 
 	void View::UpdateGeometries()
 	{
-		// Update geometries in the source view if necessary (prepare order may differ from render order)
-// 		if (sourceView_ && !sourceView_->geometriesUpdated_)
-// 		{
-// 			sourceView_->UpdateGeometries();
-// 			return;
-// 		}
-
-//		URHO3D_PROFILE(SortAndUpdateGeometry);
+		//URHO3D_PROFILE(SortAndUpdateGeometry);
 
 		WorkQueue& queue = GetSubsystem<WorkQueue>();
 #if false
@@ -623,6 +538,9 @@ namespace Unique
 			}
 		}
 #endif
+
+		renderPath_->Update(this);
+
 		// Update geometries. Split into threaded and non-threaded updates.
 		{
 			if (threadedGeometries_.size())
@@ -639,8 +557,8 @@ namespace Unique
 					}
 				}
 
-				int numWorkItems = queue.GetNumThreads() + 1; // Worker threads + main thread
-				size_t drawablesPerItem = threadedGeometries_.size() / numWorkItems;
+				int numWorkItems = (int)queue.GetNumThreads() + 1; // Worker threads + main thread
+				int drawablesPerItem = (int)threadedGeometries_.size() / numWorkItems;
 
 				auto start = threadedGeometries_.begin();
 				for (int i = 0; i < numWorkItems; ++i)

@@ -6,6 +6,7 @@
 #include "../Graphics/DebugRenderer.h"
 #include "../Scene/Scene.h"
 #include "RenderPath.h"
+#include "ScenePass.h"
 
 namespace Unique
 {
@@ -35,7 +36,8 @@ namespace Unique
 	void Renderer::Initialize()
 	{
 		defaultRenderPath_ = new RenderPath();
-
+		defaultRenderPath_->AddPass(new ClearPass());
+		defaultRenderPath_->AddPass(new ScenePass());
 
 		Subscribe(&Renderer::HandleRenderUpdate);
 		Subscribe(&Renderer::HandleEndFrame);

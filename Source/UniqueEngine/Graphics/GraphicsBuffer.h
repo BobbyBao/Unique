@@ -77,7 +77,7 @@ namespace Unique
 		UniformBuffer() : GraphicsBuffer(BIND_UNIFORM_BUFFER) {}
 
 		template<class T>
-		UniformBuffer(const T& data, Usage usage = Usage::USAGE_DYNAMIC, uint flags = 0)
+		UniformBuffer(const T& data, Usage usage = Usage::USAGE_DYNAMIC, uint flags = CPU_ACCESS_WRITE)
 		{
 			Create(data, usage, flags);
 		}
