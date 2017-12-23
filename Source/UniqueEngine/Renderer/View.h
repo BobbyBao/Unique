@@ -11,6 +11,7 @@ namespace Unique
 	class Renderer;
 	class Viewport;
 	class RenderPath;
+	class ScenePass;
 	class UniformBuffer;
 
 	struct FrameParameter
@@ -146,7 +147,6 @@ namespace Unique
 		/// Return light batch queues.
 //		const Vector<LightBatchQueue>& GetLightQueues() const { return lightQueues_; }
 
-
 		/// Set global (per-frame) shader parameters. Called by Batch and internally by View.
 		void SetGlobalShaderParameters();
 		/// Set camera-specific shader parameters. Called by Batch and internally by View.
@@ -156,8 +156,14 @@ namespace Unique
 		void GetDrawables();
 		/// Construct batches from the drawable objects.
 		void GetBatches();
+
 		void GetBaseBatches();
+
 		void AddBatchToQueue(BatchQueue& queue, Batch& batch, Shader* tech, bool allowInstancing = true, bool allowShadows = true);
+		uint GetMatrics(const Matrix3x4* transform, uint num);
+		void UpdateBatchGroup();
+		/// Prepare instancing buffer by filling it with all instance transforms.
+		void PrepareInstancingBuffer();
 		void UpdateGeometries();
 		/// Query for lit geometries and shadow casters for a light.
 		void ProcessLight(LightQueryResult& query, unsigned threadIndex);
@@ -193,7 +199,7 @@ namespace Unique
 		IntVector2 viewSize_;
 		/// Destination rendertarget size.
 		IntVector2 rtSize_;
-
+		/// Information of the frame being rendered.
 		FrameInfo frame_;
 		/// View aspect ratio.
 		float aspectRatio_;
@@ -205,6 +211,8 @@ namespace Unique
 		int minInstances_;
 		/// Geometries updated flag.
 		bool geometriesUpdated_;
+		/// Has scene passes flag. If no scene passes, view can be defined without a valid scene or camera to only perform quad rendering.
+		bool hasScenePasses_;
 		/// Draw debug geometry flag. Copied from the viewport.
 		bool drawDebug_;
 		/// Renderpath.
@@ -227,19 +235,22 @@ namespace Unique
 		PODVector<Light*> lights_;
 		/// Number of active occluders.
 		unsigned activeOccluders_;
-
 		/// Info for scene render passes defined by the renderpath.
-		PODVector<ScenePassInfo> scenePasses_;
+		PODVector<ScenePassInfo> scenePasses_[2];
 		/// Per-pixel light queues.
 		Vector<LightBatchQueue> lightQueues_;
 		/// Batch queues by pass index.
-		HashMap<byte, BatchQueue> batchQueues_;
+		HashMap<byte, BatchQueue> batchQueues_[2];
 
 		SPtr<UniformBuffer> frameUniform_;
 
 		SPtr<UniformBuffer> cameraUniform_;
 
-		Vector<Matrix3x4>	geometryInst_[2];
+		Vector<Matrix3x4>	batchMatrics_[2];
+
+		Vector<Matrix3x4>	batchGroupMatrics_[2];
+		
+		friend class ScenePass;
 
 		friend void CheckVisibilityWork(const WorkItem* item, unsigned threadIndex);
 		friend void ProcessLightWork(const WorkItem* item, unsigned threadIndex);

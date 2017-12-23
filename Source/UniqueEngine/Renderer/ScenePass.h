@@ -12,8 +12,7 @@ namespace Unique
 		~ScenePass();
 
 		virtual void Render(View* view);
-	protected:
-		BatchQueue batchQueue_[2];
+
 	};
 
 }

@@ -32,7 +32,6 @@ namespace Unique
 		virtual void Update(View* view);
 		virtual void Render(View* view);
 
-	protected:
 		/// Command type.
 		RenderPassType type_;
 		/// Sorting mode.
@@ -40,7 +39,9 @@ namespace Unique
 		/// Scene pass name.
 		String pass_;
 		/// Scene pass index. Filled by View.
-		unsigned passIndex_;
+		unsigned passIndex_ = 0;
+
+	protected:
 
 	};
 

@@ -19,6 +19,11 @@ namespace Unique
 
 	void ScenePass::Render(View* view)
 	{
-		batchQueue_[Graphics::currentContext_].Draw(view, view->GetCamera());
+		auto& batchQueues = RenderContext(view->batchQueues_);
+		BatchQueue& queue = batchQueues[passIndex_];
+		if (!queue.IsEmpty())
+		{
+			queue.Draw(view, view->GetCamera());
+		}
 	}
 }

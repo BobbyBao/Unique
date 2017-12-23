@@ -10,6 +10,7 @@
 #include "View.h"
 #include "Batch.h"
 #include "RenderPath.h"
+#include "ScenePass.h"
 
 namespace Unique
 {
@@ -172,6 +173,9 @@ namespace Unique
 		frameUniform_ = new UniformBuffer(FrameParameter());
 		cameraUniform_ = new UniformBuffer(CameraVS());
 		tempDrawables_.resize(1);
+
+		batchMatrics_[0].reserve(4096);
+		batchMatrics_[1].reserve(4096);
 	}
 
 	View::~View()
@@ -223,24 +227,80 @@ namespace Unique
 		if (!cullCamera_)
 			cullCamera_ = camera_;
 
+		auto& scenePasses = MainContext(scenePasses_);
+		hasScenePasses_ = false;
+		scenePasses.clear();
 		geometriesUpdated_ = false;
+
+		auto& batchQueues = batchQueues_[Graphics::currentContext_];
+
+		auto& renderPasses = renderPath_->GetRenderPasses();
+		for (auto& pass : renderPasses)
+		{
+			if (pass->type_ == RenderPassType::SCENEPASS)
+			{
+				hasScenePasses_ = true;
+
+				ScenePassInfo info;
+				info.passIndex_ = pass->passIndex_ = Shader::GetPassIndex(pass->pass_);
+				info.allowInstancing_ = pass->sortMode_ != RenderPassSortMode::BACKTOFRONT;
+
+				auto j = batchQueues.find(info.passIndex_);
+				if (j == batchQueues.end())
+				{
+					auto k = batchQueues.insert(Pair<unsigned, BatchQueue>(info.passIndex_, BatchQueue()));
+					info.batchQueue_ = &(k.first->second);
+				}
+				else
+				{
+					info.batchQueue_ = &j->second;
+				}
+
+				scenePasses.push_back(info);
+
+			}
+		}
+
+		if (hasScenePasses_)
+		{
+			if (!scene_ || !camera_ || !camera_->IsEnabledEffective())
+				return false;
+
+			if (!octree_)
+				return false;
+
+			if (!camera_->IsProjectionValid())
+				return false;
+		}
 
 		return true;
 	}
 
 	void View::Update(const FrameInfo& frame)
 	{
-		frame_.camera_ = cullCamera_;
+		frame_.camera_ = camera_;
 		frame_.timeStep_ = frame.timeStep_;
 		frame_.frameNumber_ = frame.frameNumber_;
 		frame_.viewSize_ = viewSize_;
+
+		int maxSortedInstances = renderer_.GetMaxSortedInstances();
 
 	//	renderTargets_.Clear();
 		geometries_.clear();
 		lights_.clear();
 
-		if (cullCamera_ && cullCamera_->GetAutoAspectRatio())
-			cullCamera_->SetAspectRatioInternal((float)frame_.viewSize_.x_ / (float)frame_.viewSize_.y_);
+		auto& batchQueues = MainContext(batchQueues_);
+		for (auto i = batchQueues.begin(); i != batchQueues.end(); ++i)
+			i->second.Clear(maxSortedInstances);
+
+		if (hasScenePasses_ && (!camera_ || !octree_))
+		{
+		//	SendViewEvent(E_ENDVIEWUPDATE);
+			return;
+		}
+
+		if (camera_ && camera_->GetAutoAspectRatio())
+			camera_->SetAspectRatioInternal((float)frame_.viewSize_.x_ / (float)frame_.viewSize_.y_);
 				
 		GetDrawables();
 		GetBatches();
@@ -253,12 +313,6 @@ namespace Unique
 		//PrepareInstancingBuffer();
 
 		renderPath_->Render(this);
-
-// 		BatchQueue& queue = batchQueues_[0];
-// 		if (!queue.IsEmpty())
-// 		{
-// 			queue.Draw(this, camera_);
-// 		}
 	}
 
 	void View::SetGlobalShaderParameters()
@@ -341,11 +395,11 @@ namespace Unique
 		if (!octree_ || !cullCamera_)
 			return;
 
-		//URHO3D_PROFILE(GetDrawables);
+		//UNIQUE_PROFILE(GetDrawables);
 
 		auto& queue = GetSubsystem<WorkQueue>();
-		PODVector<Drawable*>& tempDrawables = tempDrawables_[0];
 
+		PODVector<Drawable*>& tempDrawables = tempDrawables_[0];
 		FrustumOctreeQuery query(tempDrawables, cullCamera_->GetFrustum(), DRAWABLE_GEOMETRY | DRAWABLE_LIGHT, cullCamera_->GetViewMask());
 		octree_->GetDrawables(query);
 		std::swap(geometries_, tempDrawables);
@@ -361,12 +415,13 @@ namespace Unique
 
 // 		ProcessLights();
 // 		GetLightBatches();
+
  		GetBaseBatches();
 	}
 
 	void View::GetBaseBatches()
 	{
-	//	URHO3D_PROFILE(GetBaseBatches);
+		UNIQUE_PROFILE(GetBaseBatches);
 
 		for (auto i = geometries_.begin(); i != geometries_.end(); ++i)
 		{
@@ -379,6 +434,8 @@ namespace Unique
 
 			const Vector<SourceBatch>& batches = drawable->GetBatches();
 			bool vertexLightsProcessed = false;
+
+			auto& scenePasses = MainContext(scenePasses_);
 
 			for (unsigned j = 0; j < batches.size(); ++j)
 			{
@@ -395,9 +452,9 @@ namespace Unique
 					continue;
 
 				// Check each of the scene passes
-				for (unsigned k = 0; k < scenePasses_.size(); ++k)
+				for (unsigned k = 0; k < scenePasses.size(); ++k)
 				{
-					ScenePassInfo& info = scenePasses_[k];
+					ScenePassInfo& info = scenePasses[k];
 					// Skip forward base pass if the corresponding litbase pass already exists
 // 					if (info.passIndex_ == basePassIndex_ && j < 32 && drawable->HasBasePass(j))
 // 						continue;
@@ -408,16 +465,11 @@ namespace Unique
 
 					Batch destBatch(srcBatch);
 					destBatch.pass_ = pass;
-					//destBatch.zone_ = GetZone(drawable);
 					destBatch.isBase_ = true;
 					//destBatch.lightMask_ = (unsigned char)GetLightMask(drawable);
 					destBatch.lightQueue_ = 0;
 
- 					bool allowInstancing = info.allowInstancing_;
-// 					if (allowInstancing && info.markToStencil_ && destBatch.lightMask_ != (destBatch.zone_->GetLightMask() & 0xff))
-// 						allowInstancing = false;
-
-					AddBatchToQueue(*info.batchQueue_, destBatch, tech, allowInstancing);
+					AddBatchToQueue(*info.batchQueue_, destBatch, tech, info.allowInstancing_);
 				}
 			}
 		}
@@ -445,22 +497,11 @@ namespace Unique
 				newGroup.geometryType_ = GEOM_STATIC;
 			//	renderer_->SetBatchShaders(newGroup, tech, allowShadows, queue);
 				newGroup.CalculateSortKey();
-
-				size_t oldSize = newGroup.instances_.size();
 				newGroup.AddTransforms(batch);
-				// Convert to using instancing shaders when the instancing limit is reached
-				if (oldSize < minInstances_ && (int)newGroup.instances_.size() >= minInstances_)
-				{
-					newGroup.geometryType_ = GEOM_INSTANCED;
-					//renderer_->SetBatchShaders(newGroup, tech, allowShadows, queue);
-					newGroup.CalculateSortKey();
-				}
-
 				queue.batchGroups_.insert(std::make_pair(key, newGroup));
 			}
 			else
 			{
-
 				size_t oldSize = i->second.instances_.size();
 				i->second.AddTransforms(batch);
 				// Convert to using instancing shaders when the instancing limit is reached
@@ -486,39 +527,119 @@ namespace Unique
 				{
 					// Move the transform pointer to generate copies of the batch which only refer to 1 world transform
 					queue.batches_.push_back(batch);
+					auto& b = queue.batches_.back();
+					b.transformOffset_ = GetMatrics(&b.worldTransform_[i], 1);
 					++batch.worldTransform_;
 				}
 			}
 			else
-				queue.batches_.push_back(batch);
+			{
+				queue.batches_.push_back(batch);	
+				auto& b = queue.batches_.back();
+				b.transformOffset_ = GetMatrics(b.worldTransform_, b.numWorldTransforms_);
+			}
 		}
+	}
+
+	uint View::GetMatrics(const Matrix3x4* transform, uint num)
+	{
+		auto& batchMatrics = MainContext(batchMatrics_);
+		uint offset = (uint)batchMatrics.size();
+		size_t newSize = offset + num;
+
+		if (newSize > batchMatrics.capacity())
+		{
+			batchMatrics.resize(newSize);
+		}
+
+		std::memcpy(&batchMatrics[offset], transform, num * sizeof(Matrix3x4));
+
+		return offset;
+	}
+
+	void View::UpdateBatchGroup()
+	{
+		auto& batchQueues = MainContext(batchQueues_);
+		for (auto it = batchQueues.begin(); it != batchQueues.end(); ++it)
+		{
+			auto& batchGroups = it->second.batchGroups_;
+			for (auto group = batchGroups.begin(); group != batchGroups.end(); ++group )
+			{
+			//	auto&
+			}
+		}
+	}
+
+	void View::PrepareInstancingBuffer()
+	{
+
+		UNIQUE_PROFILE(PrepareInstancingBuffer);
+
+		unsigned totalInstances = 0;
+
+		auto& batchQueues = MainContext(batchQueues_);
+
+		for (auto i = batchQueues.begin(); i != batchQueues.end(); ++i)
+			totalInstances += i->second.GetNumInstances();
+		/*
+		for (auto i = lightQueues_.begin(); i != lightQueues_.end(); ++i)
+		{
+			for (unsigned j = 0; j < i->shadowSplits_.size(); ++j)
+				totalInstances += i->shadowSplits_[j].shadowBatches_.GetNumInstances();
+			totalInstances += i->litBaseBatches_.GetNumInstances();
+			totalInstances += i->litBatches_.GetNumInstances();
+		}*/
+
+		if (!totalInstances || !renderer_.ResizeInstancingBuffer(totalInstances))
+			return;
+
+		VertexBuffer* instancingBuffer = renderer_.GetInstancingBuffer();
+		unsigned freeIndex = 0;
+		void* dest = nullptr;// instancingBuffer->Lock(0, totalInstances, true);
+		if (!dest)
+			return;
+
+		const unsigned stride = instancingBuffer->GetStride();
+		for (auto i = batchQueues.begin(); i != batchQueues.end(); ++i)
+			i->second.SetInstancingData(dest, stride, freeIndex);
+		/*
+		for (auto i = lightQueues_.begin(); i != lightQueues_.end(); ++i)
+		{
+			for (unsigned j = 0; j < i->shadowSplits_.size(); ++j)
+				i->shadowSplits_[j].shadowBatches_.SetInstancingData(dest, stride, freeIndex);
+			i->litBaseBatches_.SetInstancingData(dest, stride, freeIndex);
+			i->litBatches_.SetInstancingData(dest, stride, freeIndex);
+		}*/
+
+		//instancingBuffer->Unlock();
 	}
 
 	void View::UpdateGeometries()
 	{
-		//URHO3D_PROFILE(SortAndUpdateGeometry);
+		//UNIQUE_PROFILE(SortAndUpdateGeometry);
 
 		WorkQueue& queue = GetSubsystem<WorkQueue>();
-#if false
+
 		// Sort batches
 		{
-			for (unsigned i = 0; i < renderPath_->commands_.Size(); ++i)
+			auto& renderPasses = renderPath_->GetRenderPasses();
+			for (unsigned i = 0; i < renderPasses.size(); ++i)
 			{
-				const RenderPathCommand& command = renderPath_->commands_[i];
-				if (!IsNecessary(command))
-					continue;
+				const auto& command = renderPasses[i];
+				//if (!IsNecessary(command))
+				//	continue;
 
-				if (command.type_ == CMD_SCENEPASS)
+				if (command->type_ == RenderPassType::SCENEPASS)
 				{
-					SPtr<WorkItem> item = queue->GetFreeItem();
+					SPtr<WorkItem> item = queue.GetFreeItem();
 					item->priority_ = M_MAX_UNSIGNED;
 					item->workFunction_ =
-						command.sortMode_ == SORT_FRONTTOBACK ? SortBatchQueueFrontToBackWork : SortBatchQueueBackToFrontWork;
-					item->start_ = &batchQueues_[command.passIndex_];
-					queue->AddWorkItem(item);
+						command->sortMode_ == RenderPassSortMode::FRONTTOBACK ? SortBatchQueueFrontToBackWork : SortBatchQueueBackToFrontWork;
+					item->start_ = &batchQueues_[command->passIndex_];
+					queue.AddWorkItem(item);
 				}
 			}
-
+#if false
 			for (auto i = lightQueues_.Begin(); i != lightQueues_.End(); ++i)
 			{
 				SPtr<WorkItem> lightItem = queue->GetFreeItem();
@@ -536,8 +657,9 @@ namespace Unique
 					queue->AddWorkItem(shadowItem);
 				}
 			}
-		}
 #endif
+		}
+
 
 		renderPath_->Update(this);
 

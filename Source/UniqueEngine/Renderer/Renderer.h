@@ -19,11 +19,17 @@ namespace Unique
 		Renderer();
 		~Renderer();
 
+		/// Set number of extra instancing buffer elements. Default is 0. Extra 4-vectors are available through TEXCOORD7 and further.
+		void SetNumExtraInstancingBufferElements(int elements);
+		/// Set minimum number of instances required in a batch group to render as instanced.
+		void SetMinInstances(int instances);
+		/// Set maximum number of sorted instances per batch group. If exceeded, instances are rendered unsorted.
+		void SetMaxSortedInstances(int instances);
+
 		/// Set number of backbuffer viewports to render.
 		void SetNumViewports(unsigned num);
 		/// Set a backbuffer viewport.
 		void SetViewport(unsigned index, Viewport* viewport);
-
 		/// Return number of backbuffer viewports.
 		size_t GetNumViewports() const { return viewports_.size(); }
 
@@ -35,6 +41,18 @@ namespace Unique
 
 		RenderPath* GetDefaultRenderPath() { return defaultRenderPath_; }
 
+		/// Return whether dynamic instancing is in use.
+		//bool GetDynamicInstancing() const { return dynamicInstancing_; }
+
+		/// Return number of extra instancing buffer elements.
+		int GetNumExtraInstancingBufferElements() const { return numExtraInstancingBufferElements_; };
+
+		/// Return minimum number of instances required in a batch group to render as instanced.
+		int GetMinInstances() const { return minInstances_; }
+
+		/// Return maximum number of sorted instances per batch group.
+		int GetMaxSortedInstances() const { return maxSortedInstances_; }
+
 		void Begin();
 		void Render();
 		void End();
@@ -42,6 +60,7 @@ namespace Unique
 
 		void DrawDebugGeometry(bool depthTest);
 
+		bool ResizeInstancingBuffer(unsigned numInstances);
 	private:
 		/// Initialize when screen mode initially set.
 		void Initialize();
@@ -52,7 +71,6 @@ namespace Unique
 		void UpdateQueuedViewport(unsigned index);
 		void QueueViewport(TextureView* renderTarget, Viewport* viewport);
 		void CreateInstancingBuffer();
-		bool ResizeInstancingBuffer(unsigned numInstances);
 
 		class Graphics& graphics_;
 
@@ -78,6 +96,11 @@ namespace Unique
 		SPtr<VertexBuffer> instancingBuffer_;
 		/// Number of extra instancing data elements.
 		int numExtraInstancingBufferElements_;
+
+		/// Minimum number of instances required in a batch group to render as instanced.
+		int minInstances_;
+		/// Maximum sorted instances per batch group.
+		int maxSortedInstances_;
 	};
 
 }

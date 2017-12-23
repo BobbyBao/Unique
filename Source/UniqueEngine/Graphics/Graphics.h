@@ -93,14 +93,16 @@ namespace Unique
 	};
 
 	template<class T>
-	class DoubleBuffer
+	inline T& MainContext(T data[2])
 	{
-	public:
-		inline T& currentContext() { return data_[Graphics::currentContext_]; }
-		inline T& renderContext() { return data_[Graphics::GetRenderContext()]; }
-	protected:
-		T data_[2];
-	};
+		return data[Graphics::currentContext_];
+	}
+
+	template<class T>
+	inline T& RenderContext(T data[2])
+	{
+		return data[1 - Graphics::currentContext_];
+	}
 	
 	extern IRenderDevice* renderDevice;
 	extern IDeviceContext* deviceContext;

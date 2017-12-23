@@ -3,8 +3,31 @@
 
 namespace Unique
 {
+	uEnumTraits
+	(
+		RenderPassType,
+		"NONE",
+		"CLEAR",
+		"SCENEPASS",
+		"QUAD",
+		"FORWARDLIGHTS",
+		"LIGHTVOLUMES",
+		"RENDERUI",
+		"SENDEVENT"
+	);
+
+	uEnumTraits
+	(
+		RenderPassSortMode,
+		"FRONTTOBACK",
+		"BACKTOFRONT"
+	);
+
 	uObject(RenderPass)
 	{
+		uAttribute("Type", type_);
+		uAttribute("Type", type_);
+
 	}
 
 	RenderPass::RenderPass()

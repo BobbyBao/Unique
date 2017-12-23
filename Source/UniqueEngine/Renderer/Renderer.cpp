@@ -48,6 +48,25 @@ namespace Unique
 
 	}
 
+	void Renderer::SetNumExtraInstancingBufferElements(int elements)
+	{
+		if (numExtraInstancingBufferElements_ != elements)
+		{
+			numExtraInstancingBufferElements_ = Clamp(elements, 0, MAX_EXTRA_INSTANCING_BUFFER_ELEMENTS);
+			CreateInstancingBuffer();
+		}
+	}
+
+	void Renderer::SetMinInstances(int instances)
+	{
+		minInstances_ = Max(instances, 1);
+	}
+
+	void Renderer::SetMaxSortedInstances(int instances)
+	{
+		maxSortedInstances_ = Max(instances, 0);
+	}
+
 	void Renderer::SetNumViewports(unsigned num)
 	{
 		assert(Thread::IsMainThread());

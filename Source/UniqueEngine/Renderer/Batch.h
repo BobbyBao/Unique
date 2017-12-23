@@ -70,6 +70,8 @@ namespace Unique
 		const Matrix3x4* worldTransform_;
 		/// Number of world transforms.
 		unsigned numWorldTransforms_;
+		//
+		uint transformOffset_ = 0;
 		/// Per-instance data. If not null, must contain enough data to fill instancing buffer.
 		void* instancingData_;
 		/// Zone.
