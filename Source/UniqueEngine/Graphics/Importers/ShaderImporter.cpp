@@ -1,7 +1,7 @@
 #include "Precompiled.h"
 #include "ShaderImporter.h"
 #include "../Shader.h"
-#include "Serialize/HjsonDeserializer.h"
+#include "Serialize/DslDeserializer.h"
 
 namespace Unique
 {
@@ -15,7 +15,7 @@ namespace Unique
 
 	SPtr<Resource> ShaderImporter::Import(const String& path)
 	{
-		HjsonDeserializer reader(true);
+		DslDeserializer reader;
 		SPtr<Shader> shader;
 		if (!reader.Load(path, shader))
 		{

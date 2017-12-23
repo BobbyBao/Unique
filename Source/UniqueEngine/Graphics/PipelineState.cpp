@@ -49,8 +49,8 @@ namespace Unique
 		PSODesc.GraphicsPipeline.RasterizerDesc = shaderPass_.rasterizerState_;
 		PSODesc.GraphicsPipeline.BlendDesc = shaderPass_.blendState_;
 
-		PSODesc.GraphicsPipeline.InputLayout.LayoutElements = shaderPass_.inputLayout_.data();
-		PSODesc.GraphicsPipeline.InputLayout.NumElements = (uint)shaderPass_.inputLayout_.size();
+		PSODesc.GraphicsPipeline.InputLayout.LayoutElements = shaderPass_.inputLayout_.layoutElements_.data();
+		PSODesc.GraphicsPipeline.InputLayout.NumElements = (uint)shaderPass_.inputLayout_.layoutElements_.size();
 
 		PSODesc.GraphicsPipeline.PrimitiveTopologyType = PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 

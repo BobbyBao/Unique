@@ -15,26 +15,29 @@ Shader "Basic"
 			FillMode SOLID
 			CullMode NONE
 		}
+		
+		InputLayout
+		{
+			LayoutElement
+			{
+				NumComponents 3
+				ValueType FLOAT32
+				IsNormalized false
+			}
 
-		InputLayout
-		{
-			NumComponents 3
-			ValueType FLOAT32
-			IsNormalized false
-		}
-		
-		InputLayout
-		{
-			NumComponents 3
-			ValueType FLOAT32
-			IsNormalized false
-		}
-		
-		InputLayout
-		{
-			NumComponents 4
-			ValueType UINT8
-			IsNormalized true
+			LayoutElement
+			{
+				NumComponents 3
+				ValueType FLOAT32
+				IsNormalized false
+			}
+			
+			LayoutElement
+			{
+				NumComponents 4
+				ValueType UINT8
+				IsNormalized true
+			}
 		}
 	
 		VertexShader

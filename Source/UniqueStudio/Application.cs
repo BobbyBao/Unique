@@ -6,7 +6,17 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace UniqueStudio
-{
+{  
+    /// Device type
+    enum DeviceType : Int32
+    {
+        Undefined = 0,  ///< Undefined device
+        D3D11,      ///< D3D11 device
+        D3D12,      ///< D3D12 device
+        OpenGL,     ///< OpenGL device 
+        OpenGLES    ///< OpenGLES device
+    }
+
     public class Application
     {
         public Application()
@@ -19,7 +29,7 @@ namespace UniqueStudio
 
         public void Run()
         {
-            Unique_Start("Direct3D11", IntPtr.Zero);
+            Unique_Start(DeviceType.D3D11, IntPtr.Zero);
         }
 
         public static void Quit()
@@ -37,7 +47,7 @@ namespace UniqueStudio
         static extern int Unique_Setup(int argc, [MarshalAs(UnmanagedType.LPStr)]string[] argv);
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int Unique_Start([MarshalAs(UnmanagedType.LPStr)]string renderer, IntPtr window);
+        static extern int Unique_Start(DeviceType deviceType, IntPtr window);
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern void Unique_Shutdown();

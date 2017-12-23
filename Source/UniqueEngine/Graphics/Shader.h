@@ -15,6 +15,13 @@ namespace Unique
 	class Shader;
 	class PipelineState;
 
+	struct InputLayout
+	{
+		Vector<LayoutElement> layoutElements_;
+
+		uClass("LayoutElement", layoutElements_)
+	};
+
 	class Pass
 	{
 	public:
@@ -34,7 +41,7 @@ namespace Unique
 		BlendStateDesc			blendState_;
 		DepthStencilStateDesc	depthState_;
 		RasterizerStateDesc		rasterizerState_;
-		Vector<LayoutElement>	inputLayout_;
+		InputLayout				inputLayout_;
 		ShaderStage				shaderStage_[6];
 
 	private:
@@ -46,6 +53,12 @@ namespace Unique
 		friend class Shader;
 		friend class ShaderVariation;
 		friend class PipelineState;
+	};
+
+	class ShaderProperties
+	{
+	public:
+		Vector<ShaderVariable> shaderVariables_;
 	};
 
 	class Shader : public Resource

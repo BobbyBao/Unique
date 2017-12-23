@@ -1,12 +1,13 @@
 #pragma once
 #include <functional>
 #include <memory>
+#include <map>
 
 namespace Unique
 {
 	class AstNode;
 	typedef UPtr<AstNode> AstNodePtr;
-	using ChildMap = std::unordered_multimap<String, std::shared_ptr<AstNode>>;
+	using ChildMap = std::multimap<String, std::shared_ptr<AstNode>>;
 
 	class AstNode
 	{
@@ -23,10 +24,10 @@ namespace Unique
 		void VisitChild(const String& key, const std::function<void(AstNode*)>& fn);
 		void Print(int depth);
 
-		String type_;
+		String token_;
 		String value_;
+		bool isQuote_ = false;
 	private:
-		//AstNode* parent_ = nullptr;
 		UPtr<ChildMap> children_;
 	};
 

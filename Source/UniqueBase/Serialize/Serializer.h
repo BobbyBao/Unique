@@ -92,7 +92,19 @@ namespace Unique
 		void TransferAttribute(const char* name, T& data, AttributeFlag metaFlag = AttributeFlag::Default)\
 		{
 			AttributeFlag metaFlagSave = attributeFlag_;
+
 			attributeFlag_ = metaFlag;
+
+			if (SerializeTraits<T>::IsArray())
+			{
+				attributeFlag_ |= AttributeFlag::Vector;
+			}
+
+			if (SerializeTraits<T>::IsMap())
+			{
+				attributeFlag_ |= AttributeFlag::Map;
+			}
+
 			if (StartAttribute(name))
 			{
 				Unique::SerializeTraits<T>::Transfer(data, *this);

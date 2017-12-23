@@ -6,6 +6,7 @@
 #include <Timer.h>
 #include "Serialize/DSL/AstParser.h"
 #include "Serialize/DSL/ScriptLexer.h"
+#include "Serialize/DslDeserializer.h"
 #include <iostream>
 
 namespace Unique
@@ -65,9 +66,17 @@ namespace Unique
 		SPtr<File> file = cache.GetFile("Shaders/Basic.shader");
 		if (file)
 		{
+			/*
 			AstParser tok;
 			tok.Parse(file->ReadAllText());
+			tok.Print();
+			 */
+			SPtr<Shader> shader(new Shader());
+			DslDeserializer reader;
+			reader.Load(*file, shader);
 
+			JsonSerializer jsonSer;
+			jsonSer.Save("basic.json", shader);
 		}
 	}
 

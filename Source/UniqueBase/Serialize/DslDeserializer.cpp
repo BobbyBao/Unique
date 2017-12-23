@@ -33,6 +33,7 @@ namespace Unique
 			return false;
 		}
 
+		parser_.Print();
  		currentNode_ = parser_.root_[0].get();
 		return true;
 	}
@@ -43,7 +44,7 @@ namespace Unique
 
 	SPtr<Object> DslDeserializer::CreateObject()
 	{		
-		return GetContext()->CreateObject(currentNode_->type_);
+		return GetContext()->CreateObject(currentNode_->token_);
 	}
 
 	bool DslDeserializer::StartAttribute(const String& key)

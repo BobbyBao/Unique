@@ -63,7 +63,7 @@ namespace Unique
 	}
 	
 	UNIQUE_C_API void Unique_Setup(int argc, char* argv[]);
-	UNIQUE_C_API int Unique_Start(const char* rendererModule, void* window);
+	UNIQUE_C_API int Unique_Start(DeviceType deviceType, void* window);
 	UNIQUE_C_API void Unique_Shutdown();
 }
 

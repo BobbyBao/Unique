@@ -16,7 +16,7 @@ namespace Unique
 	}
 
 	AstNode::AstNode(const String& type)
-		: type_(type)
+		: token_(type)
 	{
 	}
 
@@ -27,8 +27,7 @@ namespace Unique
 			children_.reset(new ChildMap);
 		}
 
-		children_->insert(std::make_pair(node->type_, node));
-	//	node->parent_ = this;
+		children_->insert(std::make_pair(node->token_, node));
 	}
 
 	AstNode* AstNode::GetChild(const String& name)
@@ -54,7 +53,7 @@ namespace Unique
 
 	void AstNode::Print(int depth)
 	{
-		std::cout << type_ << " " << value_ << std::endl;
+		std::cout << token_ << " " << value_ << std::endl;
 		
 		if (IsObject())
 		{
@@ -273,10 +272,12 @@ namespace Unique
 			//tokenType = TID_LBRACKET;
 			assert(current_ != nullptr);
 			parents_.push_back(current_);
+			current_ = nullptr;
 		}
 		else if (lexeme.Length() == 1 && lexeme[0] == closeBracket)
 		{
 			//tokenType = TID_RBRACKET;
+			current_ = nullptr;// parents_.back();
 			parents_.pop_back();
 		}
 		else
@@ -295,19 +296,21 @@ namespace Unique
 
 			if (current_)
 			{
-				if (!current_->value_.Empty())
+				if (current_->value_.Empty() && !current_->isQuote_)
 				{
-					CreateNode(isQuote ? lexeme.Substring(1, lexeme.Length() - 2) : lexeme, line);
+					current_->value_ = isQuote ? lexeme.Substring(1, lexeme.Length() - 2) : lexeme;
 				}
 				else
 				{
-					current_->value_ = isQuote ? lexeme.Substring(1, lexeme.Length() - 2) : lexeme;
+					CreateNode(isQuote ? lexeme.Substring(1, lexeme.Length() - 2) : lexeme, line);
 				}
 			}
 			else
 			{
 				CreateNode(isQuote ? lexeme.Substring(1, lexeme.Length() - 2) : lexeme, line);
 			}
+
+			current_->isQuote_ = isQuote;
 		}
 
 

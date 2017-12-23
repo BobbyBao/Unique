@@ -139,12 +139,13 @@ namespace Unique
 
 	}
 	
-	UNIQUE_C_API int Unique_Start(const char* rendererModule, void* window)
+	UNIQUE_C_API int Unique_Start(DeviceType deviceType, void* window)
 	{
 		try
 		{
 			UPtr<Context> context(new Context());
 			auto app = UPtr<Application>(new Application(context.get()));
+			app->SetDeviceType(deviceType);
 			app->Run();
 			app = nullptr;
 			context = nullptr;

@@ -161,9 +161,9 @@ namespace Unique
 	{
 		passIndex_ = Shader::GetPassIndex(name_);
 
-		for (size_t i = 0; i < inputLayout_.size(); i++)
+		for (size_t i = 0; i < inputLayout_.layoutElements_.size(); i++)
 		{
-			inputLayout_[i].InputIndex = (uint)i;
+			inputLayout_.layoutElements_[i].InputIndex = (uint)i;
 		}
 
 		auto& computeShader = shaderStage_[5];
