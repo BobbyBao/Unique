@@ -15,7 +15,7 @@ namespace Unique
 	class Shader;
 	class Pass;
 
-	uEnumTraits(ShaderProfile, "DEFAULT", "DX_4_0", "DX_5_0", "DX_5_1", "GL_4_2")
+	uEnum(ShaderProfile, "DEFAULT", "DX_4_0", "DX_5_0", "DX_5_1", "GL_4_2")
 
 	struct ShaderStage
 	{

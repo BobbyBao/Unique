@@ -158,7 +158,7 @@ namespace Unique
 	};
 }
 
-#define uFlagsTraits(CLASS, ...)\
+#define uFlags(CLASS, ...)\
 template<>\
 class SerializeTraits<CLASS> : public SerializeTraitsFlags<CLASS>\
 {\
@@ -174,7 +174,7 @@ public:\
 	}\
 };
 
-#define uEnumTraits(CLASS, ...)\
+#define uEnum(CLASS, ...)\
 template<>\
 class SerializeTraits<CLASS> : public SerializeTraitsEnum<CLASS>\
 {\

@@ -161,21 +161,4 @@ public:
 	virtual SPtr<Object> CreateObject() { return SPtr<Object>(new T()); }
 };
 
-#define uRTTI(typeName, baseTypeName) \
-    public: \
-        typedef typeName ClassName; \
-        typedef baseTypeName BaseClassName; \
-        virtual const Unique::StringID& GetType() const { return GetTypeInfoStatic()->GetType(); } \
-		virtual const Unique::TypeInfo* GetTypeInfo() const { return GetTypeInfoStatic(); } \
-        static const Unique::StringID& GetTypeStatic() { return GetTypeInfoStatic()->GetType(); } \
-		static Unique::TypeInfo* GetTypeInfoStatic() { static Unique::TypeInfo typeInfoStatic(#typeName, BaseClassName::GetTypeInfoStatic()); return &typeInfoStatic; } \
-		static void RegisterObject(Context* context);
-
-#define uObject(typeName)\
-		static RegisterRuntime s_##typeName##Callbacks(typeName::RegisterObject, nullptr);\
-		void typeName::RegisterObject(Context* context)
-
-#define uFactory(...)\
-		context->RegisterFactory<ClassName>(##__VA_ARGS__);
-
 }

@@ -61,40 +61,40 @@ namespace Unique
 	};
 
 
-	uEnumTraits(ValueType,
+	uEnum(ValueType,
 				"UNDEFINED", "INT8", "INT16", "INT32", "UINT8", "UINT16", "UINT32", "FLOAT16", "FLOAT32")
 	
-	uEnumTraits(PrimitiveTopology,
+	uEnum(PrimitiveTopology,
 				"UNDEFINED", "TRIANGLE_LIST", "TRIANGLE_STRIP", "POINT_LIST", "LINE_LIST", 
 				"PATCHES_1", "PATCHES_2", "PATCHES_3", "PATCHES_4", "PATCHES5", "PATCHES6", "PATCHES7", "PATCHES8",
 				"PATCHES_9", "PATCHES_10", "PATCHES_11", "PATCHES_12", "PATCHES_13", "PATCHES_14", "PATCHES_16", "PATCHES_16",
 				"PATCHES_17", "PATCHES_18", "PATCHES_19", "PATCHES_20", "PATCHES_21", "PATCHES_22", "PATCHES_23", "PATCHES_24",
 				"PATCHES_25", "PATCHES_26", "PATCHES_27", "PATCHES_28", "PATCHES_29", "PATCHES_30", "PATCHES_31", "PATCHES_32")
 
-	uEnumTraits(StencilOp, "UNDEFINED", "KEEP", "ZERO", "REPLACE", 
+	uEnum(StencilOp, "UNDEFINED", "KEEP", "ZERO", "REPLACE", 
 		"INCR_SAT", "DECR_SAT", "INVERT", "INCR_WRAP", "DECR_WRAP")
 
-	uEnumTraits(ComparisonFunction, "UNKNOWN", "NEVER", "LESS", "EQUAL", 
+	uEnum(ComparisonFunction, "UNKNOWN", "NEVER", "LESS", "EQUAL", 
 		"LESS_EQUAL", "GREATER", "NOT_EQUAL", "GREATER_EQUAL", "ALWAYS")
 
-	uEnumTraits(FillMode, "UNDEFINED", "WIREFRAME", "SOLID")
+	uEnum(FillMode, "UNDEFINED", "WIREFRAME", "SOLID")
 
-	uEnumTraits(CullMode, "UNDEFINED", "NONE", "FRONT", "BACK")
+	uEnum(CullMode, "UNDEFINED", "NONE", "FRONT", "BACK")
 
-	uEnumTraits(BlendFactor, "UNDEFINED", "ZERO", "ONE", "SRC_COLOR", "INV_SRC_COLOR", 
+	uEnum(BlendFactor, "UNDEFINED", "ZERO", "ONE", "SRC_COLOR", "INV_SRC_COLOR", 
 		"SRC_ALPHA", "INV_SRC_ALPHA", "DEST_ALPHA", "INV_DEST_ALPHA", "DEST_COLOR",
 		"INV_DEST_COLOR", "SRC_ALPHA_SAT", "BLEND_FACTOR", "INV_BLEND_FACTOR", "SRC1_COLOR",
 		"INV_SRC1_COLOR", "SRC1_ALPHA", "INV_SRC1_ALPHA")
 
-	uEnumTraits(BlendOperation, "UNDEFINED", "ADD", "SUBTRACT", "REV_SUBTRACT", "MIN", "MAX")
+	uEnum(BlendOperation, "UNDEFINED", "ADD", "SUBTRACT", "REV_SUBTRACT", "MIN", "MAX")
 		
-	uEnumTraits(LogicOperation, "CLEAR", "SET", "COPY", "COPY_INVERTED", "NOOP", 
+	uEnum(LogicOperation, "CLEAR", "SET", "COPY", "COPY_INVERTED", "NOOP", 
 		"INVERT", "AND", "NAND", "OR", "NOR", "XOR", "EQUIV", "AND_REVERSE",
 		"AND_INVERTED",	"OR_REVERSE", "OR_INVERTED")
 		
 
 	ENABLE_BITMASK_OPERATORS(ColorMask)
-	uFlagsTraits(ColorMask, {"RED", COLOR_MASK_RED}, {"GREEN", COLOR_MASK_GREEN}, {"BLUE", COLOR_MASK_BLUE}, {"ALPHA", COLOR_MASK_ALPHA}, { "ALL", COLOR_MASK_ALL })
+	uFlags(ColorMask, {"RED", COLOR_MASK_RED}, {"GREEN", COLOR_MASK_GREEN}, {"BLUE", COLOR_MASK_BLUE}, {"ALPHA", COLOR_MASK_ALPHA}, { "ALL", COLOR_MASK_ALL })
 	
 
 	static const Vector3 DOT_SCALE(1 / 3.0f, 1 / 3.0f, 1 / 3.0f);

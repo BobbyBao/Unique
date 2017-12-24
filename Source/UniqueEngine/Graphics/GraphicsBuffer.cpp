@@ -5,7 +5,7 @@
 
 namespace Unique
 {
-	uEnumTraits
+	uEnum
 	(
 		Usage,
 		"STATIC",

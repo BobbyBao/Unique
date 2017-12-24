@@ -71,7 +71,7 @@ namespace Unique
 		"RenderTargets[7]", self.RenderTargets[7]
 	)
 	
-	uEnumTraits(LayoutElement::FREQUENCY, "UNDEFINED", "PER_VERTEX", "PER_INSTANCE")
+	uEnum(LayoutElement::FREQUENCY, "UNDEFINED", "PER_VERTEX", "PER_INSTANCE")
 		
 	uClassTraits
 	(
@@ -109,7 +109,7 @@ namespace Unique
 	}
 
 
-	uExport(Pass, PipelineState*, GetPipeline, Shader*, const String&)
+	uExport(Pass, PipelineState*, GetPipeline, Shader*, shader, const String&, defs)
 
 
 	Pass::Pass(const String& name) : name_(name)

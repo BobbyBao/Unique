@@ -24,7 +24,7 @@ namespace Unique
 		MAX_LEGACY_VERTEX_ELEMENTS
 	};
 
-	uEnumTraits
+	uEnum
 	(
 		VertexElementType,
 		"INT", 
@@ -36,7 +36,7 @@ namespace Unique
 		"UBYTE4_NORM"
 	)
 	
-	uEnumTraits
+	uEnum
 	(
 		VertexElementSemantic,
 		"POSITION",

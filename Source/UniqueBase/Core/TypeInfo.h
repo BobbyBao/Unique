@@ -41,6 +41,13 @@ namespace Unique
 				new Unique::TAttribute<T>(name, offset, flag));
 		}
 
+		template<typename T, typename SET>
+		void RegisterAccessor(const char* name, size_t offset, SET setter, AttributeFlag flag = AttributeFlag::Default)
+		{
+			RegisterAttribute(
+				new Unique::AttributeImpl<function_traits<SET>::ClassType, T>(name, offset, setter, flag));
+		}
+
 		template<typename GET, typename SET>
 		void RegisterAccessor(const char* name, GET getter, SET setter, AttributeFlag flag = AttributeFlag::Default)
 		{
@@ -57,7 +64,7 @@ namespace Unique
 
 		void RegisterAttribute(Attribute* attr);
 
-		const Vector<SPtr<Attribute>>& GetAttributes() const { return attributes_;}
+		const Vector<Attribute*>& GetAttributes() const { return attributes_;}
 
 		template<class T>
 		static const Unique::StringID& TypeName()
@@ -66,6 +73,9 @@ namespace Unique
 			return eventID;
 		}
 		
+		static void RegisterTypeInfo();
+		static int GetAllTypeInfo(TypeInfo** typeInfos);
+		static TypeInfo* GetTypeInfo(const StringID& type);
 	private:
 
 		static const char* GetTypeName(const char* name)
@@ -81,13 +91,33 @@ namespace Unique
 		/// Base class type info.
 		const TypeInfo* baseTypeInfo_;
 
-		Vector<SPtr<Attribute>> attributes_;
+		Vector<Attribute*> attributes_;
 	};
-	
+
+
+
+#define uRTTI(typeName, baseTypeName) \
+    public: \
+        typedef typeName ClassName; \
+        typedef baseTypeName BaseClassName; \
+        virtual const Unique::StringID& GetType() const { return GetTypeInfoStatic()->GetType(); } \
+		virtual const Unique::TypeInfo* GetTypeInfo() const { return GetTypeInfoStatic(); } \
+        static const Unique::StringID& GetTypeStatic() { return GetTypeInfoStatic()->GetType(); } \
+		static Unique::TypeInfo* GetTypeInfoStatic() { static Unique::TypeInfo typeInfoStatic(#typeName, BaseClassName::GetTypeInfoStatic()); return &typeInfoStatic; } \
+		static void RegisterObject(Context* context);
+
+#define uObject(typeName)\
+		static RegisterRuntime s_##typeName##Callbacks(&typeName::RegisterObject, nullptr);\
+		void typeName::RegisterObject(Context* context)
+
+#define uFactory(...)\
+		context->RegisterFactory<ClassName>(##__VA_ARGS__);
+
+
 	/// Define an attribute that points to a memory offset in the object.
 //#define uAttribute(name, variable, ...)\
 //	ClassName::GetTypeInfoStatic()->RegisterAttribute(name, &ClassName::variable, ##__VA_ARGS__);
-	
+
 #define uAttribute(name, variable, ...)\
 	ClassName::GetTypeInfoStatic()->RegisterAttribute<decltype(((ClassName*)0)->variable)>(name, offsetof(ClassName, variable), ##__VA_ARGS__);
 
@@ -96,5 +126,16 @@ namespace Unique
 
 #define uMixedAccessor(name, getFunction, setFunction, ...)\
 	ClassName::GetTypeInfoStatic()->RegisterMixedAccessor(name, &ClassName::getFunction, &ClassName::setFunction, ##__VA_ARGS__);
+
+#define uStruct(typeName)\
+static Unique::TypeInfo typeName##TypeInfoStatic(#typeName, nullptr);\
+template<class ClassName>\
+void typeName##RegisterObject(Context* context);\
+	static RegisterRuntime s_##typeName##Callbacks(typeName##RegisterObject<typeName>, nullptr);\
+		template<class ClassName>\
+		void typeName##RegisterObject(Context* context)
+
+#define uProperty(ClassName, name, type, variable, ...)\
+	ClassName::GetTypeInfoStatic()->RegisterAttribute<type>(name, offsetof(ClassName, variable), ##__VA_ARGS__);
 
 }

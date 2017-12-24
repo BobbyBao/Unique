@@ -3,7 +3,7 @@
 
 namespace Unique
 {
-	uEnumTraits
+	uEnum
 	(
 		RenderPassType,
 		"NONE",
@@ -16,7 +16,7 @@ namespace Unique
 		"SENDEVENT"
 	);
 
-	uEnumTraits
+	uEnum
 	(
 		RenderPassSortMode,
 		"FRONTTOBACK",

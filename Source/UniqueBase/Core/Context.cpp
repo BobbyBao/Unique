@@ -143,6 +143,8 @@ Context::Context() :
 
 
 	ExecuteInitializations(this);
+
+	TypeInfo::RegisterTypeInfo();
 }
 
 Context::~Context()

@@ -67,7 +67,7 @@ void FocusParameters::Validate()
 }
 
 
-uEnumTraits(LightType, "DIRECTIONAL", "SPOT", "POINT")
+uEnum(LightType, "DIRECTIONAL", "SPOT", "POINT")
 
 uObject(Light)
 {

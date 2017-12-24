@@ -86,7 +86,7 @@ namespace Unique
 		Buffer
 	};
 
-	uEnumTraits(ShaderVariableType, "Uniform", "Texture", "Sampler", "Buffer")
+	uEnum(ShaderVariableType, "Uniform", "Texture", "Sampler", "Buffer")
 
 	struct ShaderVariable
 	{
