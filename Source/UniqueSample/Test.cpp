@@ -17,6 +17,14 @@ namespace Unique
 	{
 		const char* name_;
 		Diligent::Timer timer_;
+		int test_;
+
+		PerfBlock& Test(int val)
+		{ 
+			test_ = val;
+			return *this;
+		}
+
 		PerfBlock(const char* name) : name_(name)
 		{
 			timer_.Restart();
@@ -31,6 +39,11 @@ namespace Unique
 
 	void TestPerf();
 	void TestParse();
+
+	uStruct(PerfBlock)
+	{
+		uProperty("Test", int, test_)
+	}
 
 	void Test()
 	{
