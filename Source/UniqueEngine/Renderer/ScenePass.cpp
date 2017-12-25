@@ -8,7 +8,7 @@ namespace Unique
 		uFactory()
 	}
 
-	ScenePass::ScenePass()
+	ScenePass::ScenePass() : RenderPass(RenderPassType::SCENEPASS)
 	{
 	}
 

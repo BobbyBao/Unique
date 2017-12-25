@@ -18,6 +18,7 @@ namespace Unique
 	class Texture;
 	class VertexBuffer;
 	class View;
+	struct BatchQueue;
 	struct LightBatchQueue;
 
 	/// Queued 3D geometry draw call.
@@ -45,6 +46,7 @@ namespace Unique
 		{
 		}
 
+		void SetBatchShaders(Shader* tech, bool allowShadows, const BatchQueue& queue);
 		/// Calculate state sorting key, which consists of base pass flag, light, pass and geometry.
 		void CalculateSortKey();
 		/// Prepare for rendering.

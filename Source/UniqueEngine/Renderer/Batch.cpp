@@ -134,6 +134,12 @@ namespace Unique
 
 		dest = texAdjust * spotProj * spotView;
 	}
+
+
+	void Batch::SetBatchShaders(Shader* tech, bool allowShadows, const BatchQueue& queue)
+	{
+		pipelineState_ = pass_->GetPipeline(tech, "");
+	}
 	
 	void Batch::CalculateSortKey()
 	{

@@ -26,7 +26,7 @@ namespace Unique
 	{
 		uRTTI(RenderPass, Object)
 	public:
-		RenderPass();
+		RenderPass(RenderPassType type);
 		~RenderPass();
 
 		virtual void Update(View* view);
@@ -49,6 +49,8 @@ namespace Unique
 	{
 		uRTTI(ClearPass, RenderPass)
 	public:
+		ClearPass();
+
 		virtual void Render(View* view);
 
 	protected:

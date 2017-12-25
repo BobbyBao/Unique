@@ -199,7 +199,6 @@ namespace Unique
 
 	void Geometry::DrawInstanced(PipelineState* pipeline)
 	{
-
 		IBuffer *buffer[8] = { nullptr };
 		Uint32 offsets[8] = { 0 };
 		Uint32 strides[8] = { 0 };

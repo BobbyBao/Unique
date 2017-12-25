@@ -8,7 +8,7 @@
 #include "Math/Matrix3x4.h"
 #include "Math/Matrix4.h"
 
-UNIQUE_IMPLEMENT_MAIN(Unique::CubeSample)
+//UNIQUE_IMPLEMENT_MAIN(Unique::CubeSample)
 
 namespace Unique
 {
@@ -23,7 +23,7 @@ namespace Unique
 	struct ShaderConstants
 	{
 		Matrix4 WorldViewProjT;
-		Matrix4 WorldNormT;
+		Matrix3x4 WorldNormT;
 		Vector3 LightDir;
 		float LightCoeff;
 	};

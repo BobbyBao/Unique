@@ -232,7 +232,7 @@ namespace Unique
 		scenePasses.clear();
 		geometriesUpdated_ = false;
 
-		auto& batchQueues = batchQueues_[Graphics::currentContext_];
+		auto& batchQueues = MainContext(batchQueues_);
 
 		auto& renderPasses = renderPath_->GetRenderPasses();
 		for (auto& pass : renderPasses)
@@ -495,7 +495,7 @@ namespace Unique
 				// In case the group remains below the instancing limit, do not enable instancing shaders yet
 				BatchGroup newGroup(batch);
 				newGroup.geometryType_ = GEOM_STATIC;
-			//	renderer_->SetBatchShaders(newGroup, tech, allowShadows, queue);
+				newGroup.SetBatchShaders(tech, allowShadows, queue);
 				newGroup.CalculateSortKey();
 				newGroup.AddTransforms(batch);
 				queue.batchGroups_.insert(std::make_pair(key, newGroup));
@@ -508,14 +508,14 @@ namespace Unique
 				if (oldSize < minInstances_ && (int)i->second.instances_.size() >= minInstances_)
 				{
 					i->second.geometryType_ = GEOM_INSTANCED;
-					//renderer_->SetBatchShaders(i->second, tech, allowShadows, queue);
+					i->second.SetBatchShaders(tech, allowShadows, queue);
 					i->second.CalculateSortKey();
 				}
 			}
 		}
 		else
 		{
-		//	renderer_->SetBatchShaders(batch, tech, allowShadows, queue);
+			batch.SetBatchShaders(tech, allowShadows, queue);
 			batch.CalculateSortKey();
 
 			// If batch is static with multiple world transforms and cannot instance, we must push copies of the batch individually
@@ -635,7 +635,7 @@ namespace Unique
 					item->priority_ = M_MAX_UNSIGNED;
 					item->workFunction_ =
 						command->sortMode_ == RenderPassSortMode::FRONTTOBACK ? SortBatchQueueFrontToBackWork : SortBatchQueueBackToFrontWork;
-					item->start_ = &batchQueues_[command->passIndex_];
+					item->start_ = &MainContext(batchQueues_)[command->passIndex_];
 					queue.AddWorkItem(item);
 				}
 			}

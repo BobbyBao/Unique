@@ -26,11 +26,11 @@ namespace Unique
 	uObject(RenderPass)
 	{
 		uAttribute("Type", type_);
-		uAttribute("Type", type_);
+		uAttribute("SortMode", sortMode_);
 
 	}
 
-	RenderPass::RenderPass()
+	RenderPass::RenderPass(RenderPassType type) : type_(type)
 	{
 	}
 
@@ -49,6 +49,10 @@ namespace Unique
 	uObject(ClearPass)
 	{
 		uFactory()
+	}
+
+	ClearPass::ClearPass() : RenderPass(RenderPassType::CLEAR), clearColor_(Color::BLACK)
+	{
 	}
 
 	void ClearPass::Render(View* view)

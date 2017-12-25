@@ -93,13 +93,13 @@ namespace Unique
 	};
 
 	template<class T>
-	inline T& MainContext(T data[2])
+	inline T& MainContext(T* data)
 	{
 		return data[Graphics::currentContext_];
 	}
 
 	template<class T>
-	inline T& RenderContext(T data[2])
+	inline T& RenderContext(T* data)
 	{
 		return data[1 - Graphics::currentContext_];
 	}
