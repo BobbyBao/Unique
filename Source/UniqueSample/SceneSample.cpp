@@ -5,12 +5,15 @@
 #include "Graphics/Camera.h"
 #include "Graphics/Model.h"
 #include "Graphics/StaticModel.h"
+#include "Graphics/Model.h"
+#include "Graphics/Geometry.h"
 
 UNIQUE_IMPLEMENT_MAIN(Unique::SceneSample)
 
 namespace Unique
 {
 	extern void Test();
+	extern SPtr<Geometry> BuildSponge(int levelMax, bool aoEnabled);
 
 	struct ShaderConstants
 	{
@@ -44,9 +47,17 @@ namespace Unique
 
 		StaticModel* model = scene_->CreateChild("Model")->CreateComponent<StaticModel>();
 		model->SetModelAttr(ResourceRef::Create<Model>("Models/Kachujin/Kachujin.mdl"));
+		/*
+		Model* m = new Model();
+		m->SetNumGeometries(1);
+		m->SetNumGeometryLodLevels(0, 1);
+		SPtr<Geometry> geo = BuildSponge(2, true);
+		m->SetGeometry(0, 0, geo);
+		m->SetBoundingBox(BoundingBox(-10, 10));
+		model->SetModel(m);*/
 
 		SPtr<Material> mat(new Material());
-		mat->SetShader(ResourceRef::Create<Shader>("Shaders/Basic.shader"));
+		mat->SetShader(ResourceRef::Create<Shader>("Shaders/Test.shader"));
 		model->SetMaterial(mat);
 
 		constBuffer_ = new UniformBuffer(ShaderConstants(), USAGE_DYNAMIC, CPU_ACCESS_WRITE);
@@ -57,7 +68,7 @@ namespace Unique
 
 		auto& graphics = GetSubsystem<Graphics>();
 		graphics.AddResource("Constants", constBuffer_);
-
+		camera_->GetNode()->SetPosition(Vector3(0, 1, -5));
 	}
 
 	void SceneSample::HandleShutdown(const struct Shutdown& eventData)
@@ -70,22 +81,16 @@ namespace Unique
 		auto& graphics = GetSubsystem<Graphics>();
 		float aspectRatio = graphics.GetAspectRatio();
 
-		Matrix4 proj = Matrix4::CreateProjection(M_PI / 4, aspectRatio, 0.1f, 100.0f, graphics.IsDirect3D());
+		Matrix4 proj = camera_->GetGPUProjection();
+		Matrix3x4 view = camera_->GetView();
 
-		float dist = 2.0f;
-		Vector3 camPosInv(dist * 0.3f, dist * 0.0f, dist * 2.0f);
-
-		Matrix4 view = Matrix4::IDENTITY;
-		view.SetTranslation(camPosInv);
-
-		Matrix3x4 world = Matrix3x4::IDENTITY;// (Vector3::ZERO, spongeRotation_, Vector3::ONE);
-
-		//MapHelper<ShaderConstants> MappedData(deviceContext, *constBuffer_, MAP_WRITE, MAP_FLAG_DISCARD);
+		Matrix3x4 world(Vector3::ZERO, Quaternion::IDENTITY, Vector3::ONE);
+		Vector3 lightDir(-0.5f, -0.2f, 1.0f);
 		ShaderConstants *cst = (ShaderConstants *)constBuffer_->Lock();
 		cst->WorldViewProjT = (proj* view *world);
 		cst->WorldNormT = world.ToMatrix4();
-		//cst->LightDir = (1.0f / m_LightDir.Length()) * m_LightDir;
-		//cst->LightCoeff = 0.85f;
+		cst->LightDir = (1.0f / lightDir.Length()) * lightDir;
+		cst->LightCoeff = 0.85f;
 		constBuffer_->Unlock();
 	}
 }

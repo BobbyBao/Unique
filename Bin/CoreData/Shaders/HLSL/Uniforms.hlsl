@@ -116,10 +116,8 @@ cbuffer MaterialPS : register(b4)
     float3 cMatEmissiveColor;
     float3 cMatEnvMapColor;
     float4 cMatSpecColor;
-    #ifdef PBR
-        float cRoughness;
-        float cMetallic;
-    #endif
+	float cRoughness;
+	float cMetallic;
 }
 #endif
 

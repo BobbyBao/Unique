@@ -55,13 +55,13 @@ namespace Unique
 
 	protected:
 		/// Clear flags. Affects clear command only.
-		unsigned clearFlags_;
+		unsigned clearFlags_ = CLEAR_DEPTH_FLAG;
 		/// Clear color. Affects clear command only.
 		Color clearColor_;
 		/// Clear depth. Affects clear command only.
-		float clearDepth_;
+		float clearDepth_ = 1.0f;
 		/// Clear stencil value. Affects clear command only.
-		unsigned clearStencil_;
+		unsigned clearStencil_ = 0;
 	};
 
 }

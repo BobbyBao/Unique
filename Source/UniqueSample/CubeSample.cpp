@@ -106,7 +106,6 @@ namespace Unique
 
 		Matrix3x4 world(Vector3::ZERO, spongeRotation_, Vector3::ONE);
 
-		//MapHelper<ShaderConstants> MappedData(deviceContext, *constBuffer_, MAP_WRITE, MAP_FLAG_DISCARD);
 		ShaderConstants *cst = (ShaderConstants *)constBuffer_->Lock();
 		cst->WorldViewProjT = (proj* view *world);
 		cst->WorldNormT = world.ToMatrix4();
@@ -133,29 +132,9 @@ namespace Unique
 		deviceContext->ClearRenderTarget(nullptr, backgroundColor_);
 		deviceContext->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f);
 
-		// Set world/view/proj matrices and global shader constants
-		float aspectRatio = graphics.GetAspectRatio();
-
-		Matrix4 proj = Matrix4::CreateProjection(M_PI / 4, aspectRatio, 0.1f, 100.0f, graphics.IsDirect3D());
-
-		float dist = m_CamDistance + 0.4f;
-		Vector3 camPosInv(dist * 0.3f, dist * 0.0f, dist * 2.0f);
-
-		Matrix4 view = Matrix4::IDENTITY;
-		view.SetTranslation(camPosInv);
-
-		Matrix3x4 world(Vector3::ZERO, spongeRotation_, Vector3::ONE);
-
 		Vector<Batch>& batches = geometries_[graphics.GetRenderContext()];
 		for (auto& batch : batches)
-		{/*
-			MapHelper<ShaderConstants> MappedData(deviceContext, *constBuffer_, MAP_WRITE, MAP_FLAG_DISCARD);
-			ShaderConstants *cst = MappedData;
-			cst->WorldViewProjT = (proj* view *world);
-			cst->WorldNormT = world.ToMatrix4();
-			cst->LightDir = (1.0f / m_LightDir.Length()) * m_LightDir;
-			cst->LightCoeff = 0.85f;*/
-
+		{
 			batch.geometry_->Draw(pipeline_);
 		}
 	}

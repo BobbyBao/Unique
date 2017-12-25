@@ -34,6 +34,25 @@ namespace Unique
 		Vector4 clipPlane_;
 	};
 
+	struct CameraPS
+	{
+		Vector3 cCameraPosPS;
+		Vector4 cDepthReconstruct;
+		Vector2 cGBufferInvSize;
+		float cNearClipPS;
+		float cFarClipPS;
+	};
+
+	struct ZonePS
+	{
+		Vector4 cAmbientColor;
+		Vector4 cFogParams;
+		Vector3 cFogColor;
+		Vector3 cZoneMin;
+		Vector3 cZoneMax;
+	};
+
+
 	struct ObjectVS
 	{
 		Matrix4 world_;
@@ -244,7 +263,9 @@ namespace Unique
 
 		SPtr<UniformBuffer> frameUniform_;
 
-		SPtr<UniformBuffer> cameraUniform_;
+		SPtr<UniformBuffer> cameraUniformVS_;
+
+		SPtr<UniformBuffer> cameraUniformPS_;
 
 		Vector<Matrix3x4>	batchMatrics_[2];
 

@@ -171,7 +171,7 @@ namespace Unique
 		geometriesUpdated_(false), minInstances_(2)
 	{
 		frameUniform_ = new UniformBuffer(FrameParameter());
-		cameraUniform_ = new UniformBuffer(CameraVS());
+		cameraUniformVS_ = new UniformBuffer(CameraVS());
 		tempDrawables_.resize(1);
 
 		batchMatrics_[0].reserve(4096);
@@ -335,15 +335,25 @@ namespace Unique
 		if (!camera)
 			return;
 
+		float nearClip = camera->GetNearClip();
+		float farClip = camera->GetFarClip();
 		Matrix3x4 cameraEffectiveTransform = camera->GetEffectiveWorldTransform();
+
+		CameraVS* cameraParam = (CameraVS*)cameraUniformVS_->Lock();
+		cameraParam->cameraPos_ = cameraEffectiveTransform.Translation();
+		cameraParam->viewInv_ = cameraEffectiveTransform;
+		cameraParam->view_ = camera->GetView();
+		cameraParam->nearClip_ = nearClip;
+		cameraParam->farClip_ = farClip;
+
+		//cameraParam->nearClip_ = nearClip;
+		//cameraParam->farClip_ = farClip;
 		/*
 		graphics_->SetShaderParameter(VSP_CAMERAPOS, cameraEffectiveTransform.Translation());
 		graphics_->SetShaderParameter(VSP_VIEWINV, cameraEffectiveTransform);
 		graphics_->SetShaderParameter(VSP_VIEW, camera->GetView());
 		graphics_->SetShaderParameter(PSP_CAMERAPOS, cameraEffectiveTransform.Translation());
 
-		float nearClip = camera->GetNearClip();
-		float farClip = camera->GetFarClip();
 		graphics_->SetShaderParameter(VSP_NEARCLIP, nearClip);
 		graphics_->SetShaderParameter(VSP_FARCLIP, farClip);
 		graphics_->SetShaderParameter(PSP_NEARCLIP, nearClip);

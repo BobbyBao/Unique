@@ -21,5 +21,5 @@ PSInput VS(float3 pos : ATTRIB0, float3 norm : ATTRIB1)
 
 float4 PS(PSInput input) : SV_TARGET
 {
-    return float4(1, 1, 1, 1); 
+    return float4(1, 0, 0, 1); 
 }
