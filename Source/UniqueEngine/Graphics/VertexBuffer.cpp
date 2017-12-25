@@ -1,5 +1,6 @@
 #include "Precompiled.h"
 #include "VertexBuffer.h"
+#include "Graphics.h"
 
 namespace Unique
 {
@@ -63,7 +64,7 @@ namespace Unique
 	{
 		uFactory("Graphics")
 			uAttribute("Elements", elements_)
-			uAttribute("Data", data_)
+			uAttribute("Data", data_[0])
 	}
 
 	extern UNIQUE_API const VertexElement LEGACY_VERTEXELEMENTS[] =
@@ -95,20 +96,23 @@ namespace Unique
 		sizeof(unsigned)
 	};
 
-	VertexBuffer::VertexBuffer(uint elementMask, ByteArray&& data, Usage usage)
+	VertexBuffer::VertexBuffer(uint elementMask, ByteArray&& data, Usage usage) : GraphicsBuffer(BIND_VERTEX_BUFFER)
 	{
 		elements_ = GetElements(elementMask);
+
 		UpdateOffsets();
 
 		desc_.ElementByteStride = GetVertexSize(elements_);
 		desc_.uiSizeInBytes = (uint)data.size();
 		desc_.Usage = usage;
-		data_ = data;
+
+		auto& currentData = IsDynamic() ? MainContext(data_) : data_[0];
+		currentData = data;
 
 		GPUObject::Create();
 	}
 
-	VertexBuffer::VertexBuffer(const PODVector<VertexElement>& elements, ByteArray&& data, Usage usage)
+	VertexBuffer::VertexBuffer(const PODVector<VertexElement>& elements, ByteArray&& data, Usage usage) : GraphicsBuffer(BIND_VERTEX_BUFFER)
 	{
 		elements_ = elements;
 		UpdateOffsets();
@@ -116,7 +120,9 @@ namespace Unique
 		desc_.ElementByteStride = GetVertexSize(elements_);
 		desc_.uiSizeInBytes = (uint)data.size();
 		desc_.Usage = usage;
-		data_ = data;
+
+		auto& currentData = IsDynamic() ? MainContext(data_) : data_[0];
+		currentData = data;
 
 		GPUObject::Create();
 	}

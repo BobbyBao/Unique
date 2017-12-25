@@ -120,22 +120,34 @@ namespace Unique
 
 	void Graphics::AddResource(const Char *Name, GPUObject* pObject, bool bIsUnique)
 	{
-		resourceMapping_->AddResource(Name, *pObject, bIsUnique);
+		uCall
+		(
+			resourceMapping_->AddResource(Name, *pObject, bIsUnique);
+		)
 	}
 
 	void Graphics::AddResource(const Char *Name, IDeviceObject *pObject, bool bIsUnique)
 	{
-		resourceMapping_->AddResource(Name, pObject, bIsUnique);
+		uCall
+		(
+			resourceMapping_->AddResource(Name, pObject, bIsUnique);
+		)
 	}
 
 	void Graphics::AddResourceArray(const Char *Name, uint StartIndex, IDeviceObject* const* ppObjects, uint NumElements, bool bIsUnique)
 	{
-		resourceMapping_->AddResourceArray(Name, StartIndex, ppObjects, NumElements, bIsUnique);
+		uCall
+		(
+			resourceMapping_->AddResourceArray(Name, StartIndex, ppObjects, NumElements, bIsUnique);
+		)
 	}
 
 	void Graphics::RemoveResourceByName(const Char *Name, uint ArrayIndex)
 	{
-		resourceMapping_->RemoveResourceByName(Name, ArrayIndex);
+		uCall
+		(
+			resourceMapping_->RemoveResourceByName(Name, ArrayIndex);
+		)
 	}
 
 	void Graphics::BindShaderResources(IPipelineState* pipelineState, uint flags)
@@ -150,6 +162,7 @@ namespace Unique
 
 	void Graphics::BeginRender()
 	{
+		GPUObject::UpdateBuffers();
 	}
 
 	void Graphics::EndRender()

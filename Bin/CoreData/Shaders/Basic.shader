@@ -32,12 +32,6 @@ Shader "Basic"
 				IsNormalized false
 			}
 			
-			LayoutElement
-			{
-				NumComponents 4
-				ValueType UINT8
-				IsNormalized true
-			}
 		}
 	
 		VertexShader
@@ -45,7 +39,7 @@ Shader "Basic"
 			EntryPoint "VS" 
 			ShaderProfile "DX_4_0"
 			Defines ""
-			Source "Default.hlsl"
+			Source "Basic.hlsl"
 		}
 		
 		PixelShader
@@ -53,7 +47,7 @@ Shader "Basic"
 			EntryPoint "PS"
 			ShaderProfile "DX_4_0"
 			Defines ""
-			Source "Default.hlsl"
+			Source "Basic.hlsl"
 		}
 	}
 }

@@ -35,6 +35,7 @@ namespace Unique
 		Color backgroundColor_;	// background color
 		bool m_Animate = true;              // enable animation
 		float m_AnimationSpeed;      // animation speed
+		float yaw_ = 0.0f;
 
 		SPtr<UniformBuffer> constBuffer_;
 		SPtr<Geometry> geometry_;

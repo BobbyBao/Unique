@@ -25,13 +25,13 @@ namespace Unique
 	{
 		uFactory("Graphics")
 		uAttribute("ElementByteStride", desc_.ElementByteStride)
-		uAttribute("Data", data_)
+		uAttribute("Data", data_[0])
 	}
 
 	uObject(UniformBuffer)
 	{
 		uFactory("Graphics")
-		uAttribute("Data", data_)
+		uAttribute("Data", data_[0])
 	}
 
 	GraphicsBuffer::GraphicsBuffer(uint flags)
@@ -49,11 +49,18 @@ namespace Unique
 		desc_.uiSizeInBytes = elementCount*elementSize;
 		desc_.Usage = usage;
 		desc_.CPUAccessFlags = flags;
-		data_.resize(desc_.uiSizeInBytes);
+
+		data_[0].resize(desc_.uiSizeInBytes);
+
+		if (IsDynamic())
+		{
+			data_[1].resize(desc_.uiSizeInBytes);
+		}
 		
 		if (data)
 		{
-			std::memcpy(data_.data(), data, desc_.uiSizeInBytes);
+			auto& currentData = IsDynamic() ? MainContext(data_) : data_[0];
+			std::memcpy(currentData.data(), data, desc_.uiSizeInBytes);
 		}
 
 		return GPUObject::Create();
@@ -65,7 +72,9 @@ namespace Unique
 		desc_.uiSizeInBytes = (uint)data.size();
 		desc_.Usage = usage;
 		desc_.CPUAccessFlags = flags;
-		data_ = data;
+
+		auto& currentData = IsDynamic() ? MainContext(data_) : data_[0];
+		currentData = data;
 
 		return GPUObject::Create();
 	}
@@ -75,8 +84,9 @@ namespace Unique
 		if (!GetSizeInBytes())
 			return false;
 
+		auto& currentData = IsDynamic() ? MainContext(data_) : data_[0];
 		BufferData BuffData;
-		BuffData.pData = data_.data();
+		BuffData.pData = currentData.data();
 		BuffData.DataSize = desc_.uiSizeInBytes;
 		renderDevice->CreateBuffer(desc_, BuffData, (IBuffer**)&deviceObject_);
 		return deviceObject_ != nullptr;
@@ -104,22 +114,22 @@ namespace Unique
 
 		if (IsDynamic())
 		{
-			ByteArray& currentData = Graphics::currentContext_ == 0 ? data_ : data1_;
+			ByteArray& currentData = MainContext(data_);
 			std::memcpy(currentData.data(), data, currentData.size());
 			MarkDirty();
-			lockStart_[Graphics::currentContext_] = 0;
-			lockCount_[Graphics::currentContext_] = (uint)currentData.size();
+			MainContext(lockStart_) = 0;
+			MainContext(lockCount_) = (uint)currentData.size();
 		}
 		else
 		{
-			std::memcpy(data_.data(), data, data_.size());
+			std::memcpy(data_[0].data(), data, data_[0].size());
 
 			Graphics::AddCommand([=]()
 			{			
 				IBuffer* buffer = *this;
 				void* bufferData = nullptr;
 				buffer->Map(deviceContext, MAP_WRITE, MAP_FLAG_DISCARD, bufferData);
-				memcpy(bufferData, data_.data(), data_.size());
+				memcpy(bufferData, data_[0].data(), data_[0].size());
 				buffer->Unmap(deviceContext, MAP_WRITE, MAP_FLAG_DISCARD);
 			});
 		}
@@ -162,7 +172,7 @@ namespace Unique
 
 		if (IsDynamic())
 		{
-			ByteArray& currentData = Graphics::currentContext_ == 0 ? data_ : data1_;
+			ByteArray& currentData = MainContext(data_);
 			std::memcpy(currentData.data() + start * GetStride(), data, count * GetStride());
 			MarkDirty();
 			lockStart_[Graphics::currentContext_] = start;
@@ -170,19 +180,58 @@ namespace Unique
 		}
 		else
 		{
-			std::memcpy(data_.data() + start * GetStride(), data, count * GetStride());
+			std::memcpy(data_[0].data() + start * GetStride(), data, count * GetStride());
 			
-			Graphics::AddCommand([=]()
-			{
+			uCall
+			(
 				IBuffer* buffer = *this; 
 				void* bufferData = nullptr;
 				buffer->Map(deviceContext, MAP_WRITE, MAP_FLAG_DISCARD, bufferData);
-				memcpy(bufferData, data_.data() + start * GetStride(), count * GetStride());
+				memcpy(bufferData, data_[0].data() + start * GetStride(), count * GetStride());
 				buffer->Unmap(deviceContext, MAP_WRITE, MAP_FLAG_DISCARD);
-			});
+			);
 		}
 
 		return true;
+	}
+
+	void* GraphicsBuffer::Lock(uint lockStart, uint lockCount)
+	{
+		auto& currentData = IsDynamic() ? MainContext(data_) : data_[0];
+		
+		if (IsDynamic())
+		{
+			MainContext(lockStart_) = lockStart;
+			MainContext(lockCount_) = std::min(lockCount, GetCount());
+		}
+		else
+		{
+			lockStart_[0] = lockStart;
+			lockCount_[0] = std::min(lockCount, GetCount());
+		}
+
+		return currentData.data();
+	}
+
+	void GraphicsBuffer::Unlock()
+	{
+		if (IsDynamic())
+		{
+			MarkDirty();
+		}
+		else
+		{
+			uint start = lockStart_[0];
+			uint count = lockCount_[0];
+			uCall
+			(
+				IBuffer* buffer = *this;
+				void* bufferData = nullptr;
+				buffer->Map(deviceContext, MAP_WRITE, MAP_FLAG_DISCARD, bufferData);
+				memcpy(bufferData, data_[0].data() + start * GetStride(), count * GetStride());
+				buffer->Unmap(deviceContext, MAP_WRITE, MAP_FLAG_DISCARD);
+			);
+		}
 	}
 
 	void GraphicsBuffer::UpdateBuffer()
@@ -190,8 +239,8 @@ namespace Unique
 		IBuffer* buffer = *this;
 		void* bufferData = nullptr;
 		buffer->Map(deviceContext, MAP_WRITE, MAP_FLAG_DISCARD, bufferData);
-		memcpy(bufferData, data_.data() + lockStart_[Graphics::GetRenderContext()] * GetStride(), 
-			lockCount_[Graphics::GetRenderContext()] * GetStride());
+		memcpy(bufferData, RenderContext(data_).data() + RenderContext(lockStart_) * GetStride(),
+			RenderContext(lockCount_) * GetStride());
 		buffer->Unmap(deviceContext, MAP_WRITE, MAP_FLAG_DISCARD);
 	}
 

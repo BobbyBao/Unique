@@ -42,7 +42,6 @@ namespace Unique
 		bool IsOpenGL() const;
 
 		//***MainThread***
-
 		void Frame();
 
 		void AddResource(const Char *Name, GPUObject* pObject, bool bIsUnique = true);
@@ -106,5 +105,16 @@ namespace Unique
 	
 	extern IRenderDevice* renderDevice;
 	extern IDeviceContext* deviceContext;
+
+#define uCall(CODE)\
+ auto fn = [=]{CODE};\
+	if (Thread::IsMainThread())\
+	{\
+		Graphics::AddCommand(fn);\
+	}\
+	else\
+	{\
+		fn();\
+	}
 }
 

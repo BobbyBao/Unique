@@ -18,6 +18,7 @@ namespace Unique
 		void HandleUpdate(const struct Update& eventData);
 		SPtr<Scene> scene_;
 		SPtr<Camera> camera_;
+		SPtr<UniformBuffer> constBuffer_;
 	};
 
 }

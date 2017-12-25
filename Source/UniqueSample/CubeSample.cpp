@@ -23,7 +23,7 @@ namespace Unique
 	struct ShaderConstants
 	{
 		Matrix4 WorldViewProjT;
-		Matrix3x4 WorldNormT;
+		Matrix4 WorldNormT;
 		Vector3 LightDir;
 		float LightCoeff;
 	};
@@ -36,15 +36,18 @@ namespace Unique
 	void FillSpongeBuffers(int level, int levelMax, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices,
 		const Vector3& center, bool aoEnabled, const bool aoEdges[12], const unsigned int faceColors[6]);
 
-	CubeSample::CubeSample(Context* context) : Application(context), backgroundColor_(0.0f, 0.0f, 0.5f, 1.0f)
+	CubeSample::CubeSample(Context* context)
+		: Application(context), backgroundColor_(0.0f, 0.0f, 0.5f, 1.0f)
 	{
+		spongeRotation_ = Quaternion::IDENTITY;
+
 		m_SpongeLevel = 2;                      // number of recursions
 		m_SpongeAO = true;                      // apply ambient occlusion
 		m_LightDir.x_ = -0.5f;
 		m_LightDir.y_ = -0.2f;
 		m_LightDir.z_ = 1;
 		m_CamDistance = 0.7f;                  // camera distance
-		m_AnimationSpeed = 0.2f;               // animation speed
+		m_AnimationSpeed = 0.02f;               // animation speed
 
 		Subscribe(&CubeSample::HandleStartup);
 		Subscribe(&CubeSample::HandleShutdown);
@@ -63,17 +66,16 @@ namespace Unique
 		auto& cache = GetSubsystem<ResourceCache>();
 		auto& graphics = GetSubsystem<Graphics>();
 
-		constBuffer_ = new UniformBuffer(ShaderConstants(), USAGE_DYNAMIC, CPU_ACCESS_WRITE);
+		constBuffer_ = new UniformBuffer(ShaderConstants());
 
 		// Create vertex and index buffers
 		geometry_ = BuildSponge(m_SpongeLevel, m_SpongeAO);
 
 		shader_ = cache.GetResource<Shader>("Shaders/Test.shader");
 		pipeline_ = shader_->GetPipeline("base", "");
-
-		graphics.Frame();	
-		
 		graphics.AddResource("Constants", constBuffer_);
+	//	graphics.Frame();	
+		
 	}
 
 	void CubeSample::HandleShutdown(const struct Shutdown& eventData)
@@ -83,7 +85,34 @@ namespace Unique
 
 	void CubeSample::HandleUpdate(const struct Update& eventData)
 	{
+		float dt = (float)eventData.timeStep_;
+		
+		if (m_Animate && dt > 0 && dt < 0.2f)
+		{
+			yaw_ += m_AnimationSpeed * dt;
+			spongeRotation_ = Quaternion(0, yaw_, 0.0f);
+		}
 
+		auto& graphics = GetSubsystem<Graphics>();
+		float aspectRatio = graphics.GetAspectRatio();
+
+		Matrix4 proj = Matrix4::CreateProjection(M_PI / 4, aspectRatio, 0.1f, 100.0f, graphics.IsDirect3D());
+
+		float dist = m_CamDistance + 0.4f;
+		Vector3 camPosInv(dist * 0.3f, dist * 0.0f, dist * 2.0f);
+
+		Matrix4 view = Matrix4::IDENTITY;
+		view.SetTranslation(camPosInv);
+
+		Matrix3x4 world(Vector3::ZERO, spongeRotation_, Vector3::ONE);
+
+		//MapHelper<ShaderConstants> MappedData(deviceContext, *constBuffer_, MAP_WRITE, MAP_FLAG_DISCARD);
+		ShaderConstants *cst = (ShaderConstants *)constBuffer_->Lock();
+		cst->WorldViewProjT = (proj* view *world);
+		cst->WorldNormT = world.ToMatrix4();
+		cst->LightDir = (1.0f / m_LightDir.Length()) * m_LightDir;
+		cst->LightCoeff = 0.85f;
+		constBuffer_->Unlock();
 	}
 
 	void CubeSample::HandleRenderUpdate(const struct RenderUpdate& eventData)
@@ -115,17 +144,17 @@ namespace Unique
 		Matrix4 view = Matrix4::IDENTITY;
 		view.SetTranslation(camPosInv);
 
-		Matrix4 world = Matrix4::IDENTITY;
+		Matrix3x4 world(Vector3::ZERO, spongeRotation_, Vector3::ONE);
 
 		Vector<Batch>& batches = geometries_[graphics.GetRenderContext()];
 		for (auto& batch : batches)
-		{
+		{/*
 			MapHelper<ShaderConstants> MappedData(deviceContext, *constBuffer_, MAP_WRITE, MAP_FLAG_DISCARD);
 			ShaderConstants *cst = MappedData;
 			cst->WorldViewProjT = (proj* view *world);
-			cst->WorldNormT = world;
+			cst->WorldNormT = world.ToMatrix4();
 			cst->LightDir = (1.0f / m_LightDir.Length()) * m_LightDir;
-			cst->LightCoeff = 0.85f;
+			cst->LightCoeff = 0.85f;*/
 
 			batch.geometry_->Draw(pipeline_);
 		}

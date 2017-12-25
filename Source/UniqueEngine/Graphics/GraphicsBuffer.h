@@ -42,13 +42,15 @@ namespace Unique
 		inline uint GetStride() const { return desc_.ElementByteStride; }
 
 		virtual void UpdateBuffer();
+
+		void* Lock(uint lockStart = 0, uint lockCount = -1);
+		void Unlock();
 	protected:
 		/// Create buffer.
 		virtual bool CreateImpl();
 
 		BufferDesc desc_;
-		ByteArray data_;
-		ByteArray data1_;
+		ByteArray data_[2];
 		uint lockStart_[2];
 		uint lockCount_[2];
 	};
@@ -59,12 +61,12 @@ namespace Unique
 	public:
 		IndexBuffer() : GraphicsBuffer(BIND_INDEX_BUFFER) {}
 
-		IndexBuffer(Vector<uint>&& data, Usage usage = Usage::USAGE_STATIC, uint flags = 0)
+		IndexBuffer(Vector<uint>&& data, Usage usage = Usage::USAGE_STATIC, uint flags = 0) : GraphicsBuffer(BIND_INDEX_BUFFER)
 		{
 			Create(data, usage, flags);
 		}
 
-		IndexBuffer(Vector<ushort>&& data, Usage usage = Usage::USAGE_STATIC, uint flags = 0)
+		IndexBuffer(Vector<ushort>&& data, Usage usage = Usage::USAGE_STATIC, uint flags = 0) : GraphicsBuffer(BIND_INDEX_BUFFER)
 		{
 			Create(data, usage, flags);
 		}
@@ -77,7 +79,7 @@ namespace Unique
 		UniformBuffer() : GraphicsBuffer(BIND_UNIFORM_BUFFER) {}
 
 		template<class T>
-		UniformBuffer(const T& data, Usage usage = Usage::USAGE_DYNAMIC, uint flags = CPU_ACCESS_WRITE)
+		UniformBuffer(const T& data, Usage usage = Usage::USAGE_DYNAMIC, uint flags = CPU_ACCESS_WRITE) : GraphicsBuffer(BIND_UNIFORM_BUFFER)
 		{
 			Create(data, usage, flags);
 		}

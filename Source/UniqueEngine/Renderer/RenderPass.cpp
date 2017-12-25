@@ -51,7 +51,7 @@ namespace Unique
 		uFactory()
 	}
 
-	ClearPass::ClearPass() : RenderPass(RenderPassType::CLEAR), clearColor_(Color::BLACK)
+	ClearPass::ClearPass() : RenderPass(RenderPassType::CLEAR), clearColor_(Color::GRAY)
 	{
 	}
 

@@ -143,6 +143,26 @@ bool Model::Load(IStream& source)
         indexBuffers_.push_back(buffer);
     }
 
+// 	enum PrimitiveType
+// 	{
+// 		TRIANGLE_LIST = 0,
+// 		LINE_LIST,
+// 		POINT_LIST,
+// 		TRIANGLE_STRIP,
+// 		LINE_STRIP,
+// 		TRIANGLE_FAN
+// 	};
+
+	PrimitiveTopology primitiveType[] = 
+	{
+		PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
+		PRIMITIVE_TOPOLOGY_LINE_LIST,
+		PRIMITIVE_TOPOLOGY_POINT_LIST,
+		PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP,
+		PRIMITIVE_TOPOLOGY_UNDEFINED,
+		PRIMITIVE_TOPOLOGY_UNDEFINED
+	};
+
     // Read geometries
     unsigned numGeometries = source.Read<uint>();
     geometries_.reserve(numGeometries);
@@ -166,7 +186,7 @@ bool Model::Load(IStream& source)
         for (unsigned j = 0; j < numLodLevels; ++j)
         {
             float distance = source.Read<float>();
-            PrimitiveTopology type = (PrimitiveTopology)source.Read<uint>();
+            PrimitiveTopology type = (PrimitiveTopology)primitiveType[source.Read<uint>()];
 
             unsigned vbRef = source.Read<uint>();
             unsigned ibRef = source.Read<uint>();

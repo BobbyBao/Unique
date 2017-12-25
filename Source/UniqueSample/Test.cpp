@@ -11,6 +11,8 @@
 
 namespace Unique
 {
+
+
 	struct PerfBlock
 	{
 		const char* name_;
@@ -32,6 +34,11 @@ namespace Unique
 
 	void Test()
 	{
+		uCall(int aaa = 0; 
+			aaa+=1;
+		aaa += 2;)
+
+
 		TestParse();
 		return;
 		TestPerf();
