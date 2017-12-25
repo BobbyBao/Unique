@@ -8,7 +8,7 @@
 
 namespace Unique
 {
-	//class VertexBuffer;
+	struct Batch;
 
 	static const int INSTANCING_BUFFER_DEFAULT_SIZE = 1024;
 
@@ -41,9 +41,6 @@ namespace Unique
 
 		RenderPath* GetDefaultRenderPath() { return defaultRenderPath_; }
 
-		/// Return whether dynamic instancing is in use.
-		//bool GetDynamicInstancing() const { return dynamicInstancing_; }
-
 		/// Return number of extra instancing buffer elements.
 		int GetNumExtraInstancingBufferElements() const { return numExtraInstancingBufferElements_; };
 
@@ -57,9 +54,8 @@ namespace Unique
 		void Render();
 		void End();
 		void Stop();
-
 		void DrawDebugGeometry(bool depthTest);
-
+		void SetBatchShaders(Batch& batch, Shader* tech, bool allowShadows, const BatchQueue& queue);
 		bool ResizeInstancingBuffer(unsigned numInstances);
 	private:
 		/// Initialize when screen mode initially set.
@@ -88,19 +84,20 @@ namespace Unique
 		HashMap<Camera*, WPtr<View> > preparedViews_;
 		/// Octrees that have been updated during the frame.
 		HashSet<Octree*> updatedOctrees_;
-
 		/// Frame info for rendering.
 		FrameInfo frame_;    
-		
 		/// Instance stream vertex buffer.
 		SPtr<VertexBuffer> instancingBuffer_;
 		/// Number of extra instancing data elements.
 		int numExtraInstancingBufferElements_;
-
 		/// Minimum number of instances required in a batch group to render as instanced.
 		int minInstances_;
 		/// Maximum sorted instances per batch group.
 		int maxSortedInstances_;
+
+		SPtr<VertexBuffer> transientVertexBuffer_;
+
+		SPtr<IndexBuffer> transientIndexBuffer_;
 	};
 
 }

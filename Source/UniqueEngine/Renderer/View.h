@@ -36,11 +36,11 @@ namespace Unique
 
 	struct CameraPS
 	{
-		Vector3 cCameraPosPS;
-		Vector4 cDepthReconstruct;
-		Vector2 cGBufferInvSize;
-		float cNearClipPS;
-		float cFarClipPS;
+		Vector3 cameraPosPS_;
+		Vector4 depthReconstruct_;
+		Vector2 gBufferInvSize_;
+		float nearClipPS_;
+		float farClipPS_;
 	};
 
 	struct ZonePS
@@ -179,10 +179,12 @@ namespace Unique
 		void GetBaseBatches();
 
 		void AddBatchToQueue(BatchQueue& queue, Batch& batch, Shader* tech, bool allowInstancing = true, bool allowShadows = true);
+		
 		uint GetMatrics(const Matrix3x4* transform, uint num);
-		void UpdateBatchGroup();
+
 		/// Prepare instancing buffer by filling it with all instance transforms.
 		void PrepareInstancingBuffer();
+
 		void UpdateGeometries();
 		/// Query for lit geometries and shadow casters for a light.
 		void ProcessLight(LightQueryResult& query, unsigned threadIndex);

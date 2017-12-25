@@ -67,12 +67,19 @@ namespace Unique
 		const Vector<Attribute*>& GetAttributes() const { return attributes_;}
 
 		template<class T>
-		static const Unique::StringID& TypeName()
+		static const Unique::StringID& GetTypeID()
 		{
-			static const Unique::StringID eventID(GetTypeName(typeid(T).name()));
-			return eventID;
+			static const Unique::StringID s_typeID(GetTypeName<T>());
+			return s_typeID;
 		}
-		
+
+		template<class T>
+		static const char* GetTypeName()
+		{
+			static const char* s_typeName = GetTypeName(typeid(T).name());
+			return s_typeName;
+		}
+
 		static void RegisterTypeInfo();
 		static int GetAllTypeInfo(TypeInfo** typeInfos);
 		static TypeInfo* GetTypeInfo(const StringID& type);
@@ -95,6 +102,12 @@ namespace Unique
 	};
 
 
+	template<typename T>
+	struct Type
+	{
+		static TypeInfo* Info() { static TypeInfo s_typeInfo(TypeInfo::GetTypeName<T>(), nullptr); return &s_typeInfo; }
+	};
+
 
 #define uRTTI(typeName, baseTypeName) \
     public: \
@@ -111,7 +124,7 @@ namespace Unique
 		void typeName::RegisterObject(Context* context)
 
 #define uFactory(...)\
-		context->RegisterFactory<ClassName>(##__VA_ARGS__);
+		GetContext()->RegisterFactory<ClassName>(##__VA_ARGS__);
 
 
 	/// Define an attribute that points to a memory offset in the object.
@@ -126,16 +139,18 @@ namespace Unique
 
 #define uMixedAccessor(name, getFunction, setFunction, ...)\
 	ClassName::GetTypeInfoStatic()->RegisterMixedAccessor(name, &ClassName::getFunction, &ClassName::setFunction, ##__VA_ARGS__);
+	
+//	static Unique::TypeInfo typeName##TypeInfoStatic(#typeName, nullptr); \
 
 #define uStruct(typeName)\
-static Unique::TypeInfo typeName##TypeInfoStatic(#typeName, nullptr);\
-template<class ClassName>\
-void typeName##RegisterObject(Context* context);\
-	static RegisterRuntime s_##typeName##Callbacks(typeName##RegisterObject<typeName>, nullptr);\
+	template<class ClassName>\
+void typeName##RegisterTypeInfo(TypeInfo* typeInfo);\
+		static void typeName##RegisterObject(Context* context){ typeName##RegisterTypeInfo<typeName>(Type<typeName>::Info()); }\
+		static RegisterRuntime s_##typeName##Callbacks(typeName##RegisterObject, nullptr);\
 		template<class ClassName>\
-		void typeName##RegisterObject(Context* context)
+		void typeName##RegisterTypeInfo(TypeInfo* typeInfo)
 
-#define uProperty(ClassName, name, type, variable, ...)\
-	ClassName::GetTypeInfoStatic()->RegisterAttribute<type>(name, offsetof(ClassName, variable), ##__VA_ARGS__);
+#define uProperty(name, type, variable, ...)\
+	typeInfo->RegisterAttribute<type>(name, offsetof(ClassName, variable), ##__VA_ARGS__);
 
 }

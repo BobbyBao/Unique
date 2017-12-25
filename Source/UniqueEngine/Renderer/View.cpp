@@ -339,65 +339,65 @@ namespace Unique
 		float farClip = camera->GetFarClip();
 		Matrix3x4 cameraEffectiveTransform = camera->GetEffectiveWorldTransform();
 
-		CameraVS* cameraParam = (CameraVS*)cameraUniformVS_->Lock();
-		cameraParam->cameraPos_ = cameraEffectiveTransform.Translation();
-		cameraParam->viewInv_ = cameraEffectiveTransform;
-		cameraParam->view_ = camera->GetView();
-		cameraParam->nearClip_ = nearClip;
-		cameraParam->farClip_ = farClip;
-
-		//cameraParam->nearClip_ = nearClip;
-		//cameraParam->farClip_ = farClip;
-		/*
-		graphics_->SetShaderParameter(VSP_CAMERAPOS, cameraEffectiveTransform.Translation());
-		graphics_->SetShaderParameter(VSP_VIEWINV, cameraEffectiveTransform);
-		graphics_->SetShaderParameter(VSP_VIEW, camera->GetView());
-		graphics_->SetShaderParameter(PSP_CAMERAPOS, cameraEffectiveTransform.Translation());
-
-		graphics_->SetShaderParameter(VSP_NEARCLIP, nearClip);
-		graphics_->SetShaderParameter(VSP_FARCLIP, farClip);
-		graphics_->SetShaderParameter(PSP_NEARCLIP, nearClip);
-		graphics_->SetShaderParameter(PSP_FARCLIP, farClip);
-
-		Vector4 depthMode = Vector4::ZERO;
-		if (camera->IsOrthographic())
 		{
-			depthMode.x_ = 1.0f;
+
+			Vector4 depthMode = Vector4::ZERO;
+			if (camera->IsOrthographic())
+			{
+				depthMode.x_ = 1.0f;
 #ifdef URHO3D_OPENGL
-			depthMode.z_ = 0.5f;
-			depthMode.w_ = 0.5f;
+				depthMode.z_ = 0.5f;
+				depthMode.w_ = 0.5f;
 #else
-			depthMode.z_ = 1.0f;
+				depthMode.z_ = 1.0f;
 #endif
 		}
-		else
-			depthMode.w_ = 1.0f / camera->GetFarClip();
+			else
+				depthMode.w_ = 1.0f / camera->GetFarClip();
 
-		graphics_->SetShaderParameter(VSP_DEPTHMODE, depthMode);
 
-		Vector4 depthReconstruct
-		(farClip / (farClip - nearClip), -nearClip / (farClip - nearClip), camera->IsOrthographic() ? 1.0f : 0.0f,
-			camera->IsOrthographic() ? 0.0f : 1.0f);
-		graphics_->SetShaderParameter(PSP_DEPTHRECONSTRUCT, depthReconstruct);
+			Vector3 nearVector, farVector;
+			camera->GetFrustumSize(nearVector, farVector);
 
-		Vector3 nearVector, farVector;
-		camera->GetFrustumSize(nearVector, farVector);
-		graphics_->SetShaderParameter(VSP_FRUSTUMSIZE, farVector);
+			Matrix4 projection = camera->GetGPUProjection();
 
-		Matrix4 projection = camera->GetGPUProjection();
-#ifdef URHO3D_OPENGL
-		// Add constant depth bias manually to the projection matrix due to glPolygonOffset() inconsistency
-		float constantBias = 2.0f * graphics_->GetDepthConstantBias();
-		projection.m22_ += projection.m32_ * constantBias;
-		projection.m23_ += projection.m33_ * constantBias;
-#endif
+			if (graphics_.IsOpenGL())
+			{
+				// Add constant depth bias manually to the projection matrix due to glPolygonOffset() inconsistency
+				//float constantBias = 2.0f * graphics_->GetDepthConstantBias();
+				//projection.m22_ += projection.m32_ * constantBias;
+				//projection.m23_ += projection.m33_ * constantBias;
+			}
+			
+			CameraVS* cameraParam = (CameraVS*)cameraUniformVS_->Lock();
+			cameraParam->cameraPos_ = cameraEffectiveTransform.Translation();
+			cameraParam->nearClip_ = nearClip;
+			cameraParam->farClip_ = farClip;
+			cameraParam->depthMode_ = depthMode;
+			cameraParam->frustumSize_ = farVector;
+			cameraParam->view_ = camera->GetView();
+			cameraParam->viewInv_ = cameraEffectiveTransform;
+			cameraParam->viewProj_ = projection * camera->GetView();
 
-		graphics_->SetShaderParameter(VSP_VIEWPROJ, projection * camera->GetView());
+			cameraUniformVS_->Unlock();
 
-		// If in a scene pass and the command defines shader parameters, set them now
-		if (passCommand_)
-			SetCommandShaderParameters(*passCommand_);
-		*/
+		}
+
+		{
+			CameraPS* cameraParam = (CameraPS*)cameraUniformPS_->Lock();
+			cameraParam->cameraPosPS_ = cameraEffectiveTransform.Translation();
+
+			cameraParam->nearClipPS_ = nearClip;
+			cameraParam->farClipPS_ = farClip;
+
+			Vector4 depthReconstruct
+			(farClip / (farClip - nearClip), -nearClip / (farClip - nearClip), camera->IsOrthographic() ? 1.0f : 0.0f,
+				camera->IsOrthographic() ? 0.0f : 1.0f);
+			cameraParam->depthReconstruct_ = depthReconstruct;
+			cameraUniformPS_->Unlock();
+		}
+
+
 	}
 
 	void View::GetDrawables()
@@ -405,7 +405,7 @@ namespace Unique
 		if (!octree_ || !cullCamera_)
 			return;
 
-		//UNIQUE_PROFILE(GetDrawables);
+		UNIQUE_PROFILE(GetDrawables);
 
 		auto& queue = GetSubsystem<WorkQueue>();
 
@@ -450,15 +450,8 @@ namespace Unique
 			for (unsigned j = 0; j < batches.size(); ++j)
 			{
 				const SourceBatch& srcBatch = batches[j];
-
-				// Check here if the material refers to a rendertarget texture with camera(s) attached
-				// Only check this for backbuffer views (null rendertarget)
-// 				if (srcBatch.material_ && srcBatch.material_->GetAuxViewFrameNumber() != frame_.frameNumber_ && !renderTarget_)
-// 					CheckMaterialForAuxView(srcBatch.material_);
-// 
-// 				Technique* tech = GetTechnique(drawable, srcBatch.material_);
-				Shader* tech = srcBatch.material_->GetShader();
-				if (!srcBatch.geometry_ || !srcBatch.numWorldTransforms_ || !tech)
+				Shader* shader = srcBatch.material_->GetShader();
+				if (!srcBatch.geometry_ || !srcBatch.numWorldTransforms_ || !shader)
 					continue;
 
 				// Check each of the scene passes
@@ -469,7 +462,7 @@ namespace Unique
 // 					if (info.passIndex_ == basePassIndex_ && j < 32 && drawable->HasBasePass(j))
 // 						continue;
 
-					Pass* pass = tech->GetShaderPass(info.passIndex_);
+					Pass* pass = shader->GetPass(info.passIndex_);
 					if (!pass)
 						continue;
 
@@ -479,13 +472,13 @@ namespace Unique
 					//destBatch.lightMask_ = (unsigned char)GetLightMask(drawable);
 					destBatch.lightQueue_ = 0;
 
-					AddBatchToQueue(*info.batchQueue_, destBatch, tech, info.allowInstancing_);
+					AddBatchToQueue(*info.batchQueue_, destBatch, shader, info.allowInstancing_);
 				}
 			}
 		}
 	}
 
-	void View::AddBatchToQueue(BatchQueue& queue, Batch& batch, Shader* tech, bool allowInstancing, bool allowShadows)
+	void View::AddBatchToQueue(BatchQueue& queue, Batch& batch, Shader* shader, bool allowInstancing, bool allowShadows)
 	{
 		//if (!batch.material_)
 		//	batch.material_ = renderer_->GetDefaultMaterial();
@@ -505,7 +498,7 @@ namespace Unique
 				// In case the group remains below the instancing limit, do not enable instancing shaders yet
 				BatchGroup newGroup(batch);
 				newGroup.geometryType_ = GEOM_STATIC;
-				newGroup.SetBatchShaders(tech, allowShadows, queue);
+				renderer_.SetBatchShaders(newGroup, shader, allowShadows, queue);
 				newGroup.CalculateSortKey();
 				newGroup.AddTransforms(batch);
 				queue.batchGroups_.insert(std::make_pair(key, newGroup));
@@ -518,14 +511,14 @@ namespace Unique
 				if (oldSize < minInstances_ && (int)i->second.instances_.size() >= minInstances_)
 				{
 					i->second.geometryType_ = GEOM_INSTANCED;
-					i->second.SetBatchShaders(tech, allowShadows, queue);
+					renderer_.SetBatchShaders(i->second, shader, allowShadows, queue);
 					i->second.CalculateSortKey();
 				}
 			}
 		}
 		else
 		{
-			batch.SetBatchShaders(tech, allowShadows, queue);
+			renderer_.SetBatchShaders(batch, shader, allowShadows, queue);
 			batch.CalculateSortKey();
 
 			// If batch is static with multiple world transforms and cannot instance, we must push copies of the batch individually
@@ -567,22 +560,8 @@ namespace Unique
 		return offset;
 	}
 
-	void View::UpdateBatchGroup()
-	{
-		auto& batchQueues = MainContext(batchQueues_);
-		for (auto it = batchQueues.begin(); it != batchQueues.end(); ++it)
-		{
-			auto& batchGroups = it->second.batchGroups_;
-			for (auto group = batchGroups.begin(); group != batchGroups.end(); ++group )
-			{
-			//	auto&
-			}
-		}
-	}
-
 	void View::PrepareInstancingBuffer()
 	{
-
 		UNIQUE_PROFILE(PrepareInstancingBuffer);
 
 		unsigned totalInstances = 0;
@@ -605,7 +584,7 @@ namespace Unique
 
 		VertexBuffer* instancingBuffer = renderer_.GetInstancingBuffer();
 		unsigned freeIndex = 0;
-		void* dest = nullptr;// instancingBuffer->Lock(0, totalInstances, true);
+		void* dest = instancingBuffer->Lock(0, totalInstances);
 		if (!dest)
 			return;
 
@@ -621,12 +600,12 @@ namespace Unique
 			i->litBatches_.SetInstancingData(dest, stride, freeIndex);
 		}*/
 
-		//instancingBuffer->Unlock();
+		instancingBuffer->Unlock();
 	}
 
 	void View::UpdateGeometries()
 	{
-		//UNIQUE_PROFILE(SortAndUpdateGeometry);
+		UNIQUE_PROFILE(SortAndUpdateGeometry);
 
 		WorkQueue& queue = GetSubsystem<WorkQueue>();
 

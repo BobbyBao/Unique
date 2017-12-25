@@ -75,8 +75,8 @@ namespace Unique
 
 		Pass* AddPass(const String& name);
 
-		Pass* GetShaderPass(const String & pass);
-		Pass* GetShaderPass(unsigned passIndex);
+		Pass* GetPass(const String & pass);
+		Pass* GetPass(unsigned passIndex);
 		uint GetMask(const String& passName, const String& defs);
 
 		PipelineState* GetPipeline(const String& passName, uint defMask);

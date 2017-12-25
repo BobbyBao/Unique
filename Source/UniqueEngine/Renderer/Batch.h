@@ -46,7 +46,6 @@ namespace Unique
 		{
 		}
 
-		void SetBatchShaders(Shader* tech, bool allowShadows, const BatchQueue& queue);
 		/// Calculate state sorting key, which consists of base pass flag, light, pass and geometry.
 		void CalculateSortKey();
 		/// Prepare for rendering.

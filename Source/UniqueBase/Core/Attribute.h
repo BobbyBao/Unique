@@ -3,7 +3,7 @@
 #include "../Container/refcounted.h"
 #include "../Serialize/Serializer.h"
 #include "AttributeTraits.h"
-#include <type_traits>
+
 
 namespace Unique
 {

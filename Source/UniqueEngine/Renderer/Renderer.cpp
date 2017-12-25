@@ -90,7 +90,7 @@ namespace Unique
 
 	void Renderer::HandleRenderUpdate(const RenderUpdate& eventData)
 	{
-	//	URHO3D_PROFILE(UpdateViews);
+		UNIQUE_PROFILE(UpdateViews);
 
 		views_[Graphics::currentContext_].clear();
 		preparedViews_.clear();
@@ -258,6 +258,11 @@ namespace Unique
 	void Renderer::Stop()
 	{
 		graphics_.Close();
+	}
+
+	void Renderer::SetBatchShaders(Batch& batch, Shader* tech, bool allowShadows, const BatchQueue& queue)
+	{
+		batch.pipelineState_ = batch.pass_->GetPipeline(tech, "");
 	}
 
 	void Renderer::CreateInstancingBuffer()

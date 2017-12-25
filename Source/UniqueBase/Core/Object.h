@@ -6,7 +6,6 @@
 #include "../Core/TypeInfo.h"
 #include "../Core/Event.h"
 
-#include <functional>
 
 namespace Unique
 {
@@ -34,7 +33,7 @@ public:
 	void Transfer(TransferFunction& transfer);
 
     /// Return type info static.
-    static TypeInfo* GetTypeInfoStatic() { static Unique::TypeInfo typeInfoStatic("Object", nullptr); return &typeInfoStatic; }
+    static TypeInfo* GetTypeInfoStatic() { return Type<Object>::Info(); }
     /// Check current instance is type of specified type.
     bool IsInstanceOf(const StringID& type) const;
     /// Check current instance is type of specified type.
@@ -141,7 +140,7 @@ public:
 	virtual SPtr<Object> CreateObject() = 0;
 
 	/// Return type hash of objects created by this factory.
-	StringID GetType() const { return typeInfo_->GetType(); }
+	const StringID& GetType() const { return typeInfo_->GetType(); }
 protected:
 	/// Type info.
 	const TypeInfo* typeInfo_;

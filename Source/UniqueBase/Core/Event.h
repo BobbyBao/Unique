@@ -18,7 +18,7 @@ namespace Unique
 	{
 		static const Unique::StringID& Type()
 		{
-			return TypeInfo::TypeName<T>();
+			return TypeInfo::GetTypeID<T>();
 		}
 	};
 

@@ -134,13 +134,7 @@ namespace Unique
 
 		dest = texAdjust * spotProj * spotView;
 	}
-
-
-	void Batch::SetBatchShaders(Shader* tech, bool allowShadows, const BatchQueue& queue)
-	{
-		pipelineState_ = pass_->GetPipeline(tech, "");
-	}
-	
+		
 	void Batch::CalculateSortKey()
 	{
 		unsigned shaderID = *((unsigned*)&pipelineState_) / sizeof(PipelineState);
@@ -166,47 +160,11 @@ namespace Unique
 		Node* cameraNode = camera ? camera->GetNode() : 0;
 		Light* light = lightQueue_ ? lightQueue_->light_ : 0;
 		Texture* shadowMap = lightQueue_ ? lightQueue_->shadowMap_ : 0;
-
-#if false
-		// Set pass / material-specific renderstates
-		if (pass_ && material_)
-		{
-			BlendMode blend = pass_->GetBlendMode();
-			// Turn additive blending into subtract if the light is negative
-			if (light && light->IsNegative())
-			{
-				if (blend == BLEND_ADD)
-					blend = BLEND_SUBTRACT;
-				else if (blend == BLEND_ADDALPHA)
-					blend = BLEND_SUBTRACTALPHA;
-			}
-			graphics->SetBlendMode(blend, pass_->GetAlphaToCoverage() || material_->GetAlphaToCoverage());
-			graphics->SetLineAntiAlias(material_->GetLineAntiAlias());
-
-			bool isShadowPass = pass_->GetIndex() == Technique::shadowPassIndex;
-			CullMode effectiveCullMode = pass_->GetCullMode();
-			// Get cull mode from material if pass doesn't override it
-			if (effectiveCullMode == MAX_CULLMODES)
-				effectiveCullMode = isShadowPass ? material_->GetShadowCullMode() : material_->GetCullMode();
-
-			renderer->SetCullMode(effectiveCullMode, camera);
-			if (!isShadowPass)
-			{
-				const BiasParameters& depthBias = material_->GetDepthBias();
-				graphics->SetDepthBias(depthBias.constantBias_, depthBias.slopeScaledBias_);
-			}
-
-			// Use the "least filled" fill mode combined from camera & material
-			graphics->SetFillMode((FillMode)(Max(camera->GetFillMode(), material_->GetFillMode())));
-			graphics->SetDepthTest(pass_->GetDepthTestMode());
-			graphics->SetDepthWrite(pass_->GetDepthWrite() && allowDepthWrite);
-		}
-
-		// Set global (per-frame) shader parameters
-		if (graphics->NeedParameterUpdate(SP_FRAME, (void*)0))
-			view->SetGlobalShaderParameters();
-#endif
 		
+		// Set global (per-frame) shader parameters
+		//if (graphics->NeedParameterUpdate(SP_FRAME, (void*)0))
+		//	view->SetGlobalShaderParameters();
+
 		// Set camera & viewport shader parameters
 		unsigned cameraHash = (unsigned)(size_t)camera;
 		IntRect viewport = view->GetViewRect();
@@ -641,7 +599,7 @@ namespace Unique
 
 	unsigned BatchGroupKey::ToHash() const
 	{
-		return (unsigned)(/*(size_t)zone_ / sizeof(Zone) +*/ (size_t)lightQueue_ / sizeof(LightBatchQueue) + (size_t)pass_ / sizeof(Pass) +
+		return (unsigned)((size_t)lightQueue_ / sizeof(LightBatchQueue) + (size_t)pass_ / sizeof(Pass) +
 			(size_t)material_ / sizeof(Material) + (size_t)geometry_ / sizeof(Geometry)) + renderOrder_;
 	}
 

@@ -261,13 +261,13 @@ namespace Unique
 		return (passes_.back());
 	}
 
-	Pass* Shader::GetShaderPass(const String& passName)
+	Pass* Shader::GetPass(const String& passName)
 	{
 		unsigned index = GetPassIndex(passName);
-		return GetShaderPass(index);
+		return GetPass(index);
 	}
 
-	Pass* Shader::GetShaderPass(unsigned passIndex)
+	Pass* Shader::GetPass(unsigned passIndex)
 	{
 		for (auto& p : passes_)
 		{
@@ -282,7 +282,7 @@ namespace Unique
 
 	uint Shader::GetMask(const String & passName, const String& defs)
 	{
-		Pass* pass = GetShaderPass(passName);
+		Pass* pass = GetPass(passName);
 		if (pass == nullptr)
 		{
 			return 0;
@@ -293,7 +293,7 @@ namespace Unique
 
 	PipelineState* Shader::GetPipeline(const String& passName, uint defMask)
 	{
-		Pass* pass = GetShaderPass(passName);
+		Pass* pass = GetPass(passName);
 		if (pass == nullptr)
 		{
 			return nullptr;
@@ -304,7 +304,7 @@ namespace Unique
 
 	PipelineState* Shader::GetPipeline(const String& passName, const String& defs)
 	{
-		Pass* pass = GetShaderPass(passName);
+		Pass* pass = GetPass(passName);
 		if (pass == nullptr)
 		{
 			return nullptr;
