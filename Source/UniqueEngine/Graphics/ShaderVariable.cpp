@@ -4,7 +4,7 @@
 namespace Unique
 {
 
-	UniformData::UniformData() : vecVal_(0, 0, 0, 0)
+	UniformData::UniformData() : float4Val_(0, 0, 0, 0)
 	{
 	}
 
@@ -19,17 +19,17 @@ namespace Unique
 	}
 
 	UniformData::UniformData(const Vector2& val)
-		: vec2Val_(val)
+		: float2Val_(val)
 	{
 	}
 
 	UniformData::UniformData(const Vector3& val)
-		: vec3Val_(val)
+		: float3Val_(val)
 	{
 	}
 
 	UniformData::UniformData(const Vector4& val)
-		: vecVal_(val)
+		: float4Val_(val)
 	{
 	}
 
@@ -43,30 +43,13 @@ namespace Unique
 	{
 	}
 
+	UniformData::~UniformData()
+	{
+	}
+
 	void UniformData::operator =(const UniformData& data)
 	{
 		memcpy(this, &data, sizeof(*this));
 	}
 
-
-	uObject(CBuffer)
-	{
-		uFactory("Graphics")
-		uAttribute("Uniforms", uniforms_)
-	}
-
-
-	void ShaderVariable::Create()
-	{
-	}
-
-	void ShaderVariable::Destroy()
-	{
-		deviceObject_ = nullptr;
-	}
-
-	void ShaderVariableGroup::SetTexture(const StringID& name, ITexture* texture)
-	{
-
-	}
 }

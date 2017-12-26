@@ -1,18 +1,23 @@
 #pragma once
+#include "Texture.h"
 
 namespace Unique
 {
 	class Texture;
+	class GraphicsBuffer;
 
 	struct UniformData
 	{
 		union
 		{
+			int intVal_;
 			float floatVal_;
-			Vector2 vec2Val_;
-			Vector3 vec3Val_;
-			Vector4 vecVal_;
+			Vector2 float2Val_;
+			Vector3 float3Val_;
+			Vector4 float4Val_;
 			Color colorVal_;
+			String strVal_;
+			SPtr<Texture> texture_;
 		};
 
 		UniformData();
@@ -24,9 +29,7 @@ namespace Unique
 		UniformData(const Color& val);
 		UniformData(float* arrayPtr, int count);
 
-		~UniformData()
-		{
-		}
+		~UniformData();
 
 		void operator =(const UniformData& data);
 
@@ -38,12 +41,13 @@ namespace Unique
 		{
 			INT,
 			FLOAT,
-			VEC2,
-			VEC3,
-			VEC4,
+			FLOAT2,
+			FLOAT3,
+			FLOAT4,
 			COLOR,
 			MAT4,
 			ARRAY,
+			TEXTURE
 		};
 
 		Uniform()
@@ -62,69 +66,55 @@ namespace Unique
 		StringID name_;
 		Uniform::Type type_ = Uniform::Type::INT;
 		UniformData value_;
-		int offset = -1;
 
-		uClass("Name", name_, "Type", type_, "Data", value_.vecVal_)
+		RefCntWeakPtr<IShaderVariable> shaderVarible_;
+
+		template<class TransferFunction>
+		void Transfer(TransferFunction& transfer)
+		{
+			transfer.StartObject(3);
+			transfer.TransferAttribute("Name", name_);
+			transfer.TransferAttribute("Type", type_);
+			switch (type_)
+			{
+			case Unique::Uniform::INT:
+				transfer.TransferAttribute("Value", value_.intVal_);
+				break;
+			case Unique::Uniform::FLOAT:
+				transfer.TransferAttribute("Value", value_.floatVal_);
+				break;
+			case Unique::Uniform::FLOAT2:
+				transfer.TransferAttribute("Value", value_.float2Val_);
+				break;
+			case Unique::Uniform::FLOAT3:
+				transfer.TransferAttribute("Value", value_.float3Val_);
+				break;
+			case Unique::Uniform::FLOAT4:
+				transfer.TransferAttribute("Value", value_.float4Val_);
+				break;
+			case Unique::Uniform::COLOR:
+				transfer.TransferAttribute("Value", value_.colorVal_);
+				break;
+			case Unique::Uniform::ARRAY:
+				transfer.TransferAttribute("Value", value_.strVal_);
+				break;
+			case Unique::Uniform::MAT4:
+				transfer.TransferAttribute("Value", value_.strVal_);
+				break;
+			case Unique::Uniform::TEXTURE:
+				transfer.TransferAttribute("Value", value_.strVal_);
+				break;
+			default:
+				break;
+			}
+			transfer.EndObject();
+		}
+
+		//uClass("Name", name_, "Type", type_, "Data", value_.vecVal_)
 	};
 
 	uEnum(Uniform::Type, "INT", "FLOAT", "VEC2", "VEC3", "VEC4")
 
-	class CBuffer : public Object
-	{
-		uRTTI(CBuffer, Object)
-	public:
-		Vector<Uniform> uniforms_;
-	};
-
-	enum class ShaderVariableType
-	{
-		Uniform,
-		Texture,
-		Sampler,
-		Buffer
-	};
-
-	uEnum(ShaderVariableType, "Uniform", "Texture", "Sampler", "Buffer")
-
-	struct ShaderVariable
-	{
-		ShaderVariable()
-		{
-		}
-
-		ShaderVariable(const StringID& name, ShaderVariableType type, CBuffer* val)
-			: name_(name), type_(type), uniformBlock_(val)
-		{
-		}
-
-		~ShaderVariable()
-		{
-		}
-		
-		void Create();
-		void Destroy();
-
-		bool IsValid() { return deviceObject_.IsValid(); }
-
-		StringID name_;
-		ShaderVariableType type_;
-		SPtr<CBuffer> uniformBlock_;
-		RefCntWeakPtr<IShaderVariable> deviceObject_;
-
-		uClass("Name", name_, "Type", type_, "CBuffer", uniformBlock_)
-	};
-
-	class ShaderVariableGroup
-	{
-	public:
-
-		//void SetUniform(const StringID& name, ITexture* texture);
-
-		void SetTexture(const StringID& name, ITexture* texture);
-
-	protected:
-		Vector<ShaderVariable> shaderVaribles_;
-	};
 
 
 }

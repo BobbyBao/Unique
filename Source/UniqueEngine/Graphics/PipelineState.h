@@ -24,6 +24,8 @@ namespace Unique
 		RefCntAutoPtr<IShaderResourceBinding> shaderResourceBinding_;
 		bool dirty_ = true;
 		IResourceMapping* resourceMapping_;
+
+		HashMap<StringID, IShaderVariable*> shaderVariables_;
 	};
 
 }

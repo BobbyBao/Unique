@@ -59,7 +59,7 @@ namespace Unique
 	class ShaderProperties
 	{
 	public:
-		Vector<ShaderVariable> shaderVariables_;
+		Vector<Uniform> shaderVariables_;
 	};
 
 	class Shader : public Resource
@@ -103,7 +103,7 @@ namespace Unique
 
 	private:
 		String shaderName_;
-		Vector<ShaderVariable> shaderVaribles_;
+		Vector<Uniform> shaderVaribles_;
 		Vector<SPtr<Pass>> passes_;
 
 		/// Pass index assignments.

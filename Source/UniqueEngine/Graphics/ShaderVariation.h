@@ -64,6 +64,7 @@ namespace Unique
 		bool Convert(const String& binaryShaderName);
 		ShaderType GetShaderType() const { return shaderStage_.shaderType_; }
 
+		HashMap<StringID, IShaderVariable*> shaderVariables_;
 	protected:
 		Shader& owner_;
 		ShaderStage shaderStage_;
@@ -73,7 +74,6 @@ namespace Unique
 		unsigned mask_ = 0;
 		bool dirty_ = false;
 		ShaderMacroHelper macros_;
-
 	};
 	
 }

@@ -59,7 +59,23 @@ namespace Unique
 		Attrs.Desc.TargetProfile = SHADER_PROFILE_DX_4_0;
 		BasicShaderSourceStreamFactory BasicSSSFactory("CoreData\\Shaders;CoreData\\Shaders\\HLSL;");
 		Attrs.pShaderSourceStreamFactory = &BasicSSSFactory;
-		renderDevice->CreateShader(Attrs, (IShader**)&deviceObject_);
+		IShader* shaderObject = nullptr;
+		renderDevice->CreateShader(Attrs, &shaderObject);
+		shaderVariables_.clear();
+
+		if (shaderObject)
+		{
+			const auto& desc = shaderObject->GetDesc();
+			
+			for (uint i = 0; i < desc.NumVariables; i++)
+			{
+				const auto& svDesc = desc.VariableDesc[i];
+				IShaderVariable* shaderVariable = shaderObject->GetShaderVariable(svDesc.Name);
+				shaderVariables_[svDesc.Name] = shaderVariable;
+			}
+
+			deviceObject_ = shaderObject;
+		}
 
 		return deviceObject_ != nullptr;
 

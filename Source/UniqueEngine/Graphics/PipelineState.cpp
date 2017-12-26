@@ -61,6 +61,10 @@ namespace Unique
 				if (shader->GetShaderType() == SHADER_TYPE_COMPUTE)
 				{
 					PSODesc.ComputePipeline.pCS = *shader;
+					for (auto it : shader->shaderVariables_)
+					{
+						shaderVariables_.insert(it);
+					}
 					break;
 				}
 			}
@@ -69,6 +73,11 @@ namespace Unique
 		{
 			for (auto shader : shaders)
 			{
+				for (auto it : shader->shaderVariables_)
+				{
+					shaderVariables_.insert(it);
+				}
+
 				switch (shader->GetShaderType())
 				{
 				case SHADER_TYPE_VERTEX:
