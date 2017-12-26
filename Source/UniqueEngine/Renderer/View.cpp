@@ -172,10 +172,22 @@ namespace Unique
 	{
 		frameUniform_ = new UniformBuffer(FrameParameter());
 		cameraUniformVS_ = new UniformBuffer(CameraVS());
+		objectUniformVS_ = new UniformBuffer(ObjectVS());
+
+		cameraUniformPS_ = new UniformBuffer(CameraPS());
+		materialUniformPS_ = new UniformBuffer(MaterialPS());
+
 		tempDrawables_.resize(1);
 
 		batchMatrics_[0].reserve(4096);
 		batchMatrics_[1].reserve(4096);
+
+		graphics_.AddResource("FrameVS", frameUniform_);
+		graphics_.AddResource("CameraVS", cameraUniformVS_);
+		graphics_.AddResource("ObjectVS", objectUniformVS_);
+
+		graphics_.AddResource("CameraPS", cameraUniformPS_);
+		graphics_.AddResource("MaterialPS", materialUniformPS_);
 	}
 
 	View::~View()
@@ -306,12 +318,14 @@ namespace Unique
 		GetBatches();
 
 		UpdateGeometries();
+		
+		PrepareInstancingBuffer();
+
+		SetCameraShaderParameters(camera_);
 	}
 
 	void View::Render()
 	{
-		//PrepareInstancingBuffer();
-
 		renderPath_->Render(this);
 	}
 
@@ -345,13 +359,17 @@ namespace Unique
 			if (camera->IsOrthographic())
 			{
 				depthMode.x_ = 1.0f;
-#ifdef URHO3D_OPENGL
-				depthMode.z_ = 0.5f;
-				depthMode.w_ = 0.5f;
-#else
-				depthMode.z_ = 1.0f;
-#endif
-		}
+				if (graphics_.IsOpenGL())
+				{
+					depthMode.z_ = 0.5f;
+					depthMode.w_ = 0.5f;
+				}
+				else
+				{
+					depthMode.z_ = 1.0f;
+				}
+
+			}
 			else
 				depthMode.w_ = 1.0f / camera->GetFarClip();
 
@@ -397,7 +415,16 @@ namespace Unique
 			cameraUniformPS_->Unlock();
 		}
 
-
+		{
+			ObjectVS* data = (ObjectVS*)objectUniformVS_->Lock();
+			data->world_ = Matrix3x4::IDENTITY;
+			objectUniformVS_->Unlock();
+		}
+		{
+			MaterialPS* data = (MaterialPS*)materialUniformPS_->Lock();
+			data->matDiffColor = float4(1,1,1,1);
+			materialUniformPS_->Unlock();
+		}
 	}
 
 	void View::GetDrawables()
@@ -564,7 +591,7 @@ namespace Unique
 	{
 		UNIQUE_PROFILE(PrepareInstancingBuffer);
 
-		unsigned totalInstances = 0;
+		size_t totalInstances = 0;
 
 		auto& batchQueues = MainContext(batchQueues_);
 
@@ -579,12 +606,12 @@ namespace Unique
 			totalInstances += i->litBatches_.GetNumInstances();
 		}*/
 
-		if (!totalInstances || !renderer_.ResizeInstancingBuffer(totalInstances))
+		if (!totalInstances || !renderer_.ResizeInstancingBuffer((uint)totalInstances))
 			return;
 
 		VertexBuffer* instancingBuffer = renderer_.GetInstancingBuffer();
 		unsigned freeIndex = 0;
-		void* dest = instancingBuffer->Lock(0, totalInstances);
+		void* dest = instancingBuffer->Lock(0, (uint)totalInstances);
 		if (!dest)
 			return;
 

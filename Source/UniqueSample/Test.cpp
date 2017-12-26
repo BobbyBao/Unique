@@ -17,6 +17,7 @@ namespace Unique
 	{
 		const char* name_;
 		Diligent::Timer timer_;
+	
 		int test_;
 
 		PerfBlock& Test(int val)
@@ -42,15 +43,22 @@ namespace Unique
 
 	uStruct(PerfBlock)
 	{
-		uProperty("Test", int, test_)
+		uMixedAttribute("Test", /*int,*/ test_, Test)
 	}
 
+	enum TestEnum : byte
+	{
+		AAA
+	};
+
+	enum TestEnum1 : int
+	{
+		BBB
+	};
 	void Test()
 	{
-		uCall(int aaa = 0; 
-			aaa+=1;
-		aaa += 2;)
-
+		int sz = sizeof(TestEnum);
+		int sz1 = sizeof(TestEnum1);
 
 		TestParse();
 		return;

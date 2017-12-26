@@ -13,11 +13,6 @@ namespace Unique
 			Vector3 vec3Val_;
 			Vector4 vecVal_;
 			Color colorVal_;
-			struct
-			{
-				float* arrayPtr_;
-				int count_;
-			};
 		};
 
 		UniformData();
@@ -34,6 +29,7 @@ namespace Unique
 		}
 
 		void operator =(const UniformData& data);
+
 	};
 
 	struct Uniform
@@ -67,20 +63,22 @@ namespace Unique
 		Uniform::Type type_ = Uniform::Type::INT;
 		UniformData value_;
 		int offset = -1;
+
+		uClass("Name", name_, "Type", type_, "Data", value_.vecVal_)
 	};
+
+	uEnum(Uniform::Type, "INT", "FLOAT", "VEC2", "VEC3", "VEC4")
 
 	class CBuffer : public Object
 	{
 		uRTTI(CBuffer, Object)
 	public:
 		Vector<Uniform> uniforms_;
-		Vector<byte> buffer_[2];
 	};
-
 
 	enum class ShaderVariableType
 	{
-		CBuffer,
+		Uniform,
 		Texture,
 		Sampler,
 		Buffer
@@ -106,12 +104,26 @@ namespace Unique
 		void Create();
 		void Destroy();
 
+		bool IsValid() { return deviceObject_.IsValid(); }
+
 		StringID name_;
 		ShaderVariableType type_;
-		UPtr<CBuffer> uniformBlock_;
+		SPtr<CBuffer> uniformBlock_;
 		RefCntWeakPtr<IShaderVariable> deviceObject_;
 
 		uClass("Name", name_, "Type", type_, "CBuffer", uniformBlock_)
+	};
+
+	class ShaderVariableGroup
+	{
+	public:
+
+		//void SetUniform(const StringID& name, ITexture* texture);
+
+		void SetTexture(const StringID& name, ITexture* texture);
+
+	protected:
+		Vector<ShaderVariable> shaderVaribles_;
 	};
 
 

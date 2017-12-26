@@ -6,6 +6,7 @@
 #include <Shader.h>
 #include <PipelineState.h>
 #include <ShaderResourceBinding.h>
+#include <ShaderMacroHelper.h>
 
 namespace Unique
 {
@@ -71,6 +72,8 @@ namespace Unique
 		String defines_;
 		unsigned mask_ = 0;
 		bool dirty_ = false;
+		ShaderMacroHelper macros_;
+
 	};
 	
 }

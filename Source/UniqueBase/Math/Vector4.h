@@ -243,4 +243,6 @@ inline Vector4 VectorRound(const Vector4& vec) { return Vector4(Round(vec.x_), R
 /// Per-component ceil of 4-vector.
 inline Vector4 VectorCeil(const Vector4& vec) { return Vector4(Ceil(vec.x_), Ceil(vec.y_), Ceil(vec.z_), Ceil(vec.w_)); }
 
+using float4 = Vector4;
+
 }

@@ -41,11 +41,11 @@ namespace Unique
 				new Unique::TAttribute<T>(name, offset, flag));
 		}
 
-		template<typename T, typename SET>
-		void RegisterAccessor(const char* name, size_t offset, SET setter, AttributeFlag flag = AttributeFlag::Default)
+		template<typename C, typename T, typename SET>
+		void RegisterMixedAttribute(const char* name, size_t offset, SET setter, AttributeFlag flag = AttributeFlag::Default)
 		{
 			RegisterAttribute(
-				new Unique::AttributeImpl<function_traits<SET>::ClassType, T>(name, offset, setter, flag));
+				new Unique::AttributeImpl<C, T>(name, offset, setter, flag));
 		}
 
 		template<typename GET, typename SET>
@@ -113,15 +113,16 @@ namespace Unique
     public: \
         typedef typeName ClassName; \
         typedef baseTypeName BaseClassName; \
-        virtual const Unique::StringID& GetType() const { return GetTypeInfoStatic()->GetType(); } \
-		virtual const Unique::TypeInfo* GetTypeInfo() const { return GetTypeInfoStatic(); } \
-        static const Unique::StringID& GetTypeStatic() { return GetTypeInfoStatic()->GetType(); } \
-		static Unique::TypeInfo* GetTypeInfoStatic() { static Unique::TypeInfo typeInfoStatic(#typeName, BaseClassName::GetTypeInfoStatic()); return &typeInfoStatic; } \
-		static void RegisterObject(Context* context);
+        virtual const StringID& GetType() const { return GetTypeInfoStatic()->GetType(); } \
+		virtual const TypeInfo* GetTypeInfo() const { return GetTypeInfoStatic(); } \
+        static const StringID& GetTypeStatic() { return GetTypeInfoStatic()->GetType(); } \
+		static TypeInfo* GetTypeInfoStatic() { static TypeInfo typeInfoStatic(#typeName, BaseClassName::GetTypeInfoStatic()); return &typeInfoStatic; } \
+		static void RegisterObject(TypeInfo* typeInfo);
 
 #define uObject(typeName)\
-		static RegisterRuntime s_##typeName##Callbacks(&typeName::RegisterObject, nullptr);\
-		void typeName::RegisterObject(Context* context)
+static void typeName##RegisterObject(Context* context) {typeName::RegisterObject(typeName::GetTypeInfoStatic());}\
+		static RegisterRuntime s_##typeName##Callbacks(typeName##RegisterObject, nullptr);\
+		void typeName::RegisterObject(TypeInfo* typeInfo)
 
 #define uFactory(...)\
 		GetContext()->RegisterFactory<ClassName>(##__VA_ARGS__);
@@ -132,13 +133,16 @@ namespace Unique
 //	ClassName::GetTypeInfoStatic()->RegisterAttribute(name, &ClassName::variable, ##__VA_ARGS__);
 
 #define uAttribute(name, variable, ...)\
-	ClassName::GetTypeInfoStatic()->RegisterAttribute<decltype(((ClassName*)0)->variable)>(name, offsetof(ClassName, variable), ##__VA_ARGS__);
+	typeInfo->RegisterAttribute<decltype(((ClassName*)0)->variable)>(name, offsetof(ClassName, variable), ##__VA_ARGS__);
+
+#define uMixedAttribute(name, variable, setter, ...)\
+	typeInfo->RegisterMixedAttribute<ClassName, decltype(((ClassName*)0)->variable)>(name, offsetof(ClassName, variable), &ClassName::setter, ##__VA_ARGS__);
 
 #define uAccessor(name, getFunction, setFunction, ...)\
-	ClassName::GetTypeInfoStatic()->RegisterAccessor(name, &ClassName::getFunction, &ClassName::setFunction, ##__VA_ARGS__);
+	typeInfo->RegisterAccessor(name, &ClassName::getFunction, &ClassName::setFunction, ##__VA_ARGS__);
 
 #define uMixedAccessor(name, getFunction, setFunction, ...)\
-	ClassName::GetTypeInfoStatic()->RegisterMixedAccessor(name, &ClassName::getFunction, &ClassName::setFunction, ##__VA_ARGS__);
+	typeInfo->RegisterMixedAccessor(name, &ClassName::getFunction, &ClassName::setFunction, ##__VA_ARGS__);
 	
 //	static Unique::TypeInfo typeName##TypeInfoStatic(#typeName, nullptr); \
 

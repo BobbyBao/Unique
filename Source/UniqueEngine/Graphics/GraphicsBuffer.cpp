@@ -124,14 +124,14 @@ namespace Unique
 		{
 			std::memcpy(data_[0].data(), data, data_[0].size());
 
-			Graphics::AddCommand([=]()
-			{			
+			uCall
+			(
 				IBuffer* buffer = *this;
 				void* bufferData = nullptr;
 				buffer->Map(deviceContext, MAP_WRITE, MAP_FLAG_DISCARD, bufferData);
 				memcpy(bufferData, data_[0].data(), data_[0].size());
 				buffer->Unmap(deviceContext, MAP_WRITE, MAP_FLAG_DISCARD);
-			});
+			);
 		}
 
 

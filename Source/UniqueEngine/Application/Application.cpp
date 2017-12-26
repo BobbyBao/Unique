@@ -15,7 +15,7 @@ namespace Unique
 	Application::Application(Context* context) :
 		context_(context),
 		resolution_(800, 600),
-		deviceType_(DeviceType::OpenGL)
+		deviceType_(DeviceType::D3D11)
 	{
 		context_->RegisterSubsystem<WorkQueue>();
 		context_->RegisterSubsystem<Profiler>();

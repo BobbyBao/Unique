@@ -401,4 +401,6 @@ inline float StableRandom(const Vector2& seed) { return Fract(Sin(seed.DotProduc
 /// Return a random value from [0, 1) from scalar seed.
 inline float StableRandom(float seed) { return StableRandom(Vector2(seed, seed)); }
 
+using float2 = Vector2;
+
 }

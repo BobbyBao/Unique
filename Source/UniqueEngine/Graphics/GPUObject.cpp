@@ -10,12 +10,13 @@ namespace Unique
 		if (Thread::IsMainThread())
 		{
 			state_ = State::Creating;
-			Graphics::AddCommand([=]()
-			{
+			uCall
+			(
+			
 				ReleaseImpl();
 				CreateImpl();
 				state_ = State::Created;
-			});
+			);
 
 		}
 		else
@@ -31,11 +32,11 @@ namespace Unique
 	void GPUObject::Release()
 	{
 		state_ = State::Dying;
-		Graphics::AddCommand([=]()
-		{
+		uCall
+		(
 			ReleaseImpl();
 			state_ = State::Dead;
-		});
+		);
 	}
 
 	void GPUObject::UpdateBuffer()

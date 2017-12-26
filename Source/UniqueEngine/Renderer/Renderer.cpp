@@ -269,10 +269,10 @@ namespace Unique
 	{
 		instancingBuffer_ = new VertexBuffer();
 		const PODVector<VertexElement> instancingBufferElements = CreateInstancingBufferElements(numExtraInstancingBufferElements_);
-// 		if (!instancingBuffer_->Create(INSTANCING_BUFFER_DEFAULT_SIZE, instancingBufferElements, true))
-// 		{
-// 			instancingBuffer_.Reset();
-// 		}
+		if (!instancingBuffer_->SetSize(INSTANCING_BUFFER_DEFAULT_SIZE, instancingBufferElements, true))
+		{
+			instancingBuffer_.Reset();
+		}
 	}
 
 
@@ -288,15 +288,15 @@ namespace Unique
 		unsigned newSize = INSTANCING_BUFFER_DEFAULT_SIZE;
 		while (newSize < numInstances)
 			newSize <<= 1;
-		/*
+		
 		const PODVector<VertexElement> instancingBufferElements = CreateInstancingBufferElements(numExtraInstancingBufferElements_);
-		if (!instancingBuffer_->CreateByMask(newSize, instancingBufferElements, true))
+		if (!instancingBuffer_->SetSize(newSize, instancingBufferElements, true))
 		{
 			UNIQUE_LOGERROR("Failed to resize instancing buffer to " + String(newSize));
 			// If failed, try to restore the old size
 			instancingBuffer_->SetSize(oldSize, instancingBufferElements, true);
 			return false;
-		}*/
+		}
 
 		UNIQUE_LOGDEBUG("Resized instancing buffer to " + String(newSize));
 		return true;

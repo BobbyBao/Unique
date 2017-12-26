@@ -102,6 +102,19 @@ public:
     /// Return whether log is in quiet mode (only errors printed to standard error stream).
     bool IsQuiet() const { return quiet_; }
 
+	template<class T>
+	static void Write(int level, const T& message)
+	{
+		Write(level, ToString(message));
+	}
+
+	template<typename FirstArgType, typename... RestArgsType>
+	static void Write(int level, const FirstArgType& FirstArg, const RestArgsType&... RestArgs)
+	{
+		Write(level, FirstArg);
+		Write(level, RestArgs...); // recursive call using pack expansion syntax
+	}
+
     /// Write to the log. If logging level is higher than the level of the message, the message is ignored.
     static void Write(int level, const String& message);
     /// Write raw output to the log.
@@ -130,10 +143,10 @@ private:
 };
 
 #ifdef UNIQUE_LOGGING
-#define UNIQUE_LOGDEBUG(message) Unique::Log::Write(Unique::LOG_DEBUG, message)
-#define UNIQUE_LOGINFO(message) Unique::Log::Write(Unique::LOG_INFO, message)
-#define UNIQUE_LOGWARNING(message) Unique::Log::Write(Unique::LOG_WARNING, message)
-#define UNIQUE_LOGERROR(message) Unique::Log::Write(Unique::LOG_ERROR, message)
+#define UNIQUE_LOGDEBUG(...) Unique::Log::Write(Unique::LOG_DEBUG, ##__VA_ARGS__)
+#define UNIQUE_LOGINFO(...) Unique::Log::Write(Unique::LOG_INFO, ##__VA_ARGS__)
+#define UNIQUE_LOGWARNING(...) Unique::Log::Write(Unique::LOG_WARNING, ##__VA_ARGS__)
+#define UNIQUE_LOGERROR(...) Unique::Log::Write(Unique::LOG_ERROR, ##__VA_ARGS__)
 #define UNIQUE_LOGRAW(message) Unique::Log::WriteRaw(message)
 #define UNIQUE_LOGDEBUGF(format, ...) Unique::Log::Write(Unique::LOG_DEBUG, Unique::FormatString(format, ##__VA_ARGS__))
 #define UNIQUE_LOGINFOF(format, ...) Unique::Log::Write(Unique::LOG_INFO, Unique::FormatString(format, ##__VA_ARGS__))
@@ -141,11 +154,11 @@ private:
 #define UNIQUE_LOGERRORF(format, ...) Unique::Log::Write(Unique::LOG_ERROR, Unique::FormatString(format, ##__VA_ARGS__))
 #define UNIQUE_LOGRAWF(format, ...) Unique::Log::WriteRaw(Unique::FormatString(format, ##__VA_ARGS__))
 #else
-#define UNIQUE_LOGDEBUG(message) ((void)0)
-#define UNIQUE_LOGINFO(message) ((void)0)
-#define UNIQUE_LOGWARNING(message) ((void)0)
-#define UNIQUE_LOGERROR(message) ((void)0)
-#define UNIQUE_LOGRAW(message) ((void)0)
+#define UNIQUE_LOGDEBUG(...) ((void)0)
+#define UNIQUE_LOGINFO(...) ((void)0)
+#define UNIQUE_LOGWARNING(...) ((void)0)
+#define UNIQUE_LOGERROR(...) ((void)0)
+#define UNIQUE_LOGRAW(...) ((void)0)
 #define UNIQUE_LOGDEBUGF(...) ((void)0)
 #define UNIQUE_LOGINFOF(...) ((void)0)
 #define UNIQUE_LOGWARNINGF(...) ((void)0)

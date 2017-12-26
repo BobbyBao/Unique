@@ -11,6 +11,29 @@ namespace Unique
 	class Image;
 	class TextureView;
 
+	struct TextureLoadInfo
+	{
+		const Diligent::Char *Name;
+		Diligent::USAGE Usage;
+		Diligent::Uint32 BindFlags;
+		Diligent::Uint32 MipLevels;
+		Diligent::Uint32 CPUAccessFlags;
+		Diligent::Bool IsSRGB;
+		Diligent::Bool GenerateMips;
+		Diligent::TEXTURE_FORMAT Format;
+
+		TextureLoadInfo() :
+			Name(""),
+			Usage(Diligent::USAGE_STATIC),
+			BindFlags(Diligent::BIND_SHADER_RESOURCE),
+			MipLevels(0),
+			CPUAccessFlags(0),
+			IsSRGB(false),
+			GenerateMips(true),
+			Format(Diligent::TEX_FORMAT_UNKNOWN)
+		{}
+	};
+
 	class Texture : public Resource, public GPUObject
 	{
 		uRTTI(Texture, Resource)
@@ -20,7 +43,7 @@ namespace Unique
 
 		bool Create(const TextureDesc& desc, const TextureData& texData);
 
-		bool Create(Image& img);
+		bool Create(Image& img, const TextureLoadInfo& TexLoadInfo = TextureLoadInfo());
 
 		uint GetWidth() const { return desc_.Width; }
 

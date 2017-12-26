@@ -2,7 +2,7 @@
 cbuffer Constants
 {
     float4x4 g_WorldViewProj;
-	float4x4 g_WorldNorm;
+	float4x3 g_WorldNorm;
     float3 g_LightDir;
     float g_LightCoeff;
 };

@@ -2,7 +2,7 @@
 #include "Samplers.hlsl"
 #include "Transform.hlsl"
 
-void VS(float4 iPos : POSITION,
+void VS(float4 iPos : ATTRIB0,
     #ifdef DIFFMAP
         float2 iTexCoord : TEXCOORD0,
     #endif

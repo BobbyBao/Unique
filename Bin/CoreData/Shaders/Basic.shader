@@ -39,7 +39,7 @@ Shader "Basic"
 			EntryPoint "VS" 
 			ShaderProfile "DX_4_0"
 			Defines ""
-			Source "Basic.hlsl"
+			Source "hlsl/Basic.hlsl"
 		}
 		
 		PixelShader
@@ -47,7 +47,7 @@ Shader "Basic"
 			EntryPoint "PS"
 			ShaderProfile "DX_4_0"
 			Defines ""
-			Source "Basic.hlsl"
+			Source "hlsl/Basic.hlsl"
 		}
 	}
 }

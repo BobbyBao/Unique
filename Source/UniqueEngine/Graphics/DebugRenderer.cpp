@@ -15,9 +15,8 @@
 #include "Math/Polyhedron.h"
 #include "Resource/ResourceCache.h"
 #include "Graphics/PipelineState.h"
-//#include "../graphics/VertexTypes.h"
 #include "Scene/Node.h"
-//#include "../DebugNew.h"
+#include "DebugNew.h"
 
 namespace Unique
 {
@@ -37,6 +36,8 @@ uObject(DebugRenderer)
 DebugRenderer::DebugRenderer() : lineAntiAlias_(false)
 {
     Subscribe(&DebugRenderer::HandleEndFrame);
+
+	vertexBuffer_ = new VertexBuffer();
 
 	ResourceCache& cache = GetSubsystem<ResourceCache>();
 	shader_ = cache.GetResource<Shader>("shaders/basic.shader");
@@ -472,20 +473,15 @@ void DebugRenderer::Render()
     UNIQUE_PROFILE(RenderDebugGeometry);
 
 	//graphics->setViewTransform(view_, gpuProjection_);
-	/*
-    unsigned numVertices = (lines_.size() + noDepthLines_.size()) * 2 + (triangles_.size() + noDepthTriangles_.size()) * 3;
 
-	auto& decl = PosColorVertex::layout();
-	if (getAvailTransientVertexBuffer(numVertices, decl) < numVertices)
-	{
+	uint numVertices = (uint)((lines_.size() + noDepthLines_.size()) * 2 + (triangles_.size() + noDepthTriangles_.size()) * 3);
+	// Resize the vertex buffer if too small or much too large
+	if (vertexBuffer_->GetCount() < numVertices || vertexBuffer_->GetCount() > numVertices * 2)
+		vertexBuffer_->SetSize(numVertices, MASK_POSITION | MASK_COLOR, true);
+
+	float* dest = (float*)vertexBuffer_->Lock(0, numVertices);
+	if (!dest)
 		return;
-	}
-
-	TransientVertexBuffer vertex_buffer;
-	allocTransientVertexBuffer(&vertex_buffer, numVertices, decl);
-	float* dest = (float*)vertex_buffer.data;
-    if (!dest)
-        return;
 
     for (unsigned i = 0; i < lines_.size(); ++i)
     {
@@ -561,30 +557,32 @@ void DebugRenderer::Render()
         ((unsigned&)dest[11]) = triangle.color_;
 
         dest += 12;
-    }
-		
+	}
+
+	vertexBuffer_->Unlock();
+		/*
 	uint64 state = BGFX_STATE_RGB_WRITE |
 		BGFX_STATE_ALPHA_WRITE |
 		BGFX_STATE_DEPTH_WRITE |
 		(lineAntiAlias_ ? BGFX_STATE_LINEAA : 0) |
 		BGFX_STATE_MSAA;
+	*/
 
-
-	int start = 0;
-	int count = 0;
+	size_t start = 0;
+	size_t count = 0;
 
 	if (lines_.size() > 0)
 	{
 		count = lines_.size() * 2;
 	
-		graphics.DrawTransient(
-			vertex_buffer,
-			Matrix3x4::IDENTITY,
-			start,
-			count,
-			state | BGFX_STATE_DEPTH_TEST_LEQUAL | BGFX_STATE_PT_LINES,
-			uiShaderInstance_
-		);
+// 		graphics.DrawTransient(
+// 			vertex_buffer,
+// 			Matrix3x4::IDENTITY,
+// 			start,
+// 			count,
+// 			state | BGFX_STATE_DEPTH_TEST_LEQUAL | BGFX_STATE_PT_LINES,
+// 			uiShaderInstance_
+// 		);
 		start += count;
 	}
 
@@ -592,36 +590,36 @@ void DebugRenderer::Render()
 	{
 		count = noDepthLines_.size() * 2;
 
-		graphics.DrawTransient(
-			vertex_buffer,
-			Matrix3x4::IDENTITY,
-			start,
-			count,
-			state| BGFX_STATE_DEPTH_TEST_ALWAYS | BGFX_STATE_PT_LINES,
-			uiShaderInstance_
-		);
+// 		graphics.DrawTransient(
+// 			vertex_buffer,
+// 			Matrix3x4::IDENTITY,
+// 			start,
+// 			count,
+// 			state| BGFX_STATE_DEPTH_TEST_ALWAYS | BGFX_STATE_PT_LINES,
+// 			uiShaderInstance_
+// 		);
 	
 		start += count;
 	}
 
-	state = BGFX_STATE_RGB_WRITE |
-		BGFX_STATE_ALPHA_WRITE |
-		BGFX_STATE_BLEND_ALPHA |
-		(lineAntiAlias_ ? BGFX_STATE_LINEAA : 0) |
-		BGFX_STATE_MSAA;
+// 	state = BGFX_STATE_RGB_WRITE |
+// 		BGFX_STATE_ALPHA_WRITE |
+// 		BGFX_STATE_BLEND_ALPHA |
+// 		(lineAntiAlias_ ? BGFX_STATE_LINEAA : 0) |
+// 		BGFX_STATE_MSAA;
 
 	if (triangles_.size() > 0)
 	{
 		count = triangles_.size() * 3;
 
-		graphics.DrawTransient(
-			vertex_buffer,
-			Matrix3x4::IDENTITY,
-			start,
-			(int)count,
-			state | BGFX_STATE_DEPTH_TEST_LEQUAL,
-			uiShaderInstance_
-		);
+// 		graphics.DrawTransient(
+// 			vertex_buffer,
+// 			Matrix3x4::IDENTITY,
+// 			start,
+// 			(int)count,
+// 			state | BGFX_STATE_DEPTH_TEST_LEQUAL,
+// 			uiShaderInstance_
+// 		);
 		start += count;
 	}
 
@@ -629,15 +627,15 @@ void DebugRenderer::Render()
 	{
 		count = noDepthTriangles_.size() * 3;
 
-		graphics.DrawTransient(
-			vertex_buffer,
-			Matrix3x4::IDENTITY,
-			start,
-			(int)count,
-			state | BGFX_STATE_DEPTH_TEST_ALWAYS,
-			uiShaderInstance_
-		);
-	}	*/
+// 		graphics.DrawTransient(
+// 			vertex_buffer,
+// 			Matrix3x4::IDENTITY,
+// 			start,
+// 			(int)count,
+// 			state | BGFX_STATE_DEPTH_TEST_ALWAYS,
+// 			uiShaderInstance_
+// 		);
+	}	
 
 }
 

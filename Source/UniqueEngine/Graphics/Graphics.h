@@ -16,6 +16,24 @@ namespace Unique
 
 	using CommandQueue = Vector<std::function<void()> > ;
 
+	class TransientVertexBuffer
+	{
+	public:
+		VertexBuffer* vertexBuffer_ = nullptr;
+		uint offset_;
+		ushort count_;
+		ushort stride_;
+	};
+
+	class TransientIndexBuffer
+	{
+	public:
+		IndexBuffer* indexBuffer_ = nullptr;
+		uint offset_;
+		ushort count_;
+		ushort stride_;
+	};
+
 	class Graphics : public Object
 	{
 		uRTTI(Graphics, Object)

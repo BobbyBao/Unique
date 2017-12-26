@@ -115,6 +115,7 @@ namespace Unique
 	VertexBuffer::VertexBuffer(const PODVector<VertexElement>& elements, ByteArray&& data, Usage usage) : GraphicsBuffer(BIND_VERTEX_BUFFER)
 	{
 		elements_ = elements;
+
 		UpdateOffsets();
 
 		desc_.ElementByteStride = GetVertexSize(elements_);
@@ -125,6 +126,46 @@ namespace Unique
 		currentData = data;
 
 		GPUObject::Create();
+	}
+	
+	bool VertexBuffer::SetSize(unsigned vertexCount, const PODVector<VertexElement>& elements, bool dynamic)
+	{
+		elements_ = elements;
+
+		UpdateOffsets();
+
+		desc_.ElementByteStride = GetVertexSize(elements_);
+		desc_.uiSizeInBytes = vertexCount * desc_.ElementByteStride;
+		desc_.Usage = dynamic ? USAGE_DYNAMIC : USAGE_STATIC;
+		
+		data_[0].resize(desc_.uiSizeInBytes);
+
+		if (IsDynamic())
+		{
+			data_[1].resize(desc_.uiSizeInBytes);
+		}
+
+		return GPUObject::Create();
+	}
+
+	bool VertexBuffer::SetSize(unsigned vertexCount, unsigned elementMask, bool dynamic)
+	{
+		elements_ = GetElements(elementMask);
+
+		UpdateOffsets();
+
+		desc_.ElementByteStride = GetVertexSize(elements_);
+		desc_.uiSizeInBytes = vertexCount * desc_.ElementByteStride;
+		desc_.Usage = dynamic ? USAGE_DYNAMIC : USAGE_STATIC;
+		
+		data_[0].resize(desc_.uiSizeInBytes);
+
+		if (IsDynamic())
+		{
+			data_[1].resize(desc_.uiSizeInBytes);
+		}
+
+		return GPUObject::Create();
 	}
 
 	void VertexBuffer::UpdateOffsets()

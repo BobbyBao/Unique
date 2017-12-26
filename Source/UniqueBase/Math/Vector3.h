@@ -485,4 +485,5 @@ inline IntVector3 VectorMax(const IntVector3& lhs, const IntVector3& rhs) { retu
 /// Return a random value from [0, 1) from 3-vector seed.
 inline float StableRandom(const Vector3& seed) { return StableRandom(Vector2(StableRandom(Vector2(seed.x_, seed.y_)), seed.z_)); }
 
+using float3 = Vector3;
 }

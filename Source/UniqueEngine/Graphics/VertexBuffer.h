@@ -56,6 +56,11 @@ namespace Unique
 		VertexBuffer(uint elementMask, ByteArray&& data, Usage usage = Usage::USAGE_STATIC);
 		VertexBuffer(const PODVector<VertexElement>& elements, ByteArray&& data, Usage usage = Usage::USAGE_STATIC);
 
+		/// Set size, vertex elements and dynamic mode. Previous data will be lost.
+		bool SetSize(unsigned vertexCount, const PODVector<VertexElement>& elements, bool dynamic = false);
+		/// Set size and vertex elements and dynamic mode using legacy element bitmask. Previous data will be lost.
+		bool SetSize(unsigned vertexCount, unsigned elementMask, bool dynamic = false);
+
 		/// Return vertex elements.
 		const PODVector<VertexElement>& GetElements() const { return elements_; }
 

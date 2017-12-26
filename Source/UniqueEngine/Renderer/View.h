@@ -22,21 +22,22 @@ namespace Unique
 	
 	struct CameraVS
 	{
-		Vector3 cameraPos_;
-		float nearClip_;
-		float farClip_;
-		Vector4 depthMode_;
-		Vector3 frustumSize_;
-		Vector4 gBufferOffsets_;
 		Matrix3x4 view_;
 		Matrix3x4 viewInv_;
 		Matrix4 viewProj_;
+		Vector3 cameraPos_;
+		float nearClip_;
+		float farClip_;
+		Vector3 frustumSize_;
+		Vector4 depthMode_;
+		Vector4 gBufferOffsets_;
 		Vector4 clipPlane_;
 	};
 
 	struct CameraPS
 	{
 		Vector3 cameraPosPS_;
+		float dummy0;
 		Vector4 depthReconstruct_;
 		Vector2 gBufferInvSize_;
 		float nearClipPS_;
@@ -45,17 +46,33 @@ namespace Unique
 
 	struct ZonePS
 	{
-		Vector4 cAmbientColor;
-		Vector4 cFogParams;
-		Vector3 cFogColor;
-		Vector3 cZoneMin;
-		Vector3 cZoneMax;
+		Vector4 ambientColor;
+		Vector4 fogParams;
+		Vector3 fogColor;
+		Vector3 zoneMin;
+		Vector3 zoneMax;
 	};
 
 
 	struct ObjectVS
 	{
-		Matrix4 world_;
+		Matrix3x4 world_;
+#ifdef BILLBOARD
+		float3x3 cBillboardRot;
+#endif
+#ifdef SKINNED
+		uniform Matrix3x4 cSkinMatrices[MAXBONES];
+#endif
+	};
+
+	struct MaterialPS //: register(b4)
+	{
+		float4 matDiffColor;
+		float3 matEmissiveColor;
+		float3 matEnvMapColor;
+		float4 matSpecColor;
+		float roughness;
+		float metallic;
 	};
 
 	/// Intermediate light processing result.
@@ -266,8 +283,10 @@ namespace Unique
 		SPtr<UniformBuffer> frameUniform_;
 
 		SPtr<UniformBuffer> cameraUniformVS_;
+		SPtr<UniformBuffer> objectUniformVS_;
 
 		SPtr<UniformBuffer> cameraUniformPS_;
+		SPtr<UniformBuffer> materialUniformPS_;
 
 		Vector<Matrix3x4>	batchMatrics_[2];
 

@@ -4,7 +4,6 @@
 #include "Resource/ResourceCache.h"
 #include "Shader.h"
 #include "Graphics.h"
-
 #include <BasicShaderSourceStreamFactory.h>
 
 namespace Unique
@@ -17,6 +16,19 @@ namespace Unique
 		mask_ = defs;
 
 		defines_.Clear();
+
+		auto& graphics = GetSubsystem<Graphics>();
+		
+		//if (graphics.IsDirect3D())
+		{
+			macros_.AddShaderMacro("D3D11", "");
+		}
+
+		if (type.shaderType_ == SHADER_TYPE_VERTEX || type.shaderType_ == SHADER_TYPE_PIXEL)
+		{
+			macros_.AddShaderMacro("COMPILEVS", "");
+			macros_.AddShaderMacro("COMPILEPS", "");
+		}
 
 		for (uint i = 0; i < shaderPass_.allDefs_.size(); i++)
 		{
@@ -32,7 +44,6 @@ namespace Unique
 			}
 		}
 
-	//	ShaderMacroHelper
 		
 	}
 	
@@ -40,6 +51,7 @@ namespace Unique
 	{
 		ShaderCreationAttribs Attrs;
 		//Attrs.Desc.Name = "MainVS";
+		Attrs.Macros = macros_;
 		Attrs.FilePath = shaderStage_.source_;
 		Attrs.EntryPoint = shaderStage_.entryPoint_;
 		Attrs.Desc.ShaderType = shaderStage_.shaderType_;

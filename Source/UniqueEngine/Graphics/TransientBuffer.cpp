@@ -4,13 +4,5 @@
 
 namespace Unique
 {
-	TransientBuffer::TransientBuffer()
-	{
-	}
-
-
-	TransientBuffer::~TransientBuffer()
-	{
-	}
 
 }

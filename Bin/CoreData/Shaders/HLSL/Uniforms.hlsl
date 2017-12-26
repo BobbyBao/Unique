@@ -1,37 +1,35 @@
 
-// D3D11 uniforms (using constant buffers)
-
 #ifdef COMPILEVS
 
 // Vertex shader uniforms
-cbuffer FrameVS : register(b0)
+cbuffer FrameVS// : register(b0)
 {
     float cDeltaTime;
     float cElapsedTime;
 }
 
-cbuffer CameraVS : register(b1)
-{
+cbuffer CameraVS// : register(b1)
+{  
+	float4x3 cView;
+    float4x3 cViewInv;
+    float4x4 cViewProj;
     float3 cCameraPos;
     float cNearClip;
     float cFarClip;
-    float4 cDepthMode;
     float3 cFrustumSize;
+    float4 cDepthMode;
     float4 cGBufferOffsets;
-    float4x3 cView;
-    float4x3 cViewInv;
-    float4x4 cViewProj;
     float4 cClipPlane;
 }
 
-cbuffer ZoneVS : register(b2)
+cbuffer ZoneVS// : register(b2)
 {
     float3 cAmbientStartColor;
     float3 cAmbientEndColor;
     float4x3 cZone;
 }
 
-cbuffer LightVS : register(b3)
+cbuffer LightVS// : register(b3)
 {
     float4 cLightPos;
     float3 cLightDir;
@@ -44,14 +42,14 @@ cbuffer LightVS : register(b3)
 }
 
 #ifndef CUSTOM_MATERIAL_CBUFFER
-cbuffer MaterialVS : register(b4)
+cbuffer MaterialVS// : register(b4)
 {
     float4 cUOffset;
     float4 cVOffset;
 }
 #endif
 
-cbuffer ObjectVS : register(b5)
+cbuffer ObjectVS// : register(b5)
 {
     float4x3 cModel;
 #ifdef BILLBOARD
@@ -66,13 +64,13 @@ cbuffer ObjectVS : register(b5)
 #ifdef COMPILEPS
 
 // Pixel shader uniforms
-cbuffer FramePS : register(b0)
+cbuffer FramePS// : register(b0)
 {
     float cDeltaTimePS;
     float cElapsedTimePS;
 }
 
-cbuffer CameraPS : register(b1)
+cbuffer CameraPS //: register(b1)
 {
     float3 cCameraPosPS;
     float4 cDepthReconstruct;
@@ -81,7 +79,7 @@ cbuffer CameraPS : register(b1)
     float cFarClipPS;
 }
 
-cbuffer ZonePS : register(b2)
+cbuffer ZonePS //: register(b2)
 {
     float4 cAmbientColor;
     float4 cFogParams;
@@ -90,7 +88,7 @@ cbuffer ZonePS : register(b2)
     float3 cZoneMax;
 }
 
-cbuffer LightPS : register(b3)
+cbuffer LightPS //: register(b3)
 {
     float4 cLightColor;
     float4 cLightPosPS;
@@ -110,7 +108,7 @@ cbuffer LightPS : register(b3)
 }
 
 #ifndef CUSTOM_MATERIAL_CBUFFER
-cbuffer MaterialPS : register(b4)
+cbuffer MaterialPS //: register(b4)
 {
     float4 cMatDiffColor;
     float3 cMatEmissiveColor;

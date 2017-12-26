@@ -168,11 +168,13 @@ private:
     Matrix4 gpuProjection_;
     /// View frustum.
     Frustum frustum_;
-
+	/// Vertex buffer.
+	SPtr<VertexBuffer> vertexBuffer_;
     /// Line antialiasing flag.
     bool lineAntiAlias_;
 
 	SPtr<Shader> shader_;
+
 	SPtr<PipelineState> pipelineState_;
 };
 

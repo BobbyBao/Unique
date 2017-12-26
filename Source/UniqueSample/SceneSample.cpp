@@ -18,7 +18,7 @@ namespace Unique
 	struct ShaderConstants
 	{
 		Matrix4 WorldViewProjT;
-		Matrix4 WorldNormT;
+		Matrix3x4 WorldNormT;
 		Vector3 LightDir;
 		float LightCoeff;
 	};
@@ -57,7 +57,7 @@ namespace Unique
 		model->SetModel(m);*/
 
 		SPtr<Material> mat(new Material());
-		mat->SetShader(ResourceRef::Create<Shader>("Shaders/Test.shader"));
+		mat->SetShader(ResourceRef::Create<Shader>("Shaders/Basic.shader"));
 		model->SetMaterial(mat);
 
 		constBuffer_ = new UniformBuffer(ShaderConstants(), USAGE_DYNAMIC, CPU_ACCESS_WRITE);

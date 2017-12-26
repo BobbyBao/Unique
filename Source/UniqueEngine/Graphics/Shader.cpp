@@ -279,29 +279,7 @@ namespace Unique
 
 		return nullptr;
 	}
-
-	uint Shader::GetMask(const String & passName, const String& defs)
-	{
-		Pass* pass = GetPass(passName);
-		if (pass == nullptr)
-		{
-			return 0;
-		}
-
-		return pass->GetMask(this, defs);
-	}
-
-	PipelineState* Shader::GetPipeline(const String& passName, uint defMask)
-	{
-		Pass* pass = GetPass(passName);
-		if (pass == nullptr)
-		{
-			return nullptr;
-		}
-
-		return pass->GetPipeline(this, defMask);
-	}
-
+		
 	PipelineState* Shader::GetPipeline(const String& passName, const String& defs)
 	{
 		Pass* pass = GetPass(passName);

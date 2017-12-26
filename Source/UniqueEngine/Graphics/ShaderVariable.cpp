@@ -39,7 +39,7 @@ namespace Unique
 	}
 
 	UniformData::UniformData(float* arrayPtr, int count)
-		: arrayPtr_(arrayPtr), count_(count)
+	//	: arrayPtr_(arrayPtr), count_(count)
 	{
 	}
 
@@ -52,6 +52,7 @@ namespace Unique
 	uObject(CBuffer)
 	{
 		uFactory("Graphics")
+		uAttribute("Uniforms", uniforms_)
 	}
 
 
@@ -63,5 +64,9 @@ namespace Unique
 	{
 		deviceObject_ = nullptr;
 	}
-	
+
+	void ShaderVariableGroup::SetTexture(const StringID& name, ITexture* texture)
+	{
+
+	}
 }

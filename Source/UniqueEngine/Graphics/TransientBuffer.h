@@ -2,12 +2,8 @@
 
 namespace Unique
 {
-	class TransientBuffer
-	{
-	public:
-		TransientBuffer();
-		~TransientBuffer();
-	};
+	class VertexBuffer;
+	class IndexBuffer;
 
 
 }

@@ -9,7 +9,7 @@ namespace Diligent
 
 namespace Unique
 {
-	class Material : public Resource
+	class Material : public Resource, public ShaderVariableGroup
 	{
 		uRTTI(Material, Resource)
 	public:
@@ -25,8 +25,6 @@ namespace Unique
 		SPtr<Shader> shader_;
 		String shaderDefines_;
 		ResourceRef shaderRes_;
-		Vector<ShaderVariable> shaderVaribles_;
-		Vector3 test[4];
 	};
 
 

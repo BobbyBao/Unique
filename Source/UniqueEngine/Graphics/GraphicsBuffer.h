@@ -61,12 +61,12 @@ namespace Unique
 	public:
 		IndexBuffer() : GraphicsBuffer(BIND_INDEX_BUFFER) {}
 
-		IndexBuffer(Vector<uint>&& data, Usage usage = Usage::USAGE_STATIC, uint flags = 0) : GraphicsBuffer(BIND_INDEX_BUFFER)
+		IndexBuffer(Vector<uint>&& data, Usage usage = USAGE_STATIC, uint flags = 0) : GraphicsBuffer(BIND_INDEX_BUFFER)
 		{
 			Create(data, usage, flags);
 		}
 
-		IndexBuffer(Vector<ushort>&& data, Usage usage = Usage::USAGE_STATIC, uint flags = 0) : GraphicsBuffer(BIND_INDEX_BUFFER)
+		IndexBuffer(Vector<ushort>&& data, Usage usage = USAGE_STATIC, uint flags = 0) : GraphicsBuffer(BIND_INDEX_BUFFER)
 		{
 			Create(data, usage, flags);
 		}
