@@ -23,6 +23,7 @@ namespace Unique
 		bool isComputePipeline_ = false;
 		RefCntAutoPtr<IShaderResourceBinding> shaderResourceBinding_;
 		bool dirty_ = true;
+		uint dirtyFlags_ = 0;
 		IResourceMapping* resourceMapping_;
 
 		HashMap<StringID, IShaderVariable*> shaderVariables_;

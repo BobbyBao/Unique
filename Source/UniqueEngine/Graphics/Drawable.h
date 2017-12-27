@@ -35,7 +35,7 @@ class Graphics;
 class RenderPass;
 
 /// %Geometry type for vertex shader geometry variations.
-enum GeometryType
+enum GeometryType : byte
 {
 	GEOM_STATIC = 0,
 	GEOM_SKINNED = 1,
@@ -265,13 +265,10 @@ public:
     bool HasBasePass(unsigned batchIndex) const { return (basePassFlags_ & (1 << batchIndex)) != 0; }
 
     /// Return per-pixel lights.
-    const PODVector<Light*>& GetLights() const { return lights_; }
-
-    /// Return per-vertex lights.
-    const PODVector<Light*>& GetVertexLights() const { return vertexLights_; }
-
+//    const PODVector<Light*>& GetLights() const { return lights_; }
+	
     /// Return the first added per-pixel light.
-    Light* GetFirstLight() const { return firstLight_; }
+//    Light* GetFirstLight() const { return firstLight_; }
 
     /// Return the minimum view-space depth.
     float GetMinZ() const { return minZ_; }
@@ -280,22 +277,22 @@ public:
     float GetMaxZ() const { return maxZ_; }
 
     /// Add a per-pixel light affecting the object this frame.
-    void AddLight(Light* light)
-    {
-        if (!firstLight_)
-            firstLight_ = light;
-
-        // Need to store into the light list only if the per-pixel lights are being limited
-        // Otherwise recording the first light is enough
-        if (maxLights_)
-            lights_.push_back(light);
-    }
+//     void AddLight(Light* light)
+//     {
+//         if (!firstLight_)
+//             firstLight_ = light;
+// 
+//         // Need to store into the light list only if the per-pixel lights are being limited
+//         // Otherwise recording the first light is enough
+//         if (maxLights_)
+//             lights_.push_back(light);
+//     }
 
     /// Add a per-vertex light affecting the object this frame.
-    void AddVertexLight(Light* light)
-    {
-        vertexLights_.push_back(light);
-    }
+//     void AddVertexLight(Light* light)
+//     {
+//         vertexLights_.push_back(light);
+//     }
 
 protected:
     /// Handle node being assigned.
@@ -379,11 +376,9 @@ protected:
     /// List of cameras from which is seen on the current frame.
     PODVector<Camera*> viewCameras_;
     /// First per-pixel light added this frame.
-    Light* firstLight_;
+    //Light* firstLight_;
     /// Per-pixel lights affecting this drawable.
-    PODVector<Light*> lights_;
-    /// Per-vertex lights affecting this drawable.
-    PODVector<Light*> vertexLights_;
+    //PODVector<Light*> lights_;
 };
 
 inline bool CompareDrawables(Drawable* lhs, Drawable* rhs)

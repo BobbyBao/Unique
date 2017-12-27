@@ -1,9 +1,9 @@
 
 #include "Precompiled.h"
-
 #include "Core/Context.h"
 #include "Core/CoreEvents.h"
 #include "Core/Profiler.h"
+#include "Math/Polyhedron.h"
 //#include "../Animation/AnimatedModel.h"
 #include "../Graphics/Camera.h"
 #include "../Graphics/DebugRenderer.h"
@@ -12,10 +12,11 @@
 #include "../Graphics/ShaderVariation.h"
 #include "../Graphics/VertexBuffer.h"
 #include "../Graphics/skeleton.h"
-#include "Math/Polyhedron.h"
 #include "Resource/ResourceCache.h"
 #include "Graphics/PipelineState.h"
 #include "Scene/Node.h"
+#include "../Renderer/Batch.h"
+
 #include "DebugNew.h"
 
 namespace Unique
@@ -42,7 +43,7 @@ DebugRenderer::DebugRenderer() : lineAntiAlias_(false)
 	ResourceCache& cache = GetSubsystem<ResourceCache>();
 	shader_ = cache.GetResource<Shader>("shaders/basic.shader");
 
-	pipelineState_ = shader_->GetPipeline("", "VERTEXCOLOR");
+	pipelineState_ = shader_->GetPipeline("", "");
 }
 
 DebugRenderer::~DebugRenderer()
@@ -471,9 +472,7 @@ void DebugRenderer::Render()
     Graphics& graphics = GetSubsystem<Graphics>();
 
     UNIQUE_PROFILE(RenderDebugGeometry);
-
-	//graphics->setViewTransform(view_, gpuProjection_);
-
+	
 	uint numVertices = (uint)((lines_.size() + noDepthLines_.size()) * 2 + (triangles_.size() + noDepthTriangles_.size()) * 3);
 	// Resize the vertex buffer if too small or much too large
 	if (vertexBuffer_->GetCount() < numVertices || vertexBuffer_->GetCount() > numVertices * 2)
@@ -570,6 +569,11 @@ void DebugRenderer::Render()
 
 	size_t start = 0;
 	size_t count = 0;
+		
+	Batch batch;
+	batch.geometryType_ = GEOM_TRANSIENT;
+	TransientVertexBuffer& tvb = batch.transientVB_;
+	tvb.vertexBuffer_ = vertexBuffer_;
 
 	if (lines_.size() > 0)
 	{
@@ -583,6 +587,7 @@ void DebugRenderer::Render()
 // 			state | BGFX_STATE_DEPTH_TEST_LEQUAL | BGFX_STATE_PT_LINES,
 // 			uiShaderInstance_
 // 		);
+
 		start += count;
 	}
 
@@ -620,6 +625,7 @@ void DebugRenderer::Render()
 // 			state | BGFX_STATE_DEPTH_TEST_LEQUAL,
 // 			uiShaderInstance_
 // 		);
+
 		start += count;
 	}
 

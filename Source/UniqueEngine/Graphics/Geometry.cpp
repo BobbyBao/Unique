@@ -27,8 +27,7 @@
 #include "Graphics/Shader.h"
 #include "Graphics/PipelineState.h"
 #include "IO/Log.h"
-
-//#include "../Math/Ray.h"
+#include "Math/Ray.h"
 
 
 #define MAX_VERTEX_STREAMS 8
@@ -231,7 +230,7 @@ namespace Unique
 		}
 
 		drawAttribs.NumInstances = numInstances;
-
+		//drawAttribs.FirstInstanceLocation = ;
 		deviceContext->SetPipelineState(pipeline->GetPipeline());
 
 		auto& graphics = GetSubsystem<Graphics>();
@@ -264,16 +263,16 @@ namespace Unique
 
 		return hash;
 	}
-	/*
+	
 	float Geometry::GetHitDistance(const Ray& ray, Vector3* outNormal, Vector2* outUV) const
 	{
-		const unsigned char* vertexData;
-		const unsigned char* indexData;
-		unsigned vertexSize;
-		unsigned indexSize;
-		const PODVector<VertexElement>* elements;
+		const unsigned char* vertexData = nullptr;
+		const unsigned char* indexData = nullptr;
+		unsigned vertexSize = 0;
+		unsigned indexSize = 0;
+		const PODVector<VertexElement>* elements = nullptr;
 
-		GetRawData(vertexData, vertexSize, indexData, indexSize, elements);
+		//GetRawData(vertexData, vertexSize, indexData, indexSize, elements);
     
 		if (!vertexData || !elements || VertexBuffer::GetElementOffset(*elements, TYPE_VECTOR3, SEM_POSITION) != 0)
 			return M_INFINITY;
@@ -284,13 +283,13 @@ namespace Unique
 		{
 			// requested UV output, but no texture data in vertex buffer
 			UNIQUE_LOGWARNING("Illegal GetHitDistance call: UV return requested on vertex buffer without UV coords");
-			*outUV = Vector2::Z;
+			*outUV = Vector2::ZERO;
 			outUV = 0;
 		}
 
 		return indexData ? ray.HitDistance(vertexData, vertexSize, indexData, indexSize, indexStart_, indexCount_, outNormal, outUV,
 			uvOffset) : ray.HitDistance(vertexData, vertexSize, vertexStart_, vertexCount_, outNormal, outUV, uvOffset);
 	}
-	*/
+	
 
 }

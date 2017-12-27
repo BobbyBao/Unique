@@ -58,10 +58,9 @@ SourceBatch& SourceBatch::operator =(const SourceBatch& rhs)
 
 uObject(Drawable)
 {
-//	TRANSFER("View Mask", viewMask_)
-//		TRANSFER("Light Mask", lightMask_)
-//		TRANSFER("Shadow Mask", shadowMask_)
-
+	uAttribute("View Mask", viewMask_);
+	uAttribute("Light Mask", lightMask_);
+	uAttribute("Shadow Mask", shadowMask_);
 }
 
 Drawable::Drawable(unsigned char drawableFlags) :
@@ -89,8 +88,8 @@ Drawable::Drawable(unsigned char drawableFlags) :
     maxZ_(0.0f),
     lodBias_(1.0f),
     basePassFlags_(0),
-    maxLights_(0),
-    firstLight_(0)
+    maxLights_(0)//,
+    //firstLight_(0)
 {
 }
 
@@ -310,9 +309,9 @@ void Drawable::MarkInView(const FrameInfo& frame)
         viewCameras_.push_back(frame.camera_);
 
     basePassFlags_ = 0;
-    firstLight_ = 0;
-    lights_.clear();
-    vertexLights_.clear();
+//     firstLight_ = 0;
+//     lights_.clear();
+//     vertexLights_.clear();
 }
 
 void Drawable::MarkInView(unsigned frameNumber)
@@ -323,7 +322,7 @@ void Drawable::MarkInView(unsigned frameNumber)
         viewCameras_.clear();
     }
 }
-
+/*
 void Drawable::LimitLights()
 {
     // Maximum lights value 0 means unlimited
@@ -360,7 +359,7 @@ void Drawable::LimitVertexLights(bool removeConvertedLights)
 
     std::sort(vertexLights_.begin(), vertexLights_.end(), CompareDrawables);
     vertexLights_.resize(MAX_VERTEX_LIGHTS);
-}
+}*/
 
 void Drawable::OnNodeSet(Node* node)
 {

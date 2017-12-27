@@ -31,9 +31,9 @@ Shader "Basic"
 
 			LayoutElement
 			{
-				NumComponents 3
-				ValueType FLOAT32
-				IsNormalized false
+				NumComponents 4
+				ValueType UINT8
+				IsNormalized true
 			}
 			
 		}

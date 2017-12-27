@@ -187,6 +187,8 @@ namespace Unique
 		void SetGlobalShaderParameters();
 		/// Set camera-specific shader parameters. Called by Batch and internally by View.
 		void SetCameraShaderParameters(Camera* camera);
+
+		void AddBatch(Batch& batch);
 	protected:
 		/// Query the octree for drawable objects.
 		void GetDrawables();

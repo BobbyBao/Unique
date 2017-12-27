@@ -354,7 +354,6 @@ namespace Unique
 		Matrix3x4 cameraEffectiveTransform = camera->GetEffectiveWorldTransform();
 
 		{
-
 			Vector4 depthMode = Vector4::ZERO;
 			if (camera->IsOrthographic())
 			{
@@ -502,6 +501,23 @@ namespace Unique
 					AddBatchToQueue(*info.batchQueue_, destBatch, shader, info.allowInstancing_);
 				}
 			}
+		}
+	}
+
+
+	void View::AddBatch(Batch& batch)
+	{
+		assert(batch.pass_ != nullptr);
+
+		auto& batchQueues = MainContext(batchQueues_);
+		auto it = batchQueues.find(batch.pass_->passIndex_);
+		if (it != batchQueues.end())
+		{
+			it->second.batches_.push_back(batch);
+		}
+		else
+		{
+			UNIQUE_LOGERROR("Unknown pass index : ", batch.pass_->passIndex_);
 		}
 	}
 

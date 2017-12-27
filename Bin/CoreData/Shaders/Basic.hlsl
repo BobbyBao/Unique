@@ -2,22 +2,21 @@
 #include "Samplers.hlsl"
 #include "Transform.hlsl"
 
-struct PSInput 
-{ 
-    float4 Pos : SV_POSITION; 
-};
 
-PSInput VS(float4 iPos : ATTRIB0, float3 norm : ATTRIB1) 
-{   
-	PSInput ps; 
+void VS(
+		float4 iPos : ATTRIB0, 
+		float4 iColor : ATTRIB1,
+        out float4 oColor : COLOR0,
+		out float4 oPos : OUTPOSITION
+    ) 
+{
     float4x3 modelMatrix = iModelMatrix;
     float3 worldPos = GetWorldPos(modelMatrix);
-    ps.Pos = GetClipPos(worldPos);
-
-    return ps;
+    oPos = GetClipPos(worldPos);
+	oColor = iColor;
 }
 
-float4 PS(PSInput input) : SV_TARGET
+float4 PS(float4 iColor : COLOR0) : SV_TARGET
 {
-    return float4(1, 0, 0, 1); 
+    return iColor; 
 }

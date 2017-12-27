@@ -38,10 +38,6 @@ namespace Unique
 	{
 	}
 
-// 	UniformData::UniformData(float* arrayPtr, int count)
-// 	{
-// 	}
-
 	UniformData::~UniformData()
 	{
 	}
@@ -75,5 +71,12 @@ namespace Unique
 				shaderVarible_.Lock()->Set(*texture);
 			}
 		);
+	}
+
+	void TextureSlot::SetTextureAttr(const ResourceRef& texAttr)
+	{
+		texAttr_ = texAttr_;
+		Texture* tex = GetSubsystem<ResourceCache>().GetResource<Texture>(texAttr.name_);
+		texture_ = tex;
 	}
 }

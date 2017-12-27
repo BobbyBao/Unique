@@ -46,6 +46,34 @@ namespace Unique
 		{
 		}
 
+		/// Construct from transient buffer.
+		Batch(const TransientVertexBuffer& tvb, Material* material, Matrix3x4* worldTransform = nullptr) :
+			isBase_(true),
+			transientVB_(tvb),
+			geometry_(nullptr),
+			material_(material),
+			worldTransform_(worldTransform),
+			numWorldTransforms_(1),
+			instancingData_(nullptr),
+			lightQueue_(0),
+			geometryType_(GEOM_TRANSIENT)
+		{
+		}
+
+		Batch(const TransientVertexBuffer& tvb, const TransientIndexBuffer& tib, Material* material, Matrix3x4* worldTransform = nullptr) :
+			isBase_(true),
+			transientVB_(tvb),
+			transientIB_(tib),
+			geometry_(nullptr),
+			material_(material),
+			worldTransform_(worldTransform),
+			numWorldTransforms_(1),
+			instancingData_(nullptr),
+			lightQueue_(0),
+			geometryType_(GEOM_TRANSIENT)
+		{
+		}
+
 		/// Calculate state sorting key, which consists of base pass flag, light, pass and geometry.
 		void CalculateSortKey();
 		/// Prepare for rendering.
@@ -57,6 +85,8 @@ namespace Unique
 		unsigned long long sortKey_;
 		/// Distance from camera.
 		float distance_;
+		/// %Geometry type.
+		GeometryType geometryType_;
 		/// 8-bit render order modifier from material.
 		unsigned char renderOrder_;
 		/// 8-bit light mask for stencil marking in deferred rendering.
@@ -64,14 +94,14 @@ namespace Unique
 		/// Base batch flag. This tells to draw the object fully without light optimizations.
 		bool isBase_;
 		/// Geometry.
-		Geometry* geometry_;
+		Geometry* geometry_ = nullptr;
 		/// Material.
-		Material* material_;
+		Material* material_ = nullptr;
 		/// World transform(s). For a skinned model, these are the bone transforms.
 		const Matrix3x4* worldTransform_;
 		/// Number of world transforms.
 		unsigned numWorldTransforms_;
-		//
+		// Offset in batchMatrics
 		uint transformOffset_ = 0;
 		/// Per-instance data. If not null, must contain enough data to fill instancing buffer.
 		void* instancingData_;
@@ -87,8 +117,7 @@ namespace Unique
 		Pass* pass_;
 
 		PipelineState*  pipelineState_;
-		/// %Geometry type.
-		GeometryType geometryType_;
+
 	};
 
 

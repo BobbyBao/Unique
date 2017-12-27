@@ -9,6 +9,17 @@ namespace Unique
 
 	struct UniformData
 	{
+		UniformData();
+		UniformData(const UniformData& data);
+		UniformData(float val);
+		UniformData(const Vector2& val);
+		UniformData(const Vector3& val);
+		UniformData(const Vector4& val);
+		UniformData(const Color& val);
+		~UniformData();
+
+		void operator =(const UniformData& data);
+
 		union
 		{
 			int intVal_;
@@ -17,21 +28,7 @@ namespace Unique
 			Vector3 float3Val_;
 			Vector4 float4Val_;
 			Color colorVal_;
-			String strVal_;
 		};
-
-		UniformData();
-		UniformData(const UniformData& data);
-		UniformData(float val);
-		UniformData(const Vector2& val);
-		UniformData(const Vector3& val);
-		UniformData(const Vector4& val);
-		UniformData(const Color& val);
-		//UniformData(float* arrayPtr, int count);
-
-		~UniformData();
-
-		void operator =(const UniformData& data);
 
 	};
 
@@ -45,8 +42,6 @@ namespace Unique
 			FLOAT3,
 			FLOAT4,
 			COLOR
-			//MAT4,
-			//ARRAY
 		};
 
 		Uniform();
@@ -86,14 +81,7 @@ namespace Unique
 			case Unique::Uniform::COLOR:
 				transfer.TransferAttribute("Value", value_.colorVal_);
 				break;
-			//case Unique::Uniform::ARRAY:
-			//	transfer.TransferAttribute("Value", value_.strVal_);
-			//	break;
-			//case Unique::Uniform::MAT4:
-			//	transfer.TransferAttribute("Value", value_.strVal_);
-			//	break;
 			default:
-				transfer.TransferAttribute("Value", value_.strVal_);
 				break;
 			}
 			transfer.EndObject();
@@ -106,13 +94,14 @@ namespace Unique
 	struct TextureSlot
 	{
 		void SetTexture(Texture* tex);
+		void SetTextureAttr(const ResourceRef& texAttr);
 
 		StringID name_;
-		ResourceRef texRef_;
+		ResourceRef texAttr_;
 		SPtr<Texture> texture_;
 		RefCntWeakPtr<IShaderVariable> shaderVarible_;
 		
-		uClass("Name", name_, "Texture", texRef_)
+		uClass("Name", name_, "Texture", texAttr_)
 	};
 
 }
