@@ -31,10 +31,11 @@ namespace Unique
 		byte* data_ = nullptr;
 	};
 
-	class ImageImporter : public ResourceImporter
+	class ImageImporter : public TResourceImporter<Image>
 	{
+		uRTTI(ImageImporter, ResourceImporter)
 	public:
-
+		virtual SPtr<Resource> Import(const String& path);
 	};
 
 	static const float a = 0.055f;

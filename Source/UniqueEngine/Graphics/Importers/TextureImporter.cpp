@@ -1,7 +1,9 @@
 #include "Precompiled.h"
 #include "TextureImporter.h"
-#include "../texture.h"
 
+#include "Resource/Image.h"
+#include "DDSLoader.h"
+#include "../Graphics.h"
 
 namespace Unique
 {
@@ -12,10 +14,22 @@ namespace Unique
 
 	SPtr<Resource> TextureImporter::Import(const String& filePath)
 	{
-		if (filePath.EndsWith(".raw"))
+		if (filePath.EndsWith(".dds", false))
 		{
-			return loadRaw(filePath);
+			return LoadDDS(filePath);
 		}
+		else
+		{
+			auto& cache = GetSubsystem<ResourceCache>();
+			Image* img = cache.GetResource<Image>(filePath);
+			SPtr<Texture> tex(new Texture());
+			if (tex->Create(*img, TexLoadInfo))
+			{
+				return tex;
+			}
+		}
+
+		return nullptr;
 /*
 		String cachedAsset = ReplaceExtension(filePath, ".ktx");
 		FileSystem& fileSystem = Subsystem<FileSystem>();
@@ -66,11 +80,10 @@ namespace Unique
 		}
 
 		return resource;*/
-		return nullptr;
 	}
 
 
-	SPtr<Resource> TextureImporter::loadRaw(const String& path)
+	SPtr<Resource> TextureImporter::LoadDDS(const String& path)
 	{
 		ResourceCache& cache = GetSubsystem<ResourceCache>();
 		SPtr<File> file = cache.GetFile(path);
@@ -78,19 +91,21 @@ namespace Unique
 		{
 			return nullptr;
 		}
-
-		int texWidth = (int)sqrt(file->GetSize() / 2);
-		int texHeight = texWidth;
-		int size = texWidth * texHeight * sizeof(ushort);
-
-		SharedArrayPtr<byte> data(new byte[size]);
-		ushort* dst_mem = (ushort*)data.Get();
-		if(size != file->Read(dst_mem, size))
-		{
-			return nullptr;
-		} 
 		
+		ByteArray data = file->ReadAll();
 		SPtr<Texture> texture(new Texture());
+
+		CreateDDSTextureFromMemoryEx(renderDevice,
+			reinterpret_cast<const Uint8*>(data.data()),
+			data.size(),
+			0, // maxSize
+			TexLoadInfo.Usage,
+			TexLoadInfo.Name,
+			TexLoadInfo.BindFlags,
+			TexLoadInfo.CPUAccessFlags,
+			0, // miscFlags
+			TexLoadInfo.IsSRGB, // forceSRGB
+			*texture);
 
 		return texture;
 	}

@@ -37,6 +37,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{C1C988
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UniqueNative", "Windows\UniqueNative.vcxproj", "{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unique", "Unique", "{5BD8C710-C612-4B59-8571-3FED57E259D8}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		..\Source\UniqueBase\UniqueBase.vcxitems*{1f984cb6-33d2-4f90-9e07-1dd5c0b83d8c}*SharedItemsImports = 4

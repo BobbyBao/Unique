@@ -41,6 +41,8 @@ namespace Unique
 
 		Test();
 
+		auto& cache = GetSubsystem<ResourceCache>();
+
 		scene_ = new Scene();
 		scene_->CreateComponent<Octree>();
 		camera_ = scene_->CreateChild("Camera")->CreateComponent<Camera>();
@@ -58,6 +60,9 @@ namespace Unique
 
 		SPtr<Material> mat(new Material());
 		mat->SetShader(ResourceRef::Create<Shader>("Shaders/Basic.shader"));
+
+		Texture* tex = cache.GetResource<Texture>("Models/Kachujin/Textures/Kachujin_diffuse.png");
+		mat->SetTexture("sDiffMap", tex);
 		model->SetMaterial(mat);
 
 		constBuffer_ = new UniformBuffer(ShaderConstants(), USAGE_DYNAMIC, CPU_ACCESS_WRITE);

@@ -15,6 +15,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)Application\Application.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Importers\DDSLoader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Importers\dxgiformat.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Renderer\LightPass.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Renderer\FrameBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Renderer\Batch.h" />
@@ -62,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Application\Application.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Importers\DDSLoader.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Renderer\LightPass.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Renderer\FrameBuffer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Renderer\Batch.cpp" />

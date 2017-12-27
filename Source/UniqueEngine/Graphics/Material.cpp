@@ -26,4 +26,18 @@ namespace Unique
 		shader_ = GetSubsystem<ResourceCache>().GetResource<Shader>(shaderRes_.name_);
 	}
 
+	void Material::SetTexture(const StringID& name, Texture* texture)
+	{
+		for (auto& ts : textureSlots_)
+		{
+			if (ts.name_ == name)
+			{
+				ts.texture_ = texture;
+			//	uniform.shaderVarible_
+				break;
+			}
+
+		}
+	}
+
 }

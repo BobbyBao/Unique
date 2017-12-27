@@ -16,22 +16,18 @@ namespace Unique
 
 	using CommandQueue = Vector<std::function<void()> > ;
 
-	class TransientVertexBuffer
+	struct TransientVertexBuffer
 	{
-	public:
 		VertexBuffer* vertexBuffer_ = nullptr;
 		uint offset_;
-		ushort count_;
-		ushort stride_;
+		uint count_;
 	};
 
-	class TransientIndexBuffer
+	struct TransientIndexBuffer
 	{
-	public:
 		IndexBuffer* indexBuffer_ = nullptr;
 		uint offset_;
-		ushort count_;
-		ushort stride_;
+		uint count_;
 	};
 
 	class Graphics : public Object

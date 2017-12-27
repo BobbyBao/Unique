@@ -21,11 +21,14 @@ namespace Unique
 
 		Shader* GetShader() { return shader_; }
 
+		void SetTexture(const StringID& name, Texture* texture);
+
 	private:
 		SPtr<Shader> shader_;
 		String shaderDefines_;
 		ResourceRef shaderRes_;
 		Vector<Uniform> uniforms_;
+		Vector<TextureSlot> textureSlots_;
 	};
 
 

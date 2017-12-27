@@ -1,5 +1,6 @@
 #pragma once
 #include "Texture.h"
+#include <RefCntAutoPtr.h>
 
 namespace Unique
 {
@@ -17,7 +18,6 @@ namespace Unique
 			Vector4 float4Val_;
 			Color colorVal_;
 			String strVal_;
-			SPtr<Texture> texture_;
 		};
 
 		UniformData();
@@ -27,7 +27,7 @@ namespace Unique
 		UniformData(const Vector3& val);
 		UniformData(const Vector4& val);
 		UniformData(const Color& val);
-		UniformData(float* arrayPtr, int count);
+		//UniformData(float* arrayPtr, int count);
 
 		~UniformData();
 
@@ -44,24 +44,15 @@ namespace Unique
 			FLOAT2,
 			FLOAT3,
 			FLOAT4,
-			COLOR,
-			MAT4,
-			ARRAY,
-			TEXTURE
+			COLOR
+			//MAT4,
+			//ARRAY
 		};
 
-		Uniform()
-		{
-		}
+		Uniform();
+		Uniform(const StringID& name, Uniform::Type type, const UniformData& val);
+		~Uniform();
 
-		Uniform(const StringID& name, Uniform::Type type, const UniformData& val)
-			: name_(name), type_(type), value_(val)
-		{
-		}
-
-		~Uniform()
-		{
-		}
 		
 		StringID name_;
 		Uniform::Type type_ = Uniform::Type::INT;
@@ -95,27 +86,34 @@ namespace Unique
 			case Unique::Uniform::COLOR:
 				transfer.TransferAttribute("Value", value_.colorVal_);
 				break;
-			case Unique::Uniform::ARRAY:
-				transfer.TransferAttribute("Value", value_.strVal_);
-				break;
-			case Unique::Uniform::MAT4:
-				transfer.TransferAttribute("Value", value_.strVal_);
-				break;
-			case Unique::Uniform::TEXTURE:
-				transfer.TransferAttribute("Value", value_.strVal_);
-				break;
+			//case Unique::Uniform::ARRAY:
+			//	transfer.TransferAttribute("Value", value_.strVal_);
+			//	break;
+			//case Unique::Uniform::MAT4:
+			//	transfer.TransferAttribute("Value", value_.strVal_);
+			//	break;
 			default:
+				transfer.TransferAttribute("Value", value_.strVal_);
 				break;
 			}
 			transfer.EndObject();
 		}
 
-		//uClass("Name", name_, "Type", type_, "Data", value_.vecVal_)
 	};
 
-	uEnum(Uniform::Type, "INT", "FLOAT", "VEC2", "VEC3", "VEC4")
+	uEnum(Uniform::Type, "INT", "FLOAT", "FLOAT2", "FLOAT3", "FLOAT4", "COLOR")
 
+	struct TextureSlot
+	{
+		void SetTexture(Texture* tex);
 
+		StringID name_;
+		ResourceRef texRef_;
+		SPtr<Texture> texture_;
+		RefCntWeakPtr<IShaderVariable> shaderVarible_;
+		
+		uClass("Name", name_, "Texture", texRef_)
+	};
 
 }
 

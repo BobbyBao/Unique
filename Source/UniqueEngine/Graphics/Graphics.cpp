@@ -58,22 +58,13 @@ namespace Unique
 
 	void Graphics::Resize(const IntVector2& size)
 	{
-		auto fn = [=]()
-		{
+		uCall
+		(
 			resolution_ = size;
 			swapChain_->Resize(size.x_, size.y_);
 			deviceContext_->Flush();
-		};
-
-		if (Thread::IsMainThread())
-		{
-			Graphics::AddCommand(fn);
-		}
-		else
-		{
-			fn();
-		}
-
+		);
+		
 	}
 
 	void Graphics::SetTitle(const String& title)
@@ -123,7 +114,7 @@ namespace Unique
 		uCall
 		(
 			resourceMapping_->AddResource(Name, *pObject, bIsUnique);
-		)
+		);
 	}
 
 	void Graphics::AddResource(const Char *Name, IDeviceObject *pObject, bool bIsUnique)
@@ -131,7 +122,7 @@ namespace Unique
 		uCall
 		(
 			resourceMapping_->AddResource(Name, pObject, bIsUnique);
-		)
+		);
 	}
 
 	void Graphics::AddResourceArray(const Char *Name, uint StartIndex, IDeviceObject* const* ppObjects, uint NumElements, bool bIsUnique)
@@ -139,7 +130,7 @@ namespace Unique
 		uCall
 		(
 			resourceMapping_->AddResourceArray(Name, StartIndex, ppObjects, NumElements, bIsUnique);
-		)
+		);
 	}
 
 	void Graphics::RemoveResourceByName(const Char *Name, uint ArrayIndex)
@@ -147,7 +138,7 @@ namespace Unique
 		uCall
 		(
 			resourceMapping_->RemoveResourceByName(Name, ArrayIndex);
-		)
+		);
 	}
 
 	void Graphics::BindShaderResources(IPipelineState* pipelineState, uint flags)

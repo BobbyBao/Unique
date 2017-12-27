@@ -2,6 +2,10 @@
 
 Shader "Basic"
 {
+	Uniforms
+	{
+	}
+
 	Pass base
 	{
 		DepthState
@@ -39,7 +43,7 @@ Shader "Basic"
 			EntryPoint "VS" 
 			ShaderProfile "DX_4_0"
 			Defines ""
-			Source "hlsl/Basic.hlsl"
+			Source "Basic.hlsl"
 		}
 		
 		PixelShader
@@ -47,7 +51,7 @@ Shader "Basic"
 			EntryPoint "PS"
 			ShaderProfile "DX_4_0"
 			Defines ""
-			Source "hlsl/Basic.hlsl"
+			Source "Basic.hlsl"
 		}
 	}
 }

@@ -102,9 +102,10 @@ namespace Unique
 		static unsigned shadowPassIndex;
 
 	private:
-		String shaderName_;
-		Vector<Uniform> shaderVaribles_;
-		Vector<SPtr<Pass>> passes_;
+		String				shaderName_;
+		Vector<Uniform>		uniforms_;
+		Vector<TextureSlot> textureSlots_;
+		Vector<SPtr<Pass>>	passes_;
 
 		/// Pass index assignments.
 		static HashMap<String, unsigned> passIndices;

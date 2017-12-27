@@ -75,8 +75,8 @@ namespace Unique
 		}
 
 
-		std::vector<TextureSubResData> pSubResources(desc_.MipLevels);
-		std::vector< std::vector<Uint8> > Mips(desc_.MipLevels);
+		pSubResources.resize(desc_.MipLevels);
+		Mips.resize(desc_.MipLevels);
 
 		if (ImgDesc.numComponents == 3)
 		{

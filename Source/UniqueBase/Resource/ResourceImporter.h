@@ -20,5 +20,14 @@ namespace Unique
 		StringID type_;
 	};
 
+	template<class T>
+	class TResourceImporter : public ResourceImporter
+	{
+	public:
+		TResourceImporter() : ResourceImporter(T::GetTypeStatic())
+		{
+		}
+	};
+
 }
 

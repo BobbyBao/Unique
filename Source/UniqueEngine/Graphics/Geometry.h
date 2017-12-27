@@ -62,7 +62,7 @@ public:
 
 	void Draw(PipelineState* pipeline);
 
-	void DrawInstanced(PipelineState* pipeline);
+	void DrawInstanced(PipelineState* pipeline, uint numInstances);
     
 	/// Return all vertex buffers.
     const Vector<SPtr<VertexBuffer> >& GetVertexBuffers() const { return vertexBuffers_; }
@@ -77,7 +77,7 @@ public:
     IndexBuffer* GetIndexBuffer() const { return indexBuffer_; }
 
     /// Return primitive type.
-    PrimitiveTopology GetPrimitiveType() const { return drawAttribs_.Topology; }
+    PrimitiveTopology GetPrimitiveType() const { return primitiveType_; }
 
     /// Return start index.
     unsigned GetIndexStart() const { return indexStart_; }
@@ -110,9 +110,8 @@ private:
     Vector<SPtr<VertexBuffer> > vertexBuffers_;
     /// Index buffer.
 	SPtr<IndexBuffer> indexBuffer_;
-
-	DrawAttribs drawAttribs_;
-
+	/// Primitive type.
+	PrimitiveTopology primitiveType_;
     /// Start index.
     unsigned indexStart_;
     /// Number of indices.

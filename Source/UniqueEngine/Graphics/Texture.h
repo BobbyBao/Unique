@@ -63,6 +63,9 @@ namespace Unique
 		SPtr<TextureView> renderTargetView_;
 		SPtr<TextureView> depthStencilView_;
 		SPtr<TextureView> unorderedAccessView_;
+
+		std::vector<TextureSubResData> pSubResources;
+		std::vector< std::vector<byte> > Mips;
 	};
 
 	class TextureView : public RefCounted

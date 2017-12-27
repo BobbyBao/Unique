@@ -38,10 +38,9 @@ namespace Unique
 	{
 	}
 
-	UniformData::UniformData(float* arrayPtr, int count)
-	//	: arrayPtr_(arrayPtr), count_(count)
-	{
-	}
+// 	UniformData::UniformData(float* arrayPtr, int count)
+// 	{
+// 	}
 
 	UniformData::~UniformData()
 	{
@@ -52,4 +51,29 @@ namespace Unique
 		memcpy(this, &data, sizeof(*this));
 	}
 
+	Uniform::Uniform()
+	{
+	}
+
+	Uniform::Uniform(const StringID& name, Uniform::Type type, const UniformData& val)
+		: name_(name), type_(type), value_(val)
+	{
+	}
+
+	Uniform::~Uniform()
+	{
+	}
+
+	void TextureSlot::SetTexture(Texture* tex)
+	{
+		texture_ = tex;
+		SPtr<Texture> texture = texture_;
+		uCall
+		(
+			if (shaderVarible_.IsValid())
+			{
+				shaderVarible_.Lock()->Set(*texture);
+			}
+		);
+	}
 }

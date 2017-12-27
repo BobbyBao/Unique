@@ -105,6 +105,8 @@ namespace Unique
 	{
 		uFactory("Graphics")
 		uAttribute("Name", shaderName_)
+		uAttribute("Uniforms", uniforms_)
+		uAttribute("TextureSlots", textureSlots_)
 		uAttribute("Pass", passes_)	
 	}
 

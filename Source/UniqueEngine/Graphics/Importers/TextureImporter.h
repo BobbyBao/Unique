@@ -1,5 +1,6 @@
 #pragma once
 #include "Resource/ResourceImporter.h"
+#include "../texture.h"
 
 namespace Unique
 {
@@ -11,7 +12,8 @@ namespace Unique
 
 		virtual SPtr<Resource> Import(const String& path);
 	private:
-		SPtr<Resource> loadRaw(const String& path);
+		SPtr<Resource> LoadDDS(const String& path);
+		TextureLoadInfo TexLoadInfo;
 	};
 
 }

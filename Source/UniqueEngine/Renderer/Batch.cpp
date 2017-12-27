@@ -531,6 +531,36 @@ namespace Unique
 			Prepare(view, camera, true);
 			geometry_->Draw(pipelineState_);
 		}
+		else if (transientVB_.vertexBuffer_)
+		{
+			Prepare(view, camera, true);
+
+			IBuffer *buffer[1] = { *transientVB_.vertexBuffer_ };
+			Uint32 offsets[1] = { 0 };
+			Uint32 strides[1] = { transientVB_.vertexBuffer_->GetStride() };
+
+			DrawAttribs drawAttribs;
+			drawAttribs.NumVertices = transientVB_.count_;
+			deviceContext->SetVertexBuffers(0, 1, buffer, strides, offsets, SET_VERTEX_BUFFERS_FLAG_RESET);
+			
+			if (transientIB_.indexBuffer_)
+			{
+				deviceContext->SetIndexBuffer(*transientIB_.indexBuffer_, transientIB_.offset_);
+				drawAttribs.IsIndexed = true;
+				drawAttribs.IndexType = VT_UINT16;
+			}
+
+			deviceContext->SetPipelineState(pipelineState_->GetPipeline());
+
+			auto& graphics = GetSubsystem<Graphics>();
+
+			graphics.BindResources(pipelineState_->GetShaderResourceBinding(),
+				SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED | BIND_SHADER_RESOURCES_ALL_RESOLVED);
+
+			deviceContext->CommitShaderResources(pipelineState_->GetShaderResourceBinding(), COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
+
+			deviceContext->Draw(drawAttribs);
+		}
 	}
 
 
@@ -586,11 +616,8 @@ namespace Unique
 				Vector<SPtr<VertexBuffer> >& vertexBuffers = const_cast<Vector<SPtr<VertexBuffer> >&>(
 					geometry_->GetVertexBuffers());
 				vertexBuffers.push_back(SPtr<VertexBuffer>(instanceBuffer));
-
-// 				graphics->DrawInstanced(geometry_->GetPrimitiveType(), geometry_->GetIndexStart(), geometry_->GetIndexCount(),
-// 					geometry_->GetVertexStart(), geometry_->GetVertexCount(), instances_.Size());
 				//to do check
-				geometry_->DrawInstanced(pipelineState_);
+				geometry_->DrawInstanced(pipelineState_, (uint)instances_.size());
 				// Remove the instancing buffer & element mask now
 				vertexBuffers.pop_back();
 			}

@@ -75,6 +75,10 @@ namespace Unique
 		uint transformOffset_ = 0;
 		/// Per-instance data. If not null, must contain enough data to fill instancing buffer.
 		void* instancingData_;
+
+		TransientVertexBuffer transientVB_;
+
+		TransientIndexBuffer transientIB_;
 		/// Zone.
 		//Zone* zone_;
 		/// Light properties.

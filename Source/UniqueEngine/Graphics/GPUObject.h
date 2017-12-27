@@ -22,7 +22,10 @@ namespace Unique
 
 		template<class T>
 		operator T*() { return (T*)deviceObject_; }
-		
+		template<class T>
+		operator T**() { return (T**)&deviceObject_; }
+		template<class T>
+		operator const T**()const { return (T**)&deviceObject_; }
 	protected:	
 		virtual bool CreateImpl();
 		virtual void ReleaseImpl();

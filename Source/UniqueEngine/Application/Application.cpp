@@ -5,6 +5,7 @@
 #include "Core/CoreEvents.h"
 #include "Core/WorkQueue.h"
 #include "Graphics/Importers/ShaderImporter.h"
+#include "Resource/Image.h"
 #include "Graphics/Importers/TextureImporter.h"
 #include "Graphics/Importers/ModelImporter.h"
 
@@ -54,6 +55,7 @@ namespace Unique
 		cache.AddResourceDir("Cache");
 
 		cache.RegisterImporter(new ShaderImporter());
+		cache.RegisterImporter(new ImageImporter());
 		cache.RegisterImporter(new TextureImporter());
 		cache.RegisterImporter(new ModelImporter());
 

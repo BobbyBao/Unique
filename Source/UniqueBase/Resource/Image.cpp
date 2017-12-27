@@ -10,6 +10,11 @@
 
 namespace Unique
 {
+	uObject(Image)
+	{
+		uFactory()
+	}
+
 	Image::Image()
 	{
 	}
@@ -32,6 +37,8 @@ namespace Unique
 		}
 			
 		data_ = stbi_load_from_memory((byte*)data.data(), (int)data.size(), &desc_.width, &desc_.height, &desc_.numComponents, reqComponents);
+		desc_.bitsPerPixel = desc_.numComponents * 8;
+		desc_.rowStride = desc_.width*desc_.numComponents;
 		return data_ != nullptr;
 	}
 
@@ -52,4 +59,21 @@ namespace Unique
 		return image;
 	}
 
+	SPtr<Resource> ImageImporter::Import(const String& path)
+	{
+		auto& cache = GetSubsystem<ResourceCache>();
+		SPtr<File> file = cache.GetFile(path);
+		if (!file->IsOpen())
+		{
+			return nullptr;
+		}
+
+		SPtr<Image> image(new Image());
+		if (!image->Load(*file))
+		{
+			return nullptr;
+		}
+
+		return image;
+	}
 }
