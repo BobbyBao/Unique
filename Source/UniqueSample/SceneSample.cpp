@@ -62,10 +62,10 @@ namespace Unique
 		model->SetModel(m);*/
 
 		SPtr<Material> mat(new Material());
-		mat->SetShader(ResourceRef::Create<Shader>("Shaders/Basic.shader"));
+		mat->SetShader(ResourceRef::Create<Shader>("Shaders/Textured.shader"));
 
 		Texture* tex = cache.GetResource<Texture>("Models/Kachujin/Textures/Kachujin_diffuse.png");
-		mat->SetTexture("sDiffMap", tex);
+		mat->SetTexture("tDiffMap", tex);
 		model->SetMaterial(mat);
 
 		constBuffer_ = new UniformBuffer(ShaderConstants(), USAGE_DYNAMIC, CPU_ACCESS_WRITE);

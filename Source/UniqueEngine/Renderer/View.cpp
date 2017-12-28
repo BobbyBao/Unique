@@ -171,11 +171,13 @@ namespace Unique
 		geometriesUpdated_(false), minInstances_(2)
 	{
 		frameUniform_ = new UniformBuffer(FrameParameter());
-		cameraUniformVS_ = new UniformBuffer(CameraVS());
-		objectUniformVS_ = new UniformBuffer(ObjectVS());
+		cameraVS_ = new UniformBuffer(CameraVS());
+		objectVS_ = new UniformBuffer(ObjectVS());
+		skinnedVS_ = new UniformBuffer(SkinedVS());
+		billboardVS_ = new UniformBuffer(BillboardVS());
 
-		cameraUniformPS_ = new UniformBuffer(CameraPS());
-		materialUniformPS_ = new UniformBuffer(MaterialPS());
+		cameraPS_ = new UniformBuffer(CameraPS());
+		materialPS_ = new UniformBuffer(MaterialPS());
 
 		tempDrawables_.resize(1);
 
@@ -183,11 +185,13 @@ namespace Unique
 		batchMatrics_[1].reserve(2048);
 
 		graphics_.AddResource("FrameVS", frameUniform_);
-		graphics_.AddResource("CameraVS", cameraUniformVS_);
-		graphics_.AddResource("ObjectVS", objectUniformVS_);
+		graphics_.AddResource("CameraVS", cameraVS_);
+		graphics_.AddResource("ObjectVS", objectVS_);
+		graphics_.AddResource("SkinnedVS", skinnedVS_);
+		graphics_.AddResource("BillboardVS", billboardVS_);
 
-		graphics_.AddResource("CameraPS", cameraUniformPS_);
-		graphics_.AddResource("MaterialPS", materialUniformPS_);
+		graphics_.AddResource("CameraPS", cameraPS_);
+		graphics_.AddResource("MaterialPS", materialPS_);
 	}
 
 	View::~View()
@@ -386,7 +390,7 @@ namespace Unique
 				//projection.m23_ += projection.m33_ * constantBias;
 			}
 			
-			CameraVS* cameraParam = (CameraVS*)cameraUniformVS_->Lock();
+			CameraVS* cameraParam = (CameraVS*)cameraVS_->Lock();
 			cameraParam->cameraPos_ = cameraEffectiveTransform.Translation();
 			cameraParam->nearClip_ = nearClip;
 			cameraParam->farClip_ = farClip;
@@ -396,12 +400,12 @@ namespace Unique
 			cameraParam->viewInv_ = cameraEffectiveTransform;
 			cameraParam->viewProj_ = projection * camera->GetView();
 
-			cameraUniformVS_->Unlock();
+			cameraVS_->Unlock();
 
 		}
 
 		{
-			CameraPS* cameraParam = (CameraPS*)cameraUniformPS_->Lock();
+			CameraPS* cameraParam = (CameraPS*)cameraPS_->Lock();
 			cameraParam->cameraPosPS_ = cameraEffectiveTransform.Translation();
 
 			cameraParam->nearClipPS_ = nearClip;
@@ -411,18 +415,18 @@ namespace Unique
 			(farClip / (farClip - nearClip), -nearClip / (farClip - nearClip), camera->IsOrthographic() ? 1.0f : 0.0f,
 				camera->IsOrthographic() ? 0.0f : 1.0f);
 			cameraParam->depthReconstruct_ = depthReconstruct;
-			cameraUniformPS_->Unlock();
+			cameraPS_->Unlock();
 		}
 
 		{
-			ObjectVS* data = (ObjectVS*)objectUniformVS_->Lock();
+			ObjectVS* data = (ObjectVS*)objectVS_->Lock();
 			data->world_ = Matrix3x4::IDENTITY;
-			objectUniformVS_->Unlock();
+			objectVS_->Unlock();
 		}
 		{
-			MaterialPS* data = (MaterialPS*)materialUniformPS_->Lock();
+			MaterialPS* data = (MaterialPS*)materialPS_->Lock();
 			data->matDiffColor = float4(1,1,1,1);
-			materialUniformPS_->Unlock();
+			materialPS_->Unlock();
 		}
 	}
 
@@ -608,18 +612,18 @@ namespace Unique
 	{
 		auto& batchMatrics = RenderContext(batchMatrics_);
 		const Matrix3x4* mat  = &batchMatrics[offset];
-		void* data = objectUniformVS_->Map();
+		void* data = objectVS_->Map();
 		std::memcpy(data, mat, sizeof(Matrix3x4));
-		objectUniformVS_->UnMap();
+		objectVS_->UnMap();
 	}
 
 	void View::SetSkinedTransform(size_t offset, uint count)
 	{
 		auto& batchMatrics = RenderContext(batchMatrics_);
 		const Matrix3x4* mat = &batchMatrics[offset];
-		void* data = objectUniformVS_->Map();
+		void* data = objectVS_->Map();
 		std::memcpy(data, mat, sizeof(Matrix3x4) * count);
-		objectUniformVS_->UnMap();
+		objectVS_->UnMap();
 	}
 
 	void View::PrepareInstancingBuffer()

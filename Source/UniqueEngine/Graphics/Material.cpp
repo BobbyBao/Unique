@@ -19,6 +19,11 @@ namespace Unique
 	Material::~Material()
 	{
 	}
+	
+	void Material::CreateImpl()
+	{
+
+	}
 
 	void Material::SetShader(const ResourceRef& shader)
 	{
@@ -34,6 +39,27 @@ namespace Unique
 			{
 				ts.texture_ = texture;
 				break;
+			}
+
+		}
+	}
+
+	void Material::Apply()
+	{
+		for (auto& uniform : uniforms_)
+		{
+			if (uniform.shaderVarible_.IsValid())
+			{
+			//	uniform.shaderVarible_.Lock()->Set();
+			}
+
+		}
+
+		for (auto& ts : textureSlots_)
+		{
+			if (ts.shaderVarible_.IsValid())
+			{
+				ts.shaderVarible_.Lock()->Set(*ts.texture_);
 			}
 
 		}

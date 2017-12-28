@@ -174,13 +174,15 @@ namespace Unique
 		if (geometryType_ == GEOM_SKINNED)
 		{
 			view->SetSkinedTransform(transformOffset_, numWorldTransforms_);
-			//graphics->SetShaderParameter(VSP_SKINMATRICES, reinterpret_cast<const float*>(worldTransform_),
-			//	12 * numWorldTransforms_);
 		}
 		else
 		{	
 			view->SetWorldTransform(transformOffset_);
-			//graphics->SetShaderParameter(VSP_MODEL, *worldTransform_);
+		}
+
+		if (isBase_)
+		{
+			material_->Apply();
 		}
 
 #if false

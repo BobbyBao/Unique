@@ -58,6 +58,7 @@ namespace Unique
 	{
 		Matrix3x4 world_;
 	};
+
 #define MAXBONES 64
 	struct SkinedVS
 	{
@@ -294,16 +295,16 @@ namespace Unique
 
 		SPtr<UniformBuffer> frameUniform_;
 
-		SPtr<UniformBuffer> cameraUniformVS_;
-		SPtr<UniformBuffer> objectUniformVS_;
+		SPtr<UniformBuffer> cameraVS_;
+		SPtr<UniformBuffer> objectVS_;
+		SPtr<UniformBuffer> skinnedVS_;
+		SPtr<UniformBuffer> billboardVS_;
 
-		SPtr<UniformBuffer> cameraUniformPS_;
-		SPtr<UniformBuffer> materialUniformPS_;
+		SPtr<UniformBuffer> cameraPS_;
+		SPtr<UniformBuffer> materialPS_;
 
 		Vector<Matrix3x4>	batchMatrics_[2];
-
-		Vector<Matrix3x4>	batchGroupMatrics_[2];
-		
+				
 		friend class ScenePass;
 		friend struct Batch;
 		friend struct BatchQueue;

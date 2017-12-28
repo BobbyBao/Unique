@@ -22,7 +22,9 @@ namespace Unique
 		Shader* GetShader() { return shader_; }
 
 		void SetTexture(const StringID& name, Texture* texture);
-
+		void Apply();
+	protected:
+		virtual void CreateImpl();
 	private:
 		SPtr<Shader> shader_;
 		String shaderDefines_;
