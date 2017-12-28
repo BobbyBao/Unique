@@ -57,12 +57,18 @@ namespace Unique
 	struct ObjectVS
 	{
 		Matrix3x4 world_;
-#ifdef BILLBOARD
-		float3x3 cBillboardRot;
-#endif
-#ifdef SKINNED
-		uniform Matrix3x4 cSkinMatrices[MAXBONES];
-#endif
+	};
+#define MAXBONES 64
+	struct SkinedVS
+	{
+		Matrix3x4 world_; 
+		Matrix3x4 cSkinMatrices[MAXBONES];
+	};
+
+	struct BillboardVS
+	{
+		Matrix3x4 world_;
+		Matrix3 billboardRot;
 	};
 
 	struct MaterialPS //: register(b4)
@@ -189,6 +195,7 @@ namespace Unique
 		void SetCameraShaderParameters(Camera* camera);
 
 		void AddBatch(Batch& batch);
+				
 	protected:
 		/// Query the octree for drawable objects.
 		void GetDrawables();
@@ -199,7 +206,10 @@ namespace Unique
 
 		void AddBatchToQueue(BatchQueue& queue, Batch& batch, Shader* tech, bool allowInstancing = true, bool allowShadows = true);
 		
-		uint GetMatrics(const Matrix3x4* transform, uint num);
+		size_t GetMatrics(const Matrix3x4* transform, uint num);
+
+		void SetWorldTransform(size_t offset);
+		void SetSkinedTransform(size_t offset, uint numTransforms);
 
 		/// Prepare instancing buffer by filling it with all instance transforms.
 		void PrepareInstancingBuffer();
@@ -295,6 +305,8 @@ namespace Unique
 		Vector<Matrix3x4>	batchGroupMatrics_[2];
 		
 		friend class ScenePass;
+		friend struct Batch;
+		friend struct BatchQueue;
 
 		friend void CheckVisibilityWork(const WorkItem* item, unsigned threadIndex);
 		friend void ProcessLightWork(const WorkItem* item, unsigned threadIndex);

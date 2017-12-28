@@ -234,6 +234,22 @@ namespace Unique
 		}
 	}
 
+
+	void* GraphicsBuffer::Map(uint mapFlags)
+	{
+		IBuffer* buffer = *this;
+		void* bufferData = nullptr;
+		buffer->Map(deviceContext, MAP_WRITE, mapFlags, bufferData);
+		mapFlags_ = mapFlags;
+		return bufferData;
+	}
+
+	void GraphicsBuffer::UnMap()
+	{
+		IBuffer* buffer = *this;
+		buffer->Unmap(deviceContext, MAP_WRITE, mapFlags_);
+	}
+
 	void GraphicsBuffer::UpdateBuffer()
 	{
 		IBuffer* buffer = *this;

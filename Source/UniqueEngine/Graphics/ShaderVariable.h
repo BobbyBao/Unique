@@ -82,6 +82,7 @@ namespace Unique
 				transfer.TransferAttribute("Value", value_.colorVal_);
 				break;
 			default:
+				transfer.TransferAttribute("Value", value_.intVal_);
 				break;
 			}
 			transfer.EndObject();

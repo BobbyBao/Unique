@@ -32,10 +32,13 @@ namespace Unique
 
 	AstNode* AstNode::GetChild(const String& name)
 	{
-		auto it = children_->find(name);
-		if (it != children_->end())
+		if (children_)
 		{
-			return it->second.get();
+			auto it = children_->find(name);
+			if (it != children_->end())
+			{
+				return it->second.get();
+			}
 		}
 
 		return nullptr;

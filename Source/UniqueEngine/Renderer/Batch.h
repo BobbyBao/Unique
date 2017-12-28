@@ -97,12 +97,18 @@ namespace Unique
 		Geometry* geometry_ = nullptr;
 		/// Material.
 		Material* material_ = nullptr;
-		/// World transform(s). For a skinned model, these are the bone transforms.
-		const Matrix3x4* worldTransform_;
+
+		union
+		{
+			/// World transform(s). For a skinned model, these are the bone transforms.
+			const Matrix3x4* worldTransform_;	
+			// Offset in batchMatrics
+			size_t transformOffset_ = 0;
+		};
+
 		/// Number of world transforms.
 		unsigned numWorldTransforms_;
-		// Offset in batchMatrics
-		uint transformOffset_ = 0;
+
 		/// Per-instance data. If not null, must contain enough data to fill instancing buffer.
 		void* instancingData_;
 
@@ -276,7 +282,7 @@ namespace Unique
 		/// Draw.
 		void Draw(View* view, Camera* camera) const;
 		/// Return the combined amount of instances.
-		size_t GetNumInstances() const;
+		size_t GetNumInstances(View* view);
 
 		/// Return whether the batch group is empty.
 		bool IsEmpty() const { return batches_.empty() && batchGroups_.empty(); }

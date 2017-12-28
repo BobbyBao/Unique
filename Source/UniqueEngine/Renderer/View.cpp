@@ -179,8 +179,8 @@ namespace Unique
 
 		tempDrawables_.resize(1);
 
-		batchMatrics_[0].reserve(4096);
-		batchMatrics_[1].reserve(4096);
+		batchMatrics_[0].reserve(2048);
+		batchMatrics_[1].reserve(2048);
 
 		graphics_.AddResource("FrameVS", frameUniform_);
 		graphics_.AddResource("CameraVS", cameraUniformVS_);
@@ -587,20 +587,39 @@ namespace Unique
 		}
 	}
 
-	uint View::GetMatrics(const Matrix3x4* transform, uint num)
+	size_t View::GetMatrics(const Matrix3x4* transform, uint num)
 	{
 		auto& batchMatrics = MainContext(batchMatrics_);
-		uint offset = (uint)batchMatrics.size();
+		size_t offset = batchMatrics.size();
 		size_t newSize = offset + num;
-
-		if (newSize > batchMatrics.capacity())
+		size_t cap = batchMatrics.capacity();
+		if (newSize > cap)
 		{
-			batchMatrics.resize(newSize);
+			batchMatrics.reserve(newSize);
 		}
 
+		batchMatrics.resize(newSize);
 		std::memcpy(&batchMatrics[offset], transform, num * sizeof(Matrix3x4));
 
 		return offset;
+	}
+
+	void View::SetWorldTransform(size_t offset)
+	{
+		auto& batchMatrics = RenderContext(batchMatrics_);
+		const Matrix3x4* mat  = &batchMatrics[offset];
+		void* data = objectUniformVS_->Map();
+		std::memcpy(data, mat, sizeof(Matrix3x4));
+		objectUniformVS_->UnMap();
+	}
+
+	void View::SetSkinedTransform(size_t offset, uint count)
+	{
+		auto& batchMatrics = RenderContext(batchMatrics_);
+		const Matrix3x4* mat = &batchMatrics[offset];
+		void* data = objectUniformVS_->Map();
+		std::memcpy(data, mat, sizeof(Matrix3x4) * count);
+		objectUniformVS_->UnMap();
 	}
 
 	void View::PrepareInstancingBuffer()
@@ -612,7 +631,7 @@ namespace Unique
 		auto& batchQueues = MainContext(batchQueues_);
 
 		for (auto i = batchQueues.begin(); i != batchQueues.end(); ++i)
-			totalInstances += i->second.GetNumInstances();
+			totalInstances += i->second.GetNumInstances(this);
 		/*
 		for (auto i = lightQueues_.begin(); i != lightQueues_.end(); ++i)
 		{
@@ -633,7 +652,10 @@ namespace Unique
 
 		const unsigned stride = instancingBuffer->GetStride();
 		for (auto i = batchQueues.begin(); i != batchQueues.end(); ++i)
+		{
 			i->second.SetInstancingData(dest, stride, freeIndex);
+		}
+
 		/*
 		for (auto i = lightQueues_.begin(); i != lightQueues_.end(); ++i)
 		{

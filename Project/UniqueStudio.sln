@@ -39,7 +39,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UniqueNative", "Windows\Uni
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UniqueNative", "UniqueNative", "{5BD8C710-C612-4B59-8571-3FED57E259D8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Unique", "..\Source\Unique\Unique.csproj", "{0ED28173-42BC-45DF-AFB1-1058EC0EA568}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniqueSharp", "..\Source\UniqueSharp\UniqueSharp.csproj", "{0ED28173-42BC-45DF-AFB1-1058EC0EA568}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution

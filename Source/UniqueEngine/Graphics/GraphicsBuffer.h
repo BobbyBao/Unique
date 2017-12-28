@@ -45,6 +45,9 @@ namespace Unique
 
 		void* Lock(uint lockStart = 0, uint lockCount = -1);
 		void Unlock();
+
+		void* Map(uint mapFlags = MAP_FLAG_DISCARD);
+		void UnMap();
 	protected:
 		/// Create buffer.
 		virtual bool CreateImpl();
@@ -53,6 +56,7 @@ namespace Unique
 		ByteArray data_[2];
 		uint lockStart_[2];
 		uint lockCount_[2];
+		uint mapFlags_;
 	};
 
 	class UNIQUE_API IndexBuffer : public GraphicsBuffer

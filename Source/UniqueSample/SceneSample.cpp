@@ -46,8 +46,12 @@ namespace Unique
 		scene_->CreateComponent<Octree>();
 		camera_ = scene_->CreateChild("Camera")->CreateComponent<Camera>();
 
-		StaticModel* model = scene_->CreateChild("Model")->CreateComponent<StaticModel>();
+		node_ = scene_->CreateChild("Model");
+
+		StaticModel* model = node_->CreateComponent<StaticModel>();
 		model->SetModelAttr(ResourceRef::Create<Model>("Models/Kachujin/Kachujin.mdl"));
+	
+		
 		/*
 		Model* m = new Model();
 		m->SetNumGeometries(1);
@@ -85,6 +89,9 @@ namespace Unique
 		auto& graphics = GetSubsystem<Graphics>();
 		float aspectRatio = graphics.GetAspectRatio();
 
+		node_->Rotate(Quaternion(0, 0.1f * eventData.timeStep_, 0));
+
+		/*
 		Matrix4 proj = camera_->GetGPUProjection();
 		Matrix3x4 view = camera_->GetView();
 
@@ -92,9 +99,9 @@ namespace Unique
 		Vector3 lightDir(-0.5f, -0.2f, 1.0f);
 		ShaderConstants *cst = (ShaderConstants *)constBuffer_->Lock();
 		cst->WorldViewProjT = (proj* view *world);
-		cst->WorldNormT = world.ToMatrix4();
+		cst->WorldNormT = world;
 		cst->LightDir = (1.0f / lightDir.Length()) * lightDir;
 		cst->LightCoeff = 0.85f;
-		constBuffer_->Unlock();
+		constBuffer_->Unlock();*/
 	}
 }

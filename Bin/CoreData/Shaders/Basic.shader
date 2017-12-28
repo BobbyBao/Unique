@@ -6,6 +6,11 @@ Shader "Basic"
 	{
 	}
 
+	TextureSlots
+	{
+	}
+
+
 	Pass base
 	{
 		DepthState
@@ -43,7 +48,7 @@ Shader "Basic"
 			EntryPoint "VS" 
 			ShaderProfile "DX_4_0"
 			Defines ""
-			Source "Basic.hlsl"
+			Source "VertexColor.hlsl"
 		}
 		
 		PixelShader
@@ -51,7 +56,7 @@ Shader "Basic"
 			EntryPoint "PS"
 			ShaderProfile "DX_4_0"
 			Defines ""
-			Source "Basic.hlsl"
+			Source "VertexColor.hlsl"
 		}
 	}
 }

@@ -33,7 +33,6 @@ namespace Unique
 			if (ts.name_ == name)
 			{
 				ts.texture_ = texture;
-			//	uniform.shaderVarible_
 				break;
 			}
 

@@ -170,6 +170,19 @@ namespace Unique
 		IntRect viewport = view->GetViewRect();
 		IntVector2 viewSize = IntVector2(viewport.Width(), viewport.Height());
 		unsigned viewportHash = (unsigned)(viewSize.x_ | (viewSize.y_ << 16));
+
+		if (geometryType_ == GEOM_SKINNED)
+		{
+			view->SetSkinedTransform(transformOffset_, numWorldTransforms_);
+			//graphics->SetShaderParameter(VSP_SKINMATRICES, reinterpret_cast<const float*>(worldTransform_),
+			//	12 * numWorldTransforms_);
+		}
+		else
+		{	
+			view->SetWorldTransform(transformOffset_);
+			//graphics->SetShaderParameter(VSP_MODEL, *worldTransform_);
+		}
+
 #if false
 		if (graphics->NeedParameterUpdate(SP_CAMERA, reinterpret_cast<const void*>(cameraHash + viewportHash)))
 		{
@@ -526,7 +539,7 @@ namespace Unique
 
 	void Batch::Draw(View* view, Camera* camera) const
 	{
-		if (!geometry_->IsEmpty())
+		if (geometry_ && !geometry_->IsEmpty())
 		{
 			Prepare(view, camera, true);
 			geometry_->Draw(pipelineState_);
@@ -700,7 +713,10 @@ namespace Unique
 	void BatchQueue::SetInstancingData(void* lockedData, unsigned stride, unsigned& freeIndex)
 	{
 		for (auto i = batchGroups_.begin(); i != batchGroups_.end(); ++i)
-			i->second.SetInstancingData(lockedData, stride, freeIndex);
+		{
+			auto& batch = i->second;
+			batch.SetInstancingData(lockedData, stride, freeIndex);
+		}
 	}
 
 	void BatchQueue::Draw(View* view, Camera* camera) const
@@ -719,14 +735,22 @@ namespace Unique
 		}
 	}
 
-	size_t BatchQueue::GetNumInstances() const
+	size_t BatchQueue::GetNumInstances(View* view)
 	{
 		size_t total = 0;
 
 		for (auto i = batchGroups_.begin(); i != batchGroups_.end(); ++i)
 		{
-			if (i->second.geometryType_ == GEOM_INSTANCED)
-				total += i->second.instances_.size();
+			auto& batch = i->second;
+			if (batch.geometryType_ == GEOM_STATIC)
+			{
+				batch.transformOffset_ = view->GetMatrics(batch.worldTransform_, batch.numWorldTransforms_);
+			}
+			else
+			{
+				if (batch.geometryType_ == GEOM_INSTANCED)
+					total += batch.instances_.size();
+			}
 		}
 
 		return total;

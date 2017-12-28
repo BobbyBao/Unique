@@ -50,7 +50,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Unique\Unique.csproj">
+    <ProjectReference Include="..\UniqueSharp\UniqueSharp.csproj">
       <Project>{0ed28173-42bc-45df-afb1-1058ec0ea568}</Project>
       <Name>Unique</Name>
     </ProjectReference>
