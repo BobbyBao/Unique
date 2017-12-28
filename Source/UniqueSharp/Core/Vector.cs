@@ -9,24 +9,30 @@ namespace Unique.Engine
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct VectorBase
     {
-        /// Size of vector.
-        public int size;
+        /// Buffer start.
+        public IntPtr buffer_;
+        /// Buffer end.
+        public IntPtr end_;
         /// Buffer capacity.
-        public int capacity;
-        /// Buffer.
-        public IntPtr buffer;
+        public IntPtr capacity_;
+
+        public long size => end_.ToInt64() - buffer_.ToInt64();
+        public long capacity => capacity_.ToInt64() - buffer_.ToInt64();
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct Vector<T> where T : struct
     {
-        /// Size of vector.
-        public int size;
+        /// Buffer start.
+        public IntPtr buffer_;
+        /// Buffer end.
+        public IntPtr end_;
         /// Buffer capacity.
-        public int capacity;
-        /// Buffer.
-        public IntPtr buffer;
-        
+        public IntPtr capacity_;
+
+        public long size => end_.ToInt64() - buffer_.ToInt64();
+        public long capacity => capacity_.ToInt64() - buffer_.ToInt64();
+
         public ref T this[int index]
         {
             get
@@ -36,7 +42,7 @@ namespace Unique.Engine
                     throw new ArgumentOutOfRangeException();
                 }
 
-                return ref Utilities.At<T>(buffer, index);
+                return ref Utilities.At<T>(buffer_, index);
             }
         }
 
@@ -50,38 +56,37 @@ namespace Unique.Engine
 
         public void Dispose()
         {
-            if (buffer != IntPtr.Zero)
+            if (buffer_ != IntPtr.Zero)
             {
-                Utilities.Free(buffer);
-                buffer = IntPtr.Zero;
+                Utilities.Free(buffer_);
+                buffer_ = IntPtr.Zero;
             }
         }
         
         public ref T Front()
         {
-            return ref Utilities.As<T>(buffer);
+            return ref Utilities.As<T>(buffer_);
         }
 
         public ref T Back()
-        {
-            return ref Utilities.At<T>(buffer, size - 1);
+        {            
+            return ref Unsafe.Subtract(ref Utilities.As<T>(buffer_), 1);
         }
 
         public ref T At(int index)
         {
-            return ref Utilities.At<T>(buffer, index);
+            return ref Utilities.At<T>(buffer_, index);
         }
 
         public unsafe void Add(T val)
         {
-            if (size == capacity)
+            if (end_ == capacity_)
             {
                 Grow();
             }
-
-            At(size) = val;
-            //Unsafe.Write((void*)(buffer + size * Unsafe.SizeOf<T>()), val);
-            size++;
+            
+            Utilities.Write(end_, ref val);
+            end_ = end_ + Unsafe.SizeOf<T>();
         }
 
         public void AddRange(IEnumerable<T> values)
@@ -93,17 +98,17 @@ namespace Unique.Engine
         public void RemoveAt(int idx)
         {
             this[idx] = Back();
-            size--;
+            end_ = end_ - Unsafe.SizeOf<T>();
         }
 
         public void Clear()
         {
-            size = 0;
+            end_ = buffer_;
         }
 
         public void Resize(int sz)
         {
-            int cap = capacity;
+            int cap = (int)capacity;
             if (sz > cap)
             {
                 while (sz > cap)
@@ -114,27 +119,28 @@ namespace Unique.Engine
                 Grow(cap);
             }
 
-            size = sz;
+            end_ = buffer_ + sz * Unsafe.SizeOf<T>();
         }
 
         void Grow()
         {
-            int newCap = ((capacity == 0) ? 4 : capacity * 2);
+            int cap = (int)capacity;
+            int newCap = ((cap == 0) ? 4 : cap * 2);
             Grow(newCap);
         }
 
         void Grow(int cap)
         {
-            if(buffer == IntPtr.Zero)
+            if(buffer_ == IntPtr.Zero)
             {
-                buffer = Utilities.AllocArray<T>(cap);
+                buffer_ = Utilities.AllocArray<T>(cap);
             }
             else
             {
-                buffer = Utilities.Resize<T>(buffer, capacity);
+                buffer_ = Utilities.Resize<T>(buffer_, cap);
             }
 
-            capacity = cap;
+            capacity_ = buffer_ + cap;
         }
     }
     

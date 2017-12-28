@@ -20,7 +20,7 @@ namespace Unique.Engine
             {
                 viewport = new Viewport();
                 viewports_[index] = viewport;
-                rendererSetViewport(index, viewport.nativePtr);
+                Renderer_SetViewport(index, viewport.nativePtr);
             }
 
             return viewport;
@@ -42,14 +42,14 @@ namespace Unique.Engine
             }
 
             viewports_[index] = viewport;
-            rendererSetViewport(index, viewport.nativePtr);
+            Renderer_SetViewport(index, viewport.nativePtr);
         }
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr rendererGetViewport(int index);
+        public static extern IntPtr Render_GetViewport(int index);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void rendererSetViewport(int index, IntPtr viewport);
+        public static extern void Renderer_SetViewport(int index, IntPtr viewport);
 
 
     }

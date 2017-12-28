@@ -46,7 +46,6 @@ namespace Unique
 		ShaderStage				shaderStage_[6];
 
 	private:
-		
 		Vector<String>			allDefs_;
 		uint					allMask_ = 0;
 		HashMap<uint, SPtr<PipelineState>> cachedPass_;
@@ -74,14 +73,13 @@ namespace Unique
 		virtual bool Create();
 
 		Pass* AddPass(const String& name);
-
 		Pass* GetPass(const String & pass);
 		Pass* GetPass(unsigned passIndex);
-
 		PipelineState* GetPipeline(const String& passName, const String & defs);
+		inline const auto& GetUniforms() const { return uniforms_; }
+		inline const auto& GetTextureSlots() const { return textureSlots_; }
 
 		static unsigned GetPassIndex(const String& passName);
-
 		static Vector<String> SplitDef(const String& defs);
 
 		/// Index for base pass. Initialized once GetPassIndex() has been called for the first time.

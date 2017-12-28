@@ -8,11 +8,11 @@ namespace Unique.Engine
 {
     public struct Startup
     {
-    };
+    }
     
     public struct Shutdown
     {
-    };
+    }
 
     public struct BeginFrame
     {
@@ -29,7 +29,6 @@ namespace Unique.Engine
     {
         public float timeStep;
     }
-
 
     public struct RenderUpdate
     {

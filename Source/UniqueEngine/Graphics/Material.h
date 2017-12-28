@@ -16,7 +16,7 @@ namespace Unique
 		Material();
 		~Material();
 
-		const ResourceRef& GetShader() const { return shaderRes_; }
+		const ResourceRef& GetShader() const { return shaderAttr_; }
 		void SetShader(const ResourceRef& shader);
 
 		Shader* GetShader() { return shader_; }
@@ -24,11 +24,11 @@ namespace Unique
 		void SetTexture(const StringID& name, Texture* texture);
 		void Apply();
 	protected:
-		virtual void CreateImpl();
+		virtual bool Prepare();
 	private:
 		SPtr<Shader> shader_;
 		String shaderDefines_;
-		ResourceRef shaderRes_;
+		ResourceRef shaderAttr_;
 		Vector<Uniform> uniforms_;
 		Vector<TextureSlot> textureSlots_;
 	};

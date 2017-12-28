@@ -50,6 +50,7 @@ namespace Unique.Engine
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr Node_GetChildAt(IntPtr self, int index);
+
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern IntPtr Node_CreateComponent(IntPtr self, ref StringID type);
 

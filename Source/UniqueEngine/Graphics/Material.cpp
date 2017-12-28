@@ -7,9 +7,10 @@ namespace Unique
 	uObject(Material)
 	{
 		uFactory("Graphics");
-		uAttribute("Shader", shaderRes_);
+		uAttribute("Shader", shaderAttr_);
 		uAttribute("ShaderDefines", shaderDefines_);
-		uAttribute("ShaderVaribles", uniforms_);
+		uAttribute("Uniforms", uniforms_); 
+		uAttribute("TextureSlots", textureSlots_);
 	}
 
 	Material::Material()
@@ -20,15 +21,28 @@ namespace Unique
 	{
 	}
 	
-	void Material::CreateImpl()
+	bool Material::Prepare()
 	{
+		auto& cache = GetSubsystem<ResourceCache>();
 
+		if (GetAsyncLoadState() == ASYNC_LOADING)
+		{
+		//	cache.BackgroundLoadResource<Shader>(shaderAttr_, true, this);
+		}
+
+		if (shader_)
+		{
+			uniforms_ = shader_->GetUniforms();
+			textureSlots_ = shader_->GetTextureSlots();
+		}
+
+		return true;
 	}
 
 	void Material::SetShader(const ResourceRef& shader)
 	{
-		shaderRes_ = shader;
-		shader_ = GetSubsystem<ResourceCache>().GetResource<Shader>(shaderRes_.name_);
+		shaderAttr_ = shader;
+		shader_ = GetSubsystem<ResourceCache>().GetResource<Shader>(shaderAttr_.name_);
 	}
 
 	void Material::SetTexture(const StringID& name, Texture* texture)

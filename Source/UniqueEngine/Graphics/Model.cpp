@@ -102,7 +102,6 @@ bool Model::Load(IStream& source)
     vertexBuffers_.reserve(numVertexBuffers);
     morphRangeStarts_.resize(numVertexBuffers);
     morphRangeCounts_.resize(numVertexBuffers);
-	//loadVBData_.resize(numVertexBuffers);
 
     for (unsigned i = 0; i < numVertexBuffers; ++i)
     {

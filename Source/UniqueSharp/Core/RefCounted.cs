@@ -14,9 +14,9 @@ namespace Unique.Engine
         public int refs => refCount.refs_;
         public int weakRefs => refCount.weakRefs_ - 1;
         public bool expired => (refCount_ != IntPtr.Zero) ? refs < 0 : true;
-
         protected IntPtr native_;
         protected IntPtr refCount_;
+
         public RefCounted()
         {
         }

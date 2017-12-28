@@ -14,7 +14,7 @@ namespace Unique.Engine
             VectorBase subsystems = Context_GetSubsystems();
             for(int i = 0; i < subsystems.size; i++)
             {
-                IntPtr ss = Utilities.At<IntPtr>(subsystems.buffer, i);
+                IntPtr ss = Utilities.At<IntPtr>(subsystems.buffer_, i);
                 StringID type = Object.GetNativeType(ss);
                 Object subsystem = Object.CreateObject(type, ss);
                 if(subsystem != null)
