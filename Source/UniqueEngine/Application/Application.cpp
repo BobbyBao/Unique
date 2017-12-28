@@ -11,10 +11,12 @@
 
 namespace Unique
 {
+
+	UPtr<Context> Application::context_;
 	Vector<String> Application::argv_;
 	bool Application::quit_ = false;
-	Application::Application(Context* context) :
-		context_(context),
+
+	Application::Application():
 		resolution_(800, 600),
 		deviceType_(DeviceType::D3D11)
 	{
@@ -34,6 +36,14 @@ namespace Unique
 
 	Application::~Application()
 	{
+	}
+
+	void Application::Setup(int argc, char* argv[])
+	{
+		for (int i = 0; i < argc; i++)
+		{
+			argv_.push_back(argv[i]);
+		}
 	}
 
 	void Application::Initialize()
@@ -119,7 +129,6 @@ namespace Unique
 
 		SDL_Quit();
 
-		context_ = nullptr;
 	}
 
 	
@@ -130,26 +139,22 @@ namespace Unique
 	void Application::OnPostRender()
 	{
 	}
-	
+
 	UNIQUE_C_API void Unique_Setup(int argc, char* argv[])
 	{
-		for (int i = 0; i < argc; i++)
-		{
-			Application::argv_.push_back(argv[i]);
-		}
-
+		Application::context_.reset(new Context());
+		Application::Setup(argc, argv);
 	}
 	
 	UNIQUE_C_API int Unique_Start(DeviceType deviceType, void* window)
 	{
 		try
 		{
-			UPtr<Context> context(new Context());
-			auto app = UPtr<Application>(new Application(context.get()));
+			auto app = UPtr<Application>(new Application());
 			app->SetDeviceType(deviceType);
 			app->Run();
 			app = nullptr;
-			context = nullptr;
+			Application::context_ = nullptr;
 		}
 		catch (const std::exception& e)
 		{

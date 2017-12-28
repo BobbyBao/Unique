@@ -14,29 +14,23 @@ namespace Unique.Engine
         Unknown
     }
 
-    public class Application
+    public partial class Application : Object
     {
         public static OS OS => os_;
         private static OS os_;
-
-        private static bool shouldClose_ = false;
-
-        private Engine engine_;
-
-        protected GameWindow window_;
+                
         public Application()
+        {
+            InitOS();            
+        }
+
+        public Application(string[] args)
         {
             InitOS();
 
-            engine_ = new Engine();
+            Unique_Setup(args.Length, args);
 
-            engine_.eventInit += Init;
-            engine_.eventShutdown += Shutdown;
-        }
-        
-        public static void Quit()
-        {
-            shouldClose_ = true;
+            Setup();
         }
 
         private static void InitOS()
@@ -58,24 +52,43 @@ namespace Unique.Engine
                 os_ = OS.Unknown;
             }
         }
-
-        protected virtual void Setup()
+        
+        public void Run()
         {
+            Unique_Start(DeviceType.D3D11, IntPtr.Zero);
+
         }
 
-        protected virtual void Init()
+        public static void Quit()
         {
-            engine_.SubscribeToEvent<BeginFrame>(Handle);
+            Unique_Shutdown();
+        }
+        
+        protected virtual void Setup()
+        {/*
+            Subscribe((Startup e) =>
+            {
+                Start();
+            });
 
-            engine_.SubscribeToEvent((GUI e) =>
+            Subscribe((Shutdown e) =>
+            {
+                Shutdown();
+            });
+
+            Subscribe((GUI e) =>
             {
                 OnGUI();
             });
 
-            engine_.SubscribeToEvent((Update e) =>
+            Subscribe((Update e) =>
             {
                 UpdateFrame(e.timeStep);
-            });
+            });*/
+        }
+
+        protected virtual void Start()
+        {
         }
 
         protected virtual void Shutdown()
@@ -89,42 +102,7 @@ namespace Unique.Engine
         protected virtual void UpdateFrame(float timeStep)
         {
         }
-
-        public void Run(GameWindow w)
-        {
-            window_ = w;
-
-            Thread.CurrentThread.Name = "OS Thread";
-
-            Setup();
-
-            engine_.Initialize(window_.Handle, window_.Width, window_.Height);
-
-            engine_.Start();
-
-            OSThreadLoop();
-
-            engine_.Stop();
-
-            window_.Close();
-        }
-
-        private void OSThreadLoop()
-        {
-            while(!shouldClose_)
-            {
-                window_.RunMessageLoop();
-            }
-        }
-
-        void Handle(BeginFrame e)
-        {
-            window_.ProcessEvents();
-        }
-
-        void Handle(Update e)
-        {
-
-        }
+        
+        
     }
 }

@@ -23,12 +23,11 @@ namespace Unique
 		float LightCoeff;
 	};
 
-	SceneSample::SceneSample(Context* context) : Application(context)
+	SceneSample::SceneSample()
 	{
 		Subscribe(&SceneSample::HandleStartup);
 		Subscribe(&SceneSample::HandleShutdown);
 		Subscribe(&SceneSample::HandleUpdate);
-
 	}
 
 	SceneSample::~SceneSample()

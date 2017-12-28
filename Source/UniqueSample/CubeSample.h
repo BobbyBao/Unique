@@ -16,7 +16,7 @@ namespace Unique
 	class CubeSample : public Application
 	{
 	public:
-		CubeSample(Context* context);
+		CubeSample();
 		~CubeSample();
 
 	protected:

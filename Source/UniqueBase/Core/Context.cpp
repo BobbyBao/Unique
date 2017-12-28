@@ -272,30 +272,12 @@ void Context::RemoveEventReceiver(Object* receiver, Object* sender, StringID eve
 
 void Context::BeginSendEvent(Object* sender, StringID eventType)
 {
-#ifdef UNIQUE_PROFILING
-    if (EventProfiler::IsActive())
-    {
-        EventProfiler* eventProfiler = Subsystem<EventProfiler>();
-        if (eventProfiler)
-            eventProfiler->BeginBlock(eventType);
-    }
-#endif
-
     eventSenders_.push_back(sender);
 }
 
 void Context::EndSendEvent()
 {
     eventSenders_.pop_back();
-
-#ifdef UNIQUE_PROFILING
-    if (EventProfiler::IsActive())
-    {
-        EventProfiler* eventProfiler = Subsystem<EventProfiler>();
-        if (eventProfiler)
-            eventProfiler->EndBlock();
-    }
-#endif
 }
 
 void Context::ThreadFunction()

@@ -9,7 +9,7 @@ namespace Unique
 	class SceneSample : public Application
 	{
 	public:
-		SceneSample(Context* context);
+		SceneSample();
 		~SceneSample();
 
 	private:

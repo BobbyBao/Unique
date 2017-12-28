@@ -36,8 +36,8 @@ namespace Unique
 	void FillSpongeBuffers(int level, int levelMax, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices,
 		const Vector3& center, bool aoEnabled, const bool aoEdges[12], const unsigned int faceColors[6]);
 
-	CubeSample::CubeSample(Context* context)
-		: Application(context), backgroundColor_(0.0f, 0.0f, 0.5f, 1.0f)
+	CubeSample::CubeSample()
+		: backgroundColor_(0.0f, 0.0f, 0.5f, 1.0f)
 	{
 		spongeRotation_ = Quaternion::IDENTITY;
 

@@ -17,7 +17,7 @@ namespace Unique.Engine
         {
         }
 
-        public void SubscribeToEvent<T>(Action<T> action)
+        public void Subscribe<T>(Action<T> action)
         {
             Object_SubscribeToGlobalEvent(native_, ref TypeOf<T>(), (receiver, eventType, eventData) =>
             {
@@ -25,7 +25,7 @@ namespace Unique.Engine
             });
         }
 
-        public void SubscribeToEvent<T>(Object sender, Action<T> action)
+        public void Subscribe<T>(Object sender, Action<T> action)
         {
             Object_SubscribeToEvent(native_, sender.native_, ref TypeOf<T>(), (r, et, ed) =>
             {
@@ -33,7 +33,7 @@ namespace Unique.Engine
             });
         }
 
-        public void SubscribeToEvent<T>(ref StringID eventType, Action<T> action)
+        public void Subscribe<T>(ref StringID eventType, Action<T> action)
         {
             Object_SubscribeToGlobalEvent(native_, ref eventType, (r, et, ed) =>
             {
@@ -41,7 +41,7 @@ namespace Unique.Engine
             });
         }
 
-        public void SubscribeToEvent<T>(Object sender, ref StringID eventType, Action<T> action)
+        public void Subscribe<T>(Object sender, ref StringID eventType, Action<T> action)
         {
             Object_SubscribeToEvent(native_, sender.native_, ref eventType, (r, et, ed) =>
             {

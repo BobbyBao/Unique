@@ -6,6 +6,14 @@ using System.Text;
 
 namespace Unique.Engine
 {
+    public struct Startup
+    {
+    };
+    
+    public struct Shutdown
+    {
+    };
+
     public struct BeginFrame
     {
         public int frameNumber;
