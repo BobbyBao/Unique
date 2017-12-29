@@ -19,7 +19,7 @@ namespace Unique
 
 		auto& graphics = GetSubsystem<Graphics>();
 		
-		//if (graphics.IsDirect3D())
+		if (graphics.IsDirect3D())
 		{
 			macros_.AddShaderMacro("D3D11", "");
 		}
@@ -36,13 +36,25 @@ namespace Unique
 			{
 				if (defines_.Length() > 0)
 				{
-					defines_.Append(";");
+					defines_.Append("_");
 				}
 
-				String& def = shaderPass_.allDefs_[i];
-				defines_.Append(def);
+				const String& def = shaderPass_.allDefs_[i];
+				Vector<String> m = def.Split('=', false);
+				if (m.size() > 1)
+				{
+					defines_.Append(m[0]);
+					macros_.AddShaderMacro(def.CString(), m[1].CString());
+				}
+				else
+				{
+					defines_.Append(def);
+					macros_.AddShaderMacro(def.CString(), "");
+				}
 			}
 		}
+
+		macros_.Finalize();
 
 		for (const auto& desc : shader.GetProperties().textureSlots_)
 		{
@@ -54,55 +66,14 @@ namespace Unique
 	
 	bool ShaderVariation::CreateImpl() 
 	{
-		auto& cache = GetSubsystem<ResourceCache>();
-		SPtr<File> file = cache.GetFile("Shaders/" + shaderStage_.source_);
-		if (!file->IsOpen())
-		{
-			UNIQUE_LOGERROR(shaderStage_.source_, " is not a valid shader bytecode file");
-			return false;
-		}
-
-		source_ = file->ReadAllText();
-
-		ShaderCreationAttribs Attrs;
-		//Attrs.Desc.Name = "MainVS";
-		Attrs.Macros = macros_;
-		//Attrs.FilePath = shaderStage_.source_;
-		Attrs.EntryPoint = shaderStage_.entryPoint_;
-		Attrs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-		Attrs.Source = source_.CString();
-		Attrs.Desc.ShaderType = shaderStage_.shaderType_;
-		Attrs.Desc.TargetProfile = SHADER_PROFILE_DX_4_0;
- 		Attrs.Desc.VariableDesc = shaderVariableDesc_.data();
- 		Attrs.Desc.NumVariables = (uint)shaderVariableDesc_.size();
-		BasicShaderSourceStreamFactory BasicSSSFactory("CoreData\\Shaders;CoreData\\Shaders\\HLSL;");
-		Attrs.pShaderSourceStreamFactory = &BasicSSSFactory;
-		IShader* shaderObject = nullptr;
-		renderDevice->CreateShader(Attrs, &shaderObject);
-
-		shaderVariables_.clear();
-
-		if (shaderObject)
-		{
-			const auto& desc = shaderObject->GetDesc();
-			
-			for (uint i = 0; i < desc.NumVariables; i++)
-			{
-				const auto& svDesc = desc.VariableDesc[i];
-				IShaderVariable* shaderVariable = shaderObject->GetShaderVariable(svDesc.Name);
-				shaderVariables_[svDesc.Name] = shaderVariable;
-			}
-
-			deviceObject_ = shaderObject;
-		}
-
-		return deviceObject_ != nullptr;
-
-		// to do :
 		auto& graphics = GetSubsystem<Graphics>();
 		if (graphics.IsDirect3D())
 		{
-			return deviceObject_ != nullptr;
+			if (!LoadConvertedCode("Shaders/" + shaderStage_.source_))
+			{
+				return false;
+			}
+
 		}
 
 		String name = GetFileName(owner_.GetName());
@@ -126,7 +97,7 @@ namespace Unique
 			break;
 		}
 
-		String& defines = defines_;
+		const String& defines = defines_;
 		String binaryShaderName = Shader::GetShaderPath(graphics.GetDeviceType()) + name;
 
 		if (!defines.Empty())
@@ -180,10 +151,43 @@ namespace Unique
 			UNIQUE_LOGERROR(binaryShaderName + " is not a valid shader bytecode file");
 			return false;
 		}
+		
+		source_ = file->ReadAllText();
 
-		auto& graphics = GetSubsystem<Graphics>();
-		//to do:
-		return true;
+		ShaderCreationAttribs Attrs;
+		Attrs.Desc.Name = owner_.GetName().CString();
+		Attrs.Macros = macros_;
+		//Attrs.FilePath = shaderStage_.source_;
+		Attrs.EntryPoint = shaderStage_.entryPoint_;
+		Attrs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+		Attrs.Source = source_.CString();
+		Attrs.Desc.ShaderType = shaderStage_.shaderType_;
+		Attrs.Desc.TargetProfile = SHADER_PROFILE_DX_4_0;
+		Attrs.Desc.VariableDesc = shaderVariableDesc_.data();
+		Attrs.Desc.NumVariables = (uint)shaderVariableDesc_.size();
+		BasicShaderSourceStreamFactory BasicSSSFactory("CoreData\\Shaders;CoreData\\Shaders\\HLSL;");
+		Attrs.pShaderSourceStreamFactory = &BasicSSSFactory;
+
+		IShader* shaderObject = nullptr;
+		renderDevice->CreateShader(Attrs, &shaderObject);
+
+		shaderVariables_.clear();
+
+		if (shaderObject)
+		{
+			const auto& desc = shaderObject->GetDesc();
+
+			for (uint i = 0; i < desc.NumVariables; i++)
+			{
+				const auto& svDesc = desc.VariableDesc[i];
+				IShaderVariable* shaderVariable = shaderObject->GetShaderVariable(svDesc.Name);
+				shaderVariables_[svDesc.Name] = shaderVariable;
+			}
+
+			deviceObject_ = shaderObject;
+		}
+
+		return deviceObject_ != nullptr;
 	}
 
 	bool ShaderVariation::Convert(const String& binaryShaderName)
@@ -236,7 +240,7 @@ namespace Unique
 
 		String exeFileName = "tools\\xsc.exe";
 
-		fileSystem.CreateDir("cache/" + GetPath(binaryShaderName));
+		fileSystem.CreateDir("Cache/" + GetPath(binaryShaderName));
 
 		int result = fileSystem.SystemRun(exeFileName, { args });
 		if (result != 0)

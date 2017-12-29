@@ -54,21 +54,21 @@ namespace Unique
 		model->SetModel(m);*/
 
 		SPtr<Material> mat(new Material());
-		mat->SetShader(ResourceRef::Create<Shader>("Shaders/Textured.shader"));
+		mat->SetShaderAttr(ResourceRef::Create<Shader>("Shaders/Textured.shader"));
 
-		{
-			JsonSerializer jsonSer;
-			jsonSer.Save("test_shader.json", SPtr<Shader>(mat->GetShader()));
-		}
+// 		{
+// 			JsonSerializer jsonSer;
+// 			jsonSer.Save("test_shader.json", SPtr<Shader>(mat->GetShader()));
+// 		}
 
 		Texture* tex = cache.GetResource<Texture>("Models/Kachujin/Textures/Kachujin_diffuse.png");
 		mat->SetTexture("tDiffMap", tex);
 		model->SetMaterial(mat);
 
-		{
-			JsonSerializer jsonSer;
-			jsonSer.Save("test_material.json", mat);
-		}
+// 		{
+// 			JsonSerializer jsonSer;
+// 			jsonSer.Save("test_material.json", mat);
+// 		}
 
 		auto& renderer = GetSubsystem<Renderer>();
 		Viewport* viewport = new Viewport(scene_, camera_);

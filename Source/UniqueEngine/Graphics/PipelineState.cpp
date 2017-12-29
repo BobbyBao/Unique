@@ -5,47 +5,58 @@
 namespace Unique
 {
 
-	PipelineState::PipelineState(Shader& shader, Pass& shaderPass, unsigned defs) : shaderPass_(shaderPass)
+	PipelineState::PipelineState(Shader& shader, Pass& shaderPass, unsigned defs)
 	{
+		shaderProgram_ = new ShaderProgram(shaderPass);
+
 		if (shaderPass.shaderStage_[5])
 		{
-			isComputePipeline_ = true;
+			shaderProgram_->isComputePipeline_ = true;
 			SPtr<ShaderVariation> sv = shaderPass.GetShaderVariation(shader, shaderPass.shaderStage_[5], defs);
-			shaders_.push_back(sv);
+			shaderProgram_->shaders_.push_back(sv);
 		}
 		else
 		{
-			isComputePipeline_ = false;
+			shaderProgram_->isComputePipeline_ = false;
 
 			for (int i = 0; i < 5; i++)
 			{
 				if (shaderPass.shaderStage_[i])
 				{
 					SPtr<ShaderVariation> sv = shaderPass.GetShaderVariation(shader, shaderPass.shaderStage_[i], defs);
-					shaders_.push_back(sv);
+					shaderProgram_->shaders_.push_back(sv);
 				}
 			}
 
 		}
 
-		psoDesc_.GraphicsPipeline.DepthStencilDesc = shaderPass_.depthState_;
-		psoDesc_.GraphicsPipeline.RasterizerDesc = shaderPass_.rasterizerState_;
-		psoDesc_.GraphicsPipeline.BlendDesc = shaderPass_.blendState_;
+		Init();
+	}
 
-		psoDesc_.GraphicsPipeline.InputLayout.LayoutElements = shaderPass_.inputLayout_.layoutElements_.data();
-		psoDesc_.GraphicsPipeline.InputLayout.NumElements = (uint)shaderPass_.inputLayout_.layoutElements_.size();
+	PipelineState::PipelineState(ShaderProgram* shaderProgram) : shaderProgram_(shaderProgram)
+	{
+		Init();
+	}
 
-		psoDesc_.IsComputePipeline = isComputePipeline_;
+	void PipelineState::Init()
+	{
+		psoDesc_.GraphicsPipeline.DepthStencilDesc = shaderProgram_->shaderPass_.depthState_;
+		psoDesc_.GraphicsPipeline.RasterizerDesc = shaderProgram_->shaderPass_.rasterizerState_;
+		psoDesc_.GraphicsPipeline.BlendDesc = shaderProgram_->shaderPass_.blendState_;
+		psoDesc_.GraphicsPipeline.InputLayout.LayoutElements = shaderProgram_->shaderPass_.inputLayout_.layoutElements_.data();
+		psoDesc_.GraphicsPipeline.InputLayout.NumElements = (uint)shaderProgram_->shaderPass_.inputLayout_.layoutElements_.size();
+
+		psoDesc_.IsComputePipeline = shaderProgram_->isComputePipeline_;
+
 		psoDesc_.GraphicsPipeline.NumRenderTargets = 1;
 		psoDesc_.GraphicsPipeline.RTVFormats[0] = TEX_FORMAT_RGBA8_UNORM_SRGB;
 		psoDesc_.GraphicsPipeline.DSVFormat = TEX_FORMAT_D32_FLOAT;
-
 		psoDesc_.GraphicsPipeline.PrimitiveTopologyType = PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	}
 
 	bool PipelineState::CreateImpl()
 	{
-		for (auto& shader : shaders_)
+		for (auto& shader : shaderProgram_->shaders_)
 		{
 			if (!shader->CreateImpl())
 			{
@@ -54,18 +65,18 @@ namespace Unique
 
 		}
 		
-		shaderVariables_.clear();
+		shaderProgram_->shaderVariables_.clear();
 
-		if (isComputePipeline_)
+		if (shaderProgram_->isComputePipeline_)
 		{
-			for (auto shader : shaders_)
+			for (auto shader : shaderProgram_->shaders_)
 			{
 				if (shader->GetShaderType() == SHADER_TYPE_COMPUTE)
 				{
 					psoDesc_.ComputePipeline.pCS = *shader;
 					for (auto it : shader->shaderVariables_)
 					{
-						shaderVariables_.insert(it);
+						shaderProgram_->shaderVariables_.insert(it);
 					}
 					break;
 				}
@@ -73,7 +84,7 @@ namespace Unique
 		}
 		else
 		{
-			for (auto shader : shaders_)
+			for (auto shader : shaderProgram_->shaders_)
 			{
 				switch (shader->GetShaderType())
 				{
@@ -81,12 +92,10 @@ namespace Unique
 					psoDesc_.GraphicsPipeline.pVS = *shader;
 					break;
 				case SHADER_TYPE_PIXEL:
-
-				for (auto it : shader->shaderVariables_)
-				{
-					shaderVariables_.insert(it);
-				}
-
+					for (auto it : shader->shaderVariables_)
+					{
+						shaderProgram_->shaderVariables_.insert(it);
+					}
 					psoDesc_.GraphicsPipeline.pPS = *shader;
 					break;
 				case SHADER_TYPE_GEOMETRY:
@@ -113,19 +122,18 @@ namespace Unique
 		return true;
 	}
 
-	IShaderVariable* PipelineState::GetShaderVariable(const StringID& name) /*const*/
+	IShaderVariable* PipelineState::GetShaderVariable(const StringID& name)
 	{
 		if (shaderResourceBinding_)
 		{
 			return shaderResourceBinding_->GetVariable(SHADER_TYPE_PIXEL, name.c_str());
-			auto it = shaderVariables_.find(name);
-			if (it != shaderVariables_.end())
+			auto it = shaderProgram_->shaderVariables_.find(name);
+			if (it != shaderProgram_->shaderVariables_.end())
 			{
 				return it->second;
 			}
 		}
 	
-
 		return nullptr;
 	}
 
@@ -146,7 +154,7 @@ namespace Unique
 	{
 		dirty_ = true;
 
-		for (auto& shd : shaders_)
+		for (auto& shd : shaderProgram_->shaders_)
 		{
 			shd->Reload();
 		}

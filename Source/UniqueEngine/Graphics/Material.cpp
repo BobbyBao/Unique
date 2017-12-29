@@ -35,6 +35,11 @@ namespace Unique
 			shader_ = cache.GetResource<Shader>(shaderAttr_.name_);
 		}
 
+		return true;
+	}
+
+	bool Material::Create()
+	{
 		if (shader_)
 		{
 			uniforms_ = shader_->GetUniforms();
@@ -44,7 +49,7 @@ namespace Unique
 		return true;
 	}
 
-	void Material::SetShader(const ResourceRef& shader)
+	void Material::SetShaderAttr(const ResourceRef& shader)
 	{
 		shaderAttr_ = shader;
 		shader_ = GetSubsystem<ResourceCache>().GetResource<Shader>(shaderAttr_.name_);

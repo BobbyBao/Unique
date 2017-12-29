@@ -41,9 +41,12 @@ DebugRenderer::DebugRenderer() : lineAntiAlias_(false)
 	vertexBuffer_ = new VertexBuffer();
 
 	ResourceCache& cache = GetSubsystem<ResourceCache>();
-	shader_ = cache.GetResource<Shader>("shaders/basic.shader");
 
-	pipelineDepth_ = shader_->GetPipeline("Basic", "");
+	material_ = new Material();
+
+	Shader* shader = cache.GetResource<Shader>("shaders/basic.shader");
+	material_->SetShader(shader);
+	pipelineDepth_ = shader->GetPipeline("Basic", "");
 }
 
 DebugRenderer::~DebugRenderer()
@@ -565,6 +568,9 @@ void DebugRenderer::Render(View* view)
 		
 	Batch batch;
 	batch.geometryType_ = GEOM_TRANSIENT;
+	batch.isBase_ = true;
+	batch.material_ = nullptr;
+
 	TransientVertexBuffer& tvb = batch.transientVB_;
 	tvb.vertexBuffer_ = vertexBuffer_;
 

@@ -2,11 +2,6 @@
 #include "Resource/Resource.h"
 #include "Shader.h"
 
-namespace Diligent
-{
-	class IResourceMapping;
-}
-
 namespace Unique
 {
 	class Material : public Resource
@@ -16,15 +11,17 @@ namespace Unique
 		Material();
 		~Material();
 
-		const ResourceRef& GetShader() const { return shaderAttr_; }
-		void SetShader(const ResourceRef& shader);
+		const ResourceRef& GetShaderAttr() const { return shaderAttr_; }
+		void SetShaderAttr(const ResourceRef& shader);
 
 		Shader* GetShader() { return shader_; }
+		void SetShader(Shader* shader) { shader_ = shader; }
 
 		void SetTexture(const StringID& name, Texture* texture);
 		void Apply(PipelineState* pipeline);
 	protected:
 		virtual bool Prepare();
+		virtual bool Create();
 	private:
 		SPtr<Shader> shader_;
 		String shaderDefines_;

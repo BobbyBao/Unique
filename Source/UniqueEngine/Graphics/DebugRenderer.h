@@ -20,6 +20,7 @@ class VertexBuffer;
 class Shader;
 class PipelineState;
 class View;
+class Material;
 
 /// Debug rendering line.
 struct DebugLine
@@ -174,9 +175,10 @@ private:
     /// Line antialiasing flag.
     bool lineAntiAlias_;
 
-	SPtr<Shader> shader_;
+	SPtr<Material> material_;
 
 	SPtr<PipelineState> pipelineDepth_;
+
 	SPtr<PipelineState> pipelineNoDepth_;
 };
 

@@ -10,9 +10,9 @@ namespace Unique
 		if (Thread::IsMainThread())
 		{
 			state_ = State::Creating;
+
 			uCall
 			(
-			
 				ReleaseImpl();
 				CreateImpl();
 				state_ = State::Created;
@@ -65,12 +65,15 @@ namespace Unique
 
 	void GPUObject::UpdateBuffers()
 	{
-		auto& renderContext = updateQueue_[Graphics::GetRenderContext()];
-		for (auto buffer : renderContext)
+		auto& buffers = updateQueue_[Graphics::GetRenderContext()];
+		if (!buffers.empty())
 		{
-			buffer->UpdateBuffer();
-		}
+			for (auto buffer : buffers)
+			{
+				buffer->UpdateBuffer();
+			}
 
-		renderContext.clear();
+			buffers.clear();
+		}
 	}
 }
