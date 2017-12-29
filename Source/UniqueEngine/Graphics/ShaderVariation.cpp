@@ -49,14 +49,25 @@ namespace Unique
 	
 	bool ShaderVariation::CreateImpl() 
 	{
+		auto& cache = GetSubsystem<ResourceCache>();
+		SPtr<File> file = cache.GetFile("Shaders/" + shaderStage_.source_);
+		if (!file->IsOpen())
+		{
+			UNIQUE_LOGERROR(shaderStage_.source_, " is not a valid shader bytecode file");
+			return false;
+		}
+
+		source_ = file->ReadAllText();
+
 		ShaderCreationAttribs Attrs;
 		//Attrs.Desc.Name = "MainVS";
 		Attrs.Macros = macros_;
-		Attrs.FilePath = shaderStage_.source_;
+		//Attrs.FilePath = shaderStage_.source_;
 		Attrs.EntryPoint = shaderStage_.entryPoint_;
 		Attrs.Desc.ShaderType = shaderStage_.shaderType_;
 		Attrs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
 		Attrs.Desc.TargetProfile = SHADER_PROFILE_DX_4_0;
+		Attrs.Source = source_.CString();
 		BasicShaderSourceStreamFactory BasicSSSFactory("CoreData\\Shaders;CoreData\\Shaders\\HLSL;");
 		Attrs.pShaderSourceStreamFactory = &BasicSSSFactory;
 		IShader* shaderObject = nullptr;
@@ -108,7 +119,7 @@ namespace Unique
 		}
 
 		String& defines = defines_;
-		String binaryShaderName = "";// Shader::GetShaderPath(graphics.GetDeviceType()) + name;
+		String binaryShaderName = Shader::GetShaderPath(graphics.GetDeviceType()) + name;
 
 		if (!defines.Empty())
 		{
@@ -121,7 +132,7 @@ namespace Unique
 		{
 			if (!Convert(binaryShaderName))
 			{
-				if (LoadConvertedCode(/*Shader::GetShaderPath(graphics.GetDeviceType()) +*/ name + extension))
+				if (LoadConvertedCode(Shader::GetShaderPath(graphics.GetDeviceType()) + name + extension))
 				{
 					UNIQUE_LOGWARNING("==============================Load shader failed, name : " + binaryShaderName);
 				}
@@ -172,31 +183,21 @@ namespace Unique
 		auto& graphics = GetSubsystem<Graphics>();
 
 		const String& sourceFile = shaderStage_.source_;
-		/*
+
 		String args;
-		unsigned renderType = graphics.GetRenderID();
 		bool isOpenGL = graphics.IsOpenGL();
-
-		if (isOpenGL)
-		{
-		//	args.Append(" --platform linux");
-		}
-		else
-		{
-		//	args.Append(" --platform windows");
-		}
-
+	
 		switch (shaderStage_.shaderType_)
 		{
-		case ShaderType::Vertex:
+		case ShaderType::SHADER_TYPE_VERTEX:
 			args.Append(" -T vert");
 			args.Append(" -E ").Append(shaderStage_.entryPoint_);
 			break;
-		case ShaderType::Fragment:
+		case ShaderType::SHADER_TYPE_PIXEL:
 			args.Append(" -T frag");
 			args.Append(" -E ").Append(shaderStage_.entryPoint_);
 			break;
-		case ShaderType::Compute:
+		case ShaderType::SHADER_TYPE_COMPUTE:
 			args.Append(" -T comp");
 			args.Append(" -E ").Append(shaderStage_.entryPoint_);
 			break;
@@ -205,8 +206,8 @@ namespace Unique
 		}
 
 		FileSystem& fileSystem = GetSubsystem<FileSystem>();
-
-		String inputFile = "Cache/" + Shader::GetShaderPath(RendererID::Direct3D11) 
+	
+		String inputFile = "Cache/" + Shader::GetShaderPath(DeviceType::D3D11) 
 			+ ReplaceExtension( owner_.GetName(), ".hlsl");
 
 		{	
@@ -214,7 +215,7 @@ namespace Unique
 
 			File file;
 			file.Open(inputFile, FILE_WRITE);
-			if (!file.Write(shaderPass_.source_.CString(), shaderPass_.source_.Length()))
+			if (!file.Write(source_.CString(), source_.Length()))
 			{
 				UNIQUE_LOGERROR("Write source file failed.");
 			}
@@ -234,7 +235,7 @@ namespace Unique
 		{	
 			return false;
 		}
-		*/
+		
 		dirty_ = false;
 		return true;
 	}

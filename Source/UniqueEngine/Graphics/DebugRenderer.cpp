@@ -16,7 +16,7 @@
 #include "Graphics/PipelineState.h"
 #include "Scene/Node.h"
 #include "../Renderer/Batch.h"
-
+#include "../Renderer/View.h"
 #include "DebugNew.h"
 
 namespace Unique
@@ -43,7 +43,7 @@ DebugRenderer::DebugRenderer() : lineAntiAlias_(false)
 	ResourceCache& cache = GetSubsystem<ResourceCache>();
 	shader_ = cache.GetResource<Shader>("shaders/basic.shader");
 
-	pipelineState_ = shader_->GetPipeline("", "");
+	pipelineDepth_ = shader_->GetPipeline("Basic", "");
 }
 
 DebugRenderer::~DebugRenderer()
@@ -464,7 +464,7 @@ void DebugRenderer::AddQuad(const Vector3& center, float width, float height, co
     AddLine(v3, v0, uintColor, depthTest);
 }
 
-void DebugRenderer::Render()
+void DebugRenderer::Render(View* view)
 {
     if (!HasContent())
         return;
@@ -559,16 +559,9 @@ void DebugRenderer::Render()
 	}
 
 	vertexBuffer_->Unlock();
-		/*
-	uint64 state = BGFX_STATE_RGB_WRITE |
-		BGFX_STATE_ALPHA_WRITE |
-		BGFX_STATE_DEPTH_WRITE |
-		(lineAntiAlias_ ? BGFX_STATE_LINEAA : 0) |
-		BGFX_STATE_MSAA;
-	*/
 
-	size_t start = 0;
-	size_t count = 0;
+	uint start = 0;
+	uint count = 0;
 		
 	Batch batch;
 	batch.geometryType_ = GEOM_TRANSIENT;
@@ -577,70 +570,44 @@ void DebugRenderer::Render()
 
 	if (lines_.size() > 0)
 	{
-		count = lines_.size() * 2;
+		count = (uint)lines_.size() * 2;
 	
-// 		graphics.DrawTransient(
-// 			vertex_buffer,
-// 			Matrix3x4::IDENTITY,
-// 			start,
-// 			count,
-// 			state | BGFX_STATE_DEPTH_TEST_LEQUAL | BGFX_STATE_PT_LINES,
-// 			uiShaderInstance_
-// 		);
+		tvb.offset_ = start;
+		tvb.count_ = count;
+		view->AddBatch(batch);
 
 		start += count;
 	}
 
 	if (noDepthLines_.size() > 0)
 	{
-		count = noDepthLines_.size() * 2;
+		count = (uint)noDepthLines_.size() * 2;
 
-// 		graphics.DrawTransient(
-// 			vertex_buffer,
-// 			Matrix3x4::IDENTITY,
-// 			start,
-// 			count,
-// 			state| BGFX_STATE_DEPTH_TEST_ALWAYS | BGFX_STATE_PT_LINES,
-// 			uiShaderInstance_
-// 		);
+		tvb.offset_ = start;
+		tvb.count_ = count;
+		view->AddBatch(batch);
 	
 		start += count;
 	}
-
-// 	state = BGFX_STATE_RGB_WRITE |
-// 		BGFX_STATE_ALPHA_WRITE |
-// 		BGFX_STATE_BLEND_ALPHA |
-// 		(lineAntiAlias_ ? BGFX_STATE_LINEAA : 0) |
-// 		BGFX_STATE_MSAA;
-
+	
 	if (triangles_.size() > 0)
 	{
-		count = triangles_.size() * 3;
+		count = (uint)triangles_.size() * 3;
 
-// 		graphics.DrawTransient(
-// 			vertex_buffer,
-// 			Matrix3x4::IDENTITY,
-// 			start,
-// 			(int)count,
-// 			state | BGFX_STATE_DEPTH_TEST_LEQUAL,
-// 			uiShaderInstance_
-// 		);
+		tvb.offset_ = start;
+		tvb.count_ = count;
+		view->AddBatch(batch);
 
 		start += count;
 	}
 
 	if (noDepthTriangles_.size() > 0)
 	{
-		count = noDepthTriangles_.size() * 3;
+		count = (uint)noDepthTriangles_.size() * 3;
 
-// 		graphics.DrawTransient(
-// 			vertex_buffer,
-// 			Matrix3x4::IDENTITY,
-// 			start,
-// 			(int)count,
-// 			state | BGFX_STATE_DEPTH_TEST_ALWAYS,
-// 			uiShaderInstance_
-// 		);
+		tvb.offset_ = start;
+		tvb.count_ = count;
+		view->AddBatch(batch);
 	}	
 
 }

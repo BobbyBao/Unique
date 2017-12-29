@@ -53,6 +53,7 @@ namespace Unique
 		TextureView* GetRenderTargetView() { return renderTargetView_; }
 		TextureView* GetDepthStencilView() { return depthStencilView_; }
 		TextureView* GetUnorderedAccessView() { return unorderedAccessView_; }
+
 	protected:
 		bool CreateImpl();
 		void ReleaseImpl();
@@ -77,7 +78,11 @@ namespace Unique
 		}
 
 		uint GetWidth() const { return texture_.GetWidth(); }
-		uint GetHeight() const { return texture_.GetHeight(); }
+		uint GetHeight() const { return texture_.GetHeight(); }	
+		
+		operator ITextureView*() {
+			return textureView_;
+		}
 	private:
 		Texture& texture_;
 		ITextureView* textureView_;

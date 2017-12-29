@@ -69,11 +69,12 @@ namespace Unique
 		Shader& owner_;
 		ShaderStage shaderStage_;
 		Pass& shaderPass_;
+		String source_;
 		/// Defines to use in compiling.
 		String defines_;
 		unsigned mask_ = 0;
 		bool dirty_ = false;
 		ShaderMacroHelper macros_;
 	};
-	
+
 }

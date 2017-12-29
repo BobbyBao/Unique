@@ -26,8 +26,8 @@ namespace Unique
 	{
 		/// Construct with defaults.
 		Batch() :
-			isBase_(false),
-			lightQueue_(0)
+			isBase_(false)//,
+			//lightQueue_(0)
 		{
 		}
 
@@ -41,7 +41,7 @@ namespace Unique
 			worldTransform_(rhs.worldTransform_),
 			numWorldTransforms_(rhs.numWorldTransforms_),
 			instancingData_(rhs.instancingData_),
-			lightQueue_(0),
+			//lightQueue_(0),
 			geometryType_(rhs.geometryType_)
 		{
 		}
@@ -55,7 +55,7 @@ namespace Unique
 			worldTransform_(worldTransform),
 			numWorldTransforms_(1),
 			instancingData_(nullptr),
-			lightQueue_(0),
+			//lightQueue_(0),
 			geometryType_(GEOM_TRANSIENT)
 		{
 		}
@@ -69,7 +69,7 @@ namespace Unique
 			worldTransform_(worldTransform),
 			numWorldTransforms_(1),
 			instancingData_(nullptr),
-			lightQueue_(0),
+			//lightQueue_(0),
 			geometryType_(GEOM_TRANSIENT)
 		{
 		}
@@ -118,7 +118,7 @@ namespace Unique
 		/// Zone.
 		//Zone* zone_;
 		/// Light properties.
-		LightBatchQueue* lightQueue_;
+		//LightBatchQueue* lightQueue_;
 		/// Material pass.
 		Pass* pass_;
 
@@ -208,7 +208,7 @@ namespace Unique
 		/// Construct from a batch.
 		BatchGroupKey(const Batch& batch) :
 			//zone_(batch.zone_),
-			lightQueue_(batch.lightQueue_),
+			//lightQueue_(batch.lightQueue_),
 			pass_(batch.pass_),
 			material_(batch.material_),
 			geometry_(batch.geometry_),

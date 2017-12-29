@@ -22,7 +22,7 @@ namespace Unique
 		Shader* GetShader() { return shader_; }
 
 		void SetTexture(const StringID& name, Texture* texture);
-		void Apply();
+		void Apply(PipelineState* pipeline);
 	protected:
 		virtual bool Prepare();
 	private:

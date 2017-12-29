@@ -2,6 +2,7 @@
 #include "Texture.h"
 #include "Resource/Image.h"
 #include <GraphicsUtilities.h>
+#include <GraphicsAccessories.h>
 
 namespace Unique
 {

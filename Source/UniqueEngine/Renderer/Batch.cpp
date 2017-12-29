@@ -144,11 +144,11 @@ namespace Unique
 		if (!isBase_)
 			shaderID |= 0x8000;
 
-		unsigned lightQueueID = (unsigned)((*((unsigned*)&lightQueue_) / sizeof(LightBatchQueue)) & 0xffff);
+//		unsigned lightQueueID = (unsigned)((*((unsigned*)&lightQueue_) / sizeof(LightBatchQueue)) & 0xffff);
 		unsigned materialID = (unsigned)((*((unsigned*)&material_) / sizeof(Material)) & 0xffff);
 		unsigned geometryID = (unsigned)((*((unsigned*)&geometry_) / sizeof(Geometry)) & 0xffff);
 
-		sortKey_ = (((unsigned long long)shaderID) << 48) | (((unsigned long long)lightQueueID) << 32) |
+		sortKey_ = (((unsigned long long)shaderID) << 48) | /*(((unsigned long long)lightQueueID) << 32) |*/
 			(((unsigned long long)materialID) << 16) | geometryID;
 	}
 
@@ -158,8 +158,8 @@ namespace Unique
 		auto& renderer = GetSubsystem<Renderer>();
 
 		Node* cameraNode = camera ? camera->GetNode() : 0;
-		Light* light = lightQueue_ ? lightQueue_->light_ : 0;
-		Texture* shadowMap = lightQueue_ ? lightQueue_->shadowMap_ : 0;
+		//Light* light = lightQueue_ ? lightQueue_->light_ : 0;
+		//Texture* shadowMap = lightQueue_ ? lightQueue_->shadowMap_ : 0;
 		
 		// Set global (per-frame) shader parameters
 		//if (graphics->NeedParameterUpdate(SP_FRAME, (void*)0))
@@ -182,7 +182,7 @@ namespace Unique
 
 		if (isBase_)
 		{
-			material_->Apply();
+			material_->Apply(pipelineState_);
 		}
 
 #if false

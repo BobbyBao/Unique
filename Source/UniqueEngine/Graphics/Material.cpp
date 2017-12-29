@@ -1,6 +1,7 @@
 #include "Precompiled.h"
 #include "Material.h"
 #include <ResourceMapping.h>
+#include "PipelineState.h"
 
 namespace Unique
 {
@@ -27,7 +28,11 @@ namespace Unique
 
 		if (GetAsyncLoadState() == ASYNC_LOADING)
 		{
-		//	cache.BackgroundLoadResource<Shader>(shaderAttr_, true, this);
+			cache.BackgroundLoadResource<Shader>(shaderAttr_.name_, true, this);
+		}
+		else
+		{
+			shader_ = cache.GetResource<Shader>(shaderAttr_.name_);
 		}
 
 		if (shader_)
@@ -52,16 +57,22 @@ namespace Unique
 			if (ts.name_ == name)
 			{
 				ts.texture_ = texture;
-				break;
+				return;
 			}
 
 		}
+
+		TextureSlot textureSlot;
+		textureSlot.name_ = name;
+		textureSlot.texture_ = texture;
+		textureSlots_.push_back(textureSlot);
 	}
 
-	void Material::Apply()
+	void Material::Apply(PipelineState* pipeline)
 	{
 		for (auto& uniform : uniforms_)
 		{
+
 			if (uniform.shaderVarible_.IsValid())
 			{
 			//	uniform.shaderVarible_.Lock()->Set();
@@ -71,9 +82,10 @@ namespace Unique
 
 		for (auto& ts : textureSlots_)
 		{
-			if (ts.shaderVarible_.IsValid())
+			auto sv = pipeline->GetShaderVariable(ts.name_);
+			if (sv)
 			{
-				ts.shaderVarible_.Lock()->Set(*ts.texture_);
+				sv->Set(*ts.texture_->GetShaderResourceView());
 			}
 
 		}

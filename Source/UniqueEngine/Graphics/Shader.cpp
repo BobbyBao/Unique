@@ -87,26 +87,25 @@ namespace Unique
 
 	uObject(Pass)
 	{
-		uFactory("Graphics")
-			uAttribute("Name", name_)
-			uAttribute("DepthState", depthState_)
-			uAttribute("RasterizerState", rasterizerState_)
-			uAttribute("BlendStateDesc", blendState_)
-			uAttribute("InputLayout", inputLayout_)
-			uAttribute("VertexShader", shaderStage_[0])
-			uAttribute("PixelShader", shaderStage_[1])
-			uAttribute("GeometryShader", shaderStage_[2])
-			uAttribute("HullShader", shaderStage_[3])
-			uAttribute("DomainShader", shaderStage_[4])
-			uAttribute("ComputeShader", shaderStage_[5])
+		uFactory("Graphics");
+		uAttribute("Name", name_);
+		uAttribute("DepthState", depthState_);
+		uAttribute("RasterizerState", rasterizerState_);
+		uAttribute("BlendStateDesc", blendState_);
+		uAttribute("InputLayout", inputLayout_);
+		uAttribute("VertexShader", shaderStage_[0]);
+		uAttribute("PixelShader", shaderStage_[1]);
+		uAttribute("GeometryShader", shaderStage_[2]);
+		uAttribute("HullShader", shaderStage_[3]);
+		uAttribute("DomainShader", shaderStage_[4]);
+		uAttribute("ComputeShader", shaderStage_[5]);
 	}
 
 	uObject(Shader)
 	{
 		uFactory("Graphics")
 		uAttribute("Name", shaderName_)
-		uAttribute("Uniforms", uniforms_)
-		uAttribute("TextureSlots", textureSlots_)
+		uAttribute("Properties", shaderProperties_)
 		uAttribute("Pass", passes_)	
 	}
 
@@ -224,6 +223,21 @@ namespace Unique
 		return true;
 	}
 
+
+	SPtr<ShaderVariation> Pass::GetShaderVariation(Shader& shader, const ShaderStage& shaderStage, uint defs)
+	{
+		uint64_t key = ((uint64_t)shaderStage.shaderType_ << 32) | defs;
+		auto it = cachedShaders_.find(key);
+		if (it != cachedShaders_.end())
+		{
+			return it->second;
+		}
+
+		SPtr<ShaderVariation> shaderVariation(new ShaderVariation(shader, shaderStage, *this, defs));
+		cachedShaders_[key] = shaderVariation;
+		return shaderVariation;
+	}
+
 	unsigned Shader::basePassIndex = 0;
 	unsigned Shader::alphaPassIndex = 0;
 	unsigned Shader::materialPassIndex = 0;
@@ -322,6 +336,22 @@ namespace Unique
 			unsigned newPassIndex = (uint)passIndices.size();
 			passIndices[nameLower] = newPassIndex;
 			return newPassIndex;
+		}
+	}
+
+	String Shader::GetShaderPath(DeviceType deviceType)
+	{
+		switch (deviceType)
+		{
+		case Diligent::DeviceType::D3D11:
+		case Diligent::DeviceType::D3D12:
+			return "Shaders/HLSL/";
+
+		case Diligent::DeviceType::OpenGL:
+		case Diligent::DeviceType::OpenGLES:
+			return "Shaders/GLSL/";
+		default:
+			return "";
 		}
 	}
 

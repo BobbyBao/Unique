@@ -7,6 +7,11 @@ namespace Unique
 	class Shader;
 	class Pass;
 
+	class ShaderProgram : RefCounted
+	{
+	public:
+	};
+
 	class PipelineState : public RefCounted, public GPUObject
 	{
 	public:
@@ -15,18 +20,19 @@ namespace Unique
 		bool CreateImpl();
 		void Reload();
 
+		IShaderVariable* GetShaderVariable(const StringID& name) const;
 		IPipelineState* GetPipeline();
 		IShaderResourceBinding* GetShaderResourceBinding() { return shaderResourceBinding_; }
 	private:
+		Vector<SPtr<ShaderVariation>> shaders_;
+		HashMap<StringID, IShaderVariable*> shaderVariables_;
 		Pass& shaderPass_;
-		Vector<SPtr<ShaderVariation>> shaders;
 		bool isComputePipeline_ = false;
 		RefCntAutoPtr<IShaderResourceBinding> shaderResourceBinding_;
 		bool dirty_ = true;
 		uint dirtyFlags_ = 0;
 		IResourceMapping* resourceMapping_;
-
-		HashMap<StringID, IShaderVariable*> shaderVariables_;
+		PipelineStateDesc PSODesc;
 	};
 
 }

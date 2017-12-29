@@ -46,9 +46,11 @@ namespace Unique
 		ShaderStage				shaderStage_[6];
 
 	private:
+		SPtr<ShaderVariation>	GetShaderVariation(Shader& shader, const ShaderStage& shaderStage, uint defs);
 		Vector<String>			allDefs_;
 		uint					allMask_ = 0;
 		HashMap<uint, SPtr<PipelineState>> cachedPass_;
+		HashMap<uint64_t, SPtr<ShaderVariation>> cachedShaders_;
 
 		friend class Shader;
 		friend class ShaderVariation;
@@ -57,8 +59,11 @@ namespace Unique
 
 	class ShaderProperties
 	{
-	public:
-		Vector<Uniform> shaderVariables_;
+	public:	
+		Vector<Uniform>		uniforms_;
+		Vector<TextureSlot> textureSlots_;
+
+		uClass("Uniform", uniforms_, "TextureSlot", textureSlots_)
 	};
 
 	class Shader : public Resource
@@ -76,10 +81,11 @@ namespace Unique
 		Pass* GetPass(const String & pass);
 		Pass* GetPass(unsigned passIndex);
 		PipelineState* GetPipeline(const String& passName, const String & defs);
-		inline const auto& GetUniforms() const { return uniforms_; }
-		inline const auto& GetTextureSlots() const { return textureSlots_; }
+		inline const auto& GetUniforms() const { return shaderProperties_.uniforms_; }
+		inline const auto& GetTextureSlots() const { return shaderProperties_.textureSlots_; }
 
 		static unsigned GetPassIndex(const String& passName);
+		static String GetShaderPath(DeviceType deviceType);
 		static Vector<String> SplitDef(const String& defs);
 
 		/// Index for base pass. Initialized once GetPassIndex() has been called for the first time.
@@ -101,8 +107,7 @@ namespace Unique
 
 	private:
 		String				shaderName_;
-		Vector<Uniform>		uniforms_;
-		Vector<TextureSlot> textureSlots_;
+		ShaderProperties	shaderProperties_;
 		Vector<SPtr<Pass>>	passes_;
 
 		/// Pass index assignments.

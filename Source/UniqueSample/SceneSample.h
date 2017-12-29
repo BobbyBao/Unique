@@ -19,7 +19,6 @@ namespace Unique
 
 		SPtr<Scene> scene_;
 		SPtr<Camera> camera_;
-		SPtr<UniformBuffer> constBuffer_;
 		Node* node_;
 	};
 

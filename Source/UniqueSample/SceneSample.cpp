@@ -7,6 +7,7 @@
 #include "Graphics/StaticModel.h"
 #include "Graphics/Model.h"
 #include "Graphics/Geometry.h"
+#include "Serialize/JsonSerializer.h"
 
 UNIQUE_IMPLEMENT_MAIN(Unique::SceneSample)
 
@@ -14,14 +15,6 @@ namespace Unique
 {
 	extern void Test();
 	extern SPtr<Geometry> BuildSponge(int levelMax, bool aoEnabled);
-
-	struct ShaderConstants
-	{
-		Matrix4 WorldViewProjT;
-		Matrix3x4 WorldNormT;
-		Vector3 LightDir;
-		float LightCoeff;
-	};
 
 	SceneSample::SceneSample()
 	{
@@ -38,7 +31,7 @@ namespace Unique
 	{
 		UNIQUE_UNUSED(eventData);
 
-		Test();
+		//Test();
 
 		auto& cache = GetSubsystem<ResourceCache>();
 
@@ -50,7 +43,6 @@ namespace Unique
 
 		StaticModel* model = node_->CreateComponent<StaticModel>();
 		model->SetModelAttr(ResourceRef::Create<Model>("Models/Kachujin/Kachujin.mdl"));
-	
 		
 		/*
 		Model* m = new Model();
@@ -64,18 +56,24 @@ namespace Unique
 		SPtr<Material> mat(new Material());
 		mat->SetShader(ResourceRef::Create<Shader>("Shaders/Textured.shader"));
 
+		{
+			JsonSerializer jsonSer;
+			jsonSer.Save("test_shader.json", SPtr<Shader>(mat->GetShader()));
+		}
+
 		Texture* tex = cache.GetResource<Texture>("Models/Kachujin/Textures/Kachujin_diffuse.png");
 		mat->SetTexture("tDiffMap", tex);
 		model->SetMaterial(mat);
 
-		constBuffer_ = new UniformBuffer(ShaderConstants(), USAGE_DYNAMIC, CPU_ACCESS_WRITE);
-		
+		{
+			JsonSerializer jsonSer;
+			jsonSer.Save("test_material.json", mat);
+		}
+
 		auto& renderer = GetSubsystem<Renderer>();
 		Viewport* viewport = new Viewport(scene_, camera_);
 		renderer.SetViewport(0, viewport);
 
-		auto& graphics = GetSubsystem<Graphics>();
-		graphics.AddResource("Constants", constBuffer_);
 		camera_->GetNode()->SetPosition(Vector3(0, 1, -5));
 	}
 
@@ -91,17 +89,5 @@ namespace Unique
 
 		node_->Rotate(Quaternion(0, 0.1f * eventData.timeStep_, 0));
 
-		/*
-		Matrix4 proj = camera_->GetGPUProjection();
-		Matrix3x4 view = camera_->GetView();
-
-		Matrix3x4 world(Vector3::ZERO, Quaternion::IDENTITY, Vector3::ONE);
-		Vector3 lightDir(-0.5f, -0.2f, 1.0f);
-		ShaderConstants *cst = (ShaderConstants *)constBuffer_->Lock();
-		cst->WorldViewProjT = (proj* view *world);
-		cst->WorldNormT = world;
-		cst->LightDir = (1.0f / lightDir.Length()) * lightDir;
-		cst->LightCoeff = 0.85f;
-		constBuffer_->Unlock();*/
 	}
 }

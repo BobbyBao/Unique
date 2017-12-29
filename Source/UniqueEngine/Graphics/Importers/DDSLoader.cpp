@@ -1432,8 +1432,8 @@ void CreateDDSTextureFromMemoryEx(
 {
     if (texture)
     {
-        VERIFY( *texture == nullptr, "Overwriting reference to an existing object is unsafe")
-        *texture = nullptr;
+    //    VERIFY( *texture == nullptr, "Overwriting reference to an existing object is unsafe")
+    //    *texture = nullptr;
     }
     //if (textureView)
     //{

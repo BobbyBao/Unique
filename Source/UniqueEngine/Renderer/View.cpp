@@ -6,6 +6,7 @@
 #include "../Graphics/Octree.h"
 #include "../Graphics/OctreeQuery.h"
 #include "../Graphics/Camera.h"
+#include "../Graphics/DebugRenderer.h"
 #include "Viewport.h"
 #include "View.h"
 #include "Batch.h"
@@ -319,6 +320,7 @@ namespace Unique
 			camera_->SetAspectRatioInternal((float)frame_.viewSize_.x_ / (float)frame_.viewSize_.y_);
 				
 		GetDrawables();
+
 		GetBatches();
 
 		UpdateGeometries();
@@ -326,6 +328,23 @@ namespace Unique
 		PrepareInstancingBuffer();
 
 		SetCameraShaderParameters(camera_);
+
+
+		// Draw the associated debug geometry now if enabled
+		if (drawDebug_ && octree_ && camera_)
+		{
+			DebugRenderer* debug = octree_->GetComponent<DebugRenderer>();
+			if (debug && debug->IsEnabledEffective() && debug->HasContent())
+			{
+// 				IntVector2 rtSizeNow = graphics_->GetRenderTargetDimensions();
+// 				IntRect viewport = (currentRenderTarget_ == renderTarget_) ? viewRect_ : IntRect(0, 0, rtSizeNow.x_,
+// 					rtSizeNow.y_);
+// 				graphics_->SetViewport(viewport);
+
+				debug->SetView(camera_);
+				debug->Render(this);
+			}
+		}
 	}
 
 	void View::Render()
@@ -500,7 +519,7 @@ namespace Unique
 					destBatch.pass_ = pass;
 					destBatch.isBase_ = true;
 					//destBatch.lightMask_ = (unsigned char)GetLightMask(drawable);
-					destBatch.lightQueue_ = 0;
+					//destBatch.lightQueue_ = 0;
 
 					AddBatchToQueue(*info.batchQueue_, destBatch, shader, info.allowInstancing_);
 				}

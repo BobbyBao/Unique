@@ -105,5 +105,11 @@ namespace Unique
 		uClass("Name", name_, "Texture", texAttr_)
 	};
 
+	class ShaderVariable : public RefCounted
+	{
+	public:
+
+		RefCntWeakPtr<IShaderVariable> shaderVarible_;
+	};
 }
 

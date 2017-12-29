@@ -10,6 +10,8 @@ namespace Unique
 		if (shaderPass.shaderStage_[5])
 		{
 			isComputePipeline_ = true;
+			SPtr<ShaderVariation> sv = shaderPass.GetShaderVariation(shader, shaderPass.shaderStage_[5], defs);
+			shaders_.push_back(sv);
 		}
 		else
 		{
@@ -19,31 +21,12 @@ namespace Unique
 			{
 				if (shaderPass.shaderStage_[i])
 				{
-					SPtr<ShaderVariation> sv(new ShaderVariation(shader, shaderPass.shaderStage_[i], shaderPass, defs));
-					shaders.push_back(sv);
+					SPtr<ShaderVariation> sv = shaderPass.GetShaderVariation(shader, shaderPass.shaderStage_[i], defs);
+					shaders_.push_back(sv);
 				}
 			}
 
 		}
-
-	}
-
-	bool PipelineState::CreateImpl()
-	{
-		for (auto& shader : shaders)
-		{
-			if (!shader->CreateImpl())
-			{
-				return false;
-			}
-
-		}
-
-		PipelineStateDesc PSODesc;
-		PSODesc.IsComputePipeline = isComputePipeline_;
-		PSODesc.GraphicsPipeline.NumRenderTargets = 1;
-		PSODesc.GraphicsPipeline.RTVFormats[0] = TEX_FORMAT_RGBA8_UNORM_SRGB;
-		PSODesc.GraphicsPipeline.DSVFormat = TEX_FORMAT_D32_FLOAT;
 
 		PSODesc.GraphicsPipeline.DepthStencilDesc = shaderPass_.depthState_;
 		PSODesc.GraphicsPipeline.RasterizerDesc = shaderPass_.rasterizerState_;
@@ -52,11 +35,28 @@ namespace Unique
 		PSODesc.GraphicsPipeline.InputLayout.LayoutElements = shaderPass_.inputLayout_.layoutElements_.data();
 		PSODesc.GraphicsPipeline.InputLayout.NumElements = (uint)shaderPass_.inputLayout_.layoutElements_.size();
 
+		PSODesc.IsComputePipeline = isComputePipeline_;
+		PSODesc.GraphicsPipeline.NumRenderTargets = 1;
+		PSODesc.GraphicsPipeline.RTVFormats[0] = TEX_FORMAT_RGBA8_UNORM_SRGB;
+		PSODesc.GraphicsPipeline.DSVFormat = TEX_FORMAT_D32_FLOAT;
+
 		PSODesc.GraphicsPipeline.PrimitiveTopologyType = PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	}
+
+	bool PipelineState::CreateImpl()
+	{
+		for (auto& shader : shaders_)
+		{
+			if (!shader->CreateImpl())
+			{
+				return false;
+			}
+
+		}
 
 		if (isComputePipeline_)
 		{
-			for (auto shader : shaders)
+			for (auto shader : shaders_)
 			{
 				if (shader->GetShaderType() == SHADER_TYPE_COMPUTE)
 				{
@@ -71,7 +71,7 @@ namespace Unique
 		}
 		else
 		{
-			for (auto shader : shaders)
+			for (auto shader : shaders_)
 			{
 				for (auto it : shader->shaderVariables_)
 				{
@@ -110,6 +110,17 @@ namespace Unique
 		return true;
 	}
 
+	IShaderVariable* PipelineState::GetShaderVariable(const StringID& name) const
+	{
+		auto it = shaderVariables_.find(name);
+		if (it != shaderVariables_.end())
+		{
+			return it->second;
+		}
+
+		return nullptr;
+	}
+
 	IPipelineState* PipelineState::GetPipeline()
 	{
 		if (dirty_ || !IsValid())
@@ -127,7 +138,7 @@ namespace Unique
 	{
 		dirty_ = true;
 
-		for (auto& shd : shaders)
+		for (auto& shd : shaders_)
 		{
 			shd->Reload();
 		}

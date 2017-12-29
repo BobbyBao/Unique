@@ -19,6 +19,7 @@ class Sphere;
 class VertexBuffer;
 class Shader;
 class PipelineState;
+class View;
 
 /// Debug rendering line.
 struct DebugLine
@@ -129,7 +130,7 @@ public:
     void AddQuad(const Vector3& center, float width, float height, const Color& color, bool depthTest = true);
 
     /// Update vertex buffer and render all debug lines. The viewport and rendertarget should be set before.
-    void Render();
+    void Render(View* view);
 
     /// Return whether line antialiasing is enabled.
     bool GetLineAntiAlias() const { return lineAntiAlias_; }
@@ -175,7 +176,8 @@ private:
 
 	SPtr<Shader> shader_;
 
-	SPtr<PipelineState> pipelineState_;
+	SPtr<PipelineState> pipelineDepth_;
+	SPtr<PipelineState> pipelineNoDepth_;
 };
 
 }

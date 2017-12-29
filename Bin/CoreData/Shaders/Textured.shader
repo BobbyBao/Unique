@@ -2,12 +2,14 @@
 
 Shader "Basic"
 {
-	Uniforms
+	Properties
 	{
-	}
 
-	TextureSlots
-	{
+		TextureSlot tDiffuse
+		{
+			Texture ""
+		}
+	
 	}
 
 
