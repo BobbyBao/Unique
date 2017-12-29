@@ -75,6 +75,7 @@ namespace Unique
 		unsigned mask_ = 0;
 		bool dirty_ = false;
 		ShaderMacroHelper macros_;
+		Vector<ShaderVariableDesc> shaderVariableDesc_;
 	};
 
 }

@@ -28,19 +28,19 @@ namespace Unique
 
 		}
 
-		PSODesc.GraphicsPipeline.DepthStencilDesc = shaderPass_.depthState_;
-		PSODesc.GraphicsPipeline.RasterizerDesc = shaderPass_.rasterizerState_;
-		PSODesc.GraphicsPipeline.BlendDesc = shaderPass_.blendState_;
+		psoDesc_.GraphicsPipeline.DepthStencilDesc = shaderPass_.depthState_;
+		psoDesc_.GraphicsPipeline.RasterizerDesc = shaderPass_.rasterizerState_;
+		psoDesc_.GraphicsPipeline.BlendDesc = shaderPass_.blendState_;
 
-		PSODesc.GraphicsPipeline.InputLayout.LayoutElements = shaderPass_.inputLayout_.layoutElements_.data();
-		PSODesc.GraphicsPipeline.InputLayout.NumElements = (uint)shaderPass_.inputLayout_.layoutElements_.size();
+		psoDesc_.GraphicsPipeline.InputLayout.LayoutElements = shaderPass_.inputLayout_.layoutElements_.data();
+		psoDesc_.GraphicsPipeline.InputLayout.NumElements = (uint)shaderPass_.inputLayout_.layoutElements_.size();
 
-		PSODesc.IsComputePipeline = isComputePipeline_;
-		PSODesc.GraphicsPipeline.NumRenderTargets = 1;
-		PSODesc.GraphicsPipeline.RTVFormats[0] = TEX_FORMAT_RGBA8_UNORM_SRGB;
-		PSODesc.GraphicsPipeline.DSVFormat = TEX_FORMAT_D32_FLOAT;
+		psoDesc_.IsComputePipeline = isComputePipeline_;
+		psoDesc_.GraphicsPipeline.NumRenderTargets = 1;
+		psoDesc_.GraphicsPipeline.RTVFormats[0] = TEX_FORMAT_RGBA8_UNORM_SRGB;
+		psoDesc_.GraphicsPipeline.DSVFormat = TEX_FORMAT_D32_FLOAT;
 
-		PSODesc.GraphicsPipeline.PrimitiveTopologyType = PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		psoDesc_.GraphicsPipeline.PrimitiveTopologyType = PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	}
 
 	bool PipelineState::CreateImpl()
@@ -53,6 +53,8 @@ namespace Unique
 			}
 
 		}
+		
+		shaderVariables_.clear();
 
 		if (isComputePipeline_)
 		{
@@ -60,7 +62,7 @@ namespace Unique
 			{
 				if (shader->GetShaderType() == SHADER_TYPE_COMPUTE)
 				{
-					PSODesc.ComputePipeline.pCS = *shader;
+					psoDesc_.ComputePipeline.pCS = *shader;
 					for (auto it : shader->shaderVariables_)
 					{
 						shaderVariables_.insert(it);
@@ -73,27 +75,28 @@ namespace Unique
 		{
 			for (auto shader : shaders_)
 			{
+				switch (shader->GetShaderType())
+				{
+				case SHADER_TYPE_VERTEX:
+					psoDesc_.GraphicsPipeline.pVS = *shader;
+					break;
+				case SHADER_TYPE_PIXEL:
+
 				for (auto it : shader->shaderVariables_)
 				{
 					shaderVariables_.insert(it);
 				}
 
-				switch (shader->GetShaderType())
-				{
-				case SHADER_TYPE_VERTEX:
-					PSODesc.GraphicsPipeline.pVS = *shader;
-					break;
-				case SHADER_TYPE_PIXEL:
-					PSODesc.GraphicsPipeline.pPS = *shader;
+					psoDesc_.GraphicsPipeline.pPS = *shader;
 					break;
 				case SHADER_TYPE_GEOMETRY:
-					PSODesc.GraphicsPipeline.pGS = *shader;
+					psoDesc_.GraphicsPipeline.pGS = *shader;
 					break;
 				case SHADER_TYPE_HULL:
-					PSODesc.GraphicsPipeline.pHS = *shader;
+					psoDesc_.GraphicsPipeline.pHS = *shader;
 					break;
 				case SHADER_TYPE_DOMAIN:
-					PSODesc.GraphicsPipeline.pDS = *shader;
+					psoDesc_.GraphicsPipeline.pDS = *shader;
 					break;
 				default:
 					break;
@@ -103,20 +106,25 @@ namespace Unique
 		}
 
 		auto& graphics = GetSubsystem<Graphics>();
-		renderDevice->CreatePipelineState(PSODesc, (IPipelineState**)&deviceObject_);
+		renderDevice->CreatePipelineState(psoDesc_, (IPipelineState**)&deviceObject_);
 		graphics.BindShaderResources(*this, BIND_SHADER_RESOURCES_ALL_RESOLVED);
 		((IPipelineState*)deviceObject_)->CreateShaderResourceBinding(&shaderResourceBinding_);
 		dirty_ = false;
 		return true;
 	}
 
-	IShaderVariable* PipelineState::GetShaderVariable(const StringID& name) const
+	IShaderVariable* PipelineState::GetShaderVariable(const StringID& name) /*const*/
 	{
-		auto it = shaderVariables_.find(name);
-		if (it != shaderVariables_.end())
+		if (shaderResourceBinding_)
 		{
-			return it->second;
+			return shaderResourceBinding_->GetVariable(SHADER_TYPE_PIXEL, name.c_str());
+			auto it = shaderVariables_.find(name);
+			if (it != shaderVariables_.end())
+			{
+				return it->second;
+			}
 		}
+	
 
 		return nullptr;
 	}

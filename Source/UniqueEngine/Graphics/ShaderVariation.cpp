@@ -44,6 +44,11 @@ namespace Unique
 			}
 		}
 
+		for (const auto& desc : shader.GetProperties().textureSlots_)
+		{
+			shaderVariableDesc_.push_back(
+				ShaderVariableDesc(desc.name_.c_str(), SHADER_VARIABLE_TYPE_DYNAMIC));
+		}
 		
 	}
 	
@@ -64,14 +69,17 @@ namespace Unique
 		Attrs.Macros = macros_;
 		//Attrs.FilePath = shaderStage_.source_;
 		Attrs.EntryPoint = shaderStage_.entryPoint_;
-		Attrs.Desc.ShaderType = shaderStage_.shaderType_;
 		Attrs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-		Attrs.Desc.TargetProfile = SHADER_PROFILE_DX_4_0;
 		Attrs.Source = source_.CString();
+		Attrs.Desc.ShaderType = shaderStage_.shaderType_;
+		Attrs.Desc.TargetProfile = SHADER_PROFILE_DX_4_0;
+ 		Attrs.Desc.VariableDesc = shaderVariableDesc_.data();
+ 		Attrs.Desc.NumVariables = (uint)shaderVariableDesc_.size();
 		BasicShaderSourceStreamFactory BasicSSSFactory("CoreData\\Shaders;CoreData\\Shaders\\HLSL;");
 		Attrs.pShaderSourceStreamFactory = &BasicSSSFactory;
 		IShader* shaderObject = nullptr;
 		renderDevice->CreateShader(Attrs, &shaderObject);
+
 		shaderVariables_.clear();
 
 		if (shaderObject)

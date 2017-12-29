@@ -105,6 +105,7 @@ namespace Unique
 		/// Index for shadow pass. Initialized once GetPassIndex() has been called for the first time.
 		static unsigned shadowPassIndex;
 
+		const ShaderProperties& GetProperties() const { return shaderProperties_; }
 	private:
 		String				shaderName_;
 		ShaderProperties	shaderProperties_;
