@@ -53,7 +53,7 @@ namespace Unique
 		Uniform::Type type_ = Uniform::Type::INT;
 		UniformData value_;
 
-		RefCntWeakPtr<IShaderVariable> shaderVarible_;
+		Diligent::RefCntWeakPtr<IShaderVariable> shaderVarible_;
 
 		template<class TransferFunction>
 		void Transfer(TransferFunction& transfer)
@@ -100,7 +100,7 @@ namespace Unique
 		StringID name_;
 		ResourceRef texAttr_;
 		SPtr<Texture> texture_;
-		RefCntWeakPtr<IShaderVariable> shaderVarible_;
+		Diligent::RefCntWeakPtr<IShaderVariable> shaderVarible_;
 		
 		uClass("Name", name_, "Texture", texAttr_)
 	};
@@ -108,8 +108,7 @@ namespace Unique
 	class ShaderVariable : public RefCounted
 	{
 	public:
-
-		RefCntWeakPtr<IShaderVariable> shaderVarible_;
+		Diligent::RefCntWeakPtr<IShaderVariable> shaderVarible_;
 	};
 }
 

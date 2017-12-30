@@ -96,7 +96,8 @@ namespace Unique
 		sizeof(unsigned)
 	};
 
-	VertexBuffer::VertexBuffer(uint elementMask, ByteArray&& data, Usage usage) : GraphicsBuffer(BIND_VERTEX_BUFFER)
+	VertexBuffer::VertexBuffer(uint elementMask, ByteArray&& data, Usage usage) 
+		: GraphicsBuffer(Diligent::BIND_VERTEX_BUFFER)
 	{
 		elements_ = GetElements(elementMask);
 
@@ -112,7 +113,8 @@ namespace Unique
 		GPUObject::Create();
 	}
 
-	VertexBuffer::VertexBuffer(const PODVector<VertexElement>& elements, ByteArray&& data, Usage usage) : GraphicsBuffer(BIND_VERTEX_BUFFER)
+	VertexBuffer::VertexBuffer(const PODVector<VertexElement>& elements, ByteArray&& data, Usage usage) 
+		: GraphicsBuffer(Diligent::BIND_VERTEX_BUFFER)
 	{
 		elements_ = elements;
 
@@ -136,7 +138,7 @@ namespace Unique
 
 		desc_.ElementByteStride = GetVertexSize(elements_);
 		desc_.uiSizeInBytes = vertexCount * desc_.ElementByteStride;
-		desc_.Usage = dynamic ? USAGE_DYNAMIC : USAGE_STATIC;
+		desc_.Usage = dynamic ? Diligent::USAGE_DYNAMIC : Diligent::USAGE_STATIC;
 		
 		data_[0].resize(desc_.uiSizeInBytes);
 
@@ -156,7 +158,7 @@ namespace Unique
 
 		desc_.ElementByteStride = GetVertexSize(elements_);
 		desc_.uiSizeInBytes = vertexCount * desc_.ElementByteStride;
-		desc_.Usage = dynamic ? USAGE_DYNAMIC : USAGE_STATIC;
+		desc_.Usage = dynamic ? Diligent::USAGE_DYNAMIC : Diligent::USAGE_STATIC;
 		
 		data_[0].resize(desc_.uiSizeInBytes);
 

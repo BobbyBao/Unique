@@ -15,8 +15,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)Application\Application.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\GraphicsEvents.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Input\Controls.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Input\Input.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Input\InputEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Importers\DDSLoader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Importers\dxgiformat.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ImGUI\ImGUI.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Renderer\LightPass.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Renderer\FrameBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Renderer\Batch.h" />
@@ -44,7 +49,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\StaticModelGroup.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Texture.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Renderer\View.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Application\Input.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\PipelineState.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Renderer\Viewport.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Renderer\RenderPass.h" />
@@ -64,7 +68,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Application\Application.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Input\Controls.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Input\Input.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Importers\DDSLoader.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)ImGUI\ImGUI.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Renderer\LightPass.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Renderer\FrameBuffer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Renderer\Batch.cpp" />
@@ -94,7 +101,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\ShaderVariation.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Texture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Renderer\View.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Application\Input.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\PipelineState.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Renderer\RenderPass.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Renderer\RenderPath.cpp" />

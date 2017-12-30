@@ -8,19 +8,24 @@
 
 namespace Unique
 {
+	using TextureDesc = Diligent::TextureDesc;
+	using TextureData = Diligent::TextureData;
+	using TextureSubResData = Diligent::TextureSubResData;
+	using ITextureView = Diligent::ITextureView;
+
 	class Image;
 	class TextureView;
 
 	struct TextureLoadInfo
 	{
-		const Diligent::Char *Name;
-		Diligent::USAGE Usage;
-		Diligent::Uint32 BindFlags;
-		Diligent::Uint32 MipLevels;
-		Diligent::Uint32 CPUAccessFlags;
-		Diligent::Bool IsSRGB;
-		Diligent::Bool GenerateMips;
-		Diligent::TEXTURE_FORMAT Format;
+		const char *Name;
+		Usage Usage;
+		uint BindFlags;
+		uint MipLevels;
+		uint CPUAccessFlags;
+		bool IsSRGB;
+		bool GenerateMips;
+		TextureFormat Format;
 
 		TextureLoadInfo() :
 			Name(""),

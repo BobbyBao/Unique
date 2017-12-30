@@ -5,11 +5,13 @@
 
 namespace Unique
 {
+	using BufferDesc = Diligent::BufferDesc;
+
 	class UNIQUE_API GraphicsBuffer : public Object, public GPUObject
 	{
 		uRTTI(GraphicsBuffer, Object)
 	public:
-		GraphicsBuffer(uint flags = BIND_NONE);
+		GraphicsBuffer(uint flags = Diligent::BIND_NONE);
 		~GraphicsBuffer();
 
 		template<class T>
@@ -27,13 +29,13 @@ namespace Unique
 		/// Set size, vertex elements and dynamic mode. Previous data will be lost.
 		bool Create(uint elementCount, uint elementSize, Usage usage, uint flags, void* data);
 		
-		bool Create(ByteArray&& data, uint elementSize, Usage usage = USAGE_STATIC, uint flags = 0);
+		bool Create(ByteArray&& data, uint elementSize, Usage usage = Diligent::USAGE_STATIC, uint flags = 0);
 
 		bool SetData(const void* data);
 		/// Set a data range in the buffer. Optionally discard data outside the range.
 		bool SetDataRange(const void* data, unsigned start, unsigned count, bool discard = false);
 
-		inline bool IsDynamic() const { return desc_.Usage == USAGE::USAGE_DYNAMIC; }
+		inline bool IsDynamic() const { return desc_.Usage == Diligent::USAGE_DYNAMIC; }
 		
 		inline uint GetSizeInBytes() const { return desc_.uiSizeInBytes; }
 		
@@ -46,7 +48,7 @@ namespace Unique
 		void* Lock(uint lockStart = 0, uint lockCount = -1);
 		void Unlock();
 
-		void* Map(uint mapFlags = MAP_FLAG_DISCARD);
+		void* Map(uint mapFlags = Diligent::MAP_FLAG_DISCARD);
 		void UnMap();
 	protected:
 		/// Create buffer.
@@ -63,14 +65,16 @@ namespace Unique
 	{
 		uRTTI(IndexBuffer, GraphicsBuffer)
 	public:
-		IndexBuffer() : GraphicsBuffer(BIND_INDEX_BUFFER) {}
+		IndexBuffer() : GraphicsBuffer(Diligent::BIND_INDEX_BUFFER) {}
 
-		IndexBuffer(Vector<uint>&& data, Usage usage = USAGE_STATIC, uint flags = 0) : GraphicsBuffer(BIND_INDEX_BUFFER)
+		IndexBuffer(Vector<uint>&& data, Usage usage = Diligent::USAGE_STATIC, uint flags = 0) 
+			: GraphicsBuffer(Diligent::BIND_INDEX_BUFFER)
 		{
 			Create(data, usage, flags);
 		}
 
-		IndexBuffer(Vector<ushort>&& data, Usage usage = USAGE_STATIC, uint flags = 0) : GraphicsBuffer(BIND_INDEX_BUFFER)
+		IndexBuffer(Vector<ushort>&& data, Usage usage = Diligent::USAGE_STATIC, uint flags = 0) 
+			: GraphicsBuffer(Diligent::BIND_INDEX_BUFFER)
 		{
 			Create(data, usage, flags);
 		}
@@ -80,10 +84,11 @@ namespace Unique
 	{
 		uRTTI(UniformBuffer, GraphicsBuffer)
 	public:
-		UniformBuffer() : GraphicsBuffer(BIND_UNIFORM_BUFFER) {}
+		UniformBuffer() : GraphicsBuffer(Diligent::BIND_UNIFORM_BUFFER) {}
 
 		template<class T>
-		UniformBuffer(const T& data, Usage usage = Usage::USAGE_DYNAMIC, uint flags = CPU_ACCESS_WRITE) : GraphicsBuffer(BIND_UNIFORM_BUFFER)
+		UniformBuffer(const T& data, Usage usage = Diligent::USAGE_DYNAMIC, uint flags = Diligent::CPU_ACCESS_WRITE)
+			: GraphicsBuffer(Diligent::BIND_UNIFORM_BUFFER)
 		{
 			Create(data, usage, flags);
 		}

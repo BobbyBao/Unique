@@ -3,6 +3,8 @@
 #include "Graphics/Graphics.h"
 #include "PipelineState.h"
 
+using namespace Diligent;
+
 namespace Unique
 {	
 	uClassTraits

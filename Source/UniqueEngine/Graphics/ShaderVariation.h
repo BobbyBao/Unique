@@ -10,8 +10,10 @@
 
 namespace Unique
 {
-	using ShaderType = SHADER_TYPE;
-	using ShaderProfile = SHADER_PROFILE;
+	using ShaderType = Diligent::SHADER_TYPE;
+	using ShaderProfile = Diligent::SHADER_PROFILE;
+
+	using IShaderVariable = Diligent::IShaderVariable;
 
 	class Shader;
 	class Pass;
@@ -47,7 +49,7 @@ namespace Unique
 
 		ShaderType		shaderType_;
 		String			entryPoint_;
-		ShaderProfile	shaderProfile_ = SHADER_PROFILE_DEFAULT;
+		ShaderProfile	shaderProfile_ = Diligent::SHADER_PROFILE_DEFAULT;
 		String			defines_;
 		String			source_;
 		uint			mask_ = 0;
@@ -74,8 +76,8 @@ namespace Unique
 		String defines_;
 		unsigned mask_ = 0;
 		bool dirty_ = false;
-		ShaderMacroHelper macros_;
-		Vector<ShaderVariableDesc> shaderVariableDesc_;
+		Diligent::ShaderMacroHelper macros_;
+		Vector<Diligent::ShaderVariableDesc> shaderVariableDesc_;
 	};
 
 }

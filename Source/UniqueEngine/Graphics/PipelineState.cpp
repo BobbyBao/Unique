@@ -2,6 +2,8 @@
 #include "PipelineState.h"
 #include "Shader.h"
 
+using namespace Diligent;
+
 namespace Unique
 {
 

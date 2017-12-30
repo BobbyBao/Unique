@@ -25,23 +25,19 @@ namespace Unique
 	struct Batch
 	{
 		/// Construct with defaults.
-		Batch() :
-			isBase_(false)//,
-			//lightQueue_(0)
+		Batch() : isBase_(false)
 		{
 		}
 
 		/// Construct from a drawable's source batch.
 		Batch(const SourceBatch& rhs) :
 			distance_(rhs.distance_),
-			//	renderOrder_(rhs.material_ ? rhs.material_->GetRenderOrder() : DEFAULT_RENDER_ORDER),
 			isBase_(false),
 			geometry_(rhs.geometry_),
 			material_(rhs.material_),
 			worldTransform_(rhs.worldTransform_),
 			numWorldTransforms_(rhs.numWorldTransforms_),
 			instancingData_(rhs.instancingData_),
-			//lightQueue_(0),
 			geometryType_(rhs.geometryType_)
 		{
 		}
@@ -55,7 +51,6 @@ namespace Unique
 			worldTransform_(worldTransform),
 			numWorldTransforms_(1),
 			instancingData_(nullptr),
-			//lightQueue_(0),
 			geometryType_(GEOM_TRANSIENT)
 		{
 		}
@@ -69,7 +64,6 @@ namespace Unique
 			worldTransform_(worldTransform),
 			numWorldTransforms_(1),
 			instancingData_(nullptr),
-			//lightQueue_(0),
 			geometryType_(GEOM_TRANSIENT)
 		{
 		}
@@ -93,6 +87,8 @@ namespace Unique
 		unsigned char lightMask_;
 		/// Base batch flag. This tells to draw the object fully without light optimizations.
 		bool isBase_;
+
+		PrimitiveTopology primitiveTopology_;
 		/// Geometry.
 		Geometry* geometry_ = nullptr;
 		/// Material.
@@ -105,25 +101,15 @@ namespace Unique
 			// Offset in batchMatrics
 			size_t transformOffset_ = 0;
 		};
-
 		/// Number of world transforms.
 		unsigned numWorldTransforms_;
-
 		/// Per-instance data. If not null, must contain enough data to fill instancing buffer.
 		void* instancingData_;
-
-		TransientVertexBuffer transientVB_;
-
-		TransientIndexBuffer transientIB_;
-		/// Zone.
-		//Zone* zone_;
-		/// Light properties.
-		//LightBatchQueue* lightQueue_;
 		/// Material pass.
 		Pass* pass_;
-
 		PipelineState*  pipelineState_;
-
+		TransientVertexBuffer transientVB_;
+		TransientIndexBuffer transientIB_;
 	};
 
 

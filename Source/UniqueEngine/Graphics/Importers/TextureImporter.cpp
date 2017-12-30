@@ -96,7 +96,7 @@ namespace Unique
 		SPtr<Texture> texture(new Texture());
 
 		CreateDDSTextureFromMemoryEx(renderDevice,
-			reinterpret_cast<const Uint8*>(data.data()),
+			reinterpret_cast<const byte*>(data.data()),
 			data.size(),
 			0, // maxSize
 			TexLoadInfo.Usage,

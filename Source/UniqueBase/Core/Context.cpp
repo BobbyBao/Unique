@@ -27,6 +27,7 @@
 #include "CoreEvents.h"
 #include "Thread.h"
 #include "Timer.h"
+#include <SDL/SDL.h>
 #include "../DebugNew.h"
 
 namespace Unique
@@ -82,14 +83,18 @@ namespace
 	const int MAX_RUNTIME_CALLBACK = 256;
 
 	int sNumRegisteredCallbacks = 0;
-	RegisterRuntime::CallbackFunction* sInitializationCallbacks[MAX_RUNTIME_CALLBACK];
-	RegisterRuntime::CallbackFunction* sCleanupCallbacks[MAX_RUNTIME_CALLBACK];
+	RegisterRuntime::CallbackFn* sInitializationCallbacks[MAX_RUNTIME_CALLBACK];
+	RegisterRuntime::CallbackFn* sCleanupCallbacks[MAX_RUNTIME_CALLBACK];
+
+	// Keeps track of how many times SDL was initialised so we know when to call SDL_Quit().
+	static int sdlInitCounter = 0;
+
 }
 
-RegisterRuntime::RegisterRuntime(RegisterRuntime::CallbackFunction* Initialize, RegisterRuntime::CallbackFunction* Cleanup)
+RegisterRuntime::RegisterRuntime(RegisterRuntime::CallbackFn* initialize, RegisterRuntime::CallbackFn* cleanup)
 {
-	sInitializationCallbacks[sNumRegisteredCallbacks] = Initialize;
-	sCleanupCallbacks[sNumRegisteredCallbacks] = Cleanup;
+	sInitializationCallbacks[sNumRegisteredCallbacks] = initialize;
+	sCleanupCallbacks[sNumRegisteredCallbacks] = cleanup;
 	sNumRegisteredCallbacks++;
 	assert(sNumRegisteredCallbacks <= MAX_RUNTIME_CALLBACK);
 }
@@ -141,7 +146,6 @@ Context::Context() :
 #endif
 	context_ = this;
 
-
 	ExecuteInitializations(this);
 
 	TypeInfo::RegisterTypeInfo();
@@ -155,12 +159,13 @@ Context::~Context()
 	}
 		
 	ExecuteCleanup(this);
+
 	context_ = nullptr;
 }
 
-SPtr<Object> Context::CreateObject(StringID objectType)
+SPtr<Object> Context::CreateObject(const StringID& objectType)
 {
-	HashMap<StringID, UPtr<ObjectFactory> >::const_iterator i = factories_.find(objectType);
+	auto i = factories_.find(objectType);
 	if (i != factories_.end())
 		return i->second->CreateObject();
 	else
@@ -195,9 +200,9 @@ void Context::RegisterSubsystem(Object* object)
     subsystems_[object->GetType()] = object;
 }
 
-void Context::RemoveSubsystem(StringID objectType)
+void Context::RemoveSubsystem(const StringID& objectType)
 {
-    HashMap<StringID, SPtr<Object>>::iterator i = subsystems_.find(objectType);
+    auto i = subsystems_.find(objectType);
 	if (i != subsystems_.end())
 	{
 		Remove(subsystemVec_, i->second);
@@ -205,9 +210,9 @@ void Context::RemoveSubsystem(StringID objectType)
 	}
 }
 
-Object* Context::Subsystem(StringID type) const
+Object* Context::GetSubsystem(const StringID& type) const
 {
-    HashMap<StringID, SPtr<Object>>::const_iterator i = subsystems_.find(type);
+    auto i = subsystems_.find(type);
     if (i != subsystems_.end())
         return i->second;
     else
@@ -278,6 +283,51 @@ void Context::BeginSendEvent(Object* sender, StringID eventType)
 void Context::EndSendEvent()
 {
     eventSenders_.pop_back();
+}
+
+bool Context::RequireSDL(unsigned int sdlFlags)
+{
+	// Always increment, the caller must match with ReleaseSDL(), regardless of
+	// what happens.
+	++sdlInitCounter;
+
+	// Need to call SDL_Init() at least once before SDL_InitSubsystem()
+	if (sdlInitCounter == 1)
+	{
+		UNIQUE_LOGDEBUG("Initialising SDL");
+		if (SDL_Init(0) != 0)
+		{
+			UNIQUE_LOGERRORF("Failed to initialise SDL: %s", SDL_GetError());
+			return false;
+		}
+	}
+
+	Uint32 remainingFlags = sdlFlags & ~SDL_WasInit(0);
+	if (remainingFlags != 0)
+	{
+		if (SDL_InitSubSystem(remainingFlags) != 0)
+		{
+			UNIQUE_LOGERRORF("Failed to initialise SDL subsystem: %s", SDL_GetError());
+			return false;
+		}
+	}
+
+	return true;
+}
+
+void Context::ReleaseSDL()
+{
+	--sdlInitCounter;
+
+	if (sdlInitCounter == 0)
+	{
+		UNIQUE_LOGDEBUG("Quitting SDL");
+		SDL_QuitSubSystem(SDL_INIT_EVERYTHING);
+		SDL_Quit();
+	}
+
+	if (sdlInitCounter < 0)
+		UNIQUE_LOGERROR("Too many calls to Context::ReleaseSDL()!");
 }
 
 void Context::ThreadFunction()

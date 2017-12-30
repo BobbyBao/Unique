@@ -9,15 +9,15 @@
 
 namespace Unique
 {
-	using BlendFactor = BLEND_FACTOR;
-	using BlendOperation = BLEND_OPERATION;
+	using BlendFactor = Diligent::BLEND_FACTOR;
+	using BlendOperation = Diligent::BLEND_OPERATION;
 
 	class Shader;
 	class PipelineState;
 
 	struct InputLayout
 	{
-		Vector<LayoutElement> layoutElements_;
+		Vector<Diligent::LayoutElement> layoutElements_;
 
 		uClass("LayoutElement", layoutElements_)
 	};
@@ -39,9 +39,9 @@ namespace Unique
 
 		String					name_;
 		uint					passIndex_ = 0;
-		BlendStateDesc			blendState_;
-		DepthStencilStateDesc	depthState_;
-		RasterizerStateDesc		rasterizerState_;
+		Diligent::BlendStateDesc		blendState_;
+		Diligent::DepthStencilStateDesc	depthState_;
+		Diligent::RasterizerStateDesc	rasterizerState_;
 		InputLayout				inputLayout_;
 		ShaderStage				shaderStage_[6];
 

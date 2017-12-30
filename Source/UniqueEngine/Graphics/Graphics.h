@@ -9,11 +9,15 @@
 
 namespace Unique
 {
+	using IRenderDevice = Diligent::IRenderDevice;
+	using IDeviceContext = Diligent::IDeviceContext;
+	using ISwapChain = Diligent::ISwapChain;
+
 	class VertexBuffer;
 	class IndexBuffer;
 	class Texture;
 	class GPUObject;
-
+	
 	using CommandQueue = Vector<std::function<void()> > ;
 
 	struct TransientVertexBuffer
@@ -58,10 +62,10 @@ namespace Unique
 		//***MainThread***
 		void Frame();
 
-		void AddResource(const Char *Name, GPUObject* pObject, bool bIsUnique = true);
-		void AddResource(const Char *Name, IDeviceObject *pObject, bool bIsUnique);   
-		void AddResourceArray(const Char *Name, uint StartIndex, IDeviceObject* const* ppObjects, uint NumElements, bool bIsUnique);
-		void RemoveResourceByName(const Char *Name, uint ArrayIndex = 0);
+		void AddResource(const char *Name, GPUObject* pObject, bool bIsUnique = true);
+		void AddResource(const char *Name, IDeviceObject *pObject, bool bIsUnique);   
+		void AddResourceArray(const char *Name, uint StartIndex, IDeviceObject* const* ppObjects, uint NumElements, bool bIsUnique);
+		void RemoveResourceByName(const char *Name, uint ArrayIndex = 0);
 		void BindShaderResources(IPipelineState* pipelineState, uint flags);
 		void BindResources(IShaderResourceBinding* shaderResourceBinding, uint shaderFlags, uint flags);
 		//****************
@@ -90,12 +94,13 @@ namespace Unique
 		bool vsync_ = false;
 		bool exit_ = false;
 		int multiSampling_ = 4;
-		RefCntAutoPtr<IRenderDevice> renderDevice_;
-		RefCntAutoPtr<IDeviceContext> deviceContext_;
-		RefCntAutoPtr<ISwapChain> swapChain_;
-		RefCntAutoPtr<IResourceMapping> resourceMapping_;
+		Diligent::RefCntAutoPtr<IRenderDevice> renderDevice_;
+		Diligent::RefCntAutoPtr<IDeviceContext> deviceContext_;
+		Diligent::RefCntAutoPtr<ISwapChain> swapChain_;
+		Diligent::RefCntAutoPtr<IResourceMapping> resourceMapping_;
 
 		struct SDL_Window *window_ = nullptr;
+
 		bool singleThreaded_ = false;
 		Semaphore renderSem_;
 		Semaphore mainSem_;

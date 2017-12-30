@@ -1,4 +1,3 @@
-#include <SDL/SDL.h>
 #include "UniquePCH.h"
 #include "Application.h"
 #include "Input.h"
@@ -11,7 +10,6 @@
 
 namespace Unique
 {
-
 	UPtr<Context> Application::context_;
 	Vector<String> Application::argv_;
 	bool Application::quit_ = false;
@@ -24,14 +22,13 @@ namespace Unique
 		context_->RegisterSubsystem<Profiler>();
 		context_->RegisterSubsystem<FileSystem>();
 
-		Log& log = context_->RegisterSubsystem<Log>();
+		auto& log = context_->RegisterSubsystem<Log>();
 		log.Open("Unique.log");
 
 		context_->RegisterSubsystem<Graphics>();
 		context_->RegisterSubsystem<ResourceCache>();
 		context_->RegisterSubsystem<Renderer>();
 		context_->RegisterSubsystem<Input>();
-
 	}
 
 	Application::~Application()
@@ -48,17 +45,9 @@ namespace Unique
 
 	void Application::Initialize()
 	{
-		/* Enable standard application logging */
-		SDL_LogSetPriority(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO);
-
-		/* Initialize SDL */
-		if (SDL_Init(SDL_INIT_VIDEO) < 0)
-		{
-			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't initialize SDL: %s\n", SDL_GetError());
-			return;
-		}
-
 		auto& cache = GetSubsystem<ResourceCache>();
+		auto& graphics = GetSubsystem<Graphics>();
+
 		cache.SetAutoReloadResources(true);
 		cache.AddResourceDir("Assets");
 		cache.AddResourceDir("CoreData");
@@ -69,7 +58,6 @@ namespace Unique
 		cache.RegisterImporter(new TextureImporter());
 		cache.RegisterImporter(new ModelImporter());
 
-		Graphics& graphics = GetSubsystem<Graphics>();
 		graphics.Initialize(resolution_, deviceType_);
 		
 		loadingDone_ = true;
@@ -98,8 +86,8 @@ namespace Unique
 	{
 		Initialize();
 	
-		Renderer& renderer = GetSubsystem<Renderer>();
-		Input& input = GetSubsystem<Input>();
+		auto& renderer = GetSubsystem<Renderer>();
+		auto& input = GetSubsystem<Input>();
 
 		context_->Run();
 
@@ -126,8 +114,6 @@ namespace Unique
 		context_->Stop();
 
 		Terminate();
-
-		SDL_Quit();
 
 	}
 

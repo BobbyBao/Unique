@@ -8,6 +8,8 @@
 #include "Scene/Node.h"
 #include "../Graphics/PipelineState.h"
 
+using namespace Diligent;
+
 namespace Unique
 {
 
@@ -85,7 +87,7 @@ namespace Unique
 		//offset.x_ += scale.x_ + pixelUVOffset.x_ / width;
 		//offset.y_ += scale.y_ + pixelUVOffset.y_ / height;
 
-#ifdef URHO3D_OPENGL
+#ifdef UNIQUE_OPENGL
 		offset.z_ = 0.5f;
 		scale.z_ = 0.5f;
 		offset.y_ = 1.0f - offset.y_;
@@ -306,7 +308,7 @@ namespace Unique
 						Matrix4 lightVecRot(lightNode->GetWorldRotation().RotationMatrix());
 						// HLSL compiler will pack the parameters as if the matrix is only 3x4, so must be careful to not overwrite
 						// the next parameter
-#ifdef URHO3D_OPENGL
+#ifdef UNIQUE_OPENGL
 						graphics->SetShaderParameter(VSP_LIGHTMATRICES, lightVecRot.Data(), 16);
 #else
 						graphics->SetShaderParameter(VSP_LIGHTMATRICES, lightVecRot.Data(), 12);
@@ -366,7 +368,7 @@ namespace Unique
 						Matrix4 lightVecRot(lightNode->GetWorldRotation().RotationMatrix());
 						// HLSL compiler will pack the parameters as if the matrix is only 3x4, so must be careful to not overwrite
 						// the next parameter
-#ifdef URHO3D_OPENGL
+#ifdef UNIQUE_OPENGL
 						graphics->SetShaderParameter(PSP_LIGHTMATRICES, lightVecRot.Data(), 16);
 #else
 						graphics->SetShaderParameter(PSP_LIGHTMATRICES, lightVecRot.Data(), 12);
@@ -385,7 +387,7 @@ namespace Unique
 						unsigned faceHeight = (unsigned)(shadowMap->GetHeight() / 3);
 						float width = (float)shadowMap->GetWidth();
 						float height = (float)shadowMap->GetHeight();
-#ifdef URHO3D_OPENGL
+#ifdef UNIQUE_OPENGL
 						float mulX = (float)(faceWidth - 3) / width;
 						float mulY = (float)(faceHeight - 3) / height;
 						float addX = 1.5f / width;

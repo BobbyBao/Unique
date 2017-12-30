@@ -29,6 +29,7 @@
 #include "IO/Log.h"
 #include "Math/Ray.h"
 
+using namespace Diligent;
 
 #define MAX_VERTEX_STREAMS 8
 
@@ -173,7 +174,7 @@ namespace Unique
 		deviceContext->SetVertexBuffers(0, (uint)vertexBuffers_.size(), buffer, strides, offsets, SET_VERTEX_BUFFERS_FLAG_RESET);
 
 		DrawAttribs drawAttribs;
-		drawAttribs.Topology = primitiveType_;
+		drawAttribs.Topology = (Diligent::PRIMITIVE_TOPOLOGY)primitiveType_;
 		drawAttribs.IsIndexed = (indexBuffer_ != nullptr);
 		drawAttribs.IndexType = indexBuffer_->GetStride() == 4 ? ValueType::VT_UINT32 : ValueType::VT_UINT16;
 
@@ -213,7 +214,7 @@ namespace Unique
 		}
 
 		DrawAttribs drawAttribs;
-		drawAttribs.Topology = primitiveType_;
+		drawAttribs.Topology = (Diligent::PRIMITIVE_TOPOLOGY)primitiveType_;
 		drawAttribs.IsIndexed = (indexBuffer_ != nullptr);
 		drawAttribs.IndexType = indexBuffer_->GetStride() == 4 ? ValueType::VT_UINT32 : ValueType::VT_UINT16;
 

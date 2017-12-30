@@ -52,9 +52,9 @@ namespace Unique
 		uRTTI(VertexBuffer, GraphicsBuffer)
 
 	public:
-		VertexBuffer() : GraphicsBuffer(BIND_VERTEX_BUFFER) {}
-		VertexBuffer(uint elementMask, ByteArray&& data, Usage usage = Usage::USAGE_STATIC);
-		VertexBuffer(const PODVector<VertexElement>& elements, ByteArray&& data, Usage usage = Usage::USAGE_STATIC);
+		VertexBuffer() : GraphicsBuffer(Diligent::BIND_VERTEX_BUFFER) {}
+		VertexBuffer(uint elementMask, ByteArray&& data, Usage usage = Diligent::USAGE_STATIC);
+		VertexBuffer(const PODVector<VertexElement>& elements, ByteArray&& data, Usage usage = Diligent::USAGE_STATIC);
 
 		/// Set size, vertex elements and dynamic mode. Previous data will be lost.
 		bool SetSize(unsigned vertexCount, const PODVector<VertexElement>& elements, bool dynamic = false);

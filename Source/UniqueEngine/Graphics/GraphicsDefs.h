@@ -5,32 +5,78 @@
 #include <GraphicsTypes.h>
 #include <DeviceContext.h>
 
-using namespace Diligent;
-
 namespace Unique
 {
-	using ValueType = VALUE_TYPE;
-	using BindFlags = BIND_FLAGS;
-	using PrimitiveTopology = PRIMITIVE_TOPOLOGY;
-	using Usage = USAGE;
-	using CPUAccessFlag = CPU_ACCESS_FLAG;
-	using MapType = MAP_TYPE;
-	using MapFlags = MAP_FLAGS;
+	using DeviceType = Diligent::DeviceType;
+	using ValueType = Diligent::VALUE_TYPE;
+	using BindFlags = Diligent::BIND_FLAGS;
+	using Usage = Diligent::USAGE;
+	using CPUAccessFlag = Diligent::CPU_ACCESS_FLAG;
+	using MapType = Diligent::MAP_TYPE;
+	using MapFlags = Diligent::MAP_FLAGS;
 
-	using TextureFormat = TEXTURE_FORMAT;
-	using FilterType = FILTER_TYPE;
-	using TextureAddressMode = TEXTURE_ADDRESS_MODE;
-	using ComponentType = COMPONENT_TYPE;
+	using TextureFormat = Diligent::TEXTURE_FORMAT;
+	using FilterType = Diligent::FILTER_TYPE;
+	using TextureAddressMode = Diligent::TEXTURE_ADDRESS_MODE;
+	using ComponentType = Diligent::COMPONENT_TYPE;
 
-	using StencilOp = STENCIL_OP;
-	using ComparisonFunction = COMPARISON_FUNCTION;
-	using FillMode = FILL_MODE;
-	using CullMode = CULL_MODE;
+	using StencilOp = Diligent::STENCIL_OP;
+	using ComparisonFunction = Diligent::COMPARISON_FUNCTION;
+	using FillMode = Diligent::FILL_MODE;
+	using CullMode = Diligent::CULL_MODE;
 
-	using BlendFactor = BLEND_FACTOR;
-	using BlendOperation = BLEND_OPERATION;
-	using LogicOperation = LOGIC_OPERATION;
-	using ColorMask = COLOR_MASK;
+	using BlendFactor = Diligent::BLEND_FACTOR;
+	using BlendOperation = Diligent::BLEND_OPERATION;
+	using LogicOperation = Diligent::LOGIC_OPERATION;
+	using ColorMask = Diligent::COLOR_MASK;
+	
+	using IDeviceObject = Diligent::IDeviceObject;
+	using IPipelineState = Diligent::IPipelineState;
+	using IShaderResourceBinding = Diligent::IShaderResourceBinding;
+	using IResourceMapping = Diligent::IResourceMapping;
+
+	enum class PrimitiveTopology : byte
+	{
+		/// Undefined topology
+		UNDEFINED = 0,
+		TRIANGLE_LIST,
+		TRIANGLE_STRIP,
+		POINT_LIST,
+		LINE_LIST,
+		PATCHLIST_1,
+		PATCHLIST_2,
+		PATCHLIST_3,
+		PATCHLIST_4,
+		PATCHLIST_5,
+		PATCHLIST_6,
+		PATCHLIST_7,
+		PATCHLIST_8,
+		PATCHLIST_9,
+		PATCHLIST_10,
+		PATCHLIST_11,
+		PATCHLIST_12,
+		PATCHLIST_13,
+		PATCHLIST_14,
+		PATCHLIST_15,
+		PATCHLIST_16,
+		PATCHLIST_17,
+		PATCHLIST_18,
+		PATCHLIST_19,
+		PATCHLIST_20,
+		PATCHLIST_21,
+		PATCHLIST_22,
+		PATCHLIST_23,
+		PATCHLIST_24,
+		PATCHLIST_25,
+		PATCHLIST_26,
+		PATCHLIST_27,
+		PATCHLIST_28,
+		PATCHLIST_29,
+		PATCHLIST_30,
+		PATCHLIST_31,
+		PATCHLIST_32,
+		NUM_TOPOLOGIES
+	};
 
 	/// Arbitrary vertex declaration element datatypes.
 	enum VertexElementType

@@ -55,7 +55,7 @@ namespace Unique
 
 	protected:
 		/// Clear flags. Affects clear command only.
-		unsigned clearFlags_ = CLEAR_DEPTH_FLAG;
+		unsigned clearFlags_ = Diligent::CLEAR_DEPTH_FLAG;
 		/// Clear color. Affects clear command only.
 		Color clearColor_;
 		/// Clear depth. Affects clear command only.

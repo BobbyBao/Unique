@@ -6,6 +6,8 @@
 #include "Graphics.h"
 #include <BasicShaderSourceStreamFactory.h>
 
+using namespace Diligent;
+
 namespace Unique
 {
 

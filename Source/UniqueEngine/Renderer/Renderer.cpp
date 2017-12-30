@@ -145,7 +145,7 @@ namespace Unique
 
 	void Renderer::DrawDebugGeometry(bool depthTest)
 	{
-	//	URHO3D_PROFILE(RendererDrawDebug);
+	//	UNIQUE_PROFILE(RendererDrawDebug);
 
 		/// \todo Because debug geometry is per-scene, if two cameras show views of the same area, occlusion is not shown correctly
 		HashSet<Drawable*> processedGeometries;

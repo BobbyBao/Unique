@@ -26,16 +26,6 @@
 
 namespace Unique
 {
-class String;
-class VectorBase;
-
-/// Swap two values.
-template <class T> inline void Swap(T& first, T& second)
-{
-    T temp = first;
-    first = second;
-    second = temp;
-}
 
 template<typename T, typename U> constexpr size_t OffsetOf(U T::*member)
 {
@@ -45,6 +35,26 @@ template<typename T, typename U> constexpr size_t OffsetOf(U T::*member)
 template <typename T, int count> int LengthOf(const T(&)[count])
 {
 	return count;
+}
+
+/// Swap two values.
+template <class T> inline void Swap(T& first, T& second)
+{
+    T temp = first;
+    first = second;
+    second = temp;
+}
+
+template<class _Ty1, class _Ty2> 
+inline auto MakePair(_Ty1&& _Val1, _Ty2&& _Val2)
+{
+	return std::make_pair(_Val1, _Val2);
+}
+
+template<class _Ty1, class _Ty2>
+inline auto MakePair(const _Ty1& _Val1, const _Ty2& _Val2)
+{
+	return std::make_pair(_Val1, _Val2);
 }
 
 template<class C, class V>

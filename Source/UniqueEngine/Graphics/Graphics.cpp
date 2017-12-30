@@ -5,6 +5,8 @@
 #include "GraphicsBuffer.h"
 #include <iostream>
 
+using namespace Diligent;
+
 namespace Unique
 {
 	uObject(Graphics)
@@ -22,10 +24,17 @@ namespace Unique
 	
 	Graphics::Graphics() : title_("Unique Engine")
 	{
+		if (!GetContext()->RequireSDL(SDL_INIT_VIDEO))
+		{
+			UNIQUE_LOGERRORF("Couldn't initialize SDL: %s\n", SDL_GetError());
+			return;
+		}
+
 	}
 
 	Graphics::~Graphics()
 	{
+		GetContext()->ReleaseSDL();
 	}
 
 	bool Graphics::Initialize(const IntVector2& size, DeviceType deviceType)

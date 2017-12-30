@@ -26,15 +26,16 @@ namespace Unique
 		bool CreateImpl();
 		void Reload();
 
+		ShaderProgram* GetShaderProgram() { return shaderProgram_; }
 		IShaderVariable* GetShaderVariable(const StringID& name);
 		IPipelineState* GetPipeline();
 		IShaderResourceBinding* GetShaderResourceBinding() { return shaderResourceBinding_; }
 	private:
 		void Init();
 		SPtr<ShaderProgram> shaderProgram_;
-		RefCntAutoPtr<IShaderResourceBinding> shaderResourceBinding_;
+		Diligent::RefCntAutoPtr<IShaderResourceBinding> shaderResourceBinding_;
 		IResourceMapping* resourceMapping_;
-		PipelineStateDesc psoDesc_;
+		Diligent::PipelineStateDesc psoDesc_;
 		uint dirtyFlags_ = 0;
 		bool dirty_ = true;
 	};

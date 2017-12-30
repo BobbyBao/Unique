@@ -114,8 +114,8 @@ namespace Unique
 			for (int i = 0; i < COUNT; i++)
 			{
 				Pass* pass = shader->AddPass(String("Test_") + String(i));
-				pass->shaderStage_[0] = { ShaderType::SHADER_TYPE_VERTEX, "Assets/shader.hlsl", "VS", SHADER_PROFILE_DX_4_0 };
-				pass->shaderStage_[1] = { ShaderType::SHADER_TYPE_PIXEL, "Assets/shader.hlsl", "PS", SHADER_PROFILE_DX_4_0 };
+				pass->shaderStage_[0] = { Diligent::SHADER_TYPE_VERTEX, "Assets/shader.hlsl", "VS", Diligent::SHADER_PROFILE_DX_4_0 };
+				pass->shaderStage_[1] = { Diligent::SHADER_TYPE_PIXEL, "Assets/shader.hlsl", "PS", Diligent::SHADER_PROFILE_DX_4_0 };
 			}
 
 		}

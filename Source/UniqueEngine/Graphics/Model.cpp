@@ -33,6 +33,7 @@
 #include "../Graphics/Model.h"
 #include "../Graphics/Graphics.h"
 
+using namespace Diligent;
 
 namespace Unique
 {
@@ -154,12 +155,12 @@ bool Model::Load(IStream& source)
 
 	PrimitiveTopology primitiveType[] = 
 	{
-		PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
-		PRIMITIVE_TOPOLOGY_LINE_LIST,
-		PRIMITIVE_TOPOLOGY_POINT_LIST,
-		PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP,
-		PRIMITIVE_TOPOLOGY_UNDEFINED,
-		PRIMITIVE_TOPOLOGY_UNDEFINED
+		PrimitiveTopology::TRIANGLE_LIST,
+		PrimitiveTopology::LINE_LIST,
+		PrimitiveTopology::POINT_LIST,
+		PrimitiveTopology::TRIANGLE_STRIP,
+		PrimitiveTopology::UNDEFINED,
+		PrimitiveTopology::UNDEFINED
 	};
 
     // Read geometries

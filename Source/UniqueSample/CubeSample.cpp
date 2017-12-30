@@ -130,7 +130,7 @@ namespace Unique
 		auto& graphics = GetSubsystem<Graphics>();
 		// Clear the back buffer 
 		deviceContext->ClearRenderTarget(nullptr, backgroundColor_);
-		deviceContext->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f);
+		deviceContext->ClearDepthStencil(nullptr, Diligent::CLEAR_DEPTH_FLAG, 1.f);
 
 		Vector<Batch>& batches = geometries_[graphics.GetRenderContext()];
 		for (auto& batch : batches)
@@ -168,7 +168,7 @@ namespace Unique
 		geo->SetNumVertexBuffers(1);
 		geo->SetVertexBuffer(0, pVertexBuffer);
 		geo->SetIndexBuffer(pIndexBuffer);
-		geo->SetDrawRange(PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, 0, (unsigned int)indices.size());
+		geo->SetDrawRange(PrimitiveTopology::TRIANGLE_LIST, 0, (unsigned int)indices.size());
 		return geo;
 	}
 

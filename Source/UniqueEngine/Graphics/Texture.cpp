@@ -4,6 +4,8 @@
 #include <GraphicsUtilities.h>
 #include <GraphicsAccessories.h>
 
+using namespace Diligent;
+
 namespace Unique
 {
 

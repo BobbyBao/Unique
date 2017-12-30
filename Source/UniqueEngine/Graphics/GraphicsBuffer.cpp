@@ -3,6 +3,8 @@
 #include "Graphics/Graphics.h"
 #include <InputLayout.h>
 
+using namespace Diligent;
+
 namespace Unique
 {
 	uEnum

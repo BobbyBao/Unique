@@ -74,12 +74,12 @@ public:
     ~Context();
 
 	/// Create an object by type. Return pointer to it or null if no factory found.
-	template <class T> inline SPtr<T> CreateObject()
-	{
-		return StaticCast<T>(CreateObject(T::GetTypeStatic()));
-	}
+// 	template <class T> inline SPtr<T> CreateObject()
+// 	{
+// 		return StaticCast<T>(CreateObject(T::GetTypeStatic()));
+// 	}
 	/// Create an object by type hash. Return pointer to it or null if no factory found.
-	SPtr<Object> CreateObject(StringID objectType);
+	SPtr<Object> CreateObject(const StringID& objectType);
 	/// Register a factory for an object type.
 	void RegisterFactory(ObjectFactory* factory);
 	/// Register a factory for an object type and specify the object category.
@@ -87,7 +87,12 @@ public:
     /// Register a subsystem.
     void RegisterSubsystem(Object* subsystem);
     /// Remove a subsystem.
-    void RemoveSubsystem(StringID objectType);
+    void RemoveSubsystem(const StringID& objectType);
+	
+	/// Initialises the specified SDL systems, if not already. Returns true if successful. This call must be matched with ReleaseSDL() when SDL functions are no longer required, even if this call fails.
+	bool RequireSDL(unsigned int sdlFlags);
+	/// Indicate that you are done with using SDL. Must be called after using RequireSDL().
+	void ReleaseSDL();
 
 	/// Template version of registering an object factory.
 	template <class T> void RegisterFactory();
@@ -97,7 +102,7 @@ public:
     template <class T> void RemoveSubsystem();
 
     /// Return subsystem by type.
-    Object* Subsystem(StringID type) const;
+    Object* GetSubsystem(const StringID& type) const;
 
     /// Return all subsystems.
 	const Vector<Object*>& GetSubsystems() const { return subsystemVec_; }
@@ -117,10 +122,10 @@ public:
     /// Return event receivers for a sender and event type, or null if they do not exist.
     EventReceiverGroup* GetEventReceivers(Object* sender, StringID eventType)
     {
-        HashMap<Object*, HashMap<StringID, SPtr<EventReceiverGroup> > >::iterator i = specificEventReceivers_.find(sender);
+        auto i = specificEventReceivers_.find(sender);
         if (i != specificEventReceivers_.end())
         {
-            HashMap<StringID, SPtr<EventReceiverGroup> >::iterator j = i->second.find(eventType);
+            auto j = i->second.find(eventType);
             return j != i->second.end() ? j->second : (EventReceiverGroup*)0;
         }
         else
@@ -134,7 +139,8 @@ public:
         return i != eventReceivers_.end() ? i->second : (EventReceiverGroup*)0;
     }
 
-	template <class T> class SubsystemHolder
+	template <class T>
+	class InstanceHolder
 	{
 		static T*& Instance()
 		{
@@ -150,7 +156,7 @@ public:
 	T& RegisterSubsystem()
 	{
 		T* obj = new T();
-		SubsystemHolder<T>::Instance() = obj;
+		InstanceHolder<T>::Instance() = obj;
 		RegisterSubsystem(obj);
 		return *obj;
 	}
@@ -158,7 +164,7 @@ public:
 	template<class T>
 	static T* GetSubsystem()
 	{
-		return SubsystemHolder<T>::Instance();
+		return InstanceHolder<T>::Instance();
 	}
 
 	virtual void ThreadFunction();
@@ -230,8 +236,8 @@ template <class T> void Context::RemoveSubsystem()
 class RegisterRuntime
 {
 public:
-	typedef void CallbackFunction(Context* context);
-	RegisterRuntime(CallbackFunction* Initialize, CallbackFunction* Cleanup = nullptr);
+	typedef void CallbackFn(Context* context);
+	RegisterRuntime(CallbackFn* initialize, CallbackFn* cleanup = nullptr);
 };
 
 
