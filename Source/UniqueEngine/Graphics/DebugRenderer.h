@@ -21,6 +21,7 @@ class Shader;
 class PipelineState;
 class View;
 class Material;
+class Geometry;
 
 /// Debug rendering line.
 struct DebugLine

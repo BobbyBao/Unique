@@ -12,6 +12,7 @@
 #include "../Graphics/ShaderVariation.h"
 #include "../Graphics/VertexBuffer.h"
 #include "../Graphics/skeleton.h"
+#include "../Graphics/Geometry.h"
 #include "Resource/ResourceCache.h"
 #include "Graphics/PipelineState.h"
 #include "Scene/Node.h"
