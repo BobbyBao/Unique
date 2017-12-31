@@ -1161,16 +1161,16 @@ void Input::SetScreenJoystickVisible(SDL_JoystickID id, bool enable)
 
 void Input::SetScreenKeyboardVisible(bool enable)
 {
-    if (enable != SDL_IsTextInputActive())
-	{
-		uCall
-		(
+	uCall
+	(
+		if (enable != SDL_IsTextInputActive())
+		{
 			if (enable)
 				SDL_StartTextInput();
 			else
 				SDL_StopTextInput();
-		);
-    }
+		}
+	);
 }
 
 void Input::SetTouchEmulation(bool enable)

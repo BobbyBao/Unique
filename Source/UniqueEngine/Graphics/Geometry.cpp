@@ -167,7 +167,7 @@ namespace Unique
 		for (size_t i = 0; i < vertexBuffers_.size(); i++)
 		{
 			buffer[i] = *vertexBuffers_[i];
-			offsets[i] = offset;
+			offsets[i] = vertexStart_;
 			strides[i] = vertexBuffers_[i]->GetStride();
 		}
 		

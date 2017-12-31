@@ -136,7 +136,68 @@ namespace Unique
 
 		dest = texAdjust * spotProj * spotView;
 	}
-		
+
+	/// Construct from a drawable's source batch.
+	Batch::Batch(const SourceBatch& rhs) :
+		distance_(rhs.distance_),
+		isBase_(false),
+		geometry_(rhs.geometry_),
+		material_(rhs.material_),
+		worldTransform_(rhs.worldTransform_),
+		numWorldTransforms_(rhs.numWorldTransforms_),
+		instancingData_(rhs.instancingData_),
+		geometryType_(rhs.geometryType_)
+	{
+		size_t i = 0;
+		for (; i < rhs.geometry_->GetNumVertexBuffers(); i++)
+		{
+			vertexBuffers_[i] = rhs.geometry_->GetVertexBuffer(i);
+		}
+
+		if (i < 3)
+		{
+			vertexBuffers_[i + 1] = nullptr;
+		}
+
+		vertexOffset_ = rhs.geometry_->GetVertexStart();
+		vertexCount_ = rhs.geometry_->GetVertexCount();
+		indexBuffer_ = rhs.geometry_->GetIndexBuffer();
+		indexOffset_ = rhs.geometry_->GetIndexStart();
+		indexCount_ = rhs.geometry_->GetIndexCount();
+	}
+
+	/// Construct from transient buffer.
+	Batch::Batch(const TransientVertexBuffer& tvb, Material* material, Matrix3x4* worldTransform) :
+		isBase_(true),
+		geometry_(nullptr),
+		material_(material),
+		worldTransform_(worldTransform),
+		numWorldTransforms_(1),
+		instancingData_(nullptr),
+		geometryType_(GEOM_TRANSIENT)
+	{
+		vertexBuffers_[0] = tvb.vertexBuffer_;
+		vertexOffset_ = tvb.offset_;
+		vertexCount_ = tvb.count_;
+	}
+
+	Batch::Batch(const TransientVertexBuffer& tvb, const TransientIndexBuffer& tib, Material* material, Matrix3x4* worldTransform) :
+		isBase_(true),
+		geometry_(nullptr),
+		material_(material),
+		worldTransform_(worldTransform),
+		numWorldTransforms_(1),
+		instancingData_(nullptr),
+		geometryType_(GEOM_TRANSIENT)
+	{
+		vertexBuffers_[0] = tvb.vertexBuffer_;
+		vertexOffset_ = tvb.offset_;
+		vertexCount_ = tvb.count_;
+		indexBuffer_ = tib.indexBuffer_;
+		indexOffset_ = tib.offset_;
+		indexCount_ = tib.count_;
+	}
+
 	void Batch::CalculateSortKey()
 	{
 		unsigned shaderID = *((unsigned*)&pipelineState_) / sizeof(PipelineState);
@@ -543,33 +604,49 @@ namespace Unique
 
 	void Batch::Draw(View* view, Camera* camera) const
 	{
+		auto& graphics = GetSubsystem<Graphics>();
+
 		if (geometry_ && !geometry_->IsEmpty())
 		{
 			Prepare(view, camera, true);
 			geometry_->Draw(pipelineState_);
 		}
-		else if (transientVB_.vertexBuffer_)
+		else if (vertexBuffers_[0])
 		{
 			Prepare(view, camera, true);
 
-			IBuffer *buffer[1] = { *transientVB_.vertexBuffer_ };
-			Uint32 offsets[1] = { 0 };
-			Uint32 strides[1] = { transientVB_.vertexBuffer_->GetStride() };
-
-			DrawAttribs drawAttribs;
-			drawAttribs.NumVertices = transientVB_.count_;
-			deviceContext->SetVertexBuffers(0, 1, buffer, strides, offsets, SET_VERTEX_BUFFERS_FLAG_RESET);
-			
-			if (transientIB_.indexBuffer_)
+			IBuffer *buffer[4] = { nullptr };
+			Uint32 offsets[4] = { 0 };
+			Uint32 strides[4] = { 0 };
+			Uint32 offset = 0;
+			uint numVertexBuffers = 0;
+			for (size_t i = 0; i < 4; i++)
 			{
-				deviceContext->SetIndexBuffer(*transientIB_.indexBuffer_, transientIB_.offset_);
-				drawAttribs.IsIndexed = true;
-				drawAttribs.IndexType = VT_UINT16;
+				if (!buffer[i])
+				{
+					break;
+				}
+				buffer[i] = *vertexBuffers_[i];
+				offsets[i] = offset;
+				strides[i] = vertexBuffers_[i]->GetStride();
+				numVertexBuffers++;
 			}
 
-			deviceContext->SetPipelineState(pipelineState_->GetPipeline());
+			deviceContext->SetVertexBuffers(0, numVertexBuffers, buffer, strides, offsets, SET_VERTEX_BUFFERS_FLAG_RESET);
+			
+			DrawAttribs drawAttribs;
+			drawAttribs.Topology = (Diligent::PRIMITIVE_TOPOLOGY)primitiveTopology_;
+			if (indexBuffer_)
+			{
+				drawAttribs.NumIndices = indexCount_;
+				deviceContext->SetIndexBuffer(*indexBuffer_, indexOffset_);
+				drawAttribs.IsIndexed = true;
+				drawAttribs.IndexType = indexBuffer_->GetStride() == 4 ? ValueType::VT_UINT32 : ValueType::VT_UINT16;
+			}
+			else
+				drawAttribs.NumVertices = vertexCount_;
 
-			auto& graphics = GetSubsystem<Graphics>();
+			deviceContext->SetPipelineState(pipelineState_->GetPipeline());
 
 			graphics.BindResources(pipelineState_->GetShaderResourceBinding(),
 				SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED | BIND_SHADER_RESOURCES_ALL_RESOLVED);

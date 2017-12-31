@@ -573,8 +573,7 @@ void DebugRenderer::Render(View* view)
 	batch.geometryType_ = GEOM_TRANSIENT;
 	batch.isBase_ = true;
 	batch.material_ = material_;
-	TransientVertexBuffer& tvb = batch.transientVB_;
-	tvb.vertexBuffer_ = vertexBuffer_;
+	batch.vertexBuffers_[0] = vertexBuffer_;
 
 	batch.primitiveTopology_ = PrimitiveTopology::LINE_LIST;
 	batch.pipelineState_ = pipelineDepth_;
@@ -582,8 +581,8 @@ void DebugRenderer::Render(View* view)
 	{
 		count = (uint)lines_.size() * 2;
 	
-		tvb.offset_ = start;
-		tvb.count_ = count;
+		batch.vertexOffset_ = start;
+		batch.vertexCount_ = count;
 		view->AddBatch(batch);
 
 		start += count;
@@ -595,8 +594,8 @@ void DebugRenderer::Render(View* view)
 	{
 		count = (uint)noDepthLines_.size() * 2;
 
-		tvb.offset_ = start;
-		tvb.count_ = count;
+		batch.vertexOffset_ = start;
+		batch.vertexCount_ = count;
 		view->AddBatch(batch);
 	
 		start += count;
@@ -608,8 +607,8 @@ void DebugRenderer::Render(View* view)
 	{
 		count = (uint)triangles_.size() * 3;
 
-		tvb.offset_ = start;
-		tvb.count_ = count;
+		batch.vertexOffset_ = start;
+		batch.vertexCount_ = count;
 		view->AddBatch(batch);
 
 		start += count;
@@ -621,8 +620,8 @@ void DebugRenderer::Render(View* view)
 	{
 		count = (uint)noDepthTriangles_.size() * 3;
 
-		tvb.offset_ = start;
-		tvb.count_ = count;
+		batch.vertexOffset_ = start;
+		batch.vertexCount_ = count;
 		view->AddBatch(batch);
 	}	
 

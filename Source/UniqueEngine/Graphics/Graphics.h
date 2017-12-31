@@ -47,8 +47,8 @@ namespace Unique
 		void SetTitle(const String& title);
 		DeviceType GetDeviceType() const;
 		void SetDebug(bool val);
-		uint GetWidth() const { return resolution_.x_; }
-		uint GetHeight() const { return resolution_.y_; }
+		int GetWidth() const { return resolution_.x_; }
+		int GetHeight() const { return resolution_.y_; }
 		const IntVector2& GetResolution() const;
 
 		// Returns the aspect ratio of the render context resolution (X:Y).

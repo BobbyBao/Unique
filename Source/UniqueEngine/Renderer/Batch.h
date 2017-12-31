@@ -30,43 +30,11 @@ namespace Unique
 		}
 
 		/// Construct from a drawable's source batch.
-		Batch(const SourceBatch& rhs) :
-			distance_(rhs.distance_),
-			isBase_(false),
-			geometry_(rhs.geometry_),
-			material_(rhs.material_),
-			worldTransform_(rhs.worldTransform_),
-			numWorldTransforms_(rhs.numWorldTransforms_),
-			instancingData_(rhs.instancingData_),
-			geometryType_(rhs.geometryType_)
-		{
-		}
-
+		Batch(const SourceBatch& rhs);
+		
 		/// Construct from transient buffer.
-		Batch(const TransientVertexBuffer& tvb, Material* material, Matrix3x4* worldTransform = nullptr) :
-			isBase_(true),
-			transientVB_(tvb),
-			geometry_(nullptr),
-			material_(material),
-			worldTransform_(worldTransform),
-			numWorldTransforms_(1),
-			instancingData_(nullptr),
-			geometryType_(GEOM_TRANSIENT)
-		{
-		}
-
-		Batch(const TransientVertexBuffer& tvb, const TransientIndexBuffer& tib, Material* material, Matrix3x4* worldTransform = nullptr) :
-			isBase_(true),
-			transientVB_(tvb),
-			transientIB_(tib),
-			geometry_(nullptr),
-			material_(material),
-			worldTransform_(worldTransform),
-			numWorldTransforms_(1),
-			instancingData_(nullptr),
-			geometryType_(GEOM_TRANSIENT)
-		{
-		}
+		Batch(const TransientVertexBuffer& tvb, Material* material, Matrix3x4* worldTransform = nullptr);
+		Batch(const TransientVertexBuffer& tvb, const TransientIndexBuffer& tib, Material* material, Matrix3x4* worldTransform = nullptr);
 
 		/// Calculate state sorting key, which consists of base pass flag, light, pass and geometry.
 		void CalculateSortKey();
@@ -89,6 +57,16 @@ namespace Unique
 		bool isBase_;
 
 		PrimitiveTopology primitiveTopology_;
+		
+		VertexBuffer* vertexBuffers_[4];
+		IndexBuffer* indexBuffer_ = nullptr;
+		uint vertexOffset_;
+		uint vertexCount_;
+		uint indexOffset_;
+		uint indexCount_;
+
+		//TransientVertexBuffer transientVB_;
+		//TransientIndexBuffer transientIB_;
 		/// Geometry.
 		Geometry* geometry_ = nullptr;
 		/// Material.
@@ -108,8 +86,6 @@ namespace Unique
 		/// Material pass.
 		Pass* pass_;
 		PipelineState*  pipelineState_;
-		TransientVertexBuffer transientVB_;
-		TransientIndexBuffer transientIB_;
 	};
 
 
