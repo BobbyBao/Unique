@@ -148,7 +148,7 @@ namespace Unique
 		instancingData_(rhs.instancingData_),
 		geometryType_(rhs.geometryType_)
 	{
-		size_t i = 0;
+		uint i = 0;
 		for (; i < rhs.geometry_->GetNumVertexBuffers(); i++)
 		{
 			vertexBuffers_[i] = rhs.geometry_->GetVertexBuffer(i);

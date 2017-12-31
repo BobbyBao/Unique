@@ -172,6 +172,7 @@ private:
     Frustum frustum_;
 	/// Vertex buffer.
 	SPtr<VertexBuffer> vertexBuffer_;
+	SPtr<Geometry> geometry_;
     /// Line antialiasing flag.
     bool lineAntiAlias_;
 

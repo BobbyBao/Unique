@@ -8,6 +8,7 @@
 
 namespace Unique
 {
+	class Geometry;
 	struct Batch;
 
 	static const int INSTANCING_BUFFER_DEFAULT_SIZE = 1024;
@@ -94,10 +95,9 @@ namespace Unique
 		int minInstances_;
 		/// Maximum sorted instances per batch group.
 		int maxSortedInstances_;
-
-		SPtr<VertexBuffer> transientVertexBuffer_;
-
-		SPtr<IndexBuffer> transientIndexBuffer_;
+		
+		SPtr<Geometry> transientGeometry_;
+		SPtr<Geometry> transientIndexedGeometry_;
 	};
 
 }

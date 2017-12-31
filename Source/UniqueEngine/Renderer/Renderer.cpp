@@ -2,6 +2,7 @@
 #include "Renderer.h"
 #include "Graphics/Graphics.h"
 #include "Graphics/Octree.h"
+#include "Graphics/Geometry.h"
 #include "Core/CoreEvents.h"
 #include "../Graphics/DebugRenderer.h"
 #include "../Scene/Scene.h"
