@@ -26,25 +26,17 @@
 #include "InputEvents.h"
 //#include "../UI/Cursor.h"
 
+typedef int SDL_JoystickID;
+
 namespace Unique
 {
 
-/// %Input Mouse Modes.
-enum MouseMode
-{
-    MM_ABSOLUTE = 0,
-    MM_RELATIVE,
-    MM_WRAP,
-    MM_FREE,
-    MM_INVALID
-};
 
 class Deserializer;
 class Graphics;
 class Serializer;
 class UIElement;
 class XMLFile;
-
 const IntVector2 MOUSE_POSITION_OFFSCREEN = IntVector2(M_MIN_INT, M_MIN_INT);
 
 /// %Input state for a finger touch.
@@ -341,7 +333,7 @@ private:
     /// Handle frame start event.
     void HandleBeginFrame(const struct BeginFrame& eventData);
     /// Handle touch events from the controls of screen joystick(s).
-//    void HandleScreenJoystickTouch(VariantMap& eventData);
+	void HandleScreenJoystickTouch(const struct TouchBegin& eventData);
     /// Handle SDL event.
     void HandleSDLEvent(void* sdlEvent);
 
@@ -358,7 +350,7 @@ private:
     /// SetMouseMode  (Emscripten platform only).
     void SetMouseModeEmscripten(MouseMode mode, bool suppressEvent);
     /// Handle frame end event.
-    void HandleEndFrame(StringHash eventType, VariantMap& eventData);
+    void HandleEndFrame(const struct EndFrame& eventData);
 #endif
 
     /// Graphics subsystem.
@@ -432,7 +424,7 @@ private:
 
 #ifdef __EMSCRIPTEN__
     /// Emscripten Input glue instance.
-    UniquePtr<EmscriptenInput> emscriptenInput_;
+    UPtr<EmscriptenInput> emscriptenInput_;
     /// Flag used to detect mouse jump when exiting pointer-lock.
     bool emscriptenExitingPointerLock_;
     /// Flag used to detect mouse jump on initial mouse click when entering pointer-lock.
@@ -440,7 +432,7 @@ private:
     /// Flag indicating current pointer-lock status.
     bool emscriptenPointerLock_;
 #endif
-	Vector<union SDL_Event> events_;
+	Vector<SDL_Event> events_;
 };
 
 }

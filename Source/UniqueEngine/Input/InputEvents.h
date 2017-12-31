@@ -29,8 +29,20 @@
 #include <SDL/SDL_keycode.h>
 #include <SDL/SDL_mouse.h>
 
+union SDL_Event;
+
 namespace Unique
 {
+
+/// %Input Mouse Modes.
+enum MouseMode
+{
+	MM_ABSOLUTE = 0,
+	MM_RELATIVE,
+	MM_WRAP,
+	MM_FREE,
+	MM_INVALID
+};
 
 /// Mouse button pressed.
 uEvent(MouseButtonDown)
@@ -230,7 +242,7 @@ uEvent(ExitRequested)
 /// Raw SDL input event.
 uEvent(SDLRawInput)
 {
-	union SDL_Event* sdlEvent_;
+	SDL_Event* sdlEvent_;
     bool consumed_;
 };
 

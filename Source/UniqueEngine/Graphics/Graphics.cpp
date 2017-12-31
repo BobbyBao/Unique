@@ -3,6 +3,7 @@
 #include "Graphics.h"
 #include "Texture.h"
 #include "GraphicsBuffer.h"
+#include "GraphicsEvents.h"
 #include <iostream>
 
 using namespace Diligent;
@@ -67,11 +68,21 @@ namespace Unique
 
 	void Graphics::Resize(const IntVector2& size)
 	{
+		resolution_ = size;
+		ScreenMode eventData;
+			eventData.width_ = size.x_;
+			eventData.height_ = size.y_;
+// 			eventData.fullscreen_ = fullscreen_;
+// 			eventData.resizable_ = resizable_;
+// 			eventData.borderless_ = borderless_;
+// 			eventData.highDPI_ = highDPI_;
+			SendEvent(eventData);
+
 		uCall
 		(
-			resolution_ = size;
 			swapChain_->Resize(size.x_, size.y_);
 			deviceContext_->Flush();
+
 		);
 		
 	}

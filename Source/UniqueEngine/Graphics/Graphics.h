@@ -6,6 +6,7 @@
 #include <RenderDevice.h>
 #include <SwapChain.h>
 
+struct SDL_Window;
 
 namespace Unique
 {
@@ -56,6 +57,8 @@ namespace Unique
 			return GetResolution().x_ / (float)GetResolution().y_;
 		}
 
+		SDL_Window * GetWindow() { return window_; }
+
 		bool IsDirect3D() const;
 		bool IsOpenGL() const;
 
@@ -99,7 +102,7 @@ namespace Unique
 		Diligent::RefCntAutoPtr<ISwapChain> swapChain_;
 		Diligent::RefCntAutoPtr<IResourceMapping> resourceMapping_;
 
-		struct SDL_Window *window_ = nullptr;
+		SDL_Window *window_ = nullptr;
 
 		bool singleThreaded_ = false;
 		Semaphore renderSem_;

@@ -541,13 +541,13 @@ void Input::SetMouseVisible(bool enable, bool suppressEvent)
         if (initialized_)
         {
             // External windows can only support visible mouse cursor
-            if (graphics_->GetExternalWindow())
-            {
-                mouseVisible_ = true;
-                if (!suppressEvent)
-                    lastMouseVisible_ = true;
-                return;
-            }
+//             if (graphics_->GetExternalWindow())
+//             {
+//                 mouseVisible_ = true;
+//                 if (!suppressEvent)
+//                     lastMouseVisible_ = true;
+//                 return;
+//             }
 
             if (!enable && inputFocus_)
             {
@@ -561,14 +561,20 @@ void Input::SetMouseVisible(bool enable, bool suppressEvent)
                 if (mouseMode_ == MM_ABSOLUTE && !emscriptenPointerLock_)
                     emscriptenInput_->RequestPointerLock(MM_ABSOLUTE, suppressEvent);
 #endif
-                SDL_ShowCursor(SDL_FALSE);
+				uCall
+				(
+					SDL_ShowCursor(SDL_FALSE);
+				);
                 mouseVisible_ = false;
             }
-            else if (mouseMode_ != MM_RELATIVE)
-            {
-                SetMouseGrabbed(false, suppressEvent);
+			else if (mouseMode_ != MM_RELATIVE)
+			{
+				SetMouseGrabbed(false, suppressEvent);
 
-                SDL_ShowCursor(SDL_TRUE);
+				uCall
+				(
+					SDL_ShowCursor(SDL_TRUE);
+				);
                 mouseVisible_ = true;
 
 #ifndef __EMSCRIPTEN__
@@ -576,6 +582,7 @@ void Input::SetMouseVisible(bool enable, bool suppressEvent)
                     SetMouseModeAbsolute(SDL_FALSE);
 
                 // Update cursor position
+#if false
                 UI* ui = GetSubsystem<UI>();
                 Cursor* cursor = ui->GetCursor();
                 // If the UI Cursor was visible, use that position instead of last visible OS cursor position
@@ -589,6 +596,7 @@ void Input::SetMouseVisible(bool enable, bool suppressEvent)
                     }
                 }
                 else
+#endif
                 {
                     if (lastVisibleMousePosition_ != MOUSE_POSITION_OFFSCREEN)
                     {
@@ -825,8 +833,8 @@ void Input::SetMouseMode(MouseMode mode, bool suppressEvent)
             mouseMode_ = mode;
             SDL_Window* const window = graphics_->GetWindow();
 
-            UI* const ui = GetSubsystem<UI>();
-            Cursor* const cursor = ui->GetCursor();
+//             UI* const ui = GetSubsystem<UI>();
+//             Cursor* const cursor = ui->GetCursor();
 
             // Handle changing from previous mode
             if (previousMode == MM_ABSOLUTE)
@@ -839,8 +847,13 @@ void Input::SetMouseMode(MouseMode mode, bool suppressEvent)
                 SetMouseModeRelative(SDL_FALSE);
                 ResetMouseVisible();
             }
-            else if (previousMode == MM_WRAP)
-                SDL_SetWindowGrab(window, SDL_FALSE);
+			else if (previousMode == MM_WRAP)
+			{
+				uCall
+				(
+					SDL_SetWindowGrab(window, SDL_FALSE);
+				);
+			}
 
             // Handle changing to new mode
             if (mode == MM_ABSOLUTE)
@@ -856,11 +869,14 @@ void Input::SetMouseMode(MouseMode mode, bool suppressEvent)
             else if (mode == MM_WRAP)
             {
                 SetMouseGrabbed(true, suppressEvent);
-                SDL_SetWindowGrab(window, SDL_TRUE);
+				uCall
+				(
+					SDL_SetWindowGrab(window, SDL_TRUE);
+				);
             }
 
             if (mode != MM_WRAP)
-                SetMouseGrabbed(!(mouseVisible_ || (cursor && cursor->IsVisible())), suppressEvent);
+                SetMouseGrabbed(!(mouseVisible_ /*|| (cursor && cursor->IsVisible())*/), suppressEvent);
         }
         else
         {
@@ -1113,7 +1129,7 @@ SDL_JoystickID Input::AddScreenJoystick(XMLFile* layoutFile, XMLFile* styleFile)
 
 bool Input::RemoveScreenJoystick(SDL_JoystickID id)
 {
-    if (!Contains(joysticks_, id))
+    if (joysticks_.find(id) == joysticks_.end())
     {
         UNIQUE_LOGERRORF("Failed to remove non-existing screen joystick ID #%d", id);
         return false;
@@ -1126,31 +1142,34 @@ bool Input::RemoveScreenJoystick(SDL_JoystickID id)
         return false;
     }
 
-    state.screenJoystick_->Remove();
-    joysticks_.remove(id);
+    //state.screenJoystick_->Remove();
+    joysticks_.erase(id);
 
     return true;
 }
 
 void Input::SetScreenJoystickVisible(SDL_JoystickID id, bool enable)
 {
-    if (Contains(joysticks_, id))
+    if (joysticks_.find(id) != joysticks_.end())
     {
         JoystickState& state = joysticks_[id];
 
-        if (state.screenJoystick_)
-            state.screenJoystick_->SetVisible(enable);
+//         if (state.screenJoystick_)
+//             state.screenJoystick_->SetVisible(enable);
     }
 }
 
 void Input::SetScreenKeyboardVisible(bool enable)
 {
     if (enable != SDL_IsTextInputActive())
-    {
-        if (enable)
-            SDL_StartTextInput();
-        else
-            SDL_StopTextInput();
+	{
+		uCall
+		(
+			if (enable)
+				SDL_StartTextInput();
+			else
+				SDL_StopTextInput();
+		);
     }
 }
 
@@ -1164,10 +1183,13 @@ void Input::SetTouchEmulation(bool enable)
             // Touch emulation needs the mouse visible
             if (!mouseVisible_)
                 SetMouseVisible(true);
-
+			/*
+			uCall
+			(
             // Add a virtual touch device the first time we are enabling emulated touch
             if (!SDL_GetNumTouchDevices())
                 SDL_AddTouch(0, "Emulated Touch");
+			);*/
         }
         else
             ResetTouches();
@@ -1191,14 +1213,16 @@ bool Input::RecordGesture()
 
 bool Input::SaveGestures(Serializer& dest)
 {
-    RWOpsWrapper<Serializer> wrapper(dest);
-    return SDL_SaveAllDollarTemplates(wrapper.GetRWOps()) != 0;
+//     RWOpsWrapper<Serializer> wrapper(dest);
+//     return SDL_SaveAllDollarTemplates(wrapper.GetRWOps()) != 0;
+	return true;
 }
 
 bool Input::SaveGesture(Serializer& dest, unsigned gestureID)
 {
-    RWOpsWrapper<Serializer> wrapper(dest);
-    return SDL_SaveDollarTemplate(gestureID, wrapper.GetRWOps()) != 0;
+//     RWOpsWrapper<Serializer> wrapper(dest);
+//     return SDL_SaveDollarTemplate(gestureID, wrapper.GetRWOps()) != 0;
+	return true;
 }
 
 unsigned Input::LoadGestures(Deserializer& source)
@@ -1210,8 +1234,9 @@ unsigned Input::LoadGestures(Deserializer& source)
         return 0;
     }
 
-    RWOpsWrapper<Deserializer> wrapper(source);
-    return (unsigned)SDL_LoadDollarTemplates(-1, wrapper.GetRWOps());
+//     RWOpsWrapper<Deserializer> wrapper(source);
+//     return (unsigned)SDL_LoadDollarTemplates(-1, wrapper.GetRWOps());
+	return true;
 }
 
 
@@ -1220,14 +1245,15 @@ bool Input::RemoveGesture(unsigned gestureID)
 #ifdef __EMSCRIPTEN__
     return false;
 #else
-    return SDL_RemoveDollarTemplate(gestureID) != 0;
+//    return SDL_RemoveDollarTemplate(gestureID) != 0;
 #endif
+	return false;
 }
 
 void Input::RemoveAllGestures()
 {
 #ifndef __EMSCRIPTEN__
-    SDL_RemoveAllDollarTemplates();
+//    SDL_RemoveAllDollarTemplates();
 #endif
 }
 
@@ -1299,22 +1325,22 @@ String Input::GetScancodeName(int scancode) const
 
 bool Input::GetKeyDown(int key) const
 {
-    return Contains(keyDown_, SDL_tolower(key));
+    return keyDown_.find(SDL_tolower(key)) != keyDown_.end();
 }
 
 bool Input::GetKeyPress(int key) const
 {
-    return Contains(keyPress_, SDL_tolower(key));
+    return keyPress_.find(SDL_tolower(key)) != keyPress_.end();
 }
 
 bool Input::GetScancodeDown(int scancode) const
 {
-    return Contains(scancodeDown_, scancode);
+    return scancodeDown_.find(scancode) != scancodeDown_.end();
 }
 
 bool Input::GetScancodePress(int scancode) const
 {
-    return Contains(scancodePress_, scancode);
+    return scancodePress_.find(scancode) != scancodePress_.end();
 }
 
 bool Input::GetMouseButtonDown(int button) const
@@ -1446,7 +1472,7 @@ JoystickState* Input::GetJoystick(SDL_JoystickID id)
 bool Input::IsScreenJoystickVisible(SDL_JoystickID id) const
 {
     auto i = joysticks_.find(id);
-    return i != joysticks_.end() && i->second.screenJoystick_ && i->second.screenJoystick_->IsVisible();
+    return i != joysticks_.end() && i->second.screenJoystick_/* && i->second.screenJoystick_->IsVisible()*/;
 }
 
 bool Input::GetScreenKeyboardSupport() const
@@ -1471,23 +1497,23 @@ bool Input::IsMouseLocked() const
 bool Input::IsMinimized() const
 {
     // Return minimized state also when unfocused in fullscreen
-    if (!inputFocus_ && graphics_ && graphics_->GetFullscreen())
-        return true;
-    else
+//     if (!inputFocus_ && graphics_ && graphics_->GetFullscreen())
+//         return true;
+//     else
         return minimized_;
 }
 
 void Input::Initialize()
 {
-    Graphics* graphics = GetSubsystem<Graphics>();
-    if (!graphics || !graphics->IsInitialized())
-        return;
+    Graphics& graphics = GetSubsystem<Graphics>();
+//     if (!graphics || !graphics->IsInitialized())
+//         return;
 
-    graphics_ = graphics;
+    graphics_ = &graphics;
 
     // In external window mode only visible mouse is supported
-    if (graphics_->GetExternalWindow())
-        mouseVisible_ = true;
+//     if (graphics_->GetExternalWindow())
+//         mouseVisible_ = true;
 
     // Set the initial activation
     initialized_ = true;
@@ -1504,9 +1530,9 @@ void Input::Initialize()
     ResetJoysticks();
     ResetState();
 
-    SubscribeToEvent(E_BEGINFRAME, UNIQUE_HANDLER(Input, HandleBeginFrame));
+    Subscribe(&Input::HandleBeginFrame);
 #ifdef __EMSCRIPTEN__
-    SubscribeToEvent(E_ENDFRAME, UNIQUE_HANDLER(Input, HandleEndFrame));
+    Subscribe(&Input::HandleEndFrame);
 #endif
 
     UNIQUE_LOGINFO("Initialized input");
@@ -1532,7 +1558,7 @@ void Input::ResetInputAccumulation()
     mouseMoveWheel_ = 0;
     for (auto i = joysticks_.begin(); i != joysticks_.end(); ++i)
     {
-        for (unsigned j = 0; j < i->second.buttonPress_.Size(); ++j)
+        for (unsigned j = 0; j < i->second.buttonPress_.size(); ++j)
             i->second.buttonPress_[j] = false;
     }
 
@@ -1667,7 +1693,7 @@ void Input::PushTouchIndex(int touchID)
 
     // Sorted insertion
     bool inserted = false;
-    for (List<int>::Iterator i = availableTouchIDs_.begin(); i != availableTouchIDs_.end(); ++i)
+    for (auto i = availableTouchIDs_.begin(); i != availableTouchIDs_.end(); ++i)
     {
         if (*i == index)
         {
@@ -1691,12 +1717,10 @@ void Input::PushTouchIndex(int touchID)
 
 void Input::SendInputFocusEvent()
 {
-    using namespace InputFocus;
-
-    VariantMap& eventData = GetEventDataMap();
-    eventData[P_FOCUS] = HasFocus();
-    eventData[P_MINIMIZED] = IsMinimized();
-    SendEvent(E_INPUTFOCUS, eventData);
+	InputFocus eventData;
+    eventData.focus_ = HasFocus();
+    eventData.minimized_ = IsMinimized();
+    SendEvent(eventData);
 }
 
 void Input::SetMouseButton(int button, bool newState)
@@ -1716,13 +1740,11 @@ void Input::SetMouseButton(int button, bool newState)
         mouseButtonDown_ &= ~button;
     }
 
-    using namespace MouseButtonDown;
-
-    VariantMap& eventData = GetEventDataMap();
-    eventData[P_BUTTON] = button;
-    eventData[P_BUTTONS] = mouseButtonDown_;
-    eventData[P_QUALIFIERS] = GetQualifiers();
-    SendEvent(newState ? E_MOUSEBUTTONDOWN : E_MOUSEBUTTONUP, eventData);
+	MouseButtonDown eventData;
+    eventData.button_ = button;
+    eventData.buttons_ = mouseButtonDown_;
+    eventData.qualifiers_ = GetQualifiers();
+    SendEvent(newState ? MouseButtonDown::Type() : MouseButtonUp::Type(), eventData);
 }
 
 void Input::SetKey(int key, int scancode, bool newState)
@@ -1731,39 +1753,38 @@ void Input::SetKey(int key, int scancode, bool newState)
 
     if (newState)
     {
-        scancodeDown_.Insert(scancode);
-        scancodePress_.Insert(scancode);
+        scancodeDown_.insert(scancode);
+        scancodePress_.insert(scancode);
 
-        if (!keyDown_.Contains(key))
+        if (keyDown_.find(key) == keyDown_.end())
         {
-            keyDown_.Insert(key);
-            keyPress_.Insert(key);
+            keyDown_.insert(key);
+            keyPress_.insert(key);
         }
         else
             repeat = true;
     }
     else
     {
-        scancodeDown_.Erase(scancode);
+        scancodeDown_.erase(scancode);
 
-        if (!keyDown_.Erase(key))
+        if (!keyDown_.erase(key))
             return;
     }
 
-    using namespace KeyDown;
-
-    VariantMap& eventData = GetEventDataMap();
-    eventData[P_KEY] = key;
-    eventData[P_SCANCODE] = scancode;
-    eventData[P_BUTTONS] = mouseButtonDown_;
-    eventData[P_QUALIFIERS] = GetQualifiers();
+	KeyDown eventData;
+    eventData.key_ = key;
+    eventData.scancode_ = scancode;
+    eventData.buttons_ = mouseButtonDown_;
+    eventData.qualifiers_ = GetQualifiers();
     if (newState)
-        eventData[P_REPEAT] = repeat;
-    SendEvent(newState ? E_KEYDOWN : E_KEYUP, eventData);
+        eventData.repeat_ = repeat;
 
-    if ((key == KEY_RETURN || key == KEY_RETURN2 || key == KEY_KP_ENTER) && newState && !repeat && toggleFullscreen_ &&
-        (GetKeyDown(KEY_LALT) || GetKeyDown(KEY_RALT)))
-        graphics_->ToggleFullscreen();
+    SendEvent(newState ? KeyDown::Type() : KeyUp::Type(), eventData);
+
+//     if ((key == KEY_RETURN || key == KEY_RETURN2 || key == KEY_KP_ENTER) && newState && !repeat && toggleFullscreen_ &&
+//         (GetKeyDown(KEY_LALT) || GetKeyDown(KEY_RALT)))
+//         graphics_->ToggleFullscreen();
 }
 
 void Input::SetMouseWheel(int delta)
@@ -1772,13 +1793,11 @@ void Input::SetMouseWheel(int delta)
     {
         mouseMoveWheel_ += delta;
 
-        using namespace MouseWheel;
-
-        VariantMap& eventData = GetEventDataMap();
-        eventData[P_WHEEL] = delta;
-        eventData[P_BUTTONS] = mouseButtonDown_;
-        eventData[P_QUALIFIERS] = GetQualifiers();
-        SendEvent(E_MOUSEWHEEL, eventData);
+		MouseWheel eventData;
+        eventData.wheel_ = delta;
+        eventData.buttons_ = mouseButtonDown_;
+        eventData.qualifiers_ = GetQualifiers();
+        SendEvent(eventData);
     }
 }
 
@@ -1842,14 +1861,12 @@ void Input::HandleSDLEvent(void* sdlEvent)
 
     // Possibility for custom handling or suppression of default handling for the SDL event
     {
-        using namespace SDLRawInput;
+		SDLRawInput eventData;
+        eventData.sdlEvent_ = &evt;
+        eventData.consumed_ = false;
+        SendEvent(eventData);
 
-        VariantMap eventData = GetEventDataMap();
-        eventData[P_SDLEVENT] = &evt;
-        eventData[P_CONSUMED] = false;
-        SendEvent(E_SDLRAWINPUT, eventData);
-
-        if (eventData[P_CONSUMED].GetBool())
+        if (eventData.consumed_)
             return;
     }
 
@@ -1865,23 +1882,19 @@ void Input::HandleSDLEvent(void* sdlEvent)
 
     case SDL_TEXTINPUT:
         {
-            using namespace TextInput;
-
-            VariantMap textInputEventData;
-            textInputEventData[P_TEXT] = textInput_ = &evt.text.text[0];
-            SendEvent(E_TEXTINPUT, textInputEventData);
+			TextInput textInputEventData;
+            textInputEventData.text_ = textInput_ = &evt.text.text[0];
+            SendEvent(textInputEventData);
         }
         break;
 
     case SDL_TEXTEDITING:
         {
-            using namespace TextEditing;
-
-            VariantMap textEditingEventData;
-            textEditingEventData[P_COMPOSITION] = &evt.edit.text[0];
-            textEditingEventData[P_CURSOR] = evt.edit.start;
-            textEditingEventData[P_SELECTION_LENGTH] = evt.edit.length;
-            SendEvent(E_TEXTEDITING, textEditingEventData);
+			TextEditing textEditingEventData;
+            textEditingEventData.composition_ = &evt.edit.text[0];
+            textEditingEventData.cursor_ = evt.edit.start;
+            textEditingEventData.selectionLength_ = evt.edit.length;
+            SendEvent(textEditingEventData);
         }
         break;
 
@@ -1889,22 +1902,25 @@ void Input::HandleSDLEvent(void* sdlEvent)
         if (!touchEmulation_)
             SetMouseButton(1 << (evt.button.button - 1), true);
         else
-        {
-            int x, y;
-            SDL_GetMouseState(&x, &y);
-            x = (int)(x * inputScale_.x_);
-            y = (int)(y * inputScale_.y_);
+        {/*
+			uCall
+			(
+				int x, y;
+			SDL_GetMouseState(&x, &y);
+			x = (int)(x * inputScale_.x_);
+			y = (int)(y * inputScale_.y_);
 
-            SDL_Event event;
-            event.type = SDL_FINGERDOWN;
-            event.tfinger.touchId = 0;
-            event.tfinger.fingerId = evt.button.button - 1;
-            event.tfinger.pressure = 1.0f;
-            event.tfinger.x = (float)x / (float)graphics_->GetWidth();
-            event.tfinger.y = (float)y / (float)graphics_->GetHeight();
-            event.tfinger.dx = 0;
-            event.tfinger.dy = 0;
-            SDL_PushEvent(&event);
+			SDL_Event event;
+			event.type = SDL_FINGERDOWN;
+			event.tfinger.touchId = 0;
+			event.tfinger.fingerId = evt.button.button - 1;
+			event.tfinger.pressure = 1.0f;
+			event.tfinger.x = (float)x / (float)graphics_->GetWidth();
+			event.tfinger.y = (float)y / (float)graphics_->GetHeight();
+			event.tfinger.dx = 0;
+			event.tfinger.dy = 0;
+			SDL_PushEvent(&event);
+			);*/
         }
         break;
 
@@ -1912,7 +1928,9 @@ void Input::HandleSDLEvent(void* sdlEvent)
         if (!touchEmulation_)
             SetMouseButton(1 << (evt.button.button - 1), false);
         else
-        {
+		{/*
+			uCall
+			(
             int x, y;
             SDL_GetMouseState(&x, &y);
             x = (int)(x * inputScale_.x_);
@@ -1928,6 +1946,7 @@ void Input::HandleSDLEvent(void* sdlEvent)
             event.tfinger.dx = 0;
             event.tfinger.dy = 0;
             SDL_PushEvent(&event);
+			);*/
         }
         break;
 
@@ -1953,22 +1972,22 @@ void Input::HandleSDLEvent(void* sdlEvent)
 
             if (!suppressNextMouseMove_)
             {
-                using namespace MouseMove;
-
-                VariantMap& eventData = GetEventDataMap();
-                eventData[P_X] = (int)(evt.motion.x * inputScale_.x_);
-                eventData[P_Y] = (int)(evt.motion.y * inputScale_.y_);
+				MouseMove eventData;
+                eventData.x_ = (int)(evt.motion.x * inputScale_.x_);
+                eventData.y_ = (int)(evt.motion.y * inputScale_.y_);
                 // The "on-the-fly" motion data needs to be scaled now, though this may reduce accuracy
-                eventData[P_DX] = (int)(evt.motion.xrel * inputScale_.x_);
-                eventData[P_DY] = (int)(evt.motion.yrel * inputScale_.y_);
-                eventData[P_BUTTONS] = mouseButtonDown_;
-                eventData[P_QUALIFIERS] = GetQualifiers();
-                SendEvent(E_MOUSEMOVE, eventData);
+                eventData.dx_ = (int)(evt.motion.xrel * inputScale_.x_);
+                eventData.dy_ = (int)(evt.motion.yrel * inputScale_.y_);
+                eventData.buttons_ = mouseButtonDown_;
+                eventData.qualifiers_ = GetQualifiers();
+                SendEvent(eventData);
             }
         }
         // Only the left mouse button "finger" moves along with the mouse movement
-        else if (touchEmulation_ && touches_.Contains(0))
-        {
+        else if (touchEmulation_ && touches_.find(0) != touches_.end())
+		{/*
+			uCall
+			(
             int x, y;
             SDL_GetMouseState(&x, &y);
             x = (int)(x * inputScale_.x_);
@@ -1984,6 +2003,7 @@ void Input::HandleSDLEvent(void* sdlEvent)
             event.tfinger.dx = (float)evt.motion.xrel * inputScale_.x_ / (float)graphics_->GetWidth();
             event.tfinger.dy = (float)evt.motion.yrel * inputScale_.y_ / (float)graphics_->GetHeight();
             SDL_PushEvent(&event);
+			);*/
         }
         break;
 
@@ -2003,14 +2023,12 @@ void Input::HandleSDLEvent(void* sdlEvent)
             state.delta_ = IntVector2::ZERO;
             state.pressure_ = evt.tfinger.pressure;
 
-            using namespace TouchBegin;
-
-            VariantMap& eventData = GetEventDataMap();
-            eventData[P_TOUCHID] = touchID;
-            eventData[P_X] = state.position_.x_;
-            eventData[P_Y] = state.position_.y_;
-            eventData[P_PRESSURE] = state.pressure_;
-            SendEvent(E_TOUCHBEGIN, eventData);
+			TouchBegin eventData;
+            eventData.touchID_ = touchID;
+            eventData.x_ = state.position_.x_;
+            eventData.y_ = state.position_.y_;
+            eventData.pressure_ = state.pressure_;
+            SendEvent(eventData);
 
             // Finger touch may move the mouse cursor. Suppress next mouse move when cursor hidden to prevent jumps
             if (!mouseVisible_)
@@ -2024,20 +2042,18 @@ void Input::HandleSDLEvent(void* sdlEvent)
             int touchID = GetTouchIndexFromID(evt.tfinger.fingerId & 0x7ffffff);
             TouchState& state = touches_[touchID];
 
-            using namespace TouchEnd;
-
-            VariantMap& eventData = GetEventDataMap();
+			TouchEnd eventData;
             // Do not trust the position in the finger up event. Instead use the last position stored in the
             // touch structure
-            eventData[P_TOUCHID] = touchID;
-            eventData[P_X] = state.position_.x_;
-            eventData[P_Y] = state.position_.y_;
-            SendEvent(E_TOUCHEND, eventData);
+            eventData.touchID_ = touchID;
+            eventData.x_ = state.position_.x_;
+            eventData.y_ = state.position_.y_;
+            SendEvent(eventData);
 
             // Add touch index back to list of available touch Ids
             PushTouchIndex(evt.tfinger.fingerId & 0x7ffffff);
 
-            touches_.Erase(touchID);
+            touches_.erase(touchID);
         }
         break;
 
@@ -2046,7 +2062,7 @@ void Input::HandleSDLEvent(void* sdlEvent)
         {
             int touchID = GetTouchIndexFromID(evt.tfinger.fingerId & 0x7ffffff);
             // We don't want this event to create a new touches_ event if it doesn't exist (touchEmulation)
-            if (touchEmulation_ && !touches_.Contains(touchID))
+            if (touchEmulation_ && touches_.find(touchID) == touches_.end())
                 break;
             TouchState& state = touches_[touchID];
             state.touchID_ = touchID;
@@ -2055,16 +2071,14 @@ void Input::HandleSDLEvent(void* sdlEvent)
             state.delta_ = state.position_ - state.lastPosition_;
             state.pressure_ = evt.tfinger.pressure;
 
-            using namespace TouchMove;
-
-            VariantMap& eventData = GetEventDataMap();
-            eventData[P_TOUCHID] = touchID;
-            eventData[P_X] = state.position_.x_;
-            eventData[P_Y] = state.position_.y_;
-            eventData[P_DX] = (int)(evt.tfinger.dx * graphics_->GetWidth());
-            eventData[P_DY] = (int)(evt.tfinger.dy * graphics_->GetHeight());
-            eventData[P_PRESSURE] = state.pressure_;
-            SendEvent(E_TOUCHMOVE, eventData);
+			TouchMove eventData;
+            eventData.touchID_ = touchID;
+            eventData.x_ = state.position_.x_;
+            eventData.y_ = state.position_.y_;
+            eventData.dx_ = (int)(evt.tfinger.dx * graphics_->GetWidth());
+            eventData.dy_ = (int)(evt.tfinger.dy * graphics_->GetHeight());
+            eventData.pressure_ = state.pressure_;
+            SendEvent(eventData);
 
             // Finger touch may move the mouse cursor. Suppress next mouse move when cursor hidden to prevent jumps
             if (!mouseVisible_)
@@ -2074,70 +2088,58 @@ void Input::HandleSDLEvent(void* sdlEvent)
 
     case SDL_DOLLARRECORD:
         {
-            using namespace GestureRecorded;
-
-            VariantMap& eventData = GetEventDataMap();
-            eventData[P_GESTUREID] = (int)evt.dgesture.gestureId;
-            SendEvent(E_GESTURERECORDED, eventData);
+			GestureRecorded eventData;
+            eventData.gestureID_ = (int)evt.dgesture.gestureId;
+            SendEvent(eventData);
         }
         break;
 
     case SDL_DOLLARGESTURE:
         {
-            using namespace GestureInput;
-
-            VariantMap& eventData = GetEventDataMap();
-            eventData[P_GESTUREID] = (int)evt.dgesture.gestureId;
-            eventData[P_CENTERX] = (int)(evt.dgesture.x * graphics_->GetWidth());
-            eventData[P_CENTERY] = (int)(evt.dgesture.y * graphics_->GetHeight());
-            eventData[P_NUMFINGERS] = (int)evt.dgesture.numFingers;
-            eventData[P_ERROR] = evt.dgesture.error;
-            SendEvent(E_GESTUREINPUT, eventData);
+			GestureInput eventData;
+            eventData.gestureID_ = (int)evt.dgesture.gestureId;
+            eventData.centerX_ = (int)(evt.dgesture.x * graphics_->GetWidth());
+            eventData.centerY_ = (int)(evt.dgesture.y * graphics_->GetHeight());
+            eventData.numFingers_ = (int)evt.dgesture.numFingers;
+            eventData.error_ = evt.dgesture.error;
+            SendEvent(eventData);
         }
         break;
 
     case SDL_MULTIGESTURE:
         {
-            using namespace MultiGesture;
-
-            VariantMap& eventData = GetEventDataMap();
-            eventData[P_CENTERX] = (int)(evt.mgesture.x * graphics_->GetWidth());
-            eventData[P_CENTERY] = (int)(evt.mgesture.y * graphics_->GetHeight());
-            eventData[P_NUMFINGERS] = (int)evt.mgesture.numFingers;
-            eventData[P_DTHETA] = M_RADTODEG * evt.mgesture.dTheta;
-            eventData[P_DDIST] = evt.mgesture.dDist;
-            SendEvent(E_MULTIGESTURE, eventData);
+			MultiGesture eventData;
+            eventData.centerX_ = (int)(evt.mgesture.x * graphics_->GetWidth());
+            eventData.centerY_ = (int)(evt.mgesture.y * graphics_->GetHeight());
+            eventData.numFingers_ = (int)evt.mgesture.numFingers;
+            eventData.DTheta_ = M_RADTODEG * evt.mgesture.dTheta;
+            eventData.DDist_ = evt.mgesture.dDist;
+            SendEvent(eventData);
         }
         break;
 
     case SDL_JOYDEVICEADDED:
         {
-            using namespace JoystickConnected;
-
             SDL_JoystickID joystickID = OpenJoystick((unsigned)evt.jdevice.which);
 
-            VariantMap& eventData = GetEventDataMap();
-            eventData[P_JOYSTICKID] = joystickID;
-            SendEvent(E_JOYSTICKCONNECTED, eventData);
+			JoystickConnected eventData;
+            eventData.joystickID_ = joystickID;
+            SendEvent(eventData);
         }
         break;
 
     case SDL_JOYDEVICEREMOVED:
         {
-            using namespace JoystickDisconnected;
+            joysticks_.erase(evt.jdevice.which);
 
-            joysticks_.Erase(evt.jdevice.which);
-
-            VariantMap& eventData = GetEventDataMap();
-            eventData[P_JOYSTICKID] = evt.jdevice.which;
-            SendEvent(E_JOYSTICKDISCONNECTED, eventData);
+			JoystickDisconnected eventData;
+            eventData.joystickID_ = evt.jdevice.which;
+            SendEvent(eventData);
         }
         break;
 
     case SDL_JOYBUTTONDOWN:
         {
-            using namespace JoystickButtonDown;
-
             unsigned button = evt.jbutton.button;
             SDL_JoystickID joystickID = evt.jbutton.which;
             JoystickState& state = joysticks_[joystickID];
@@ -2145,15 +2147,15 @@ void Input::HandleSDLEvent(void* sdlEvent)
             // Skip ordinary joystick event for a controller
             if (!state.controller_)
             {
-                VariantMap& eventData = GetEventDataMap();
-                eventData[P_JOYSTICKID] = joystickID;
-                eventData[P_BUTTON] = button;
+				JoystickButtonDown eventData;
+                eventData.joystickID_ = joystickID;
+                eventData.button_ = button;
 
-                if (button < state.buttons_.Size())
+                if (button < state.buttons_.size())
                 {
                     state.buttons_[button] = true;
                     state.buttonPress_[button] = true;
-                    SendEvent(E_JOYSTICKBUTTONDOWN, eventData);
+                    SendEvent(eventData);
                 }
             }
         }
@@ -2161,23 +2163,21 @@ void Input::HandleSDLEvent(void* sdlEvent)
 
     case SDL_JOYBUTTONUP:
         {
-            using namespace JoystickButtonUp;
-
             unsigned button = evt.jbutton.button;
             SDL_JoystickID joystickID = evt.jbutton.which;
             JoystickState& state = joysticks_[joystickID];
 
             if (!state.controller_)
             {
-                VariantMap& eventData = GetEventDataMap();
-                eventData[P_JOYSTICKID] = joystickID;
-                eventData[P_BUTTON] = button;
+				JoystickButtonUp eventData;
+                eventData.joystickID_ = joystickID;
+                eventData.button_ = button;
 
-                if (button < state.buttons_.Size())
+                if (button < state.buttons_.size())
                 {
                     if (!state.controller_)
                         state.buttons_[button] = false;
-                    SendEvent(E_JOYSTICKBUTTONUP, eventData);
+                    SendEvent(eventData);
                 }
             }
         }
@@ -2185,25 +2185,23 @@ void Input::HandleSDLEvent(void* sdlEvent)
 
     case SDL_JOYAXISMOTION:
         {
-            using namespace JoystickAxisMove;
-
             SDL_JoystickID joystickID = evt.jaxis.which;
             JoystickState& state = joysticks_[joystickID];
 
             if (!state.controller_)
             {
-                VariantMap& eventData = GetEventDataMap();
-                eventData[P_JOYSTICKID] = joystickID;
-                eventData[P_AXIS] = evt.jaxis.axis;
-                eventData[P_POSITION] = Clamp((float)evt.jaxis.value / 32767.0f, -1.0f, 1.0f);
+				JoystickAxisMove eventData;
+                eventData.joystickID_ = joystickID;
+                eventData.button_ = evt.jaxis.axis;
+                eventData.position_ = Clamp((float)evt.jaxis.value / 32767.0f, -1.0f, 1.0f);
 
-                if (evt.jaxis.axis < state.axes_.Size())
+                if (evt.jaxis.axis < state.axes_.size())
                 {
                     // If the joystick is a controller, only use the controller axis mappings
                     // (we'll also get the controller event)
                     if (!state.controller_)
-                        state.axes_[evt.jaxis.axis] = eventData[P_POSITION].GetFloat();
-                    SendEvent(E_JOYSTICKAXISMOVE, eventData);
+                        state.axes_[evt.jaxis.axis] = eventData.position_;
+                    SendEvent(eventData);
                 }
             }
         }
@@ -2211,81 +2209,73 @@ void Input::HandleSDLEvent(void* sdlEvent)
 
     case SDL_JOYHATMOTION:
         {
-            using namespace JoystickHatMove;
-
             SDL_JoystickID joystickID = evt.jaxis.which;
             JoystickState& state = joysticks_[joystickID];
 
-            VariantMap& eventData = GetEventDataMap();
-            eventData[P_JOYSTICKID] = joystickID;
-            eventData[P_HAT] = evt.jhat.hat;
-            eventData[P_POSITION] = evt.jhat.value;
+			JoystickHatMove eventData;
+            eventData.joystickID_ = joystickID;
+            eventData.button_ = evt.jhat.hat;
+            eventData.position_ = evt.jhat.value;
 
-            if (evt.jhat.hat < state.hats_.Size())
+            if (evt.jhat.hat < state.hats_.size())
             {
                 state.hats_[evt.jhat.hat] = evt.jhat.value;
-                SendEvent(E_JOYSTICKHATMOVE, eventData);
+                SendEvent(eventData);
             }
         }
         break;
 
     case SDL_CONTROLLERBUTTONDOWN:
         {
-            using namespace JoystickButtonDown;
-
             unsigned button = evt.cbutton.button;
             SDL_JoystickID joystickID = evt.cbutton.which;
             JoystickState& state = joysticks_[joystickID];
 
-            VariantMap& eventData = GetEventDataMap();
-            eventData[P_JOYSTICKID] = joystickID;
-            eventData[P_BUTTON] = button;
+			JoystickButtonDown eventData;
+            eventData.joystickID_ = joystickID;
+            eventData.button_ = button;
 
-            if (button < state.buttons_.Size())
+            if (button < state.buttons_.size())
             {
                 state.buttons_[button] = true;
                 state.buttonPress_[button] = true;
-                SendEvent(E_JOYSTICKBUTTONDOWN, eventData);
+                SendEvent(eventData);
             }
         }
         break;
 
     case SDL_CONTROLLERBUTTONUP:
         {
-            using namespace JoystickButtonUp;
-
             unsigned button = evt.cbutton.button;
             SDL_JoystickID joystickID = evt.cbutton.which;
             JoystickState& state = joysticks_[joystickID];
 
-            VariantMap& eventData = GetEventDataMap();
-            eventData[P_JOYSTICKID] = joystickID;
-            eventData[P_BUTTON] = button;
+			JoystickButtonUp eventData;
+            eventData.joystickID_ = joystickID;
+            eventData.button_ = button;
 
-            if (button < state.buttons_.Size())
+            if (button < state.buttons_.size())
             {
                 state.buttons_[button] = false;
-                SendEvent(E_JOYSTICKBUTTONUP, eventData);
+                SendEvent(eventData);
             }
         }
         break;
 
     case SDL_CONTROLLERAXISMOTION:
         {
-            using namespace JoystickAxisMove;
-
             SDL_JoystickID joystickID = evt.caxis.which;
             JoystickState& state = joysticks_[joystickID];
 
-            VariantMap& eventData = GetEventDataMap();
-            eventData[P_JOYSTICKID] = joystickID;
-            eventData[P_AXIS] = evt.caxis.axis;
-            eventData[P_POSITION] = Clamp((float)evt.caxis.value / 32767.0f, -1.0f, 1.0f);
+			JoystickAxisMove eventData;
+            eventData.joystickID_ = joystickID;
+            eventData.button_	 = evt.caxis.axis;
+            eventData.position_ = Clamp((float)evt.caxis.value / 32767.0f, -1.0f, 1.0f);
 
-            if (evt.caxis.axis < state.axes_.Size())
+            if (evt.caxis.axis < state.axes_.size())
             {
-                state.axes_[evt.caxis.axis] = eventData[P_POSITION].GetFloat();
-                SendEvent(E_JOYSTICKAXISMOVE, eventData);
+                state.axes_[evt.caxis.axis] = eventData.position_;
+                SendEvent(eventData);
             }
         }
         break;
@@ -2310,12 +2300,12 @@ void Input::HandleSDLEvent(void* sdlEvent)
                 SendInputFocusEvent();
                 break;
 
-            case SDL_WINDOWEVENT_RESIZED:
-                graphics_->OnWindowResized();
-                break;
-            case SDL_WINDOWEVENT_MOVED:
-                graphics_->OnWindowMoved();
-                break;
+//             case SDL_WINDOWEVENT_RESIZED:
+//                 graphics_->OnWindowResized();
+//                 break;
+//             case SDL_WINDOWEVENT_MOVED:
+//                 graphics_->OnWindowMoved();
+//                 break;
 
             default: break;
             }
@@ -2324,25 +2314,23 @@ void Input::HandleSDLEvent(void* sdlEvent)
 
     case SDL_DROPFILE:
         {
-            using namespace DropFile;
-
-            VariantMap& eventData = GetEventDataMap();
-            eventData[P_FILENAME] = GetInternalPath(String(evt.drop.file));
+			DropFile eventData;
+            eventData.fileName_ = GetInternalPath(String(evt.drop.file));
             SDL_free(evt.drop.file);
 
-            SendEvent(E_DROPFILE, eventData);
+            SendEvent(eventData);
         }
         break;
 
     case SDL_QUIT:
-        SendEvent(E_EXITREQUESTED);
+        SendEvent(ExitRequested());
         break;
 
     default: break;
     }
 }
 
-void Input::HandleScreenMode(StringHash eventType, VariantMap& eventData)
+void Input::HandleScreenMode(const ScreenMode& eventData)
 {
     if (!initialized_)
         Initialize();
@@ -2353,15 +2341,15 @@ void Input::HandleScreenMode(StringHash eventType, VariantMap& eventData)
     windowID_ = SDL_GetWindowID(window);
 
     // Resize screen joysticks to new screen size
-    for (HashMap<SDL_JoystickID, JoystickState>::Iterator i = joysticks_.Begin(); i != joysticks_.End(); ++i)
+    for (auto i = joysticks_.begin(); i != joysticks_.end(); ++i)
     {
-        UIElement* screenjoystick = i->second_.screenJoystick_;
-        if (screenjoystick)
-            screenjoystick->SetSize(graphics_->GetWidth(), graphics_->GetHeight());
+        UIElement* screenjoystick = i->second.screenJoystick_;
+//         if (screenjoystick)
+//             screenjoystick->SetSize(graphics_->GetWidth(), graphics_->GetHeight());
     }
 
-    if (graphics_->GetFullscreen() || !mouseVisible_)
-        focusedThisFrame_ = true;
+//     if (graphics_->GetFullscreen() || !mouseVisible_)
+//         focusedThisFrame_ = true;
 
     // After setting a new screen mode we should not be minimized
     minimized_ = (SDL_GetWindowFlags(window) & SDL_WINDOW_MINIMIZED) != 0;
@@ -2380,16 +2368,16 @@ void Input::HandleScreenMode(StringHash eventType, VariantMap& eventData)
         inputScale_ = Vector2::ONE;
 }
 
-void Input::HandleBeginFrame(StringHash eventType, VariantMap& eventData)
+void Input::HandleBeginFrame(const BeginFrame& eventData)
 {
     // Update input right at the beginning of the frame
-    SendEvent(E_INPUTBEGIN);
+    SendEvent(InputBegin());
     Update();
-    SendEvent(E_INPUTEND);
+    SendEvent(InputEnd());
 }
 
 #ifdef __EMSCRIPTEN__
-void Input::HandleEndFrame(StringHash eventType, VariantMap& eventData)
+void Input::HandleEndFrame(const EndFrame& eventData)
 {
     if (suppressNextMouseMove_ && mouseMove_ != IntVector2::ZERO)
         UnsuppressMouseMove();
@@ -2398,12 +2386,11 @@ void Input::HandleEndFrame(StringHash eventType, VariantMap& eventData)
 }
 #endif
 
-void Input::HandleScreenJoystickTouch(StringHash eventType, VariantMap& eventData)
+void Input::HandleScreenJoystickTouch(const TouchBegin& eventData)
 {
-    using namespace TouchBegin;
-
     // Only interested in events from screen joystick(s)
-    TouchState& state = touches_[eventData[P_TOUCHID].GetInt()];
+    TouchState& state = touches_[eventData.touchID_];
+#if false
     IntVector2 position(int(state.position_.x_ / GetSubsystem<UI>()->GetScale()), int(state.position_.y_ / GetSubsystem<UI>()->GetScale()));
     UIElement* element = eventType == E_TOUCHBEGIN ? GetSubsystem<UI>()->GetElementAt(position) : state.touchedElement_;
     if (!element)
@@ -2537,6 +2524,7 @@ void Input::HandleScreenJoystickTouch(StringHash eventType, VariantMap& eventDat
 
     // Handle the fake SDL event to turn it into Unique genuine event
     HandleSDLEvent(&evt);
+#endif
 }
 
 bool Input::ProcessEvents()
@@ -2564,13 +2552,11 @@ bool Input::ProcessEvents()
 			switch (event.window.event)
 			{
 			case SDL_WINDOWEVENT_RESIZED:
-				SDL_Log("Window %d resized to %dx%d",
-					event.window.windowID, event.window.data1,
-					event.window.data2);
-
-				GetSubsystem<Graphics>().Resize(IntVector2(event.window.data1, event.window.data2));
+				graphics_->Resize(IntVector2(event.window.data1, event.window.data2));
 				break;
-
+			case SDL_WINDOWEVENT_MOVED:
+				//graphics_->OnWindowMoved();
+				break;
 			default:
 				//SDL_Log("Window %d event %d",
 				//	event.window.windowID, event.window.event);
@@ -2588,4 +2574,5 @@ bool Input::ProcessEvents()
 
 	return true;
 }
+
 }
