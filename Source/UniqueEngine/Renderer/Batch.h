@@ -33,8 +33,7 @@ namespace Unique
 		Batch(const SourceBatch& rhs);
 		
 		/// Construct from transient buffer.
-		Batch(const TransientVertexBuffer& tvb, Material* material, Matrix3x4* worldTransform = nullptr);
-		Batch(const TransientVertexBuffer& tvb, const TransientIndexBuffer& tib, Material* material, Matrix3x4* worldTransform = nullptr);
+		Batch(Geometry* geometry, Material* material, Matrix3x4* worldTransform = nullptr);
 
 		/// Calculate state sorting key, which consists of base pass flag, light, pass and geometry.
 		void CalculateSortKey();
@@ -58,15 +57,13 @@ namespace Unique
 
 		PrimitiveTopology primitiveTopology_;
 		
-		VertexBuffer* vertexBuffers_[4];
-		IndexBuffer* indexBuffer_ = nullptr;
+		//VertexBuffer* vertexBuffers_[4];
+		//IndexBuffer* indexBuffer_ = nullptr;
 		uint vertexOffset_;
 		uint vertexCount_;
 		uint indexOffset_;
 		uint indexCount_;
 
-		//TransientVertexBuffer transientVB_;
-		//TransientIndexBuffer transientIB_;
 		/// Geometry.
 		Geometry* geometry_ = nullptr;
 		/// Material.

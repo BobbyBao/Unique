@@ -249,6 +249,9 @@ namespace Unique
 		scenePasses.clear();
 		geometriesUpdated_ = false;
 
+		auto& batchMatrics = MainContext(batchMatrics_);
+		batchMatrics.clear();
+
 		auto& batchQueues = MainContext(batchQueues_);
 
 		auto& renderPasses = renderPath_->GetRenderPasses();
@@ -305,8 +308,9 @@ namespace Unique
 	//	renderTargets_.Clear();
 		geometries_.clear();
 		lights_.clear();
-
+		
 		auto& batchQueues = MainContext(batchQueues_);
+
 		for (auto i = batchQueues.begin(); i != batchQueues.end(); ++i)
 			i->second.Clear(maxSortedInstances);
 
@@ -613,6 +617,9 @@ namespace Unique
 	size_t View::GetMatrics(const Matrix3x4* transform, uint num)
 	{
 		auto& batchMatrics = MainContext(batchMatrics_);
+		batchMatrics.resize(1);
+		std::memcpy(&batchMatrics[0], transform, num * sizeof(Matrix3x4));
+		return 0;
 		size_t offset = batchMatrics.size();
 		size_t newSize = offset + num;
 		size_t cap = batchMatrics.capacity();

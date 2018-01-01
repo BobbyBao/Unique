@@ -76,8 +76,9 @@ namespace Unique
 				return false;
 			}
 
+			return true;
 		}
-
+		
 		String name = GetFileName(owner_.GetName());
 		String extension;
 

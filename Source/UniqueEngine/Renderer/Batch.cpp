@@ -148,56 +148,29 @@ namespace Unique
 		instancingData_(rhs.instancingData_),
 		geometryType_(rhs.geometryType_)
 	{
-		uint i = 0;
-		for (; i < rhs.geometry_->GetNumVertexBuffers(); i++)
-		{
-			vertexBuffers_[i] = rhs.geometry_->GetVertexBuffer(i);
-		}
-
-		if (i < 3)
-		{
-			vertexBuffers_[i + 1] = nullptr;
-		}
-
+		assert(worldTransform_);
 		vertexOffset_ = rhs.geometry_->GetVertexStart();
-		vertexCount_ = rhs.geometry_->GetVertexCount();
-		indexBuffer_ = rhs.geometry_->GetIndexBuffer();
+		vertexCount_ = rhs.geometry_->GetVertexCount();		
 		indexOffset_ = rhs.geometry_->GetIndexStart();
 		indexCount_ = rhs.geometry_->GetIndexCount();
 	}
 
 	/// Construct from transient buffer.
-	Batch::Batch(const TransientVertexBuffer& tvb, Material* material, Matrix3x4* worldTransform) :
+	Batch::Batch(Geometry* geometry, Material* material, Matrix3x4* worldTransform) :
 		isBase_(true),
-		geometry_(nullptr),
+		geometry_(geometry),
 		material_(material),
 		worldTransform_(worldTransform),
 		numWorldTransforms_(1),
 		instancingData_(nullptr),
 		geometryType_(GEOM_TRANSIENT)
 	{
-		vertexBuffers_[0] = tvb.vertexBuffer_;
-		vertexOffset_ = tvb.offset_;
-		vertexCount_ = tvb.count_;
+		vertexOffset_ = 0;
+		vertexCount_ = 0;
+		indexOffset_ = 0;
+		indexCount_ = 0;
 	}
-
-	Batch::Batch(const TransientVertexBuffer& tvb, const TransientIndexBuffer& tib, Material* material, Matrix3x4* worldTransform) :
-		isBase_(true),
-		geometry_(nullptr),
-		material_(material),
-		worldTransform_(worldTransform),
-		numWorldTransforms_(1),
-		instancingData_(nullptr),
-		geometryType_(GEOM_TRANSIENT)
-	{
-		vertexBuffers_[0] = tvb.vertexBuffer_;
-		vertexOffset_ = tvb.offset_;
-		vertexCount_ = tvb.count_;
-		indexBuffer_ = tib.indexBuffer_;
-		indexOffset_ = tib.offset_;
-		indexCount_ = tib.count_;
-	}
-
+	
 	void Batch::CalculateSortKey()
 	{
 		unsigned shaderID = *((unsigned*)&pipelineState_) / sizeof(PipelineState);
@@ -606,11 +579,12 @@ namespace Unique
 	{
 		auto& graphics = GetSubsystem<Graphics>();
 
-		if (geometry_ && !geometry_->IsEmpty())
+		if (!geometry_->IsEmpty())
 		{
 			Prepare(view, camera, true);
 			geometry_->Draw(pipelineState_);
 		}
+		/*
 		else if (vertexBuffers_[0])
 		{
 			Prepare(view, camera, true);
@@ -654,7 +628,7 @@ namespace Unique
 			deviceContext->CommitShaderResources(pipelineState_->GetShaderResourceBinding(), COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
 
 			deviceContext->Draw(drawAttribs);
-		}
+		}*/
 	}
 
 
@@ -729,6 +703,7 @@ namespace Unique
 		batches_.clear();
 		sortedBatches_.clear();
 		batchGroups_.clear();
+		sortedBatchGroups_.clear();
 		maxSortedInstances_ = (unsigned)maxSortedInstances;
 	}
 

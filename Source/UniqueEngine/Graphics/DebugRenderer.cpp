@@ -40,6 +40,9 @@ DebugRenderer::DebugRenderer() : lineAntiAlias_(false)
     Subscribe(&DebugRenderer::HandleEndFrame);
 
 	vertexBuffer_ = new VertexBuffer();
+	geometry_ = new Geometry();
+	geometry_->SetNumVertexBuffers(1);
+	geometry_->SetVertexBuffer(0, vertexBuffer_);
 
 	ResourceCache& cache = GetSubsystem<ResourceCache>();
 
@@ -569,12 +572,12 @@ void DebugRenderer::Render(View* view)
 	uint count = 0;
 		
 	Batch batch;
+	batch.geometry_ = geometry_;
 	batch.worldTransform_ = &GetNode()->GetWorldTransform();
 	batch.numWorldTransforms_ = 1;
 	batch.geometryType_ = GEOM_TRANSIENT;
 	batch.isBase_ = true;
 	batch.material_ = material_;
-	batch.vertexBuffers_[0] = vertexBuffer_;
 
 	batch.primitiveTopology_ = PrimitiveTopology::LINE_LIST;
 	batch.pipelineState_ = pipelineDepth_;
