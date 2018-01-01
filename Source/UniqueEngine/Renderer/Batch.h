@@ -57,8 +57,6 @@ namespace Unique
 
 		PrimitiveTopology primitiveTopology_;
 		
-		//VertexBuffer* vertexBuffers_[4];
-		//IndexBuffer* indexBuffer_ = nullptr;
 		uint vertexOffset_;
 		uint vertexCount_;
 		uint indexOffset_;

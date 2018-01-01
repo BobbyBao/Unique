@@ -529,6 +529,7 @@ namespace Unique
 				}
 			}
 		}
+
 	}
 
 
@@ -617,9 +618,6 @@ namespace Unique
 	size_t View::GetMatrics(const Matrix3x4* transform, uint num)
 	{
 		auto& batchMatrics = MainContext(batchMatrics_);
-		batchMatrics.resize(1);
-		std::memcpy(&batchMatrics[0], transform, num * sizeof(Matrix3x4));
-		return 0;
 		size_t offset = batchMatrics.size();
 		size_t newSize = offset + num;
 		size_t cap = batchMatrics.capacity();

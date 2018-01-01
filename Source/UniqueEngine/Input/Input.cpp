@@ -1530,7 +1530,7 @@ void Input::Initialize()
     ResetJoysticks();
     ResetState();
 
-    Subscribe(&Input::HandleBeginFrame);
+    //Subscribe(&Input::HandleBeginFrame);
 #ifdef __EMSCRIPTEN__
     Subscribe(&Input::HandleEndFrame);
 #endif

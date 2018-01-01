@@ -348,19 +348,32 @@ void Context::ThreadFunction()
 		{
 			UNIQUE_PROFILE(Update);
 
-			Unique::Update eventData;
-			eventData.timeStep_ = timeStep_;
+			{
+				Unique::Update eventData;
+				eventData.timeStep_ = timeStep_;
+				SendEvent(eventData);
+			}
 
-			SendEvent(eventData);
+			{
+				Unique::PostUpdate eventData;
+				eventData.timeStep_ = timeStep_;
+				// Logic post-update event
+				SendEvent((const PostUpdate&)eventData);
+			}
 
-			// Logic post-update event
-			SendEvent((const PostUpdate&)eventData);
+			{
+				Unique::RenderUpdate eventData;
+				eventData.timeStep_ = timeStep_;
+				// Rendering update event
+				SendEvent((const RenderUpdate&)eventData);
+			}
 
-			// Rendering update event
-			SendEvent((const RenderUpdate&)eventData);
-
-			// Post-render update event
-			SendEvent((const PostRenderUpdate&) eventData);
+			{
+				Unique::PostRenderUpdate eventData;
+				eventData.timeStep_ = timeStep_;
+				// Post-render update event
+				SendEvent((const PostRenderUpdate&) eventData);
+			}
 		}
 
 		ApplyFrameLimit();

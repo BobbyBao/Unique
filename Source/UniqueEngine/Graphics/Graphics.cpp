@@ -190,7 +190,6 @@ namespace Unique
 			SwapContext();
 
 			RenderSemPost();
-
 		}
 	}
 
