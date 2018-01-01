@@ -41,7 +41,6 @@ public:
     /// Check current instance is type of specified class.
     template<typename T> bool IsInstanceOf() const { return IsInstanceOf(T::GetTypeInfoStatic()); }
 
-
 	/// Send event with parameters to all subscribers.
 	template<class E>
 	void SendEvent(const E& eventData)
@@ -53,7 +52,6 @@ public:
 	void SendEvent(const StringID& eventType);
 	/// Send event with parameters to all subscribers.
 	void SendEvent(const StringID& eventType, const Event& eventData);
-	
     /// Return whether has subscribed to an event without specific sender.
     bool HasSubscribed(StringID eventType) const;
     /// Return whether has subscribed to a specific sender's event.

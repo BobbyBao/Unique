@@ -74,10 +74,10 @@ public:
     ~Context();
 
 	/// Create an object by type. Return pointer to it or null if no factory found.
-// 	template <class T> inline SPtr<T> CreateObject()
-// 	{
-// 		return StaticCast<T>(CreateObject(T::GetTypeStatic()));
-// 	}
+	template <class T> inline SPtr<T> CreateObject()
+	{
+		return StaticCast<T>(CreateObject(T::GetTypeStatic()));
+	}
 	/// Create an object by type hash. Return pointer to it or null if no factory found.
 	SPtr<Object> CreateObject(const StringID& objectType);
 	/// Register a factory for an object type.

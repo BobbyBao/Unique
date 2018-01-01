@@ -68,6 +68,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Application\Application.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Export\CoreExport.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Export\GraphicsExport.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Export\RendererExport.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Input\Controls.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Input\Input.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Importers\DDSLoader.cpp" />
