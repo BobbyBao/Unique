@@ -202,7 +202,6 @@ namespace Unique
 	void Graphics::Close()
 	{
 		MainSemWait();
-		//FrameNoRenderWait();
 		RenderSemPost();
 	}
 

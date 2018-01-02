@@ -25,7 +25,8 @@ namespace Unique
 		const StringID& GetType() const { return type_; }
 		/// Return base type info.
 		const TypeInfo* GetBaseTypeInfo() const { return baseTypeInfo_; }
-		
+
+		void Transfer(Serializer& serializer, void* obj) const;
 		/*
 		template<class C, class T>
 		void RegisterAttribute(const char* name, T C::* m, AttributeFlag flag = AttributeFlag::Default)
@@ -83,13 +84,17 @@ namespace Unique
 		static void RegisterTypeInfo();
 		static int GetAllTypeInfo(TypeInfo** typeInfos);
 		static TypeInfo* GetTypeInfo(const StringID& type);
-	private:
 
+	private:
 		static const char* GetTypeName(const char* name)
 		{
 			const char* p = std::strrchr(name, ':');
 			return p ? ++p : name;
 		}
+
+		uint GetAttributeCount(void* obj) const;
+		void TransferImpl(Serializer& serializer, void* obj) const;
+
 
 		/// Type.
 		StringID type_;
@@ -143,8 +148,6 @@ static void typeName##RegisterObject(Context* context) {typeName::RegisterObject
 
 #define uMixedAccessor(name, getFunction, setFunction, ...)\
 	typeInfo->RegisterMixedAccessor(name, &ClassName::getFunction, &ClassName::setFunction, ##__VA_ARGS__);
-	
-//	static Unique::TypeInfo typeName##TypeInfoStatic(#typeName, nullptr); \
 
 #define uStruct(typeName)\
 	template<class ClassName>\

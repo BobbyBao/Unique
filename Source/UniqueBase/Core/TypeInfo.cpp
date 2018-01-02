@@ -55,6 +55,69 @@ namespace Unique
 
 		return false;
 	}
+	
+	void TypeInfo::Transfer(Serializer& serializer, void* obj) const
+	{
+		uint attributeCount = 0;
+
+		if (serializer.IsWriting())
+		{
+			attributeCount += GetAttributeCount(obj);
+
+			const TypeInfo* baseTypeInfo = GetBaseTypeInfo();
+			while (baseTypeInfo)
+			{
+				attributeCount += baseTypeInfo->GetAttributeCount(obj);
+				baseTypeInfo = baseTypeInfo->GetBaseTypeInfo();
+			}
+
+		}
+
+		serializer.StartObject(attributeCount + 1);
+
+		if (serializer.IsWriting())
+		{
+			StringID tmp = GetType();
+
+			serializer.TransferAttribute("Type", tmp, AttributeFlag::FileWrite);
+		}
+
+		TransferImpl(serializer, obj);
+
+		serializer.EndObject();
+	}
+
+	uint TypeInfo::GetAttributeCount(void* obj) const
+	{
+		uint count = 0;
+		auto& attributes = GetAttributes();
+		for (Attribute* attri : attributes)
+		{
+			if (!attri->IsDefault(obj))
+			{
+				count++;
+			}
+		}
+		return count;
+	}
+
+	void TypeInfo::TransferImpl(Serializer& serializer, void* obj) const
+	{
+		const TypeInfo* baseTypeInfo = GetBaseTypeInfo();
+		if (baseTypeInfo)
+		{
+			baseTypeInfo->TransferImpl(serializer, obj);
+		}
+
+		auto& attributes = GetAttributes();
+		for (Attribute* attri : attributes)
+		{
+			if (!attri->IsDefault(obj))
+			{
+				attri->Visit(serializer, obj);
+			}
+		}
+	}
 
 	void TypeInfo::RegisterAttribute(Attribute* attr)
 	{

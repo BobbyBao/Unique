@@ -1,6 +1,7 @@
 #pragma once
 #include "Texture.h"
 #include <RefCntAutoPtr.h>
+#include <Sampler.h>
 
 namespace Unique
 {
@@ -100,6 +101,16 @@ namespace Unique
 		StringID name_;
 		ResourceRef texAttr_;
 		SPtr<Texture> texture_;
+		Diligent::RefCntWeakPtr<IShaderVariable> shaderVarible_;
+		
+		uClass("Name", name_, "Texture", texAttr_)
+	};
+
+	class Sampler
+	{		
+	public:
+		StringID name_;
+		Diligent::SamplerDesc desc_;
 		Diligent::RefCntWeakPtr<IShaderVariable> shaderVarible_;
 		
 		uClass("Name", name_, "Texture", texAttr_)
