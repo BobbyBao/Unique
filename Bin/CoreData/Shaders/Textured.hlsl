@@ -6,8 +6,8 @@
 void VS(
 		float4 iPos : ATTRIB0, 
         float2 iTexCoord : ATTRIB1,
-		out float4 oPos : OUTPOSITION,
-        out float2 oTexCoord : TEXCOORD0
+        out float2 oTexCoord : TEXCOORD0,
+		out float4 oPos : OUTPOSITION
     ) 
 {
     float4x3 modelMatrix = iModelMatrix;

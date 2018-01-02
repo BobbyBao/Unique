@@ -5,6 +5,7 @@
 #include "GraphicsBuffer.h"
 #include "GraphicsEvents.h"
 #include <iostream>
+#include <Errors.h>
 
 using namespace Diligent;
 
@@ -69,14 +70,15 @@ namespace Unique
 	void Graphics::Resize(const IntVector2& size)
 	{
 		resolution_ = size;
+
 		ScreenMode eventData;
-			eventData.width_ = size.x_;
-			eventData.height_ = size.y_;
+		eventData.width_ = size.x_;
+		eventData.height_ = size.y_;
 // 			eventData.fullscreen_ = fullscreen_;
 // 			eventData.resizable_ = resizable_;
 // 			eventData.borderless_ = borderless_;
 // 			eventData.highDPI_ = highDPI_;
-			SendEvent(eventData);
+		SendEvent(eventData);
 
 		uCall
 		(
@@ -122,14 +124,7 @@ namespace Unique
 		return (deviceType_ == DeviceType::OpenGL || deviceType_ == DeviceType::OpenGLES);
 	}
 
-	void Graphics::Frame()
-	{
-		RenderSemWait();
-
-		FrameNoRenderWait();
-	}
-
-	void Graphics::AddResource(const Char *Name, GPUObject* pObject, bool bIsUnique)
+	void Graphics::AddResource(const char *Name, GPUObject* pObject, bool bIsUnique)
 	{
 		uCall
 		(
@@ -137,7 +132,7 @@ namespace Unique
 		);
 	}
 
-	void Graphics::AddResource(const Char *Name, IDeviceObject *pObject, bool bIsUnique)
+	void Graphics::AddResource(const char *Name, IDeviceObject *pObject, bool bIsUnique)
 	{
 		uCall
 		(
@@ -145,7 +140,7 @@ namespace Unique
 		);
 	}
 
-	void Graphics::AddResourceArray(const Char *Name, uint StartIndex, IDeviceObject* const* ppObjects, uint NumElements, bool bIsUnique)
+	void Graphics::AddResourceArray(const char *Name, uint StartIndex, IDeviceObject* const* ppObjects, uint NumElements, bool bIsUnique)
 	{
 		uCall
 		(
@@ -153,7 +148,7 @@ namespace Unique
 		);
 	}
 
-	void Graphics::RemoveResourceByName(const Char *Name, uint ArrayIndex)
+	void Graphics::RemoveResourceByName(const char *Name, uint ArrayIndex)
 	{
 		uCall
 		(
@@ -171,6 +166,15 @@ namespace Unique
 		shaderResourceBinding->BindResources(shaderFlags, resourceMapping_, flags);
 	}
 
+	void Graphics::Frame()
+	{
+		RenderSemWait();
+
+		//LOG_INFO_MESSAGE("Update");
+
+		FrameNoRenderWait();
+	}
+
 	void Graphics::BeginRender()
 	{
 		GPUObject::UpdateBuffers();
@@ -186,6 +190,8 @@ namespace Unique
 				UNIQUE_PROFILE(ExecCommands);
 				ExecuteCommands(comands_);
 			}
+
+			//LOG_INFO_MESSAGE("Render");
 
 			SwapContext();
 
@@ -227,6 +233,7 @@ namespace Unique
 
 	void Graphics::FrameNoRenderWait()
 	{
+		//SwapContext();
 		// release render thread
 		MainSemPost();
 	}

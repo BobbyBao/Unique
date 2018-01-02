@@ -63,17 +63,16 @@ namespace Unique
 		bool IsOpenGL() const;
 
 		//***MainThread***
-		void Frame();
-
 		void AddResource(const char *Name, GPUObject* pObject, bool bIsUnique = true);
 		void AddResource(const char *Name, IDeviceObject *pObject, bool bIsUnique);   
 		void AddResourceArray(const char *Name, uint StartIndex, IDeviceObject* const* ppObjects, uint NumElements, bool bIsUnique);
 		void RemoveResourceByName(const char *Name, uint ArrayIndex = 0);
 		void BindShaderResources(IPipelineState* pipelineState, uint flags);
 		void BindResources(IShaderResourceBinding* shaderResourceBinding, uint shaderFlags, uint flags);
+		void Frame();
 		//****************
 
-		//Execute in render thread
+		//Render thread
 		void BeginRender();
 		void EndRender();
 		void Close();
