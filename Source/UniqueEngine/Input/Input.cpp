@@ -326,7 +326,7 @@ Input::Input() :
     inputScale_(Vector2::ONE),
     windowID_(0),
     toggleFullscreen_(true),
-    mouseVisible_(false),
+    mouseVisible_(true),
     lastMouseVisible_(false),
     mouseGrabbed_(false),
     lastMouseGrabbed_(false),
@@ -385,6 +385,12 @@ void Input::Update()
 //     SDL_Event evt;
 //     while (SDL_PollEvent(&evt))
 //         HandleSDLEvent(&evt);
+
+	auto& events = MainContext(events_);
+	for (auto& evt : events)
+	{
+		HandleSDLEvent(&evt);
+	}
 
     if (suppressNextMouseMove_ && (mouseMove_ != IntVector2::ZERO || mouseMoved))
         UnsuppressMouseMove();
@@ -1161,11 +1167,12 @@ void Input::SetScreenJoystickVisible(SDL_JoystickID id, bool enable)
 
 void Input::SetScreenKeyboardVisible(bool enable)
 {
+	int intEnable = enable;
 	uCall
 	(
-		if (enable != SDL_IsTextInputActive())
+		if (intEnable != SDL_IsTextInputActive())
 		{
-			if (enable)
+			if (intEnable)
 				SDL_StartTextInput();
 			else
 				SDL_StopTextInput();
@@ -1423,7 +1430,7 @@ int Input::GetMouseMoveX() const
 int Input::GetMouseMoveY() const
 {
     if (!suppressNextMouseMove_)
-        return mouseMoveScaled_ ? mouseMove_.y_ : mouseMove_.y_ * inputScale_.y_;
+        return mouseMoveScaled_ ? mouseMove_.y_ : int(mouseMove_.y_ * inputScale_.y_);
     else
         return 0;
 }
@@ -1477,12 +1484,12 @@ bool Input::IsScreenJoystickVisible(SDL_JoystickID id) const
 
 bool Input::GetScreenKeyboardSupport() const
 {
-    return SDL_HasScreenKeyboardSupport();
+    return SDL_HasScreenKeyboardSupport() != 0;
 }
 
 bool Input::IsScreenKeyboardVisible() const
 {
-    return SDL_IsTextInputActive();
+    return SDL_IsTextInputActive() != 0;
 }
 
 bool Input::IsMouseLocked() const
@@ -1530,7 +1537,7 @@ void Input::Initialize()
     ResetJoysticks();
     ResetState();
 
-    //Subscribe(&Input::HandleBeginFrame);
+    Subscribe(&Input::HandleBeginFrame);
 #ifdef __EMSCRIPTEN__
     Subscribe(&Input::HandleEndFrame);
 #endif
@@ -1782,9 +1789,6 @@ void Input::SetKey(int key, int scancode, bool newState)
 
     SendEvent(newState ? KeyDown::Type() : KeyUp::Type(), eventData);
 
-//     if ((key == KEY_RETURN || key == KEY_RETURN2 || key == KEY_KP_ENTER) && newState && !repeat && toggleFullscreen_ &&
-//         (GetKeyDown(KEY_LALT) || GetKeyDown(KEY_RALT)))
-//         graphics_->ToggleFullscreen();
 }
 
 void Input::SetMouseWheel(int delta)
@@ -2529,6 +2533,9 @@ void Input::HandleScreenJoystickTouch(const TouchBegin& eventData)
 
 bool Input::ProcessEvents()
 {
+	auto& events = RenderContext(events_);
+	events.clear();
+
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
 	{
@@ -2536,17 +2543,16 @@ bool Input::ProcessEvents()
 		{
 		case SDL_KEYDOWN:
 		case SDL_KEYUP:
-			events_.push_back(event);
+			events.push_back(event);
 			break;
 		case SDL_TEXTEDITING:
-			events_.push_back(event);
+			events.push_back(event);
 			break;
-			events_.push_back(event);
 		case SDL_TEXTINPUT:
-			events_.push_back(event);
+			events.push_back(event);
 			break;
 		case SDL_MOUSEBUTTONDOWN:
-			events_.push_back(event);
+			events.push_back(event);
 			break;
 		case SDL_WINDOWEVENT:
 			switch (event.window.event)
@@ -2558,8 +2564,6 @@ bool Input::ProcessEvents()
 				//graphics_->OnWindowMoved();
 				break;
 			default:
-				//SDL_Log("Window %d event %d",
-				//	event.window.windowID, event.window.event);
 				break;
 			}
 			break;
@@ -2567,7 +2571,7 @@ bool Input::ProcessEvents()
 			return false;
 			break;
 		default:
-			events_.push_back(event);
+			events.push_back(event);
 			break;
 		}
 	}

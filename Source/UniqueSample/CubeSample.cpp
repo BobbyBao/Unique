@@ -161,8 +161,7 @@ namespace Unique
 		SPtr<VertexBuffer> pVertexBuffer(new VertexBuffer());
 		pVertexBuffer->Create(std::move(vertices));
 
-		SPtr<IndexBuffer> pIndexBuffer(new IndexBuffer());
-		pIndexBuffer->Create(std::move(indices));
+		SPtr<IndexBuffer> pIndexBuffer(new IndexBuffer(std::move(indices)));
 
 		SPtr<Geometry> geo(new Geometry());
 		geo->SetNumVertexBuffers(1);

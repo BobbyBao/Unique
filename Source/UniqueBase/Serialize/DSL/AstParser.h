@@ -32,10 +32,10 @@ namespace Unique
 	};
 
 
-	class AstParser
+	class ASTParser
 	{
 	public:
-		AstParser();
+		ASTParser();
 
 		bool Parse(const String& str);
 		bool Parse(const char* buf, size_t size);

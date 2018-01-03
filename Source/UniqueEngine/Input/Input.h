@@ -432,7 +432,7 @@ private:
     /// Flag indicating current pointer-lock status.
     bool emscriptenPointerLock_;
 #endif
-	Vector<SDL_Event> events_;
+	Vector<SDL_Event> events_[2];
 };
 
 }

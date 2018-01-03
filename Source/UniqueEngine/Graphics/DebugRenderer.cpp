@@ -571,16 +571,11 @@ void DebugRenderer::Render(View* view)
 	uint start = 0;
 	uint count = 0;
 		
-	Batch batch;
-	batch.geometry_ = geometry_;
-	batch.worldTransform_ = &GetNode()->GetWorldTransform();
-	batch.numWorldTransforms_ = 1;
-	batch.geometryType_ = GEOM_TRANSIENT;
-	batch.isBase_ = true;
-	batch.material_ = material_;
+	Batch batch(geometry_, material_, &GetNode()->GetWorldTransform());
 
 	batch.primitiveTopology_ = PrimitiveTopology::LINE_LIST;
 	batch.pipelineState_ = pipelineDepth_;
+
 	if (lines_.size() > 0)
 	{
 		count = (uint)lines_.size() * 2;
@@ -594,6 +589,7 @@ void DebugRenderer::Render(View* view)
 
 	batch.primitiveTopology_ = PrimitiveTopology::LINE_LIST;
 	batch.pipelineState_ = pipelineNoDepth_;
+
 	if (noDepthLines_.size() > 0)
 	{
 		count = (uint)noDepthLines_.size() * 2;

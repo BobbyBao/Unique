@@ -33,7 +33,7 @@ namespace Unique
 		Batch(const SourceBatch& rhs);
 		
 		/// Construct from transient buffer.
-		Batch(Geometry* geometry, Material* material, Matrix3x4* worldTransform = nullptr);
+		Batch(Geometry* geometry, Material* material, const Matrix3x4* worldTransform = nullptr);
 
 		/// Calculate state sorting key, which consists of base pass flag, light, pass and geometry.
 		void CalculateSortKey();
@@ -56,7 +56,6 @@ namespace Unique
 		bool isBase_;
 
 		PrimitiveTopology primitiveTopology_;
-		
 		uint vertexOffset_;
 		uint vertexCount_;
 		uint indexOffset_;
@@ -80,6 +79,7 @@ namespace Unique
 		void* instancingData_;
 		/// Material pass.
 		Pass* pass_;
+
 		PipelineState*  pipelineState_;
 	};
 

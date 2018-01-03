@@ -1,6 +1,6 @@
 #pragma once
 #include "Serializer.h"
-#include "Serialize/DSL/AstParser.h"
+#include "Serialize/DSL/ASTParser.h"
 
 namespace Unique
 {
@@ -42,7 +42,7 @@ namespace Unique
 		virtual void TransferPrimitive(Color& data);
 		virtual void TransferPrimitive(Quaternion& data);
 	private:
-		AstParser parser_;
+		ASTParser parser_;
 		AstNode nameNode_;
 		AstNode* currentNode_ = nullptr;
 		Vector<AstNode*> parentNode_;

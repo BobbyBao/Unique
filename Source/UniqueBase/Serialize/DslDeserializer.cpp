@@ -33,7 +33,7 @@ namespace Unique
 			return false;
 		}
 
-		parser_.Print();
+		//parser_.Print();
  		currentNode_ = parser_.root_[0].get();
 		return true;
 	}

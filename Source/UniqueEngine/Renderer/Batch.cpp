@@ -156,7 +156,7 @@ namespace Unique
 	}
 
 	/// Construct from transient buffer.
-	Batch::Batch(Geometry* geometry, Material* material, Matrix3x4* worldTransform) :
+	Batch::Batch(Geometry* geometry, Material* material, const Matrix3x4* worldTransform) :
 		isBase_(true),
 		geometry_(geometry),
 		material_(material),
@@ -584,7 +584,15 @@ namespace Unique
 		if (!geometry_->IsEmpty())
 		{
 			Prepare(view, camera, true);
-			geometry_->Draw(pipelineState_);
+			if (geometryType_ == GEOM_TRANSIENT )
+			{
+				geometry_->Draw(pipelineState_, primitiveTopology_, 
+					vertexOffset_, vertexCount_, indexOffset_, indexCount_);
+			}
+			else
+			{
+				geometry_->Draw(pipelineState_);
+			}
 		}
 		/*
 		else if (vertexBuffers_[0])
@@ -687,7 +695,7 @@ namespace Unique
 					geometry_->GetVertexBuffers());
 				vertexBuffers.push_back(SPtr<VertexBuffer>(instanceBuffer));
 				//to do check
-				geometry_->DrawInstanced(pipelineState_, (uint)instances_.size());
+				geometry_->DrawInstanced(pipelineState_, 0, (uint)instances_.size());
 				// Remove the instancing buffer & element mask now
 				vertexBuffers.pop_back();
 			}

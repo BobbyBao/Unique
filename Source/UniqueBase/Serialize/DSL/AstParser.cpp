@@ -1,5 +1,5 @@
 #include "Precompiled.h"
-#include "AstParser.h"
+#include "ASTParser.h"
 #include <cassert>
 #include <iostream>
 
@@ -72,16 +72,16 @@ namespace Unique
 
 	}
 
-	AstParser::AstParser()
+	ASTParser::ASTParser()
 	{
 	}
 
-	bool AstParser::Parse(const String& str)
+	bool ASTParser::Parse(const String& str)
 	{
 		return Parse(str.CString(), str.Length());
 	}
 
-	void AstParser::Print()
+	void ASTParser::Print()
 	{
 		for (auto& n : root_)
 		{
@@ -89,7 +89,7 @@ namespace Unique
 		}
 	}
 
-	bool AstParser::Parse(const char* buf, size_t size)
+	bool ASTParser::Parse(const char* buf, size_t size)
 	{
 		if (!Tokenize(buf, size))
 		{
@@ -99,7 +99,7 @@ namespace Unique
 		return !root_.empty();
 	}
 
-	bool AstParser::Tokenize(const char* buf, size_t size)
+	bool ASTParser::Tokenize(const char* buf, size_t size)
 	{
 		// State enums
 		enum { READY = 0, COMMENT, MULTICOMMENT, WORD, QUOTE, POSSIBLECOMMENT };
@@ -261,7 +261,7 @@ namespace Unique
 		return true;
 	}
 
-	void AstParser::SetToken(const String &lexeme, uint line)
+	void ASTParser::SetToken(const String &lexeme, uint line)
 	{
 		const char openBracket = '{', closeBracket = '}', quote = '\"';
 
@@ -319,7 +319,7 @@ namespace Unique
 
 	}
 
-	void AstParser::CreateNode(const String& type, uint line)
+	void ASTParser::CreateNode(const String& type, uint line)
 	{
 		current_ = new AstNode(type);
 		AstNode* parent = GetParent();

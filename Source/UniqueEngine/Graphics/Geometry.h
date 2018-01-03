@@ -61,8 +61,9 @@ public:
     void SetLodDistance(float distance);
 
 	void Draw(PipelineState* pipeline);
-
-	void DrawInstanced(PipelineState* pipeline, uint numInstances);
+	void Draw(PipelineState* pipeline, PrimitiveTopology primitiveType, 
+		unsigned vertexStart, unsigned vertexCount,	unsigned indexStart, unsigned indexCount);
+	void DrawInstanced(PipelineState* pipeline, uint instanceOffset, uint numInstances);
     
 	/// Return all vertex buffers.
     const Vector<SPtr<VertexBuffer> >& GetVertexBuffers() const { return vertexBuffers_; }
