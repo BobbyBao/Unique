@@ -7,6 +7,7 @@
 #include "Graphics/StaticModel.h"
 #include "Graphics/Model.h"
 #include "Graphics/Geometry.h"
+#include "Graphics/DebugRenderer.h"
 #include "Serialize/JsonSerializer.h"
 
 UNIQUE_IMPLEMENT_MAIN(Unique::SceneSample)
@@ -21,6 +22,7 @@ namespace Unique
 		Subscribe(&SceneSample::HandleStartup);
 		Subscribe(&SceneSample::HandleShutdown);
 		Subscribe(&SceneSample::HandleUpdate);
+		Subscribe(&SceneSample::HandlePostRenderUpdate);
 	}
 
 	SceneSample::~SceneSample()
@@ -37,6 +39,7 @@ namespace Unique
 
 		scene_ = new Scene();
 		scene_->CreateComponent<Octree>();
+		scene_->CreateComponent<DebugRenderer>();
 		camera_ = scene_->CreateChild("Camera")->CreateComponent<Camera>();
 
 		node_ = scene_->CreateChild("Model");
@@ -89,5 +92,10 @@ namespace Unique
 
 		node_->Rotate(Quaternion(0, 0.1f * eventData.timeStep_, 0));
 
+	}
+
+	void SceneSample::HandlePostRenderUpdate(const struct PostRenderUpdate& eventData)
+	{
+	//	GetSubsystem<Renderer>().DrawDebugGeometry(true);
 	}
 }

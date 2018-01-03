@@ -106,7 +106,7 @@ namespace Unique
 		desc_.ElementByteStride = GetVertexSize(elements_);
 		desc_.uiSizeInBytes = (uint)data.size();
 		desc_.Usage = usage;
-
+		desc_.CPUAccessFlags |= (usage == Diligent::USAGE_DYNAMIC ? Diligent::CPU_ACCESS_WRITE : 0);
 		auto& currentData = IsDynamic() ? MainContext(data_) : data_[0];
 		currentData = data;
 
@@ -123,7 +123,7 @@ namespace Unique
 		desc_.ElementByteStride = GetVertexSize(elements_);
 		desc_.uiSizeInBytes = (uint)data.size();
 		desc_.Usage = usage;
-
+		desc_.CPUAccessFlags |= (usage == Diligent::USAGE_DYNAMIC ? Diligent::CPU_ACCESS_WRITE : 0);
 		auto& currentData = IsDynamic() ? MainContext(data_) : data_[0];
 		currentData = data;
 
@@ -139,7 +139,7 @@ namespace Unique
 		desc_.ElementByteStride = GetVertexSize(elements_);
 		desc_.uiSizeInBytes = vertexCount * desc_.ElementByteStride;
 		desc_.Usage = dynamic ? Diligent::USAGE_DYNAMIC : Diligent::USAGE_STATIC;
-		
+		desc_.CPUAccessFlags |= (dynamic ? Diligent::CPU_ACCESS_WRITE : 0);
 		data_[0].resize(desc_.uiSizeInBytes);
 
 		if (IsDynamic())

@@ -58,15 +58,19 @@ namespace Unique
 
 	bool PipelineState::CreateImpl()
 	{
-		for (auto& shader : shaderProgram_->shaders_)
+		if (shaderDirty_)
 		{
-			if (!shader->CreateImpl())
+			for (auto& shader : shaderProgram_->shaders_)
 			{
-				return false;
+				if (!shader->CreateImpl())
+				{
+					return false;
+				}
+
 			}
 
 		}
-		
+
 		shaderProgram_->shaderVariables_.clear();
 
 		if (shaderProgram_->isComputePipeline_)
@@ -76,10 +80,6 @@ namespace Unique
 				if (shader->GetShaderType() == SHADER_TYPE_COMPUTE)
 				{
 					psoDesc_.ComputePipeline.pCS = *shader;
-					for (auto it : shader->shaderVariables_)
-					{
-						shaderProgram_->shaderVariables_.insert(it);
-					}
 					break;
 				}
 			}
@@ -94,10 +94,6 @@ namespace Unique
 					psoDesc_.GraphicsPipeline.pVS = *shader;
 					break;
 				case SHADER_TYPE_PIXEL:
-					for (auto it : shader->shaderVariables_)
-					{
-						shaderProgram_->shaderVariables_.insert(it);
-					}
 					psoDesc_.GraphicsPipeline.pPS = *shader;
 					break;
 				case SHADER_TYPE_GEOMETRY:
@@ -142,7 +138,7 @@ namespace Unique
 
 	IPipelineState* PipelineState::GetPipeline()
 	{
-		if (dirty_ || !IsValid())
+		if (shaderDirty_ || dirty_ || !IsValid())
 		{
 			if (!CreateImpl())
 			{
@@ -151,6 +147,12 @@ namespace Unique
 		}
 
 		return (IPipelineState*)deviceObject_;
+	}
+
+	void PipelineState::SetDepthStencilState(const DepthStencilStateDesc& dss)
+	{
+		psoDesc_.GraphicsPipeline.DepthStencilDesc = dss;
+		dirty_ = true;
 	}
 
 	void PipelineState::Reload()

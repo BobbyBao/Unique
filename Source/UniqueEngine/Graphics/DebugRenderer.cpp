@@ -32,6 +32,7 @@ static const unsigned MAX_TRIANGLES = 100000;
 
 uObject(DebugRenderer)
 {
+	uFactory();
 	uAccessor("Line Antialias", GetLineAntiAlias, SetLineAntiAlias)
 }
 
@@ -50,7 +51,7 @@ DebugRenderer::DebugRenderer() : lineAntiAlias_(false)
 
 	Shader* shader = cache.GetResource<Shader>("shaders/basic.shader");
 	material_->SetShader(shader);
-	pipelineDepth_ = shader->GetPipeline("Basic", "");
+	pipelineDepth_ = shader->GetPipeline("base", "");
 	pipelineNoDepth_ = new PipelineState(pipelineDepth_->GetShaderProgram());
 }
 
@@ -572,7 +573,7 @@ void DebugRenderer::Render(View* view)
 	uint count = 0;
 		
 	Batch batch(geometry_, material_, &GetNode()->GetWorldTransform());
-
+	batch.pass_ = material_->GetShader()->GetPass("base");
 	batch.primitiveTopology_ = PrimitiveTopology::LINE_LIST;
 	batch.pipelineState_ = pipelineDepth_;
 
@@ -587,11 +588,11 @@ void DebugRenderer::Render(View* view)
 		start += count;
 	}
 
-	batch.primitiveTopology_ = PrimitiveTopology::LINE_LIST;
-	batch.pipelineState_ = pipelineNoDepth_;
-
 	if (noDepthLines_.size() > 0)
 	{
+		batch.primitiveTopology_ = PrimitiveTopology::LINE_LIST;
+		batch.pipelineState_ = pipelineNoDepth_;
+
 		count = (uint)noDepthLines_.size() * 2;
 
 		batch.vertexOffset_ = start;
@@ -601,10 +602,11 @@ void DebugRenderer::Render(View* view)
 		start += count;
 	}
 
-	batch.primitiveTopology_ = PrimitiveTopology::TRIANGLE_LIST;
-	batch.pipelineState_ = pipelineDepth_;
 	if (triangles_.size() > 0)
 	{
+		batch.primitiveTopology_ = PrimitiveTopology::TRIANGLE_LIST;
+		batch.pipelineState_ = pipelineDepth_;
+
 		count = (uint)triangles_.size() * 3;
 
 		batch.vertexOffset_ = start;
@@ -614,10 +616,11 @@ void DebugRenderer::Render(View* view)
 		start += count;
 	}
 
-	batch.primitiveTopology_ = PrimitiveTopology::TRIANGLE_LIST;
-	batch.pipelineState_ = pipelineNoDepth_;
 	if (noDepthTriangles_.size() > 0)
 	{
+		batch.primitiveTopology_ = PrimitiveTopology::TRIANGLE_LIST;
+		batch.pipelineState_ = pipelineNoDepth_;
+
 		count = (uint)noDepthTriangles_.size() * 3;
 
 		batch.vertexOffset_ = start;

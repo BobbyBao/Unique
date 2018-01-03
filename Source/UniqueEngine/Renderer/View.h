@@ -149,6 +149,8 @@ namespace Unique
 
 		void Update(const FrameInfo& frame);
 
+		void DrawDebug();
+
 		void Render();
 
 		/// Return scene.

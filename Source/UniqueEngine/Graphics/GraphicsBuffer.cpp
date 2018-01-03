@@ -86,7 +86,7 @@ namespace Unique
 		if (!GetSizeInBytes())
 			return false;
 
-		auto& currentData = IsDynamic() ? MainContext(data_) : data_[0];
+		auto& currentData = IsDynamic() ? RenderContext(data_) : data_[0];
 		BufferData BuffData;
 		BuffData.pData = currentData.data();
 		BuffData.DataSize = desc_.uiSizeInBytes;

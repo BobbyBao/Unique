@@ -93,7 +93,8 @@ namespace Unique
 	{
 		UNIQUE_PROFILE(UpdateViews);
 
-		views_[Graphics::currentContext_].clear();
+		auto& views = MainContext(views_);
+		views.clear();
 		preparedViews_.clear();
 
 		// Set up the frameinfo structure for this frame
@@ -137,7 +138,9 @@ namespace Unique
 
 	void Renderer::Render()
 	{
-		for (auto view : views_[Graphics::GetRenderContext()])
+		auto& views = RenderContext(views_);
+
+		for (auto view : views)
 		{
 			view->Render();
 		}
@@ -151,7 +154,9 @@ namespace Unique
 		/// \todo Because debug geometry is per-scene, if two cameras show views of the same area, occlusion is not shown correctly
 		HashSet<Drawable*> processedGeometries;
 		HashSet<Light*> processedLights;
-		auto& views = views_[Graphics::currentContext_];
+
+		auto& views = MainContext(views_);
+
 		for (unsigned i = 0; i < views.size(); ++i)
 		{
 			View* view = views[i];
@@ -176,6 +181,7 @@ namespace Unique
 					processedGeometries.insert(geometries[i]);
 				}
 			}
+
 			for (size_t i = 0; i < lights.size(); ++i)
 			{
 				if (!processedLights.count(lights[i]))
@@ -184,6 +190,11 @@ namespace Unique
 					processedLights.insert(lights[i]);
 				}
 			}
+		}
+
+		for (auto view : views)
+		{
+			view->DrawDebug();
 		}
 	}
 
@@ -206,7 +217,8 @@ namespace Unique
 		if (!view->Define(renderTarget, viewport))
 			return;
 
-		views_[Graphics::currentContext_].push_back(WPtr<View>(view));
+		auto& views = MainContext(views_);
+		views.push_back(WPtr<View>(view));
 
 		const IntRect& viewRect = viewport->GetRect();
 		Scene* scene = viewport->GetScene();

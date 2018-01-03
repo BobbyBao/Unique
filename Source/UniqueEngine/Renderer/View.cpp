@@ -333,22 +333,26 @@ namespace Unique
 
 		SetCameraShaderParameters(camera_);
 
+	}
 
+	void View::DrawDebug()
+	{
 		// Draw the associated debug geometry now if enabled
 		if (drawDebug_ && octree_ && camera_)
 		{
 			DebugRenderer* debug = octree_->GetComponent<DebugRenderer>();
 			if (debug && debug->IsEnabledEffective() && debug->HasContent())
 			{
-// 				IntVector2 rtSizeNow = graphics_->GetRenderTargetDimensions();
-// 				IntRect viewport = (currentRenderTarget_ == renderTarget_) ? viewRect_ : IntRect(0, 0, rtSizeNow.x_,
-// 					rtSizeNow.y_);
-// 				graphics_->SetViewport(viewport);
+				// 				IntVector2 rtSizeNow = graphics_->GetRenderTargetDimensions();
+				// 				IntRect viewport = (currentRenderTarget_ == renderTarget_) ? viewRect_ : IntRect(0, 0, rtSizeNow.x_,
+				// 					rtSizeNow.y_);
+				// 				graphics_->SetViewport(viewport);
 
 				debug->SetView(camera_);
 				debug->Render(this);
 			}
 		}
+
 	}
 
 	void View::Render()
@@ -446,6 +450,7 @@ namespace Unique
 			data->world_ = Matrix3x4::IDENTITY;
 			objectVS_->Unlock();
 		}
+
 		{
 			MaterialPS* data = (MaterialPS*)materialPS_->Lock();
 			data->matDiffColor = float4(1,1,1,1);

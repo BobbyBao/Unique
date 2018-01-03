@@ -30,13 +30,16 @@ namespace Unique
 		IShaderVariable* GetShaderVariable(const StringID& name);
 		IPipelineState* GetPipeline();
 		IShaderResourceBinding* GetShaderResourceBinding() { return shaderResourceBinding_; }
+
+		void SetDepthStencilState(const Diligent::DepthStencilStateDesc& dss);
+
 	private:
 		void Init();
 		SPtr<ShaderProgram> shaderProgram_;
 		Diligent::RefCntAutoPtr<IShaderResourceBinding> shaderResourceBinding_;
 		IResourceMapping* resourceMapping_;
 		Diligent::PipelineStateDesc psoDesc_;
-		uint dirtyFlags_ = 0;
+		bool shaderDirty_ = true;
 		bool dirty_ = true;
 	};
 

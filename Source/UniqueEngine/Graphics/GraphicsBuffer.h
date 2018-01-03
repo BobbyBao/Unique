@@ -39,7 +39,7 @@ namespace Unique
 		
 		inline uint GetSizeInBytes() const { return desc_.uiSizeInBytes; }
 		
-		inline uint GetCount() const { return desc_.uiSizeInBytes / desc_.ElementByteStride; }
+		inline uint GetCount() const { return desc_.uiSizeInBytes == 0 ? 0 : desc_.uiSizeInBytes / desc_.ElementByteStride; }
 		
 		inline uint GetStride() const { return desc_.ElementByteStride; }
 
