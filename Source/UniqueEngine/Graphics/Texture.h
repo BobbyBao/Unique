@@ -10,6 +10,8 @@ namespace Unique
 {
 	using TextureDesc = Diligent::TextureDesc;
 	using TextureData = Diligent::TextureData;
+	using SamplerDesc = Diligent::SamplerDesc;
+	using ISampler = Diligent::ISampler;
 	using TextureSubResData = Diligent::TextureSubResData;
 	using ITextureView = Diligent::ITextureView;
 
@@ -58,20 +60,22 @@ namespace Unique
 		TextureView* GetRenderTargetView() { return renderTargetView_; }
 		TextureView* GetDepthStencilView() { return depthStencilView_; }
 		TextureView* GetUnorderedAccessView() { return unorderedAccessView_; }
-
+		ISampler*	GetSampler() { return sampler_; }
 	protected:
 		bool CreateImpl();
 		void ReleaseImpl();
 
 		TextureDesc desc_;
 		TextureData texData_;
+		SamplerDesc samplerDesc_;
+		ISampler*	sampler_ = nullptr;
 		SPtr<TextureView> shaderResourceView_;
 		SPtr<TextureView> renderTargetView_;
 		SPtr<TextureView> depthStencilView_;
 		SPtr<TextureView> unorderedAccessView_;
 
-		std::vector<TextureSubResData> pSubResources;
-		std::vector< std::vector<byte> > Mips;
+		Vector<TextureSubResData> pSubResources;
+		Vector< Vector<byte> > Mips;
 	};
 
 	class TextureView : public RefCounted
@@ -88,6 +92,9 @@ namespace Unique
 		operator ITextureView*() {
 			return textureView_;
 		}
+
+		void SetSampler(ISampler* sampler) { textureView_->SetSampler(sampler); }
+		ISampler* GetSampler() { return textureView_->GetSampler(); }
 	private:
 		Texture& texture_;
 		ITextureView* textureView_;

@@ -5,7 +5,7 @@ Shader "Basic"
 	Properties
 	{
 
-		TextureSlot tDiffMap
+		TextureSlot DiffMap
 		{
 			Texture ""
 		}

@@ -59,7 +59,7 @@ namespace Unique
 	Uniform::~Uniform()
 	{
 	}
-
+	
 	void TextureSlot::SetTexture(Texture* tex)
 	{
 		texture_ = tex;

@@ -151,24 +151,30 @@ namespace Unique
 			return false;
 		}
 
+		renderDevice->CreateSampler(samplerDesc_, &sampler_);
+
 		if (desc_.BindFlags & BIND_SHADER_RESOURCE)
 		{
 			shaderResourceView_ = new TextureView(*this, textureObject->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE));
+			shaderResourceView_->SetSampler(sampler_);
 		}
 
 		if (desc_.BindFlags & BIND_RENDER_TARGET)
 		{
 			renderTargetView_ = new TextureView(*this, textureObject->GetDefaultView(TEXTURE_VIEW_RENDER_TARGET));
+			shaderResourceView_->SetSampler(sampler_);
 		}
 
 		if (desc_.BindFlags & BIND_DEPTH_STENCIL)
 		{
 			depthStencilView_ = new TextureView(*this, textureObject->GetDefaultView(TEXTURE_VIEW_DEPTH_STENCIL));
+			shaderResourceView_->SetSampler(sampler_);
 		}
 
 		if (desc_.BindFlags & BIND_UNORDERED_ACCESS)
 		{
 			unorderedAccessView_ = new TextureView(*this, textureObject->GetDefaultView(TEXTURE_VIEW_UNORDERED_ACCESS));
+			shaderResourceView_->SetSampler(sampler_);
 		}
 
 		return deviceObject_ != nullptr;

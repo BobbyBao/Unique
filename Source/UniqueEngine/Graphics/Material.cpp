@@ -92,7 +92,11 @@ namespace Unique
 			{
 				sv->Set(*ts.texture_->GetShaderResourceView());
 			}
-
+// 			auto sampler = pipeline->GetShaderVariable(ts.samplerName_);
+// 			if (sampler)
+// 			{
+// 				sampler->Set(ts.texture_->GetSampler());
+// 			}
 		}
 	}
 

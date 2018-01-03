@@ -113,7 +113,7 @@ namespace Unique
 		Diligent::SamplerDesc desc_;
 		Diligent::RefCntWeakPtr<IShaderVariable> shaderVarible_;
 		
-		uClass("Name", name_, "Texture", texAttr_)
+		uClass("Name", name_, "MinFilter", desc_.MinFilter)
 	};
 
 	class ShaderVariable : public RefCounted

@@ -62,7 +62,7 @@ namespace Unique
 // 		}
 
 		Texture* tex = cache.GetResource<Texture>("Models/Kachujin/Textures/Kachujin_diffuse.png");
-		mat->SetTexture("tDiffMap", tex);
+		mat->SetTexture("DiffMap", tex);
 		model->SetMaterial(mat);
 
 // 		{

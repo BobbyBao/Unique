@@ -5,7 +5,8 @@
 
 void VS(
 		float4 iPos : ATTRIB0, 
-        float2 iTexCoord : ATTRIB1,
+        float3 iNormal : ATTRIB1,
+        float2 iTexCoord : ATTRIB2,
         out float2 oTexCoord : TEXCOORD0,
 		out float4 oPos : OUTPOSITION
     ) 

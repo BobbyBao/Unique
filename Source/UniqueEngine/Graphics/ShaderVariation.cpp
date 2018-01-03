@@ -158,7 +158,7 @@ namespace Unique
 		source_ = file->ReadAllText();
 
 		ShaderCreationAttribs Attrs;
-		Attrs.Desc.Name = owner_.GetName().CString();
+		Attrs.Desc.Name = shaderStage_.source_.CString();// owner_.GetName().CString();
 		Attrs.Macros = macros_;
 		//Attrs.FilePath = shaderStage_.source_;
 		Attrs.EntryPoint = shaderStage_.entryPoint_;
@@ -178,14 +178,14 @@ namespace Unique
 
 		if (shaderObject)
 		{
-			const auto& desc = shaderObject->GetDesc();
-
-			for (uint i = 0; i < desc.NumVariables; i++)
-			{
-				const auto& svDesc = desc.VariableDesc[i];
-				IShaderVariable* shaderVariable = shaderObject->GetShaderVariable(svDesc.Name);
-				shaderVariables_[svDesc.Name] = shaderVariable;
-			}
+// 			const auto& desc = shaderObject->GetDesc();
+// 
+// 			for (uint i = 0; i < desc.NumVariables; i++)
+// 			{
+// 				const auto& svDesc = desc.VariableDesc[i];
+// 				IShaderVariable* shaderVariable = shaderObject->GetShaderVariable(svDesc.Name);
+// 				shaderVariables_[svDesc.Name] = shaderVariable;
+// 			}
 
 			deviceObject_ = shaderObject;
 		}

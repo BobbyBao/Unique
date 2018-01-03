@@ -127,9 +127,10 @@ namespace Unique
 	IShaderVariable* PipelineState::GetShaderVariable(const StringID& name)
 	{
 		if (shaderResourceBinding_)
-		{
-			return shaderResourceBinding_->GetVariable(SHADER_TYPE_PIXEL, name.c_str());
+		{	
 			auto it = shaderProgram_->shaderVariables_.find(name);
+			return shaderResourceBinding_->GetVariable(SHADER_TYPE_PIXEL, name.c_str());
+		
 			if (it != shaderProgram_->shaderVariables_.end())
 			{
 				return it->second;

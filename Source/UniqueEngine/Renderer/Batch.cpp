@@ -215,9 +215,11 @@ namespace Unique
 		{	
 			view->SetWorldTransform(transformOffset_);
 		}
+		
 
 		if (isBase_)
 		{
+			pipelineState_->GetPipeline();
 			material_->Apply(pipelineState_);
 		}
 
