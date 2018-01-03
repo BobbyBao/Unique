@@ -20,9 +20,14 @@ namespace Unique
 	IDeviceContext* deviceContext = nullptr;
 
 	int Graphics::currentContext_ = 0;
+	bool Graphics::singleThreaded_ = false;
+	Semaphore Graphics::renderSem_;
+	Semaphore Graphics::mainSem_;
+	long long Graphics::waitSubmit_ = 0;
+	long long Graphics::waitRender_ = 0;
 	CommandQueue Graphics::comands_;
 
-	extern void CreateDevice(SDL_Window* window, IRenderDevice **ppRenderDevice, IDeviceContext **ppImmediateContext, ISwapChain **ppSwapChain, DeviceType DevType);
+	extern void CreateDevice(SDL_Window* window, DeviceType DevType, const SwapChainDesc& SCDesc, IRenderDevice **ppRenderDevice, IDeviceContext **ppImmediateContext, ISwapChain **ppSwapChain);
 	
 	Graphics::Graphics() : title_("Unique Engine")
 	{
@@ -54,7 +59,9 @@ namespace Unique
 			return false;
 		}
 
-		CreateDevice(window_, &renderDevice_, &deviceContext_, &swapChain_, deviceType);
+		SwapChainDesc SCDesc;
+		SCDesc.SamplesCount = 1/*multiSampling_*/;
+		CreateDevice(window_, deviceType, SCDesc, &renderDevice_, &deviceContext_, &swapChain_);
 		
 		renderDevice = renderDevice_;
 
@@ -63,7 +70,7 @@ namespace Unique
 		renderDevice->CreateResourceMapping(ResourceMappingDesc(), &resourceMapping_);
 
 		FrameNoRenderWait();
-
+		
 		return true;
 	}
 
@@ -170,7 +177,7 @@ namespace Unique
 	{
 		RenderSemWait();
 
-		//LOG_INFO_MESSAGE("Update");
+		LOG_INFO_MESSAGE("Update");
 
 		FrameNoRenderWait();
 	}
@@ -191,7 +198,7 @@ namespace Unique
 				ExecuteCommands(comands_);
 			}
 
-			//LOG_INFO_MESSAGE("Render");
+			LOG_INFO_MESSAGE("Render");
 
 			SwapContext();
 

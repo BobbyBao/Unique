@@ -29,6 +29,7 @@ namespace Unique
 		context_->RegisterSubsystem<ResourceCache>();
 		context_->RegisterSubsystem<Renderer>();
 		context_->RegisterSubsystem<Input>();
+
 	}
 
 	Application::~Application()
@@ -117,7 +118,6 @@ namespace Unique
 
 	}
 
-	
 	void Application::OnPreRender()
 	{
 	}

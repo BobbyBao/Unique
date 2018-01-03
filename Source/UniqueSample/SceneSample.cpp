@@ -33,10 +33,7 @@ namespace Unique
 	{
 		UNIQUE_UNUSED(eventData);
 
-		//Test();
-
 		auto& cache = GetSubsystem<ResourceCache>();
-
 		scene_ = new Scene();
 		scene_->CreateComponent<Octree>();
 		scene_->CreateComponent<DebugRenderer>();

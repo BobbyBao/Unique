@@ -32,11 +32,10 @@ namespace Unique
 	}
 
 	// Create Direct3D device and swap chain
-	void CreateDevice(SDL_Window* window, IRenderDevice **ppRenderDevice, IDeviceContext **ppImmediateContext, ISwapChain **ppSwapChain, DeviceType DevType)
+	void CreateDevice(SDL_Window* window, DeviceType DevType, const SwapChainDesc& SCDesc, IRenderDevice **ppRenderDevice, IDeviceContext **ppImmediateContext, ISwapChain **ppSwapChain)
 	{
 		HWND hWnd = GetWindowHandle(window);
-		SwapChainDesc SCDesc;
-		SCDesc.SamplesCount = 1;
+
 		switch (DevType)
 		{
 		case DeviceType::D3D11:

@@ -29,8 +29,7 @@ public:
     /// Handle event.
     virtual void OnEvent(Object* sender, StringID eventType, const Event& eventData);
 	
-	template<class TransferFunction>
-	void Transfer(TransferFunction& transfer);
+	void Transfer(Serializer& transfer);
 
     /// Return type info static.
     static TypeInfo* GetTypeInfoStatic() { return Type<Object>::Info(); }

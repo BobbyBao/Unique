@@ -80,14 +80,14 @@ namespace Unique
 		static int currentContext_;
 		inline static int GetRenderContext() { return 1 - currentContext_; }
 		static void AddCommand(std::function<void()> cmd);
+		static void FrameNoRenderWait();
 	protected:
-		void ExecuteCommands(CommandQueue& cmds);
-		void FrameNoRenderWait();
-		void MainSemPost();
-		bool MainSemWait(int _msecs = -1);
-		void SwapContext();
-		void RenderSemPost();
-		void RenderSemWait();
+		static void ExecuteCommands(CommandQueue& cmds);
+		static void MainSemPost();
+		static bool MainSemWait(int _msecs = -1);
+		static void SwapContext();
+		static void RenderSemPost();
+		static void RenderSemWait();
 
 		String title_;
 		IntVector2 resolution_;
@@ -103,13 +103,12 @@ namespace Unique
 
 		SDL_Window *window_ = nullptr;
 
-		bool singleThreaded_ = false;
-		Semaphore renderSem_;
-		Semaphore mainSem_;
-		long long waitSubmit_ = 0;
-		long long waitRender_ = 0;
-
-		static CommandQueue comands_;;
+		static bool singleThreaded_;
+		static Semaphore renderSem_;
+		static Semaphore mainSem_;
+		static long long waitSubmit_;
+		static long long waitRender_;
+		static CommandQueue comands_;
 	};
 
 	template<class T>

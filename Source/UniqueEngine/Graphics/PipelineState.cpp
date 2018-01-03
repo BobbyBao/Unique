@@ -68,7 +68,7 @@ namespace Unique
 				}
 
 			}
-
+			shaderDirty_ = false;
 		}
 
 		shaderProgram_->shaderVariables_.clear();

@@ -36,8 +36,7 @@ inline void TransferTypeInfo(TransferFunction& transfer, const TypeInfo* typeInf
 	}
 }
 
-template<class TransferFunction>
-void Object::Transfer(TransferFunction& transfer)
+void Object::Transfer(Serializer& transfer)
 {
 	const TypeInfo* typeInfo = GetTypeInfo();
 
@@ -69,8 +68,6 @@ void Object::Transfer(TransferFunction& transfer)
 
 	transfer.EndObject();
 }
-
-template UNIQUE_API void Object::Transfer(Serializer&);
 
 void Object::OnEvent(Object* sender, StringID eventType, const Event& eventData)
 {

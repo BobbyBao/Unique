@@ -14,7 +14,12 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Animation\AnimatedModel.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Animation\Animation.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Animation\AnimationController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Animation\AnimationState.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Application\Application.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\DrawableEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\GraphicsEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Input\Controls.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Input\Input.h" />
@@ -67,6 +72,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\VertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Animation\AnimatedModel.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Animation\Animation.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Animation\AnimationController.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Animation\AnimationState.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Application\Application.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Export\CoreExport.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Export\GraphicsExport.cpp" />

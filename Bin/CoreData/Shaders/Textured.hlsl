@@ -1,7 +1,9 @@
 #include "Uniforms.hlsl"
-#include "Samplers.hlsl"
+//#include "Samplers.hlsl"
 #include "Transform.hlsl"
 
+Texture2D DiffMap;
+SamplerState DiffMap_sampler;
 
 void VS(
 		float4 iPos : ATTRIB0, 
@@ -22,7 +24,7 @@ float4 PS(float2 iTexCoord : TEXCOORD0) : SV_TARGET
     float4 diffColor = float4(1,1,1,1);//cMatDiffColor;
 
     //#ifdef DIFFMAP
-        float4 diffInput = Sample2D(DiffMap, iTexCoord);
+        float4 diffInput = DiffMap.Sample(DiffMap_sampler, iTexCoord);
         #ifdef ALPHAMASK
             if (diffInput.a < 0.5)
                 discard;

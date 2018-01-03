@@ -69,7 +69,7 @@ namespace Unique
 	bool ShaderVariation::CreateImpl() 
 	{
 		auto& graphics = GetSubsystem<Graphics>();
-		if (graphics.IsDirect3D())
+		//if (graphics.IsDirect3D())
 		{
 			if (!LoadConvertedCode("Shaders/" + shaderStage_.source_))
 			{
@@ -78,7 +78,7 @@ namespace Unique
 
 			return true;
 		}
-		
+				
 		String name = GetFileName(owner_.GetName());
 		String extension;
 
