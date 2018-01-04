@@ -51,6 +51,7 @@ bool Resource::Load()
     // If we are loading synchronously in a non-main thread, behave as if async loading (for example use
     // GetTempResource() instead of GetResource() to load resource dependencies)
     SetAsyncLoadState(Thread::IsMainThread() ? ASYNC_DONE : ASYNC_LOADING);
+
     bool success = Prepare();
     if (success)
         success &= Create();
@@ -72,7 +73,6 @@ bool Resource::Prepare()
 
 bool Resource::Create()
 {
-    // If no GPU upload step is necessary, no override is necessary
     return true;
 }
 

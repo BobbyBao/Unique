@@ -30,7 +30,7 @@ namespace Unique
 class Animation;
 class AnimatedModel;
 class Deserializer;
-class Serializer;
+class Visitor;
 class Skeleton;
 struct AnimationTrack;
 struct Bone;

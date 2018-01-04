@@ -56,7 +56,7 @@ namespace Unique
 		return false;
 	}
 	
-	void TypeInfo::Transfer(Serializer& serializer, void* obj) const
+	void TypeInfo::Transfer(Visitor& serializer, void* obj) const
 	{
 		uint attributeCount = 0;
 
@@ -101,7 +101,7 @@ namespace Unique
 		return count;
 	}
 
-	void TypeInfo::TransferImpl(Serializer& serializer, void* obj) const
+	void TypeInfo::TransferImpl(Visitor& serializer, void* obj) const
 	{
 		const TypeInfo* baseTypeInfo = GetBaseTypeInfo();
 		if (baseTypeInfo)

@@ -34,7 +34,7 @@ static const unsigned BONECOLLISION_BOX = 0x2;
 
 class File;
 class ResourceCache;
-class Serializer;
+class Visitor;
 
 /// %Bone in a skeleton.
 struct Bone

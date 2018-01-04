@@ -1,0 +1,18 @@
+{
+    "Type": "Material",
+    "Shader": {
+        "Type": "Shader",
+        "Name": "Shaders/Textured.shader"
+    },
+    "ShaderDefines": "",
+    "Uniforms": [],
+    "TextureSlots": [
+        {
+            "Name": "DiffMap",
+            "Texture": {
+                "Type": "Texture",
+                "Name": "Models/Kachujin/Textures/Kachujin_diffuse.png"
+            }
+        }
+    ]
+}

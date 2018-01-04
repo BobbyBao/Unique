@@ -1,14 +1,14 @@
 #pragma once
 #include "../Core/CoreDefs.h"
 #include "../Container/Ptr.h"
-#include "SerializeTraitsBasic.h"
-#include "SerializeTraitsStd.h"
+#include "PrimitiveTypeTraits.h"
+#include "StdTypeTraits.h"
 	
 
 namespace Unique
 {
 	template<class T>
-	class SerializeTraits<Unique::SPtr<T> > : public SerializeTraitsBase<Unique::SPtr<T> >
+	class TypeTraits<Unique::SPtr<T> > : public TypeTraitsBase<Unique::SPtr<T> >
 	{
 	public:
 		inline static const char* GetTypeName() { return T::GetTypeStatic().c_str(); }
@@ -29,7 +29,7 @@ namespace Unique
 	};
 
 	template<class T>
-	class SerializeTraits<Vector<T> > : public SerializeTraitsArray<Vector<T> >
+	class TypeTraits<Vector<T> > : public SerializeTraitsArray<Vector<T> >
 	{
 	public:
 		template<class TransferFunction>
@@ -40,7 +40,7 @@ namespace Unique
 	};
 
 	template<>
-	class SerializeTraits<Vector<byte>> : public SerializeTraitsArray<Vector<byte>>
+	class TypeTraits<Vector<byte>> : public SerializeTraitsArray<Vector<byte>>
 	{
 	public:	
 		template<class TransferFunction>
@@ -51,7 +51,7 @@ namespace Unique
 	};
 
 	template<>
-	class SerializeTraits<ByteArray> : public SerializeTraitsArray<ByteArray>
+	class TypeTraits<ByteArray> : public SerializeTraitsArray<ByteArray>
 	{
 	public:
 		template<class TransferFunction>
@@ -63,7 +63,7 @@ namespace Unique
 	};
 
 	template<class T>
-	class SerializeTraitsEnum : public SerializeTraitsBase<T>
+	class SerializeTraitsEnum : public TypeTraitsBase<T>
 	{
 	public:
 		static int GetEnum(const char* enumNames[], int count, const Unique::String& val)
@@ -97,7 +97,7 @@ namespace Unique
 	};
 	
 	template<class T>
-	class SerializeTraitsFlags : public SerializeTraitsBase<T>
+	class SerializeTraitsFlags : public TypeTraitsBase<T>
 	{
 	public:
 		template<class TransferFunction>
@@ -160,7 +160,7 @@ namespace Unique
 
 #define uFlags(CLASS, ...)\
 template<>\
-class SerializeTraits<CLASS> : public SerializeTraitsFlags<CLASS>\
+class TypeTraits<CLASS> : public SerializeTraitsFlags<CLASS>\
 {\
 public:\
 	template<class TransferFunction>\
@@ -176,7 +176,7 @@ public:\
 
 #define uEnum(CLASS, ...)\
 template<>\
-class SerializeTraits<CLASS> : public SerializeTraitsEnum<CLASS>\
+class TypeTraits<CLASS> : public SerializeTraitsEnum<CLASS>\
 {\
 public:\
 	template<class TransferFunction>\
@@ -192,7 +192,7 @@ public:\
 
 #define uClassTraits(CLASS, ...)\
 template<>\
-class SerializeTraits<CLASS> : public SerializeTraitsBase<CLASS>\
+class TypeTraits<CLASS> : public TypeTraitsBase<CLASS>\
 {\
 public:\
 	template<class TransferFunction>\

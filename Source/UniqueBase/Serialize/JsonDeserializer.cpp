@@ -4,7 +4,7 @@
 
 namespace Unique
 {
-	JsonDeserializer::JsonDeserializer() : Serializer(TransferState::Reading)
+	JsonDeserializer::JsonDeserializer() : Visitor(TransferState::Reading)
 	{
 	}
 
@@ -189,10 +189,10 @@ namespace Unique
 				switch (i)
 				{
 				case 0:
-					SerializeTraits<float>::Transfer(data.x_, *this);
+					TypeTraits<float>::Transfer(data.x_, *this);
 					break;
 				case 1:
-					SerializeTraits<float>::Transfer(data.y_, *this);
+					TypeTraits<float>::Transfer(data.y_, *this);
 					break;
 				default:
 					break;
@@ -216,13 +216,13 @@ namespace Unique
 				switch (i)
 				{
 				case 0:
-					SerializeTraits<float>::Transfer(data.x_, *this);
+					TypeTraits<float>::Transfer(data.x_, *this);
 					break;
 				case 1:
-					SerializeTraits<float>::Transfer(data.y_, *this);
+					TypeTraits<float>::Transfer(data.y_, *this);
 					break;
 				case 2:
-					SerializeTraits<float>::Transfer(data.z_, *this);
+					TypeTraits<float>::Transfer(data.z_, *this);
 					break;
 				default:
 					break;
@@ -245,16 +245,16 @@ namespace Unique
 				switch (i)
 				{
 				case 0:
-					SerializeTraits<float>::Transfer(data.x_, *this);
+					TypeTraits<float>::Transfer(data.x_, *this);
 					break;
 				case 1:
-					SerializeTraits<float>::Transfer(data.y_, *this);
+					TypeTraits<float>::Transfer(data.y_, *this);
 					break;
 				case 2:
-					SerializeTraits<float>::Transfer(data.z_, *this);
+					TypeTraits<float>::Transfer(data.z_, *this);
 					break;
 				case 3:
-					SerializeTraits<float>::Transfer(data.w_, *this);
+					TypeTraits<float>::Transfer(data.w_, *this);
 					break;
 				default:
 					break;
@@ -277,16 +277,16 @@ namespace Unique
 				switch (i)
 				{
 				case 0:
-					SerializeTraits<float>::Transfer(data.r_, *this);
+					TypeTraits<float>::Transfer(data.r_, *this);
 					break;
 				case 1:
-					SerializeTraits<float>::Transfer(data.g_, *this);
+					TypeTraits<float>::Transfer(data.g_, *this);
 					break;
 				case 2:
-					SerializeTraits<float>::Transfer(data.b_, *this);
+					TypeTraits<float>::Transfer(data.b_, *this);
 					break;
 				case 3:
-					SerializeTraits<float>::Transfer(data.a_, *this);
+					TypeTraits<float>::Transfer(data.a_, *this);
 					break;
 				default:
 					break;
@@ -309,16 +309,16 @@ namespace Unique
 				switch (i)
 				{
 				case 0:
-					SerializeTraits<float>::Transfer(data.w_, *this);
+					TypeTraits<float>::Transfer(data.w_, *this);
 					break;
 				case 1:
-					SerializeTraits<float>::Transfer(data.x_, *this);
+					TypeTraits<float>::Transfer(data.x_, *this);
 					break;
 				case 2:
-					SerializeTraits<float>::Transfer(data.y_, *this);
+					TypeTraits<float>::Transfer(data.y_, *this);
 					break;
 				case 3:
-					SerializeTraits<float>::Transfer(data.z_, *this);
+					TypeTraits<float>::Transfer(data.z_, *this);
 					break;
 				default:
 					break;

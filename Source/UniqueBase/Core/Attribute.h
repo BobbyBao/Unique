@@ -1,7 +1,7 @@
 #pragma once
 #include "../Core/CoreDefs.h"
 #include "../Container/refcounted.h"
-#include "../Serialize/Serializer.h"
+#include "../Serialize/Visitor.h"
 #include "AttributeTraits.h"
 
 
@@ -16,7 +16,7 @@ namespace Unique
 		{
 		}
 
-		virtual void Visit(Serializer& serializer, void* obj) {}
+		virtual void Visit(Visitor& serializer, void* obj) {}
 		//virtual void Get(const void* ptr, void* dest) const = 0;
 		//virtual void Set(void* ptr, const void* value) = 0;
 		virtual bool IsDefault(void* ptr) const { return false; }
@@ -39,7 +39,7 @@ namespace Unique
 		{
 		}
 
-		virtual void Visit(Serializer& serializer, void* obj)
+		virtual void Visit(Visitor& serializer, void* obj)
 		{
 			VisitImpl(serializer, obj);
 		}
@@ -94,7 +94,7 @@ namespace Unique
 		{
 		}
 
-		virtual void Visit(Serializer& serializer, void* obj)
+		virtual void Visit(Visitor& serializer, void* obj)
 		{
 			VisitImpl(serializer, obj);
 		}
@@ -155,7 +155,7 @@ namespace Unique
 			assert(setFunction_);
 		}
 
-		virtual void Visit(Serializer& serializer, void* obj)
+		virtual void Visit(Visitor& serializer, void* obj)
 		{
 			VisitImpl(serializer, obj);
 		}

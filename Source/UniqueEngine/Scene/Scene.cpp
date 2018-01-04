@@ -579,7 +579,7 @@ void Scene::FinishLoading(Deserializer* source)
     }
 }
 
-void Scene::FinishSaving(Serializer* dest) const
+void Scene::FinishSaving(Visitor* dest) const
 {
     Deserializer* ptr = dynamic_cast<Deserializer*>(dest);
     if (ptr)

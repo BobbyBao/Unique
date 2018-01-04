@@ -36,7 +36,7 @@ inline void TransferTypeInfo(TransferFunction& transfer, const TypeInfo* typeInf
 	}
 }
 
-void Object::Transfer(Serializer& transfer)
+void Object::Transfer(Visitor& transfer)
 {
 	const TypeInfo* typeInfo = GetTypeInfo();
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "Serializer.h"
+#include "Visitor.h"
 
 #include <rapidjson/rapidjson.h>
 #include <rapidjson/document.h>
@@ -11,7 +11,7 @@ using namespace rapidjson;
 namespace Unique
 {
 
-	class JsonDeserializer : public Serializer
+	class JsonDeserializer : public Visitor
 	{
 	public:
 		JsonDeserializer();

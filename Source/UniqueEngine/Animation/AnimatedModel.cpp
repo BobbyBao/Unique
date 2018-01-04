@@ -449,7 +449,7 @@ void AnimatedModel::RemoveAnimationState(Animation* animation)
         RemoveAnimationState(animation->GetNameHash());
     else
     {
-        for (Vector<SPtr<AnimationState> >::iterator i = animationStates_.begin(); i != animationStates_.end(); ++i)
+        for (auto i = animationStates_.begin(); i != animationStates_.end(); ++i)
         {
             AnimationState* state = *i;
             if (!state->GetAnimation())
@@ -469,7 +469,7 @@ void AnimatedModel::RemoveAnimationState(const String& animationName)
 
 void AnimatedModel::RemoveAnimationState(StringID animationNameHash)
 {
-    for (Vector<SPtr<AnimationState> >::iterator i = animationStates_.begin(); i != animationStates_.end(); ++i)
+    for (auto i = animationStates_.begin(); i != animationStates_.end(); ++i)
     {
         AnimationState* state = *i;
         Animation* animation = state->GetAnimation();
@@ -488,7 +488,7 @@ void AnimatedModel::RemoveAnimationState(StringID animationNameHash)
 
 void AnimatedModel::RemoveAnimationState(AnimationState* state)
 {
-    for (Vector<SPtr<AnimationState> >::iterator i = animationStates_.begin(); i != animationStates_.end(); ++i)
+    for (auto i = animationStates_.begin(); i != animationStates_.end(); ++i)
     {
         if (*i == state)
         {
@@ -973,7 +973,7 @@ void AnimatedModel::AssignBoneNodes()
         SetSkeleton(model_->GetSkeleton(), true);
 
     // Re-assign the same start bone to animations to get the proper bone node this time
-    for (Vector<SPtr<AnimationState> >::iterator i = animationStates_.begin(); i != animationStates_.end(); ++i)
+    for (auto i = animationStates_.begin(); i != animationStates_.end(); ++i)
     {
         AnimationState* state = *i;
         state->SetStartBone(state->GetStartBone());

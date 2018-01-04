@@ -1,5 +1,5 @@
 #pragma once
-#include "SerializeDefs.h"
+#include "TypeTraits.h"
 #include "Math/Rect.h"
 #include "Math/Sphere.h"
 #include "Math/BoundingBox.h"

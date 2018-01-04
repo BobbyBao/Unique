@@ -1,10 +1,10 @@
 #pragma once
-#include "Serializer.h"
+#include "Visitor.h"
 #include "Serialize/mpack/mpack.h"
 
 namespace Unique
 {
-	class BinarySerializer : public Serializer
+	class BinarySerializer : public Visitor
 	{
 	public:
 		BinarySerializer();

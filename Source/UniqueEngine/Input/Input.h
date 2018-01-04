@@ -34,7 +34,7 @@ namespace Unique
 
 class Deserializer;
 class Graphics;
-class Serializer;
+class Visitor;
 class UIElement;
 class XMLFile;
 const IntVector2 MOUSE_POSITION_OFFSCREEN = IntVector2(M_MIN_INT, M_MIN_INT);
@@ -192,9 +192,9 @@ public:
     /// Begin recording a touch gesture. Return true if successful. The E_GESTURERECORDED event (which contains the ID for the new gesture) will be sent when recording finishes.
     bool RecordGesture();
     /// Save all in-memory touch gestures. Return true if successful.
-    bool SaveGestures(Serializer& dest);
+    bool SaveGestures(Visitor& dest);
     /// Save a specific in-memory touch gesture to a file. Return true if successful.
-    bool SaveGesture(Serializer& dest, unsigned gestureID);
+    bool SaveGesture(Visitor& dest, unsigned gestureID);
     /// Load touch gestures from a file. Return number of loaded gestures, or 0 on failure.
     unsigned LoadGestures(Deserializer& source);
     /// Remove an in-memory gesture by ID. Return true if was found.

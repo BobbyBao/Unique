@@ -1,7 +1,7 @@
 #ifndef SERIALIZETRAITS_H
 #define SERIALIZETRAITS_H
 
-#include "SerializeDefs.h"
+#include "TypeTraits.h"
 #include "../Math/MathDefs.h"
 #include "../Math/Vector2.h"
 #include "../Math/Vector3.h"
@@ -12,7 +12,7 @@
 
 #define uPrimitiveTraits(type)\
 	template<>\
-class SerializeTraits<type> : public SerializeTraitsPrimitive<type>\
+class TypeTraits<type> : public PrimitiveTraits<type>\
 {\
 };
 

@@ -27,7 +27,7 @@
 #include "IO/File.h"
 #include "IO/FileSystem.h"
 #include "Resource/ResourceCache.h"
-#include "Serialize/SerializeTraitsMath.h"
+#include "Serialize/MathTypeTraits.h"
 #include "../Graphics/Geometry.h"
 #include "../Graphics/VertexBuffer.h"
 #include "../Graphics/Model.h"

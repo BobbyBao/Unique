@@ -141,7 +141,7 @@ private:
     /// Finish loading. Sets the scene filename and checksum.
     void FinishLoading(Deserializer* source);
     /// Finish saving. Sets the scene filename and checksum.
-    void FinishSaving(Serializer* dest) const;
+    void FinishSaving(Visitor* dest) const;
 
     /// Preload resources from a binary scene or object prefab file.
     void PreloadResources(File* file, bool isSceneFile);

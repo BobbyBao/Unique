@@ -1,11 +1,11 @@
 #pragma once
-#include "Serializer.h"
+#include "Visitor.h"
 #include "Serialize/DSL/ASTParser.h"
 
 namespace Unique
 {
 
-	class DslDeserializer : public Serializer
+	class DslDeserializer : public Visitor
 	{
 	public:
 		DslDeserializer();

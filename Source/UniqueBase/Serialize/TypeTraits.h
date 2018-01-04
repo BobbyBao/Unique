@@ -36,7 +36,7 @@ transfer.TransferAttributes(##__VA_ARGS__);\
 namespace Unique
 {
 	template<class T>
-	class SerializeTraitsBase
+	class TypeTraitsBase
 	{
 	public:
 		typedef T value_type;
@@ -53,7 +53,7 @@ namespace Unique
 	};
 
 	template<class T>
-	class SerializeTraits : public SerializeTraitsBase<T>
+	class TypeTraits : public TypeTraitsBase<T>
 	{
 	public:
 		template<class TransferFunction>
@@ -65,7 +65,7 @@ namespace Unique
 	};
 
 	template<class T>
-	class SerializeTraitsPrimitive : public SerializeTraitsBase<T>
+	class PrimitiveTraits : public TypeTraitsBase<T>
 	{
 	public:
 		inline static bool IsBasicType() { return true; }
@@ -85,7 +85,7 @@ namespace Unique
 	};
 
 	template<class T, bool IsContinous = true>
-	class SerializeTraitsArray : public SerializeTraitsBase<T>
+	class SerializeTraitsArray : public TypeTraitsBase<T>
 	{
 	public:
 		inline static bool IsArray() { return true; }
@@ -101,7 +101,7 @@ namespace Unique
 	};
 
 	template<class T>
-	class SerializeTraitsMap : public SerializeTraitsBase<T>
+	class SerializeTraitsMap : public TypeTraitsBase<T>
 	{
 	public:
 		inline static bool IsMap() { return true; }

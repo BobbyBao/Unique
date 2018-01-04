@@ -5,7 +5,7 @@
 
 namespace Unique
 {
-	HjsonSerializer::HjsonSerializer() : Serializer(TransferState::Writing)
+	HjsonSerializer::HjsonSerializer() : Visitor(TransferState::Writing)
 	{
 	}
 

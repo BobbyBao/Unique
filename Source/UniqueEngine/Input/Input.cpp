@@ -1218,14 +1218,14 @@ bool Input::RecordGesture()
     return SDL_RecordGesture(-1) != 0;
 }
 
-bool Input::SaveGestures(Serializer& dest)
+bool Input::SaveGestures(Visitor& dest)
 {
 //     RWOpsWrapper<Serializer> wrapper(dest);
 //     return SDL_SaveAllDollarTemplates(wrapper.GetRWOps()) != 0;
 	return true;
 }
 
-bool Input::SaveGesture(Serializer& dest, unsigned gestureID)
+bool Input::SaveGesture(Visitor& dest, unsigned gestureID)
 {
 //     RWOpsWrapper<Serializer> wrapper(dest);
 //     return SDL_SaveDollarTemplate(gestureID, wrapper.GetRWOps()) != 0;

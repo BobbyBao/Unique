@@ -41,7 +41,7 @@ UNIQUE_C_API void Object_SubscribeToGlobalEvent(Object* self, const StringID& ev
 	self->Subscribe(eventType, new StaticEventHandler(self, handler));
 }
 
-UNIQUE_C_API void Object_SubscribeToEvent(Object* self, Object* sender, StringID eventType, EventFn handler)
+UNIQUE_C_API void Object_SubscribeToEvent(Object* self, Object* sender, const StringID& eventType, EventFn handler)
 {
 	self->Subscribe(sender, eventType, new StaticEventHandler(self, handler));
 }

@@ -1,6 +1,6 @@
 #pragma once
 #include "IO/IStream.h"
-#include "SerializeTraitsBasic.h"
+#include "PrimitiveTypeTraits.h"
 
 namespace Unique
 {
@@ -13,10 +13,10 @@ namespace Unique
 
 	class Object;
 
-	class Serializer
+	class Visitor
 	{
 	public:
-		Serializer(TransferState state) 
+		Visitor(TransferState state) 
 			: state_(state)
 		{
 		}
@@ -33,7 +33,7 @@ namespace Unique
 				return false;
 			}
 
-			SerializeTraits<T>::Transfer(data, *this);
+			TypeTraits<T>::Transfer(data, *this);
 
 			EndDocument();
 
@@ -63,11 +63,11 @@ namespace Unique
 				return false;
 			}
 
-			rootObject_ = SerializeTraits<T>::IsObject();
-			rootType_ = SerializeTraits<T>::GetTypeName();
+			rootObject_ = TypeTraits<T>::IsObject();
+			rootType_ = TypeTraits<T>::GetTypeName();
 
 			StartDocument(source.GetName());
-			SerializeTraits<T>::Transfer(data, *this);
+			TypeTraits<T>::Transfer(data, *this);
 			EndDocument();
 			return true;
 		}
@@ -97,19 +97,19 @@ namespace Unique
 
 			attributeFlag_ = metaFlag;
 
-			if (SerializeTraits<T>::IsArray())
+			if (TypeTraits<T>::IsArray())
 			{
 				attributeFlag_ |= AttributeFlag::Vector;
 			}
 
-			if (SerializeTraits<T>::IsMap())
+			if (TypeTraits<T>::IsMap())
 			{
 				attributeFlag_ |= AttributeFlag::Map;
 			}
 
 			if (StartAttribute(name))
 			{
-				Unique::SerializeTraits<T>::Transfer(data, *this);
+				Unique::TypeTraits<T>::Transfer(data, *this);
 				EndAttribute();
 			}
 
@@ -152,7 +152,7 @@ namespace Unique
 		virtual void TransferPrimitive(Vector4& data) {}
 		virtual void TransferPrimitive(Color& data) {}
 		virtual void TransferPrimitive(Quaternion& data) {}
-	protected:
+
 		virtual bool StartDocument(const String& fileName) { return true; }
 		virtual void EndDocument() {}
 		virtual SPtr<Object> CreateObject() { return nullptr; }
@@ -162,6 +162,7 @@ namespace Unique
 		virtual void SetElement(uint index) {}
 		virtual void EndArray() {}
 
+	protected:
 		template <typename First, typename... Rest>
 		void TransferImpl1(First first, Rest&... rest)
 		{
@@ -189,7 +190,7 @@ namespace Unique
 	};
 
 	template<class T>
-	inline void Serializer::TransferObject(SPtr<T>& data)
+	inline void Visitor::TransferObject(SPtr<T>& data)
 	{
 		if (IsReading())
 		{
@@ -208,7 +209,7 @@ namespace Unique
 	}
 
 	template<class T>
-	inline void Serializer::TransferArray(T& data, int metaFlag)
+	inline void Visitor::TransferArray(T& data, int metaFlag)
 	{
 		typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
 		
@@ -222,7 +223,7 @@ namespace Unique
 				{
 					SetElement(i);
 					non_const_value_type val;
-					SerializeTraits<non_const_value_type>::Transfer(val, *this);
+					TypeTraits<non_const_value_type>::Transfer(val, *this);
 					data.push_back(val);
 				}
 
@@ -237,7 +238,7 @@ namespace Unique
 			{
 				for (non_const_value_type& val : data)
 				{
-					SerializeTraits<non_const_value_type>::Transfer(val, *this);
+					TypeTraits<non_const_value_type>::Transfer(val, *this);
 				}
 
 				EndArray();
@@ -248,7 +249,7 @@ namespace Unique
 	}
 
 	template<class T>
-	inline void Serializer::TransferMap(T& data, int metaFlag)
+	inline void Visitor::TransferMap(T& data, int metaFlag)
 	{
 		typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
 		typedef typename non_const_value_type::first_type first_type;
@@ -264,7 +265,7 @@ namespace Unique
 				{
 					SetElement(i);
 					non_const_value_type val;
-					SerializeTraits<non_const_value_type>::Transfer(val, *this);
+					TypeTraits<non_const_value_type>::Transfer(val, *this);
 					data.insert(val);
 				}
 
@@ -279,7 +280,7 @@ namespace Unique
 			{
 				for (non_const_value_type& val : data)
 				{
-					SerializeTraits<non_const_value_type>::Transfer(val, *this);
+					TypeTraits<non_const_value_type>::Transfer(val, *this);
 				}
 
 				EndArray();
@@ -290,7 +291,7 @@ namespace Unique
 
 
 	template<class T>
-	inline void Serializer::TransferSet(T& data, int metaFlag)
+	inline void Visitor::TransferSet(T& data, int metaFlag)
 	{
 		typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
 
@@ -304,7 +305,7 @@ namespace Unique
 				{
 					SetElement(i);
 					non_const_value_type val;
-					SerializeTraits<non_const_value_type>::Transfer(val, *this);
+					TypeTraits<non_const_value_type>::Transfer(val, *this);
 					data.insert(val);
 				}
 
@@ -319,7 +320,7 @@ namespace Unique
 			{
 				for (non_const_value_type& val : data)
 				{
-					SerializeTraits<non_const_value_type>::Transfer(val, *this);
+					TypeTraits<non_const_value_type>::Transfer(val, *this);
 				}
 
 				EndArray();

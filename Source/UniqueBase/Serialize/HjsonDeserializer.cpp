@@ -5,7 +5,7 @@
 namespace Unique
 {
 	HjsonDeserializer::HjsonDeserializer(bool dsl) 
-		: Serializer(TransferState::Reading), dsl_(dsl)
+		: Visitor(TransferState::Reading), dsl_(dsl)
 	{
 	}
 

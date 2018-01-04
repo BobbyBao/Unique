@@ -26,7 +26,7 @@ namespace Unique
 		/// Return base type info.
 		const TypeInfo* GetBaseTypeInfo() const { return baseTypeInfo_; }
 
-		void Transfer(Serializer& serializer, void* obj) const;
+		void Transfer(Visitor& serializer, void* obj) const;
 		/*
 		template<class C, class T>
 		void RegisterAttribute(const char* name, T C::* m, AttributeFlag flag = AttributeFlag::Default)
@@ -93,7 +93,7 @@ namespace Unique
 		}
 
 		uint GetAttributeCount(void* obj) const;
-		void TransferImpl(Serializer& serializer, void* obj) const;
+		void TransferImpl(Visitor& serializer, void* obj) const;
 
 
 		/// Type.

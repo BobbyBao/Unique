@@ -1,5 +1,5 @@
 #pragma once
-#include "SerializeDefs.h"
+#include "TypeTraits.h"
 #include <string>
 #include <vector>
 #include <map>
@@ -13,29 +13,29 @@ namespace Unique
 	uPrimitiveTraits(std::string)
 
 	template<class T, class Allocator>
-	class SerializeTraits<std::vector<T, Allocator> > : public SerializeTraitsArray<std::vector<T, Allocator> >
+	class TypeTraits<std::vector<T, Allocator> > : public SerializeTraitsArray<std::vector<T, Allocator> >
 	{
 	};
 
 	template<class Allocator>
-	class SerializeTraits<std::vector<unsigned char, Allocator> > : public SerializeTraitsArray<std::vector<unsigned char, Allocator> >
+	class TypeTraits<std::vector<unsigned char, Allocator> > : public SerializeTraitsArray<std::vector<unsigned char, Allocator> >
 	{
 	};
 
 	template<class T, class Allocator>
-	class SerializeTraits<std::deque<T, Allocator> > : public SerializeTraitsArray<std::deque<T, Allocator>, false >
+	class TypeTraits<std::deque<T, Allocator> > : public SerializeTraitsArray<std::deque<T, Allocator>, false >
 	{
 	};
 
 	template<class T, class Allocator>
-	class SerializeTraits<std::list<T, Allocator> > : public SerializeTraitsArray<std::list<T, Allocator>, false >
+	class TypeTraits<std::list<T, Allocator> > : public SerializeTraitsArray<std::list<T, Allocator>, false >
 	{
 	public:
 		static void ResizeSTLStyleArray(value_type& data, int rs) { data.resize(rs); }
 	};
 
 	template<class FirstClass, class SecondClass>
-	class SerializeTraits<std::pair<FirstClass, SecondClass> > : public SerializeTraitsBase<std::pair<FirstClass, SecondClass> >
+	class TypeTraits<std::pair<FirstClass, SecondClass> > : public TypeTraitsBase<std::pair<FirstClass, SecondClass> >
 	{
 	public:
 		typedef std::pair<FirstClass, SecondClass>	value_type;
@@ -49,7 +49,7 @@ namespace Unique
 	};
 
 	template<class FirstClass, class SecondClass, class Compare, class Allocator>
-	class SerializeTraits<std::map<FirstClass, SecondClass, Compare, Allocator> > : public SerializeTraitsMap<std::map<FirstClass, SecondClass, Compare, Allocator> >
+	class TypeTraits<std::map<FirstClass, SecondClass, Compare, Allocator> > : public SerializeTraitsMap<std::map<FirstClass, SecondClass, Compare, Allocator> >
 	{
 	public:
 		typedef std::map<FirstClass, SecondClass, Compare, Allocator>	value_type;
@@ -62,7 +62,7 @@ namespace Unique
 	};
 
 	template<class FirstClass, class SecondClass, class Compare, class Allocator>
-	class SerializeTraits<std::unordered_map<FirstClass, SecondClass, Compare, Allocator> > : public SerializeTraitsMap<std::map<FirstClass, SecondClass, Compare, Allocator> >
+	class TypeTraits<std::unordered_map<FirstClass, SecondClass, Compare, Allocator> > : public SerializeTraitsMap<std::map<FirstClass, SecondClass, Compare, Allocator> >
 	{
 	public:
 		typedef std::unordered_map<FirstClass, SecondClass, Compare, Allocator>	value_type;
@@ -75,7 +75,7 @@ namespace Unique
 	};
 
 	template<class FirstClass, class SecondClass, class Compare, class Allocator>
-	class SerializeTraits<std::multimap<FirstClass, SecondClass, Compare, Allocator> > : public SerializeTraitsMap<std::multimap<FirstClass, SecondClass, Compare, Allocator> >
+	class TypeTraits<std::multimap<FirstClass, SecondClass, Compare, Allocator> > : public SerializeTraitsMap<std::multimap<FirstClass, SecondClass, Compare, Allocator> >
 	{
 	public:
 		typedef std::multimap<FirstClass, SecondClass, Compare, Allocator>	value_type;
@@ -89,7 +89,7 @@ namespace Unique
 
 
 	template<class T, class Compare, class Allocator>
-	class SerializeTraits<std::set<T, Compare, Allocator> > : public SerializeTraitsArray<std::set<T, Compare, Allocator> >
+	class TypeTraits<std::set<T, Compare, Allocator> > : public SerializeTraitsArray<std::set<T, Compare, Allocator> >
 	{
 	public:
 		template<class TransferFunction> 

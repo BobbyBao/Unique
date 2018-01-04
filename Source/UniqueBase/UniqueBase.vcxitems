@@ -19,7 +19,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\Variant.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\DslDeserializer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\DSL\ASTParser.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\SerializeTraitsMath.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\MathTypeTraits.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\BinaryDeserializer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\BinarySerializer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\HjsonDeserializer.h" />
@@ -88,7 +88,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Resource\ResourceEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Resource\ResourceImporter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Resource\ResourceRef.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\Serializer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\Visitor.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\hjson\hjson.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-common.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-expect.h" />
@@ -97,10 +97,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-reader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-writer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\SerializeDefs.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\TypeTraits.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\SerializeTraits.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\SerializeTraitsBasic.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\SerializeTraitsStd.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\PrimitiveTypeTraits.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\StdTypeTraits.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Unique.h" />
   </ItemGroup>
   <ItemGroup>
@@ -160,7 +160,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Resource\ResourceCache.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Resource\ResourceImporter.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Resource\ResourceRef.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\Serializer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\Visitor.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\hjson\hjson_decode.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\hjson\hjson_encode.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\hjson\hjson_parsenumber.cpp" />

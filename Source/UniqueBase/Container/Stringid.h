@@ -1,5 +1,5 @@
 #pragma once
-#include "../serialize/SerializeDefs.h"
+#include "../serialize/TypeTraits.h"
 #include "../core/SpinLock.h"
 #include "../Core/StringUtils.h"
 #include "../Container/Str.h"
@@ -135,7 +135,7 @@ namespace Unique
 	};
 
 	template<>
-	class SerializeTraits<Unique::StringID> : public SerializeTraitsPrimitive<Unique::StringID>
+	class TypeTraits<Unique::StringID> : public PrimitiveTraits<Unique::StringID>
 	{
 	public:
 		template<class TransferFunction>

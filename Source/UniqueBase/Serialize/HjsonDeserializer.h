@@ -1,5 +1,5 @@
 #pragma once
-#include "Serializer.h"
+#include "Visitor.h"
 #include "hjson/hjson.h"
 
 namespace Hjson
@@ -10,7 +10,7 @@ namespace Hjson
 namespace Unique
 {
 
-	class HjsonDeserializer : public Serializer
+	class HjsonDeserializer : public Visitor
 	{
 	public:
 		HjsonDeserializer(bool dsl = false);

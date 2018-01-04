@@ -1,5 +1,5 @@
 #pragma once
-#include "Serializer.h"
+#include "Visitor.h"
 #include <fstream>
 
 #include <rapidjson/rapidjson.h>
@@ -11,7 +11,7 @@
 
 namespace Unique
 {
-	class JsonSerializer : public Serializer
+	class JsonSerializer : public Visitor
 	{
 	public:
 		JsonSerializer();
