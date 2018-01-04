@@ -2,13 +2,13 @@
 #ifdef COMPILEVS
 
 // Vertex shader uniforms
-cbuffer FrameVS// : register(b0)
+cbuffer FrameVS
 {
     float cDeltaTime;
     float cElapsedTime;
 }
 
-cbuffer CameraVS// : register(b1)
+cbuffer CameraVS
 {  
 	float4x3 cView;
     float4x3 cViewInv;
@@ -22,14 +22,14 @@ cbuffer CameraVS// : register(b1)
     float4 cClipPlane;
 }
 
-cbuffer ZoneVS// : register(b2)
+cbuffer ZoneVS
 {
     float3 cAmbientStartColor;
     float3 cAmbientEndColor;
     float4x3 cZone;
 }
 
-cbuffer LightVS// : register(b3)
+cbuffer LightVS
 {
     float4 cLightPos;
     float3 cLightDir;
@@ -42,14 +42,14 @@ cbuffer LightVS// : register(b3)
 }
 
 #ifndef CUSTOM_MATERIAL_CBUFFER
-cbuffer MaterialVS// : register(b4)
+cbuffer MaterialVS
 {
     float4 cUOffset;
     float4 cVOffset;
 }
 #endif
 
-cbuffer ObjectVS// : register(b5)
+cbuffer ObjectVS
 {
     float4x3 cModel;
 #ifdef BILLBOARD
@@ -64,13 +64,13 @@ cbuffer ObjectVS// : register(b5)
 #ifdef COMPILEPS
 
 // Pixel shader uniforms
-cbuffer FramePS// : register(b0)
+cbuffer FramePS
 {
     float cDeltaTimePS;
     float cElapsedTimePS;
 }
 
-cbuffer CameraPS //: register(b1)
+cbuffer CameraPS
 {
     float3 cCameraPosPS;
     float4 cDepthReconstruct;
@@ -79,7 +79,7 @@ cbuffer CameraPS //: register(b1)
     float cFarClipPS;
 }
 
-cbuffer ZonePS //: register(b2)
+cbuffer ZonePS
 {
     float4 cAmbientColor;
     float4 cFogParams;
@@ -88,7 +88,7 @@ cbuffer ZonePS //: register(b2)
     float3 cZoneMax;
 }
 
-cbuffer LightPS //: register(b3)
+cbuffer LightPS
 {
     float4 cLightColor;
     float4 cLightPosPS;
@@ -108,7 +108,7 @@ cbuffer LightPS //: register(b3)
 }
 
 #ifndef CUSTOM_MATERIAL_CBUFFER
-cbuffer MaterialPS //: register(b4)
+cbuffer MaterialPS
 {
     float4 cMatDiffColor;
     float3 cMatEmissiveColor;

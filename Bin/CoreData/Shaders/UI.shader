@@ -1,0 +1,68 @@
+
+
+Shader "UI"
+{
+	Properties
+	{
+		TextureSlot DiffMap
+		{
+			Texture ""
+		}
+
+	}
+
+	Pass base
+	{
+		DepthState
+		{
+			DepthEnable false
+			DepthWriteEnable false
+		}
+		
+		RasterizerState 
+		{
+			FillMode SOLID
+			CullMode NONE
+		}
+		
+		InputLayout
+		{
+			LayoutElement
+			{
+				NumComponents 2
+				ValueType FLOAT32
+				IsNormalized false
+			}
+
+			LayoutElement
+			{
+				NumComponents 2
+				ValueType FLOAT32
+				IsNormalized false
+			}
+			
+			LayoutElement
+			{
+				NumComponents 4
+				ValueType UINT8
+				IsNormalized true
+			}
+		}
+	
+		VertexShader
+		{ 
+			EntryPoint "VS" 
+			ShaderProfile "DX_4_0"
+			Defines ""
+			Source "UI.hlsl"
+		}
+		
+		PixelShader
+		{
+			EntryPoint "PS"
+			ShaderProfile "DX_4_0"
+			Defines ""
+			Source "UI.hlsl"
+		}
+	}
+}
