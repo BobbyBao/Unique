@@ -50,6 +50,8 @@ namespace Unique
 
 		void* Map(uint mapFlags = Diligent::MAP_FLAG_DISCARD);
 		void UnMap();
+
+		inline char* GetShadowData() { return data_[0].data(); }
 	protected:
 		/// Create buffer.
 		virtual bool CreateImpl();
@@ -78,6 +80,10 @@ namespace Unique
 		{
 			Create(data, usage, flags);
 		}
+
+		inline uint GetIndexSize() const { return GetStride(); }
+
+		inline uint GetIndexCount() const { return GetCount(); }
 	};
 
 	class UNIQUE_API UniformBuffer : public GraphicsBuffer

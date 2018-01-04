@@ -61,6 +61,12 @@ namespace Unique
 		/// Set size and vertex elements and dynamic mode using legacy element bitmask. Previous data will be lost.
 		bool SetSize(unsigned vertexCount, unsigned elementMask, bool dynamic = false);
 
+		inline uint GetVertexSize() const { return GetStride(); }
+
+		inline uint GetVertexCount() const { return GetCount(); }
+
+		inline uint GetElementMask() const { return elementMask_; }
+
 		/// Return vertex elements.
 		const PODVector<VertexElement>& GetElements() const { return elements_; }
 
@@ -113,6 +119,7 @@ namespace Unique
 		PODVector<VertexElement> elements_;
 		/// Vertex element hash.
 		unsigned long long elementHash_;
+		uint elementMask_;
 	};
 
 	/// Sizes of vertex element types.

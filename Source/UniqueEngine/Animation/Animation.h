@@ -99,7 +99,7 @@ struct AnimationTriggerPoint
     /// Trigger time.
     float time_;
     /// Trigger data.
-    ByteArray data_;
+    String data_;
 };
 
 static const unsigned char CHANNEL_POSITION = 0x1;

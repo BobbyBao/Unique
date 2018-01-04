@@ -389,13 +389,13 @@ void AnimatedModel::SetModel(Model* model, bool createBones)
                 if (geometrySkinMatrices_.size() && geometrySkinMatrices_[i].size())
                 {
                     batches_[i].worldTransform_ = &geometrySkinMatrices_[i][0];
-                    batches_[i].numWorldTransforms_ = geometrySkinMatrices_[i].size();
+                    batches_[i].numWorldTransforms_ = (uint)geometrySkinMatrices_[i].size();
                 }
                 // If not, use the global skin matrices
                 else
                 {
                     batches_[i].worldTransform_ = &skinMatrices_[0];
-                    batches_[i].numWorldTransforms_ = skinMatrices_.size();
+                    batches_[i].numWorldTransforms_ = (uint)skinMatrices_.size();
                 }
             }
             else
@@ -782,14 +782,14 @@ void AnimatedModel::SetModelAttr(const ResourceRef& value)
     SetModel(cache.GetResource<Model>(value.name_), !loading_);
 }
 
-void AnimatedModel::SetBonesEnabledAttr(const Vector<byte>& value)
+void AnimatedModel::SetBonesEnabledAttr(const Vector<bool>& value)
 {
     Vector<Bone>& bones = skeleton_.GetModifiableBones();
     for (unsigned i = 0; i < bones.size() && i < value.size(); ++i)
         bones[i].animated_ = value[i];
 }
 /*
-void AnimatedModel::SetAnimationStatesAttr(const Vector<byte>& value)
+void AnimatedModel::SetAnimationStatesAttr(const Vector<bool>& value)
 {
     ResourceCache& cache = GetSubsystem<ResourceCache>();
     RemoveAllAnimationStates();
@@ -843,16 +843,16 @@ ResourceRef AnimatedModel::GetModelAttr() const
     return GetResourceRef(model_, Model::GetTypeStatic());
 }
 
-Vector<byte> AnimatedModel::GetBonesEnabledAttr() const
+Vector<bool> AnimatedModel::GetBonesEnabledAttr() const
 {
-	Vector<byte> ret;
+	Vector<bool> ret;
     const Vector<Bone>& bones = skeleton_.GetBones();
     ret.reserve(bones.size());
     for (Vector<Bone>::const_iterator i = bones.begin(); i != bones.end(); ++i)
         ret.push_back(i->animated_);
     return ret;
 }
-
+/*
 Vector<byte> AnimatedModel::GetAnimationStatesAttr() const
 {
 	Vector<byte> ret;
@@ -871,7 +871,7 @@ Vector<byte> AnimatedModel::GetAnimationStatesAttr() const
         ret.push_back((int)state->GetLayer());
     }
     return ret;
-}
+}*/
 
 void AnimatedModel::UpdateBoneBoundingBox()
 {
@@ -1257,7 +1257,7 @@ void AnimatedModel::ApplyAnimation()
     if (isMaster_)
     {
         skeleton_.ResetSilent();
-        for (Vector<SPtr<AnimationState> >::iterator i = animationStates_.begin(); i != animationStates_.end(); ++i)
+        for (auto i = animationStates_.begin(); i != animationStates_.end(); ++i)
             (*i)->Apply();
 
         // Skeleton reset and animations apply the node transforms "silently" to avoid repeated marking dirty. Mark dirty now
@@ -1338,7 +1338,7 @@ void AnimatedModel::UpdateMorphs()
                     {
                         if (morphs_[j].weight_ != 0.0f)
                         {
-                            HashMap<unsigned, VertexBufferMorph>::iterator k = morphs_[j].buffers_.find(i);
+                            auto k = morphs_[j].buffers_.find(i);
                             if (k != morphs_[j].buffers_.end())
                                 ApplyMorph(buffer, dest, morphStart, k->second, morphs_[j].weight_);
                         }

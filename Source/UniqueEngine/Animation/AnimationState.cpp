@@ -294,8 +294,6 @@ void AnimationState::AddTime(float delta)
     // Process finish event
     if (sendFinishEvent)
     {
-        //using namespace AnimationFinished;
-
         WPtr<AnimationState> self(this);
         WPtr<Node> senderNode(model_ ? model_->GetNode() : node_);
 
@@ -343,8 +341,6 @@ void AnimationState::AddTime(float delta)
 
             if (oldTime <= frameTime && time > frameTime)
             {
-               // using namespace AnimationTrigger;
-
                 WPtr<AnimationState> self(this);
                 WPtr<Node> senderNode(model_ ? model_->GetNode() : node_);
 

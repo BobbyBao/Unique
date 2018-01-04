@@ -28,43 +28,43 @@ namespace Unique
 	uEnum
 	(
 		VertexElementType,
-		"INT", 
+		"INT",
 		"FLOAT",
 		"VECTOR2",
 		"VECTOR3",
 		"VECTOR4",
 		"UBYTE4",
 		"UBYTE4_NORM"
-	)
-	
+	);
+
 	uEnum
 	(
 		VertexElementSemantic,
 		"POSITION",
-		"NORMAL", 
+		"NORMAL",
 		"BINORMAL",
-		"TANGENT", 
+		"TANGENT",
 		"TEXCOORD",
 		"COLOR",
 		"BLENDWEIGHTS",
 		"BLENDINDICES",
 		"OBJECTINDEX"
-	)
+	);
 
-		uClassTraits
-		(
-			VertexElement,
-			"Type", self.type_,
-			"Semantic", self.semantic_,
-			"Index", self.index_,
-			"PerInstance", self.perInstance_
-		)
+	uClassTraits
+	(
+		VertexElement,
+		"Type", self.type_,
+		"Semantic", self.semantic_,
+		"Index", self.index_,
+		"PerInstance", self.perInstance_
+	);
 
 	uObject(VertexBuffer)
 	{
 		uFactory("Graphics")
-			uAttribute("Elements", elements_)
-			uAttribute("Data", data_[0])
+		uAttribute("Elements", elements_);
+		uAttribute("Data", data_[0]);
 	}
 
 	extern UNIQUE_API const VertexElement LEGACY_VERTEXELEMENTS[] =
@@ -174,6 +174,7 @@ namespace Unique
 	{
 		unsigned elementOffset = 0;
 		elementHash_ = 0;
+		elementMask_ = 0;
 
 		for (auto i = elements_.begin(); i != elements_.end(); ++i)
 		{
@@ -181,6 +182,13 @@ namespace Unique
 			elementOffset += ELEMENT_TYPESIZES[i->type_];
 			elementHash_ <<= 6;
 			elementHash_ += (((int)i->type_ + 1) * ((int)i->semantic_ + 1) + i->index_);
+
+			for (unsigned j = 0; j < MAX_LEGACY_VERTEX_ELEMENTS; ++j)
+			{
+				const VertexElement& legacy = LEGACY_VERTEXELEMENTS[j];
+				if (i->type_ == legacy.type_ && i->semantic_ == legacy.semantic_ && i->index_ == legacy.index_)
+					elementMask_ |= (1 << j);
+			}
 		}
 
 		desc_.ElementByteStride = elementOffset;

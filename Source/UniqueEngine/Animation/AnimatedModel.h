@@ -137,17 +137,17 @@ public:
     /// Set model attribute.
     void SetModelAttr(const ResourceRef& value);
     /// Set bones' animation enabled attribute.
-    void SetBonesEnabledAttr(const Vector<byte>& value);
+    void SetBonesEnabledAttr(const Vector<bool>& value);
     /// Set animation states attribute.
-    void SetAnimationStatesAttr(const Vector<byte>& value);
+    void SetAnimationStatesAttr(const Vector<bool>& value);
     /// Set morphs attribute.
     void SetMorphsAttr(const PODVector<unsigned char>& value);
     /// Return model attribute.
     ResourceRef GetModelAttr() const;
     /// Return bones' animation enabled attribute.
-	Vector<byte> GetBonesEnabledAttr() const;
+	Vector<bool> GetBonesEnabledAttr() const;
     /// Return animation states attribute.
-	Vector<byte> GetAnimationStatesAttr() const;
+	//Vector<bool> GetAnimationStatesAttr() const;
     /// Return morphs attribute.
     const PODVector<unsigned char>& GetMorphsAttr() const;
 

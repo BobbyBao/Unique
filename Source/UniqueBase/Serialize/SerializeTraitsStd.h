@@ -98,15 +98,7 @@ namespace Unique
 			transfer.TransferSet(data);
 		}
 	};
-
-	// Vector<bool> serialization is not allowed
-	template<class Allocator>
-	class SerializeTraits<std::vector<bool, Allocator> > : public SerializeTraitsBase<std::vector<bool, Allocator> >
-	{
-	public:
-		// disallow std::vector<bool> serialization	
-	};
-
+	
 	template<class T>
 	struct NonConstContainerValueType<std::set<T> >
 	{
