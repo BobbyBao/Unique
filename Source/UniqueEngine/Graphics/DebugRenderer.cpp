@@ -53,6 +53,7 @@ DebugRenderer::DebugRenderer() : lineAntiAlias_(false)
 	material_->SetShader(shader);
 	pipelineDepth_ = shader->GetPipeline("base", "");
 	pipelineNoDepth_ = new PipelineState(pipelineDepth_->GetShaderProgram());
+	pipelineNoDepth_->SetDepthStencilState(DepthStencilStateDesc(false, false));
 }
 
 DebugRenderer::~DebugRenderer()

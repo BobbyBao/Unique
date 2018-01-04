@@ -3,6 +3,8 @@
 
 namespace Unique
 {
+	using DepthStencilStateDesc = Diligent::DepthStencilStateDesc;
+
 	class ShaderVariation;
 	class Shader;
 	class Pass;
@@ -31,7 +33,7 @@ namespace Unique
 		IPipelineState* GetPipeline();
 		IShaderResourceBinding* GetShaderResourceBinding() { return shaderResourceBinding_; }
 
-		void SetDepthStencilState(const Diligent::DepthStencilStateDesc& dss);
+		void SetDepthStencilState(const DepthStencilStateDesc& dss);
 
 	private:
 		void Init();
