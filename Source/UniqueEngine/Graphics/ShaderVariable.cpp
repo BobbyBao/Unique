@@ -63,6 +63,7 @@ namespace Unique
 	void TextureSlot::SetTexture(Texture* tex)
 	{
 		texture_ = tex;
+
 		SPtr<Texture> texture = texture_;
 		uCall
 		(
@@ -75,7 +76,7 @@ namespace Unique
 
 	void TextureSlot::SetTextureAttr(const ResourceRef& texAttr)
 	{
-		texAttr_ = texAttr_;
+		texAttr_ = texAttr;
 		Texture* tex = GetSubsystem<ResourceCache>().GetResource<Texture>(texAttr.name_);
 		texture_ = tex;
 	}

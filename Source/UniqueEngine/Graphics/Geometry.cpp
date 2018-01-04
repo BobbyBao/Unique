@@ -171,12 +171,12 @@ namespace Unique
 		DrawAttribs drawAttribs;
 		drawAttribs.Topology = (Diligent::PRIMITIVE_TOPOLOGY)primitiveType_;
 		drawAttribs.IsIndexed = (indexBuffer_ != nullptr);
-		drawAttribs.IndexType = indexBuffer_->GetStride() == 4 ? ValueType::VT_UINT32 : ValueType::VT_UINT16;
-
+		
 		if (indexBuffer_ && indexCount_ > 0)
 		{
 			drawAttribs.FirstIndexLocation = indexStart_;
-			drawAttribs.NumIndices = indexCount_;
+			drawAttribs.NumIndices = indexCount_; 
+			drawAttribs.IndexType = indexBuffer_->GetStride() == 4 ? ValueType::VT_UINT32 : ValueType::VT_UINT16;
 			deviceContext->SetIndexBuffer(*indexBuffer_, 0);
 		}
 		else if (vertexCount_ > 0)
@@ -215,12 +215,12 @@ namespace Unique
 		DrawAttribs drawAttribs;
 		drawAttribs.Topology = (Diligent::PRIMITIVE_TOPOLOGY)primitiveType;
 		drawAttribs.IsIndexed = (indexBuffer_ != nullptr);
-		drawAttribs.IndexType = indexBuffer_->GetStride() == 4 ? ValueType::VT_UINT32 : ValueType::VT_UINT16;
-
+		
 		if (indexBuffer_ && indexCount_ > 0)
 		{
 			drawAttribs.FirstIndexLocation = indexStart;
 			drawAttribs.NumIndices = indexCount;
+			drawAttribs.IndexType = indexBuffer_->GetStride() == 4 ? ValueType::VT_UINT32 : ValueType::VT_UINT16;
 			deviceContext->SetIndexBuffer(*indexBuffer_, 0);
 		}
 		else if (vertexCount_ > 0)
@@ -255,14 +255,15 @@ namespace Unique
 		DrawAttribs drawAttribs;
 		drawAttribs.Topology = (Diligent::PRIMITIVE_TOPOLOGY)primitiveType_;
 		drawAttribs.IsIndexed = (indexBuffer_ != nullptr);
-		drawAttribs.IndexType = indexBuffer_->GetStride() == 4 ? ValueType::VT_UINT32 : ValueType::VT_UINT16;
-
+		
 		deviceContext->SetVertexBuffers(0, (uint)vertexBuffers_.size(), buffer, strides, offsets, SET_VERTEX_BUFFERS_FLAG_RESET);
 
 		if (indexBuffer_ && indexCount_ > 0)
-		{
-			deviceContext->SetIndexBuffer(*indexBuffer_, 0);
+		{	
 			drawAttribs.NumIndices = indexCount_;
+			drawAttribs.IndexType = indexBuffer_->GetStride() == 4 ? ValueType::VT_UINT32 : ValueType::VT_UINT16;
+			deviceContext->SetIndexBuffer(*indexBuffer_, 0);
+	
 		}
 		else if (vertexCount_ > 0)
 		{

@@ -19,16 +19,11 @@ namespace Unique.Engine
         public static OS OS => os_;
         private static OS os_;
                 
-        public Application()
-        {
-            InitOS();            
-        }
-
         public Application(string[] args)
         {
             InitOS();
 
-            Unique_Setup(args.Length, args);
+            native_ = Unique_Setup(args.Length, args);
 
             Setup();
         }
@@ -55,7 +50,7 @@ namespace Unique.Engine
         
         public void Run()
         {
-            Unique_Start(DeviceType.D3D11, IntPtr.Zero);
+            Unique_Start(native_, DeviceType.D3D11, IntPtr.Zero);
 
         }
 
@@ -65,7 +60,7 @@ namespace Unique.Engine
         }
         
         protected virtual void Setup()
-        {/*
+        {
             Subscribe((Startup e) =>
             {
                 Start();
@@ -84,7 +79,7 @@ namespace Unique.Engine
             Subscribe((Update e) =>
             {
                 UpdateFrame(e.timeStep);
-            });*/
+            });
         }
 
         protected virtual void Start()

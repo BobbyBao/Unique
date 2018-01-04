@@ -48,7 +48,7 @@ namespace Unique
 		try
 		{
 			Unique_Setup(argc, argv);
-			auto app = UPtr<T>(new T());
+			auto app = SPtr<T>(new T());
 			app->Run();
 			app = nullptr;
 			Application::context_ = nullptr;
@@ -63,8 +63,8 @@ namespace Unique
 		return 0;
 	}
 	
-	UNIQUE_C_API void Unique_Setup(int argc, char* argv[]);
-	UNIQUE_C_API int Unique_Start(DeviceType deviceType, void* window);
+	UNIQUE_C_API Application* Unique_Setup(int argc, char* argv[]);
+	UNIQUE_C_API void Unique_Start(Application* app, DeviceType deviceType, void* window);
 	UNIQUE_C_API void Unique_Shutdown();
 }
 

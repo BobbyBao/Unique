@@ -11,7 +11,7 @@ namespace UniqueStudio
     {
         static void Main(string[] args)
         {
-            var app = new Application(new string[] {"Test"});
+            Application app = new Application(new string[] {"Test"});
             app.Run();
         }
     }

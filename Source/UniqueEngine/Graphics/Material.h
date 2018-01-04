@@ -17,6 +17,7 @@ namespace Unique
 		Shader* GetShader() { return shader_; }
 		void SetShader(Shader* shader) { shader_ = shader; }
 
+		void SetTexture(const StringID& name, const ResourceRef& textureRef);
 		void SetTexture(const StringID& name, Texture* texture);
 		void Apply(PipelineState* pipeline);
 	protected:

@@ -43,6 +43,8 @@ namespace Unique
 
 		StaticModel* model = node_->CreateComponent<StaticModel>();
 		model->SetModelAttr(ResourceRef::Create<Model>("Models/Kachujin/Kachujin.mdl"));
+// 		model->SetMaterialsAttr(ResourceRefList::Create<Material>(
+// 		{ "Models/Kachujin/Materials/Kachujin.material" }));
 		
 		/*
 		Model* m = new Model();
@@ -55,14 +57,7 @@ namespace Unique
 
 		SPtr<Material> mat(new Material());
 		mat->SetShaderAttr(ResourceRef::Create<Shader>("Shaders/Textured.shader"));
-
-// 		{
-// 			JsonSerializer jsonSer;
-// 			jsonSer.Save("test_shader.json", SPtr<Shader>(mat->GetShader()));
-// 		}
-
-		Texture* tex = cache.GetResource<Texture>("Models/Kachujin/Textures/Kachujin_diffuse.png");
-		mat->SetTexture("DiffMap", tex);
+		mat->SetTexture("DiffMap", ResourceRef::Create<Texture>("Models/Kachujin/Textures/Kachujin_diffuse.png"));
 		model->SetMaterial(mat);
 
 // 		{
@@ -93,6 +88,6 @@ namespace Unique
 
 	void SceneSample::HandlePostRenderUpdate(const struct PostRenderUpdate& eventData)
 	{
-	//	GetSubsystem<Renderer>().DrawDebugGeometry(true);
+		GetSubsystem<Renderer>().DrawDebugGeometry(true);
 	}
 }

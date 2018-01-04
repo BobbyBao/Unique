@@ -546,7 +546,11 @@ namespace Unique
 		auto it = batchQueues.find(batch.pass_->passIndex_);
 		if (it != batchQueues.end())
 		{
-			it->second.batches_.push_back(batch);
+			auto& batchQueue = it->second;
+			batch.transformOffset_ = GetMatrics(batch.worldTransform_, 1);
+			batchQueue.batches_.push_back(batch);
+			batchQueue.sortedBatches_.push_back(&batchQueue.batches_.back());
+		
 		}
 		else
 		{

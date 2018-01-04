@@ -64,8 +64,11 @@ bool Skeleton::Load(IStream& source)
         newBone.collisionMask_ = source.Read<byte>();
         if (newBone.collisionMask_ & BONECOLLISION_SPHERE)
             newBone.radius_ = source.Read<float>();
-        if (newBone.collisionMask_ & BONECOLLISION_BOX)
-            newBone.boundingBox_ = source.Read<BoundingBox>();
+		if (newBone.collisionMask_ & BONECOLLISION_BOX)
+		{
+			newBone.boundingBox_.min_ = source.Read<Vector3>();
+			newBone.boundingBox_.max_ = source.Read<Vector3>();
+		}
 
         if (newBone.parentIndex_ == i)
             rootBoneIndex_ = i;

@@ -49,7 +49,6 @@ namespace Unique
 		Uniform(const StringID& name, Uniform::Type type, const UniformData& val);
 		~Uniform();
 
-		
 		StringID name_;
 		Uniform::Type type_ = Uniform::Type::INT;
 		UniformData value_;
@@ -62,6 +61,7 @@ namespace Unique
 			transfer.StartObject(3);
 			transfer.TransferAttribute("Name", name_);
 			transfer.TransferAttribute("Type", type_);
+
 			switch (type_)
 			{
 			case Unique::Uniform::INT:
@@ -86,6 +86,7 @@ namespace Unique
 				transfer.TransferAttribute("Value", value_.intVal_);
 				break;
 			}
+
 			transfer.EndObject();
 		}
 

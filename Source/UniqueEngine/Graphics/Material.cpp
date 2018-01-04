@@ -55,6 +55,26 @@ namespace Unique
 		shader_ = GetSubsystem<ResourceCache>().GetResource<Shader>(shaderAttr_.name_);
 	}
 
+
+	void Material::SetTexture(const StringID& name, const ResourceRef& textureRef)
+	{
+		for (auto& ts : textureSlots_)
+		{
+			if (ts.name_ == name)
+			{
+				ts.SetTextureAttr(textureRef);
+				return;
+			}
+
+		}
+
+		TextureSlot textureSlot;
+		textureSlot.name_ = name;
+		textureSlot.SetTextureAttr(textureRef);
+		textureSlots_.push_back(textureSlot);
+
+	}
+
 	void Material::SetTexture(const StringID& name, Texture* texture)
 	{
 		for (auto& ts : textureSlots_)
@@ -77,7 +97,6 @@ namespace Unique
 	{
 		for (auto& uniform : uniforms_)
 		{
-
 			if (uniform.shaderVarible_.IsValid())
 			{
 			//	uniform.shaderVarible_.Lock()->Set();
@@ -92,11 +111,6 @@ namespace Unique
 			{
 				sv->Set(*ts.texture_->GetShaderResourceView());
 			}
-// 			auto sampler = pipeline->GetShaderVariable(ts.samplerName_);
-// 			if (sampler)
-// 			{
-// 				sampler->Set(ts.texture_->GetSampler());
-// 			}
 		}
 	}
 

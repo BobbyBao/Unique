@@ -197,7 +197,7 @@ void Context::RegisterSubsystem(Object* object)
         return;
 
 	subsystemVec_.push_back(object);
-    subsystems_[object->GetType()] = object;
+    subsystems_[object->GetType()] = SPtr<Object>(object);
 }
 
 void Context::RemoveSubsystem(const StringID& objectType)

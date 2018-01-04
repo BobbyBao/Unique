@@ -177,7 +177,7 @@ namespace Unique
 	{
 		RenderSemWait();
 
-		LOG_INFO_MESSAGE("Update");
+		//LOG_INFO_MESSAGE("Update");
 
 		FrameNoRenderWait();
 	}
@@ -198,7 +198,7 @@ namespace Unique
 				ExecuteCommands(comands_);
 			}
 
-			LOG_INFO_MESSAGE("Render");
+			//LOG_INFO_MESSAGE("Render");
 
 			SwapContext();
 

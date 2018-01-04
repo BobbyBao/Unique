@@ -285,7 +285,8 @@ bool Model::Load(IStream& source)
     memoryUse += skeleton_.GetNumBones() * sizeof(Bone);
 
     // Read bounding box
-    boundingBox_ = source.Read<BoundingBox>();
+	boundingBox_.min_ = source.Read<Vector3>();
+	boundingBox_.max_ = source.Read<Vector3>();
 
     // Read geometry centers
     for (unsigned i = 0; i < geometries_.size() && !source.IsEof(); ++i)

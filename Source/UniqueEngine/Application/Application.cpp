@@ -126,27 +126,28 @@ namespace Unique
 	{
 	}
 
-	UNIQUE_C_API void Unique_Setup(int argc, char* argv[])
+	UNIQUE_C_API Application* Unique_Setup(int argc, char* argv[])
 	{
 		Application::context_.reset(new Context());
 		Application::Setup(argc, argv);
+		Application* app = new Application();
+
+		return app;
 	}
 	
-	UNIQUE_C_API int Unique_Start(DeviceType deviceType, void* window)
+	UNIQUE_C_API void Unique_Start(Application* app, DeviceType deviceType, void* window)
 	{
 		try
-		{
-			auto app = UPtr<Application>(new Application());
+		{	
 			app->SetDeviceType(deviceType);
 			app->Run();
-			app = nullptr;
+			app->ReleaseRef();
 			Application::context_ = nullptr;
 		}
 		catch (const std::exception& e)
 		{
 			std::cerr << e.what() << std::endl;
 		}
-		return 0;
 	}
 
 	UNIQUE_C_API void Unique_Shutdown()

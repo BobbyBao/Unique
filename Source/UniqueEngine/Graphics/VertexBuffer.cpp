@@ -159,7 +159,7 @@ namespace Unique
 		desc_.ElementByteStride = GetVertexSize(elements_);
 		desc_.uiSizeInBytes = vertexCount * desc_.ElementByteStride;
 		desc_.Usage = dynamic ? Diligent::USAGE_DYNAMIC : Diligent::USAGE_STATIC;
-		
+		desc_.CPUAccessFlags |= (dynamic ? Diligent::CPU_ACCESS_WRITE : 0);
 		data_[0].resize(desc_.uiSizeInBytes);
 
 		if (IsDynamic())

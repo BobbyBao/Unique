@@ -252,13 +252,13 @@ void ResourceCache::ReleaseResources(StringID type, bool force)
 {
     bool released = false;
 
-    HashMap<StringID, ResourceGroup>::iterator i = resourceGroups_.find(type);
+    auto i = resourceGroups_.find(type);
     if (i != resourceGroups_.end())
     {
-        for (HashMap<StringID, SPtr<Resource> >::iterator j = i->second.resources_.begin();
+        for (auto j = i->second.resources_.begin();
              j != i->second.resources_.end();)
         {
-            HashMap<StringID, SPtr<Resource> >::iterator current = j++;
+            auto current = j++;
             // If other references exist, do not release, unless forced
             if ((current->second.Refs() == 1 && current->second.WeakRefs() == 0) || force)
             {
@@ -276,13 +276,13 @@ void ResourceCache::ReleaseResources(StringID type, const String& partialName, b
 {
     bool released = false;
 
-    HashMap<StringID, ResourceGroup>::iterator i = resourceGroups_.find(type);
+    auto i = resourceGroups_.find(type);
     if (i != resourceGroups_.end())
     {
-        for (HashMap<StringID, SPtr<Resource> >::iterator j = i->second.resources_.begin();
+        for (auto j = i->second.resources_.begin();
              j != i->second.resources_.end();)
         {
-            HashMap<StringID, SPtr<Resource> >::iterator current = j++;
+            auto current = j++;
             if (current->second->GetName().Contains(partialName))
             {
                 // If other references exist, do not release, unless forced
@@ -307,14 +307,14 @@ void ResourceCache::ReleaseResources(const String& partialName, bool force)
 
     while (repeat--)
     {
-        for (HashMap<StringID, ResourceGroup>::iterator i = resourceGroups_.begin(); i != resourceGroups_.end(); ++i)
+        for (auto i = resourceGroups_.begin(); i != resourceGroups_.end(); ++i)
         {
             bool released = false;
 
-            for (HashMap<StringID, SPtr<Resource> >::iterator j = i->second.resources_.begin();
+            for (auto j = i->second.resources_.begin();
                  j != i->second.resources_.end();)
             {
-                HashMap<StringID, SPtr<Resource> >::iterator current = j++;
+                auto current = j++;
                 if (current->second->GetName().Contains(partialName))
                 {
                     // If other references exist, do not release, unless forced
@@ -337,15 +337,15 @@ void ResourceCache::ReleaseAllResources(bool force)
 
     while (repeat--)
     {
-        for (HashMap<StringID, ResourceGroup>::iterator i = resourceGroups_.begin();
+        for (auto i = resourceGroups_.begin();
              i != resourceGroups_.end(); ++i)
         {
             bool released = false;
 
-            for (HashMap<StringID, SPtr<Resource> >::iterator j = i->second.resources_.begin();
+            for (auto j = i->second.resources_.begin();
                  j != i->second.resources_.end();)
             {
-                HashMap<StringID, SPtr<Resource> >::iterator current = j++;
+                auto current = j++;
                 // If other references exist, do not release, unless forced
                 if ((current->second.Refs() == 1 && current->second.WeakRefs() == 0) || force)
                 {
@@ -706,7 +706,7 @@ unsigned ResourceCache::GetNumBackgroundLoadResources() const
 void ResourceCache::GetResources(PODVector<Resource*>& result, StringID type) const
 {
     result.clear();
-    HashMap<StringID, ResourceGroup>::const_iterator i = resourceGroups_.find(type);
+    auto i = resourceGroups_.find(type);
     if (i != resourceGroups_.end())
     {
         for (HashMap<StringID, SPtr<Resource> >::const_iterator j = i->second.resources_.begin();
@@ -750,20 +750,20 @@ bool ResourceCache::Exists(const String& nameIn) const
 
 unsigned long long ResourceCache::GetMemoryBudget(StringID type) const
 {
-    HashMap<StringID, ResourceGroup>::const_iterator i = resourceGroups_.find(type);
+    auto i = resourceGroups_.find(type);
     return i != resourceGroups_.end() ? i->second.memoryBudget_ : 0;
 }
 
 unsigned long long ResourceCache::GetMemoryUse(StringID type) const
 {
-    HashMap<StringID, ResourceGroup>::const_iterator i = resourceGroups_.find(type);
+    auto i = resourceGroups_.find(type);
     return i != resourceGroups_.end() ? i->second.memoryUse_ : 0;
 }
 
 unsigned long long ResourceCache::GetTotalMemoryUse() const
 {
     unsigned long long total = 0;
-    for (HashMap<StringID, ResourceGroup>::const_iterator i = resourceGroups_.begin(); i != resourceGroups_.end(); ++i)
+    for (auto i = resourceGroups_.begin(); i != resourceGroups_.end(); ++i)
         total += i->second.memoryUse_;
     return total;
 }
@@ -934,7 +934,7 @@ String ResourceCache::PrintMemoryUsage() const
     unsigned long long totalAverage = 0;
     unsigned long long totalUse = GetTotalMemoryUse();
 
-    for (HashMap<StringID, ResourceGroup>::const_iterator cit = resourceGroups_.begin(); cit != resourceGroups_.end(); ++cit)
+    for (auto cit = resourceGroups_.begin(); cit != resourceGroups_.end(); ++cit)
     {
         const unsigned resourceCt = (unsigned)cit->second.resources_.size();
         unsigned long long average = 0;
@@ -987,10 +987,10 @@ const SPtr<Resource>& ResourceCache::FindResource(StringID type, StringID nameHa
 {
     std::lock_guard<Mutex> lock(resourceMutex_);
 
-    HashMap<StringID, ResourceGroup>::iterator i = resourceGroups_.find(type);
+    auto i = resourceGroups_.find(type);
     if (i == resourceGroups_.end())
         return noResource;
-    HashMap<StringID, SPtr<Resource> >::iterator j = i->second.resources_.find(nameHash);
+    auto j = i->second.resources_.find(nameHash);
     if (j == i->second.resources_.end())
         return noResource;
 
@@ -1001,9 +1001,9 @@ const SPtr<Resource>& ResourceCache::FindResource(StringID nameHash)
 {
     std::lock_guard<Mutex> lock(resourceMutex_);
 
-    for (HashMap<StringID, ResourceGroup>::iterator i = resourceGroups_.begin(); i != resourceGroups_.end(); ++i)
+    for (auto i = resourceGroups_.begin(); i != resourceGroups_.end(); ++i)
     {
-        HashMap<StringID, SPtr<Resource> >::iterator j = i->second.resources_.find(nameHash);
+        auto j = i->second.resources_.find(nameHash);
         if (j != i->second.resources_.end())
             return j->second;
     }
@@ -1016,14 +1016,14 @@ void ResourceCache::ReleasePackageResources(PackageFile* package, bool force)
     HashSet<StringID> affectedGroups;
 
     const HashMap<String, PackageEntry>& entries = package->GetEntries();
-    for (HashMap<String, PackageEntry>::const_iterator i = entries.begin(); i != entries.end(); ++i)
+    for (auto i = entries.begin(); i != entries.end(); ++i)
     {
         StringID nameHash(i->first);
 
         // We do not know the actual resource type, so search all type containers
-        for (HashMap<StringID, ResourceGroup>::iterator j = resourceGroups_.begin(); j != resourceGroups_.end(); ++j)
+        for (auto j = resourceGroups_.begin(); j != resourceGroups_.end(); ++j)
         {
-            HashMap<StringID, SPtr<Resource> >::iterator k = j->second.resources_.find(nameHash);
+            auto k = j->second.resources_.find(nameHash);
             if (k != j->second.resources_.end())
             {
                 // If other references exist, do not release, unless forced
@@ -1037,13 +1037,13 @@ void ResourceCache::ReleasePackageResources(PackageFile* package, bool force)
         }
     }
 
-    for (HashSet<StringID>::iterator i = affectedGroups.begin(); i != affectedGroups.end(); ++i)
+    for (auto i = affectedGroups.begin(); i != affectedGroups.end(); ++i)
         UpdateResourceGroup(*i);
 }
 
 void ResourceCache::UpdateResourceGroup(StringID type)
 {
-    HashMap<StringID, ResourceGroup>::iterator i = resourceGroups_.find(type);
+    auto i = resourceGroups_.find(type);
     if (i == resourceGroups_.end())
         return;
 
@@ -1051,9 +1051,9 @@ void ResourceCache::UpdateResourceGroup(StringID type)
     {
         unsigned totalSize = 0;
         unsigned oldestTimer = 0;
-        HashMap<StringID, SPtr<Resource> >::iterator oldestResource = i->second.resources_.end();
+        auto oldestResource = i->second.resources_.end();
 
-        for (HashMap<StringID, SPtr<Resource> >::iterator j = i->second.resources_.begin();
+        for (auto j = i->second.resources_.begin();
              j != i->second.resources_.end(); ++j)
         {
             totalSize += j->second->GetMemoryUse();
@@ -1154,13 +1154,14 @@ SPtr<Resource> ResourceCache::LoadResource(StringID type, const String& name)
 	if (it != resourceImporters_.end())
 	{
 		resource = it->second->Import(name);
+
+		resource->SetName(name);
+		if (!resource->Load())
+		{
+			return SPtr<Resource>();
+		}
 	}
 
-	resource->SetName(name);
-	if (!resource->Load())
-	{
-		return SPtr<Resource>();
-	}
 
 	return resource;
 }

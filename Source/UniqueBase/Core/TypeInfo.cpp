@@ -112,7 +112,7 @@ namespace Unique
 		auto& attributes = GetAttributes();
 		for (Attribute* attri : attributes)
 		{
-			if (!attri->IsDefault(obj))
+			if (!attri->IsDefault(obj) || !serializer.IsWriting())
 			{
 				attri->Visit(serializer, obj);
 			}
