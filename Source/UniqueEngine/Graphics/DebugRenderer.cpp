@@ -573,7 +573,7 @@ void DebugRenderer::Render(View* view)
 	uint count = 0;
 		
 	Batch batch(geometry_, material_, &GetNode()->GetWorldTransform());
-	batch.pass_ = material_->GetShader()->GetPass("base");
+	batch.pass_ = material_->GetShader()->GetPass(Shader::basePassIndex);
 	batch.primitiveTopology_ = PrimitiveTopology::LINE_LIST;
 	batch.pipelineState_ = pipelineDepth_;
 

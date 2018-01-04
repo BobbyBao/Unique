@@ -92,7 +92,7 @@ namespace Unique
 	void Renderer::HandleRenderUpdate(const RenderUpdate& eventData)
 	{
 		UNIQUE_PROFILE(UpdateViews);
-
+		
 		auto& views = MainContext(views_);
 		views.clear();
 		preparedViews_.clear();

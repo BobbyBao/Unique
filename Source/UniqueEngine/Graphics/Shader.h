@@ -74,13 +74,13 @@ namespace Unique
 		~Shader();
 
 		virtual bool Prepare();
-		
 		virtual bool Create();
 
 		Pass* AddPass(const String& name);
 		Pass* GetPass(const String & pass);
 		Pass* GetPass(unsigned passIndex);
 		PipelineState* GetPipeline(const String& passName, const String & defs);
+
 		inline const auto& GetUniforms() const { return shaderProperties_.uniforms_; }
 		inline const auto& GetTextureSlots() const { return shaderProperties_.textureSlots_; }
 

@@ -81,6 +81,9 @@ namespace Unique
 			Create(data, usage, flags);
 		}
 
+		/// Set size and vertex elements and dynamic mode. Previous data will be lost.
+		bool SetSize(unsigned indexCount, bool largeIndices, bool dynamic = false);
+
 		inline uint GetIndexSize() const { return GetStride(); }
 
 		inline uint GetIndexCount() const { return GetCount(); }

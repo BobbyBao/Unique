@@ -262,4 +262,10 @@ namespace Unique
 		buffer->Unmap(deviceContext, MAP_WRITE, MAP_FLAG_DISCARD);
 	}
 
+	bool IndexBuffer::SetSize(unsigned indexCount, bool largeIndices, bool dynamic)
+	{
+		Usage usage = dynamic ? Diligent::USAGE_DYNAMIC : Diligent::USAGE_STATIC;
+		uint flags = (dynamic ? Diligent::CPU_ACCESS_WRITE : 0);
+		return GraphicsBuffer::Create(indexCount, largeIndices ? 4 : 2, usage, flags, nullptr);
+	}
 }
