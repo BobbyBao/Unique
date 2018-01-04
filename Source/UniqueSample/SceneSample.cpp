@@ -9,6 +9,7 @@
 #include "Graphics/Geometry.h"
 #include "Graphics/DebugRenderer.h"
 #include "Serialize/JsonSerializer.h"
+#include "Input/Input.h"
 
 UNIQUE_IMPLEMENT_MAIN(Unique::SceneSample)
 
@@ -81,6 +82,8 @@ namespace Unique
 	{
 		auto& graphics = GetSubsystem<Graphics>();
 		float aspectRatio = graphics.GetAspectRatio();
+		
+		UpdateCamera(eventData.timeStep_);
 
 		node_->Rotate(Quaternion(0, 0.1f * eventData.timeStep_, 0));
 
@@ -89,5 +92,49 @@ namespace Unique
 	void SceneSample::HandlePostRenderUpdate(const struct PostRenderUpdate& eventData)
 	{
 		GetSubsystem<Renderer>().DrawDebugGeometry(true);
+	}
+
+
+	void SceneSample::UpdateCamera(float timeStep)
+	{
+		auto& input = GetSubsystem<Input>();
+
+		// Movement speed as world units per second
+		const float MOVE_SPEED = 20.0f;
+		// Mouse sensitivity as degrees per pixel
+		const float MOUSE_SENSITIVITY = 0.1f;
+
+		if (input.GetMouseButtonDown(MOUSEB_RIGHT))
+		{
+			// Use this frame's mouse motion to adjust camera node yaw and pitch. Clamp the pitch between -90 and 90 degrees
+			IntVector2 mouseMove = input.GetMouseMove();
+			yaw_ += MOUSE_SENSITIVITY * mouseMove.x_;
+			pitch_ += MOUSE_SENSITIVITY * mouseMove.y_;
+			pitch_ = Clamp(pitch_, -90.0f, 90.0f);
+
+			// Construct new orientation for the camera scene node from yaw and pitch. Roll is fixed to zero
+			camera_->GetNode()->SetRotation(Quaternion(pitch_*M_DEGTORAD, yaw_*M_DEGTORAD, 0.0f));
+		}
+
+		// Read WASD keys and move the camera scene node to the corresponding direction if they are pressed
+		// Use the Translate() function (default local space) to move relative to the node's orientation.
+		if (input.GetKeyDown(KEY_W))
+			camera_->GetNode()->Translate(Vector3::FORWARD * MOVE_SPEED * timeStep);
+		if (input.GetKeyDown(KEY_S))
+			camera_->GetNode()->Translate(Vector3::BACK * MOVE_SPEED * timeStep);
+		if (input.GetKeyDown(KEY_A))
+			camera_->GetNode()->Translate(Vector3::LEFT * MOVE_SPEED * timeStep);
+		if (input.GetKeyDown(KEY_D))
+			camera_->GetNode()->Translate(Vector3::RIGHT * MOVE_SPEED * timeStep);
+
+
+// 		AnimatedModel* model = characterNode->GetComponent<AnimatedModel>(true);
+// 		if (model && model->GetNumAnimationStates())
+// 		{
+// 			AnimationState* state = model->GetAnimationStates()[0];
+// 			state->AddTime(deltaTime);
+// 		}
+
+
 	}
 }

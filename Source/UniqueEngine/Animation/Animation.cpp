@@ -21,15 +21,11 @@
 //
 
 #include "Precompiled.h"
-
-//#include "../Container/Sort.h"
 #include "Core/Context.h"
 #include "Core/Profiler.h"
 #include "Animation/Animation.h"
-//#include "IO/Deserializer.h"
 #include "IO/FileSystem.h"
 #include "IO/Log.h"
-//#include "../IO/Serializer.h"
 #include "Resource/ResourceCache.h"
 
 #include "DebugNew.h"

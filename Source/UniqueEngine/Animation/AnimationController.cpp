@@ -53,6 +53,12 @@ static const unsigned MAX_NODE_ANIMATION_STATES = 256;
 
 extern const char* LOGIC_CATEGORY;
 
+uObject(AnimationController)
+{
+	uFactory();
+
+}
+
 AnimationController::AnimationController()
 {
 }

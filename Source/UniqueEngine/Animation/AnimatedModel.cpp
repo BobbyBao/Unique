@@ -71,6 +71,24 @@ static const unsigned MAX_ANIMATION_STATES = 256;
 uObject(AnimatedModel)
 {
 	uFactory("Geometry");
+
+	uAccessor("Is Enabled", IsEnabled, SetEnabled);
+	uMixedAccessor("Model", GetModelAttr, SetModelAttr);
+	uAccessor("Material", GetMaterialsAttr, SetMaterialsAttr);
+	uAttribute("Is Occluder", occluder_);
+	uAccessor("Can Be Occluded", IsOccludee, SetOccludee/*, bool, true, TF_DEFAULT*/);
+	uAttribute("Cast Shadows", castShadows_/*, false, TF_DEFAULT*/);
+	uAccessor("Update When Invisible", GetUpdateInvisible, SetUpdateInvisible/*, bool, false, TF_DEFAULT*/);
+	uAccessor("Draw Distance", GetDrawDistance, SetDrawDistance/*, float, 0.0f, TF_DEFAULT*/);
+	uAccessor("Shadow Distance", GetShadowDistance, SetShadowDistance/*, float, 0.0f, TF_DEFAULT*/);
+	uAccessor("LOD Bias", GetLodBias, SetLodBias/*, float, 1.0f, TF_DEFAULT*/);
+	uAccessor("Animation LOD Bias", GetAnimationLodBias, SetAnimationLodBias/*, float, 1.0f, TF_DEFAULT*/);
+
+	//uMixedAccessor("Bone Animation Enabled", GetBonesEnabledAttr, SetBonesEnabledAttr);
+	//uMixedAccessor("Animation States", GetAnimationStatesAttr, SetAnimationStatesAttr);
+	//uAccessor("Morphs", GetMorphsAttr, SetMorphsAttr);
+
+
 }
 
 
@@ -104,34 +122,6 @@ AnimatedModel::~AnimatedModel()
             RemoveRootBone();
     }
 }
-
-#if false
-void AnimatedModel::RegisterObject()
-{
-    GetContext->RegisterFactory<AnimatedModel>(GEOMETRY_CATEGORY);
-
-    UNIQUE_ACCESSOR_ATTRIBUTE("Is Enabled", IsEnabled, SetEnabled, bool, true, TF_DEFAULT);
-    UNIQUE_MIXED_ACCESSOR_ATTRIBUTE("Model", GetModelAttr, SetModelAttr, ResourceRef, ResourceRef(Model::GetTypeStatic()), TF_DEFAULT);
-    UNIQUE_ACCESSOR_ATTRIBUTE("Material", GetMaterialsAttr, SetMaterialsAttr, ResourceRefList, ResourceRefList(Material::GetTypeStatic()),
-        TF_DEFAULT);
-    UNIQUE_ATTRIBUTE("Is Occluder", bool, occluder_, false, TF_DEFAULT);
-    UNIQUE_ACCESSOR_ATTRIBUTE("Can Be Occluded", IsOccludee, SetOccludee, bool, true, TF_DEFAULT);
-    UNIQUE_ATTRIBUTE("Cast Shadows", bool, castShadows_, false, TF_DEFAULT);
-    UNIQUE_ACCESSOR_ATTRIBUTE("Update When Invisible", GetUpdateInvisible, SetUpdateInvisible, bool, false, TF_DEFAULT);
-    UNIQUE_ACCESSOR_ATTRIBUTE("Draw Distance", GetDrawDistance, SetDrawDistance, float, 0.0f, TF_DEFAULT);
-    UNIQUE_ACCESSOR_ATTRIBUTE("Shadow Distance", GetShadowDistance, SetShadowDistance, float, 0.0f, TF_DEFAULT);
-    UNIQUE_ACCESSOR_ATTRIBUTE("LOD Bias", GetLodBias, SetLodBias, float, 1.0f, TF_DEFAULT);
-    UNIQUE_ACCESSOR_ATTRIBUTE("Animation LOD Bias", GetAnimationLodBias, SetAnimationLodBias, float, 1.0f, TF_DEFAULT);
-    UNIQUE_COPY_BASE_ATTRIBUTES(Drawable);
-    UNIQUE_MIXED_ACCESSOR_ATTRIBUTE("Bone Animation Enabled", GetBonesEnabledAttr, SetBonesEnabledAttr, VariantVector,
-        Variant::emptyVariantVector, TF_DEFAULT | AM_NOEDIT);
-    UNIQUE_MIXED_ACCESSOR_VARIANT_VECTOR_STRUCTURE_ATTRIBUTE("Animation States", GetAnimationStatesAttr, SetAnimationStatesAttr,
-                                                            VariantVector, Variant::emptyVariantVector,
-                                                            animationStatesStructureElementNames, TF_DEFAULT);
-    UNIQUE_ACCESSOR_ATTRIBUTE("Morphs", GetMorphsAttr, SetMorphsAttr, PODVector<unsigned char>, Variant::emptyBuffer,
-        TF_DEFAULT | AM_NOEDIT);
-}
-#endif
 
 void AnimatedModel::ApplyAttributes()
 {
