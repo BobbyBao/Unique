@@ -8,7 +8,7 @@
 #include "Math/Matrix3x4.h"
 #include "Math/Matrix4.h"
 
-//UNIQUE_IMPLEMENT_MAIN(Unique::CubeSample)
+UNIQUE_IMPLEMENT_MAIN(Unique::CubeSample)
 
 namespace Unique
 {
@@ -55,11 +55,9 @@ namespace Unique
 		Subscribe(&CubeSample::HandleRenderUpdate);
 	}
 
-
 	CubeSample::~CubeSample()
 	{
 	}
-
 
 	void CubeSample::HandleStartup(const struct Startup& eventData)
 	{
@@ -116,29 +114,10 @@ namespace Unique
 
 	void CubeSample::HandleRenderUpdate(const struct RenderUpdate& eventData)
 	{
-		Graphics& graphics = GetSubsystem<Graphics>();
-		Vector<Batch>& batches = geometries_[graphics.currentContext_];
-		batches.clear();
-		Batch batch;
-		batch.geometry_ = geometry_;
+		auto& renderer = GetSubsystem<Renderer>();
+		Batch& batch = renderer.AddBatch(geometry_, nullptr);
 		batch.pipelineState_ = pipeline_;
-		batches.emplace_back(batch);
 	}
-	
-	void CubeSample::OnPreRender()
-	{
-		auto& graphics = GetSubsystem<Graphics>();
-		// Clear the back buffer 
-		deviceContext->ClearRenderTarget(nullptr, backgroundColor_);
-		deviceContext->ClearDepthStencil(nullptr, Diligent::CLEAR_DEPTH_FLAG, 1.f);
-
-		Vector<Batch>& batches = geometries_[graphics.GetRenderContext()];
-		for (auto& batch : batches)
-		{
-			batch.geometry_->Draw(pipeline_);
-		}
-	}
-
 
 	// Each cube face is split into a 3x3 grid
 	const int CUBE_FACE_VERTEX_COUNT = 4 * 4;       // 16 vertices per face
@@ -167,7 +146,7 @@ namespace Unique
 		geo->SetNumVertexBuffers(1);
 		geo->SetVertexBuffer(0, pVertexBuffer);
 		geo->SetIndexBuffer(pIndexBuffer);
-		geo->SetDrawRange(PrimitiveTopology::TRIANGLE_LIST, 0, (unsigned int)indices.size());
+		geo->SetDrawRange(PrimitiveTopology::TRIANGLE_LIST, 0, pIndexBuffer->GetIndexCount());
 		return geo;
 	}
 

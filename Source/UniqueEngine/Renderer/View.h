@@ -294,7 +294,8 @@ namespace Unique
 		Vector<LightBatchQueue> lightQueues_;
 		/// Batch queues by pass index.
 		HashMap<byte, BatchQueue> batchQueues_[2];
-
+		
+		
 		SPtr<UniformBuffer> frameUniform_;
 
 		SPtr<UniformBuffer> cameraVS_;

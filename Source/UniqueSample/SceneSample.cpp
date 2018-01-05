@@ -11,7 +11,7 @@
 #include "Serialize/JsonSerializer.h"
 #include "Input/Input.h"
 
-UNIQUE_IMPLEMENT_MAIN(Unique::SceneSample)
+//UNIQUE_IMPLEMENT_MAIN(Unique::SceneSample)
 
 namespace Unique
 {

@@ -171,6 +171,12 @@ namespace Unique
 		renderer_(GetSubsystem<Renderer>()), 
 		geometriesUpdated_(false), minInstances_(2)
 	{
+		unsigned numThreads = GetSubsystem<WorkQueue>().GetNumThreads() + 1; // Worker threads + main thread
+		tempDrawables_.resize(numThreads);
+		sceneResults_.resize(numThreads);
+		frame_.camera_ = nullptr;
+		
+		
 		frameUniform_ = new UniformBuffer(FrameParameter());
 		cameraVS_ = new UniformBuffer(CameraVS());
 		objectVS_ = new UniformBuffer(ObjectVS());
@@ -193,11 +199,6 @@ namespace Unique
 
 		graphics_.AddResource("CameraPS", cameraPS_);
 		graphics_.AddResource("MaterialPS", materialPS_);
-
-		unsigned numThreads = GetSubsystem<WorkQueue>().GetNumThreads() + 1; // Worker threads + main thread
-		tempDrawables_.resize(numThreads);
-		sceneResults_.resize(numThreads);
-		frame_.camera_ = nullptr;
 	}
 
 	View::~View()
@@ -253,12 +254,8 @@ namespace Unique
 		hasScenePasses_ = false;
 		scenePasses.clear();
 		geometriesUpdated_ = false;
-
-		auto& batchMatrics = MainContext(batchMatrics_);
-		batchMatrics.clear();
-
+		
 		auto& batchQueues = MainContext(batchQueues_);
-
 		auto& renderPasses = renderPath_->GetRenderPasses();
 		for (auto& pass : renderPasses)
 		{
@@ -284,6 +281,8 @@ namespace Unique
 				scenePasses.push_back(info);
 
 			}
+
+			MainContext(batchMatrics_).clear();
 		}
 
 		if (hasScenePasses_)
@@ -340,6 +339,8 @@ namespace Unique
 		UpdateGeometries();
 
 		PrepareInstancingBuffer();
+
+		SetGlobalShaderParameters();
 
 		SetCameraShaderParameters(camera_);
 

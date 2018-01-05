@@ -43,6 +43,7 @@ namespace Unique
 		Subscribe(&Renderer::HandleRenderUpdate);
 		Subscribe(&Renderer::HandlePostRenderUpdate);
 		Subscribe(&Renderer::HandleEndFrame);
+		
 	}
 
 	void Renderer::LoadShaders()
@@ -97,7 +98,7 @@ namespace Unique
 		auto& views = MainContext(views_);
 		views.clear();
 		preparedViews_.clear();
-
+		
 		// Set up the frameinfo structure for this frame
 		frame_.frameNumber_ = GetSubsystem<Time>().GetFrameNumber();
 		frame_.timeStep_ = eventData.timeStep_;
@@ -123,9 +124,10 @@ namespace Unique
 		for (unsigned i = numMainViewports; i < queuedViewports_.size(); ++i)
 			UpdateQueuedViewport(i);
 
-		//resetViews_ = false;
-
-		DrawDebugGeometry(true);
+		if (drawDebug_)
+		{
+			DrawDebugGeometry(true);
+		}
 	}
 
 	void Renderer::HandlePostRenderUpdate(const PostRenderUpdate& eventData)
@@ -157,7 +159,15 @@ namespace Unique
 		{
 			view->Render();
 		}
-
+		
+		auto& batchQueue = RenderContext(batchQueue_);
+		if(!batchQueue.empty())
+		{
+			for(auto& batch : batchQueue)
+			{
+				batch.Draw();
+			}
+		}
 	}
 
 	void Renderer::DrawDebugGeometry(bool depthTest)
@@ -301,7 +311,6 @@ namespace Unique
 		}
 	}
 
-
 	bool Renderer::ResizeInstancingBuffer(unsigned numInstances)
 	{
 		if (!instancingBuffer_)
@@ -326,5 +335,12 @@ namespace Unique
 
 		UNIQUE_LOGDEBUG("Resized instancing buffer to " + String(newSize));
 		return true;
+	}
+	
+	Batch& Renderer::AddBatch(Geometry* geometry, Material* material, const Matrix3x4* worldTransform)
+	{
+		auto& batchQueue = MainContext(batchQueue_);
+		batchQueue.emplace_back(geometry, material, worldTransform);
+		return batchQueue.back();
 	}
 }

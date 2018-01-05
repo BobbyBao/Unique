@@ -34,6 +34,10 @@ namespace Unique
 		
 		/// Construct from transient buffer.
 		Batch(Geometry* geometry, Material* material, const Matrix3x4* worldTransform = nullptr);
+		/// Set the draw range.
+		void SetDrawRange(PrimitiveTopology type, unsigned vertexStart, unsigned vertexCount);
+		/// Set the indexed draw range.
+		void SetDrawRange(PrimitiveTopology type, unsigned indexStart, unsigned indexCount, unsigned vertexStart = 0, unsigned vertexCount = -1);
 
 		/// Calculate state sorting key, which consists of base pass flag, light, pass and geometry.
 		void CalculateSortKey();
@@ -41,7 +45,8 @@ namespace Unique
 		void Prepare(View* view, Camera* camera, bool setModelTransform) const;
 		/// Prepare and draw.
 		void Draw(View* view, Camera* camera) const;
-
+		/// Draw.
+		void Draw() const;
 		/// State sorting key.
 		unsigned long long sortKey_;
 		/// Distance from camera.

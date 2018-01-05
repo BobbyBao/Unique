@@ -383,9 +383,12 @@ void Input::Update()
     ResetInputAccumulation();
 	
 	auto& events = MainContext(events_);
-	for (auto& evt : events)
+	if (!events.empty())
 	{
-		HandleSDLEvent(&evt);
+		for (auto& evt : events)
+		{
+			HandleSDLEvent(&evt);
+		}
 	}
 
     if (suppressNextMouseMove_ && (mouseMove_ != IntVector2::ZERO || mouseMoved))

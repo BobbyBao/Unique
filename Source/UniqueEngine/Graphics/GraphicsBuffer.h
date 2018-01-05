@@ -72,13 +72,13 @@ namespace Unique
 		IndexBuffer(Vector<uint>&& data, Usage usage = Diligent::USAGE_STATIC, uint flags = 0) 
 			: GraphicsBuffer(Diligent::BIND_INDEX_BUFFER)
 		{
-			Create(data, usage, flags);
+			Create(std::move(data), usage, flags);
 		}
 
 		IndexBuffer(Vector<ushort>&& data, Usage usage = Diligent::USAGE_STATIC, uint flags = 0) 
 			: GraphicsBuffer(Diligent::BIND_INDEX_BUFFER)
 		{
-			Create(data, usage, flags);
+			Create(std::move(data), usage, flags);
 		}
 
 		/// Set size and vertex elements and dynamic mode. Previous data will be lost.

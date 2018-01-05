@@ -55,9 +55,10 @@ namespace Unique
 		void Render();
 		void End();
 		void Stop();
-		void DrawDebugGeometry(bool depthTest);
 		void SetBatchShaders(Batch& batch, Shader* tech, bool allowShadows, const BatchQueue& queue);
 		bool ResizeInstancingBuffer(unsigned numInstances);
+
+		Batch& AddBatch(Geometry* geometry, Material* material, const Matrix3x4* worldTransform = nullptr);
 	private:
 		/// Initialize when screen mode initially set.
 		void Initialize();
@@ -69,6 +70,7 @@ namespace Unique
 		void UpdateQueuedViewport(unsigned index);
 		void QueueViewport(TextureView* renderTarget, Viewport* viewport);
 		void CreateInstancingBuffer();
+		void DrawDebugGeometry(bool depthTest);
 
 		class Graphics& graphics_;
 
@@ -99,6 +101,11 @@ namespace Unique
 		
 		SPtr<Geometry> transientGeometry_;
 		SPtr<Geometry> transientIndexedGeometry_;
+		bool drawDebug_ = false;
+
+
+
+		Vector<Batch> batchQueue_[2];
 	};
 
 }

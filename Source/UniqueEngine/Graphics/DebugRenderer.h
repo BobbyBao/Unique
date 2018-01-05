@@ -131,9 +131,6 @@ public:
     /// Add a quad on the XZ plane.
     void AddQuad(const Vector3& center, float width, float height, const Color& color, bool depthTest = true);
 
-    /// Update vertex buffer and render all debug lines. The viewport and rendertarget should be set before.
-    void Render(View* view);
-
     /// Return whether line antialiasing is enabled.
     bool GetLineAntiAlias() const { return lineAntiAlias_; }
 
@@ -152,8 +149,10 @@ public:
     bool HasContent() const; 
 	
 	virtual void UpdateBatches(const FrameInfo& frame);
+
 protected:
 	virtual void OnWorldBoundingBoxUpdate();
+
 private:
     /// Handle end of frame. Clear debug geometry.
     void HandleEndFrame(const struct EndFrame& eventData);

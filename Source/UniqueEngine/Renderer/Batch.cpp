@@ -164,13 +164,33 @@ namespace Unique
 		worldTransform_(worldTransform),
 		numWorldTransforms_(1),
 		instancingData_(nullptr),
-		geometryType_(GEOM_TRANSIENT)
+		geometryType_(GEOM_STATIC)
 	{
-		pass_ = material->GetPass(Shader::basePassIndex);
-		vertexOffset_ = 0;
-		vertexCount_ = 0;
+		if (material)
+		{
+			pass_ = material->GetPass(Shader::basePassIndex);
+		}
+
+	}
+
+	void Batch::SetDrawRange(PrimitiveTopology type, unsigned vertexStart, unsigned vertexCount)
+	{
+		geometryType_ = GEOM_TRANSIENT;
+		primitiveTopology_ = type;
+		vertexOffset_ = vertexStart;
+		vertexCount_ = vertexCount;
 		indexOffset_ = 0;
-		indexCount_ = 0;
+		indexCount_ = -1;
+	}
+
+	void Batch::SetDrawRange(PrimitiveTopology type, unsigned indexStart, unsigned indexCount, unsigned vertexStart, unsigned vertexCount)
+	{
+		geometryType_ = GEOM_TRANSIENT;
+		primitiveTopology_ = type;
+		vertexOffset_ = vertexStart;
+		vertexCount_ = vertexCount;
+		indexOffset_ = indexStart;
+		indexCount_ = indexCount;
 	}
 	
 	void Batch::CalculateSortKey()
@@ -215,12 +235,6 @@ namespace Unique
 			view->SetWorldTransform(transformOffset_);
 		}
 		
-		if (isBase_)
-		{
-			pipelineState_->GetPipeline();
-			material_->Apply(pipelineState_);
-		}
-
 #if false
 		if (graphics->NeedParameterUpdate(SP_CAMERA, reinterpret_cast<const void*>(cameraHash + viewportHash)))
 		{
@@ -577,11 +591,14 @@ namespace Unique
 
 	void Batch::Draw(View* view, Camera* camera) const
 	{
-		auto& graphics = GetSubsystem<Graphics>();
-
 		if (!geometry_->IsEmpty())
 		{
 			Prepare(view, camera, true);
+			
+			if (isBase_)
+			{
+				material_->Apply(pipelineState_);
+			}
 
 			if (geometryType_ == GEOM_TRANSIENT )
 			{
@@ -595,7 +612,28 @@ namespace Unique
 		}
 		
 	}
+	
+	void Batch::Draw() const
+	{
+		if (!geometry_->IsEmpty())
+		{			
+			if (isBase_ && material_)
+			{
+				material_->Apply(pipelineState_);
+			}
 
+			if (geometryType_ == GEOM_TRANSIENT )
+			{
+				geometry_->Draw(pipelineState_, primitiveTopology_, 
+					vertexOffset_, vertexCount_, indexOffset_, indexCount_);
+			}
+			else
+			{
+				geometry_->Draw(pipelineState_);
+			}
+		}
+		
+	}
 
 	void BatchGroup::SetInstancingData(void* lockedData, unsigned stride, unsigned& freeIndex)
 	{
