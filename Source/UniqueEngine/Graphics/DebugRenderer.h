@@ -2,7 +2,7 @@
 
 #include "Math/Color.h"
 #include "Math/Frustum.h"
-#include "../Scene/Component.h"
+#include "../Graphics/Drawable.h"
 
 namespace Unique
 {
@@ -75,9 +75,9 @@ struct DebugTriangle
 };
 
 /// Debug geometry rendering component. Should be added only to the root scene node.
-class UNIQUE_API DebugRenderer : public Component
+class UNIQUE_API DebugRenderer : public Drawable
 {
-	uRTTI(DebugRenderer, Component)
+	uRTTI(DebugRenderer, Drawable)
 
 public:
     /// Construct.
@@ -149,8 +149,11 @@ public:
     /// Check whether a bounding box is inside the view frustum.
     bool IsInside(const BoundingBox& box) const;
     /// Return whether has something to render.
-    bool HasContent() const;
-
+    bool HasContent() const; 
+	
+	virtual void UpdateBatches(const FrameInfo& frame);
+protected:
+	virtual void OnWorldBoundingBoxUpdate();
 private:
     /// Handle end of frame. Clear debug geometry.
     void HandleEndFrame(const struct EndFrame& eventData);

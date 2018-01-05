@@ -148,7 +148,7 @@ namespace Unique
 		bool Define(TextureView* renderTarget, Unique::Viewport* viewport);
 
 		void Update(const FrameInfo& frame);
-
+		void PostUpdate();
 		void DrawDebug();
 
 		void Render();

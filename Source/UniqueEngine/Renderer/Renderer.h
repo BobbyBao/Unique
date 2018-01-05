@@ -65,6 +65,7 @@ namespace Unique
 		void LoadShaders();
 		void HandleEndFrame(const EndFrame& eventData);
 		void HandleRenderUpdate(const RenderUpdate& eventData);
+		void HandlePostRenderUpdate(const PostRenderUpdate& eventData);
 		void UpdateQueuedViewport(unsigned index);
 		void QueueViewport(TextureView* renderTarget, Viewport* viewport);
 		void CreateInstancingBuffer();

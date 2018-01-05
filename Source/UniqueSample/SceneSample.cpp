@@ -23,7 +23,7 @@ namespace Unique
 		Subscribe(&SceneSample::HandleStartup);
 		Subscribe(&SceneSample::HandleShutdown);
 		Subscribe(&SceneSample::HandleUpdate);
-		Subscribe(&SceneSample::HandlePostRenderUpdate);
+		//Subscribe(&SceneSample::HandlePostRenderUpdate);
 	}
 
 	SceneSample::~SceneSample()
@@ -88,13 +88,7 @@ namespace Unique
 		node_->Rotate(Quaternion(0, 0.1f * eventData.timeStep_, 0));
 
 	}
-
-	void SceneSample::HandlePostRenderUpdate(const struct PostRenderUpdate& eventData)
-	{
-		GetSubsystem<Renderer>().DrawDebugGeometry(true);
-	}
-
-
+	
 	void SceneSample::UpdateCamera(float timeStep)
 	{
 		auto& input = GetSubsystem<Input>();
@@ -128,13 +122,7 @@ namespace Unique
 			camera_->GetNode()->Translate(Vector3::RIGHT * MOVE_SPEED * timeStep);
 
 
-// 		AnimatedModel* model = characterNode->GetComponent<AnimatedModel>(true);
-// 		if (model && model->GetNumAnimationStates())
-// 		{
-// 			AnimationState* state = model->GetAnimationStates()[0];
-// 			state->AddTime(deltaTime);
-// 		}
-
+// 		AnimatedModel* model = characterNode->GetComponent<AnimatedModel>(true);// 		if (model && model->GetNumAnimationStates())// 		{// 			AnimationState* state = model->GetAnimationStates()[0];// 			state->AddTime(deltaTime);// 		}
 
 	}
 }

@@ -7,6 +7,7 @@
 #include "Resource/Image.h"
 #include "Graphics/Importers/TextureImporter.h"
 #include "Graphics/Importers/ModelImporter.h"
+#include "ImGUI/ImGUI.h"
 
 namespace Unique
 {
@@ -29,6 +30,7 @@ namespace Unique
 		context_->RegisterSubsystem<ResourceCache>();
 		context_->RegisterSubsystem<Renderer>();
 		context_->RegisterSubsystem<Input>();
+		context_->RegisterSubsystem<GUISystem>();
 
 	}
 

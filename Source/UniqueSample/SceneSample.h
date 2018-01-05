@@ -16,7 +16,6 @@ namespace Unique
 		void HandleStartup(const struct Startup& eventData);
 		void HandleShutdown(const struct Shutdown& eventData);
 		void HandleUpdate(const struct Update& eventData);
-		void HandlePostRenderUpdate(const struct PostRenderUpdate& eventData);
 		void UpdateCamera(float timeStep);
 
 		SPtr<Scene> scene_;

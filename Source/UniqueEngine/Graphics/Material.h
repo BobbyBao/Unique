@@ -19,6 +19,11 @@ namespace Unique
 
 		void SetTexture(const StringID& name, const ResourceRef& textureRef);
 		void SetTexture(const StringID& name, Texture* texture);
+
+		Pass* GetPass(const String & pass);
+		Pass* GetPass(unsigned passIndex);
+		PipelineState* GetPipeline(const String& passName, const String & defs);
+
 		void Apply(PipelineState* pipeline);
 	protected:
 		virtual bool Prepare();

@@ -1,5 +1,6 @@
 #pragma once
 #include "GPUObject.h"
+#include "../Graphics/ShaderVariation.h"
 
 namespace Unique
 {

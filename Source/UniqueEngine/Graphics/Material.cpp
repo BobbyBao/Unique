@@ -93,6 +93,24 @@ namespace Unique
 		textureSlots_.push_back(textureSlot);
 	}
 
+	Pass* Material::GetPass(const String & pass)
+	{
+		auto shader = GetShader();
+		return shader ? shader->GetPass(pass) : nullptr;
+	}
+
+	Pass* Material::GetPass(unsigned passIndex)
+	{
+		auto shader = GetShader();
+		return shader ? shader->GetPass(passIndex) : nullptr;
+	}
+
+	PipelineState* Material::GetPipeline(const String& passName, const String & defs)
+	{
+		auto shader = GetShader();
+		return shader ? shader->GetPipeline(passName, defs) : nullptr;
+	}
+
 	void Material::Apply(PipelineState* pipeline)
 	{
 		for (auto& uniform : uniforms_)

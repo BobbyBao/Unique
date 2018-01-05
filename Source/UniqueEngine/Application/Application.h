@@ -47,7 +47,8 @@ namespace Unique
 	{
 		try
 		{
-			Unique_Setup(argc, argv);
+			Application::context_.reset(new Context());
+			Application::Setup(argc, argv);
 			auto app = SPtr<T>(new T());
 			app->Run();
 			app = nullptr;

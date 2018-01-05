@@ -149,10 +149,11 @@ namespace Unique
 		geometryType_(rhs.geometryType_)
 	{
 		assert(worldTransform_);
-		vertexOffset_ = rhs.geometry_->GetVertexStart();
-		vertexCount_ = rhs.geometry_->GetVertexCount();		
-		indexOffset_ = rhs.geometry_->GetIndexStart();
-		indexCount_ = rhs.geometry_->GetIndexCount();
+		primitiveTopology_ = rhs.primitiveTopology_;
+		vertexOffset_ = rhs.vertexOffset_;
+		vertexCount_ = rhs.vertexCount_;
+		indexOffset_ = rhs.indexOffset_;
+		indexCount_ = rhs.indexCount_;
 	}
 
 	/// Construct from transient buffer.
@@ -165,6 +166,7 @@ namespace Unique
 		instancingData_(nullptr),
 		geometryType_(GEOM_TRANSIENT)
 	{
+		pass_ = material->GetPass(Shader::basePassIndex);
 		vertexOffset_ = 0;
 		vertexCount_ = 0;
 		indexOffset_ = 0;
@@ -174,9 +176,6 @@ namespace Unique
 	void Batch::CalculateSortKey()
 	{
 		unsigned shaderID = *((unsigned*)&pipelineState_) / sizeof(PipelineState);
-			//(unsigned)(
-			//((*((unsigned*)&vertexShader_) / sizeof(ShaderVariation)) 
-			//	+ (*((unsigned*)&pixelShader_) / sizeof(ShaderVariation))) & 0x7fff);
 		if (!isBase_)
 			shaderID |= 0x8000;
 
@@ -216,7 +215,6 @@ namespace Unique
 			view->SetWorldTransform(transformOffset_);
 		}
 		
-
 		if (isBase_)
 		{
 			pipelineState_->GetPipeline();
@@ -584,6 +582,7 @@ namespace Unique
 		if (!geometry_->IsEmpty())
 		{
 			Prepare(view, camera, true);
+
 			if (geometryType_ == GEOM_TRANSIENT )
 			{
 				geometry_->Draw(pipelineState_, primitiveTopology_, 
@@ -594,51 +593,7 @@ namespace Unique
 				geometry_->Draw(pipelineState_);
 			}
 		}
-		/*
-		else if (vertexBuffers_[0])
-		{
-			Prepare(view, camera, true);
-
-			IBuffer *buffer[4] = { nullptr };
-			Uint32 offsets[4] = { 0 };
-			Uint32 strides[4] = { 0 };
-			Uint32 offset = 0;
-			uint numVertexBuffers = 0;
-			for (size_t i = 0; i < 4; i++)
-			{
-				if (!buffer[i])
-				{
-					break;
-				}
-				buffer[i] = *vertexBuffers_[i];
-				offsets[i] = offset;
-				strides[i] = vertexBuffers_[i]->GetStride();
-				numVertexBuffers++;
-			}
-
-			deviceContext->SetVertexBuffers(0, numVertexBuffers, buffer, strides, offsets, SET_VERTEX_BUFFERS_FLAG_RESET);
-			
-			DrawAttribs drawAttribs;
-			drawAttribs.Topology = (Diligent::PRIMITIVE_TOPOLOGY)primitiveTopology_;
-			if (indexBuffer_)
-			{
-				drawAttribs.NumIndices = indexCount_;
-				deviceContext->SetIndexBuffer(*indexBuffer_, indexOffset_);
-				drawAttribs.IsIndexed = true;
-				drawAttribs.IndexType = indexBuffer_->GetStride() == 4 ? ValueType::VT_UINT32 : ValueType::VT_UINT16;
-			}
-			else
-				drawAttribs.NumVertices = vertexCount_;
-
-			deviceContext->SetPipelineState(pipelineState_->GetPipeline());
-
-			graphics.BindResources(pipelineState_->GetShaderResourceBinding(),
-				SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED | BIND_SHADER_RESOURCES_ALL_RESOLVED);
-
-			deviceContext->CommitShaderResources(pipelineState_->GetShaderResourceBinding(), COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
-
-			deviceContext->Draw(drawAttribs);
-		}*/
+		
 	}
 
 

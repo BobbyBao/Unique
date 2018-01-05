@@ -28,28 +28,17 @@ namespace Unique
 
 	};
 
-	template<class T>
-	class TypeTraits<Vector<T> > : public SerializeTraitsArray<Vector<T> >
-	{
-	public:
-		template<class TransferFunction>
-		inline static void Transfer(value_type& data, TransferFunction& transfer)
-		{
-			transfer.TransferArray(data);
-		}
-	};
-
-	template<>
-	class TypeTraits<Vector<byte>> : public SerializeTraitsArray<Vector<byte>>
-	{
-	public:	
-		template<class TransferFunction>
-		inline static void Transfer(value_type& data, TransferFunction& transfer)
-		{
-			transfer.TransferBin(data);
-		}
-	};
-
+// 	template<class T>
+// 	class TypeTraits<Vector<T> > : public SerializeTraitsArray<Vector<T> >
+// 	{
+// 	public:
+// 		template<class TransferFunction>
+// 		inline static void Transfer(value_type& data, TransferFunction& transfer)
+// 		{
+// 			transfer.TransferArray(data);
+// 		}
+// 	};
+	
 	template<>
 	class TypeTraits<ByteArray> : public SerializeTraitsArray<ByteArray>
 	{

@@ -36,7 +36,7 @@ uObject(DebugRenderer)
 	uAccessor("Line Antialias", GetLineAntiAlias, SetLineAntiAlias)
 }
 
-DebugRenderer::DebugRenderer() : lineAntiAlias_(false)
+DebugRenderer::DebugRenderer() : Drawable(DRAWABLE_DEBUG), lineAntiAlias_(false)
 {
     Subscribe(&DebugRenderer::HandleEndFrame);
 
@@ -48,10 +48,8 @@ DebugRenderer::DebugRenderer() : lineAntiAlias_(false)
 	ResourceCache& cache = GetSubsystem<ResourceCache>();
 
 	material_ = new Material();
-
-	Shader* shader = cache.GetResource<Shader>("shaders/basic.shader");
-	material_->SetShader(shader);
-	pipelineDepth_ = shader->GetPipeline("base", "");
+	material_->SetShaderAttr(ResourceRef::Create<Shader>("shaders/basic.shader"));
+	pipelineDepth_ = material_->GetPipeline("base", "");
 	pipelineNoDepth_ = new PipelineState(pipelineDepth_->GetShaderProgram());
 	pipelineNoDepth_->SetDepthStencilState(DepthStencilStateDesc(false, false));
 }
@@ -476,6 +474,8 @@ void DebugRenderer::AddQuad(const Vector3& center, float width, float height, co
 
 void DebugRenderer::Render(View* view)
 {
+	return;
+
     if (!HasContent())
         return;
 
@@ -574,7 +574,6 @@ void DebugRenderer::Render(View* view)
 	uint count = 0;
 		
 	Batch batch(geometry_, material_, &GetNode()->GetWorldTransform());
-	batch.pass_ = material_->GetShader()->GetPass(Shader::basePassIndex);
 	batch.primitiveTopology_ = PrimitiveTopology::LINE_LIST;
 	batch.pipelineState_ = pipelineDepth_;
 
@@ -662,6 +661,172 @@ void DebugRenderer::HandleEndFrame(const EndFrame& eventData)
         triangles_.reserve(trianglesSize);
     if (noDepthTriangles_.capacity() > noDepthTrianglesSize * 2)
         noDepthTriangles_.reserve(noDepthTrianglesSize);
+}
+
+void DebugRenderer::UpdateBatches(const FrameInfo& frame)
+{
+	batches_.clear();
+
+	if (!HasContent())
+		return;
+
+	Graphics& graphics = GetSubsystem<Graphics>();
+
+	UNIQUE_PROFILE(RenderDebugGeometry);
+
+	uint numVertices = (uint)((lines_.size() + noDepthLines_.size()) * 2 + (triangles_.size() + noDepthTriangles_.size()) * 3);
+	// Resize the vertex buffer if too small or much too large
+	if (vertexBuffer_->GetCount() < numVertices || vertexBuffer_->GetCount() > numVertices * 2)
+		vertexBuffer_->SetSize(numVertices, MASK_POSITION | MASK_COLOR, true);
+
+	float* dest = (float*)vertexBuffer_->Lock(0, numVertices);
+	if (!dest)
+		return;
+
+	for (unsigned i = 0; i < lines_.size(); ++i)
+	{
+		const DebugLine& line = lines_[i];
+
+		dest[0] = line.start_.x_;
+		dest[1] = line.start_.y_;
+		dest[2] = line.start_.z_;
+		((unsigned&)dest[3]) = line.color_;
+		dest[4] = line.end_.x_;
+		dest[5] = line.end_.y_;
+		dest[6] = line.end_.z_;
+		((unsigned&)dest[7]) = line.color_;
+
+		dest += 8;
+	}
+
+	for (unsigned i = 0; i < noDepthLines_.size(); ++i)
+	{
+		const DebugLine& line = noDepthLines_[i];
+
+		dest[0] = line.start_.x_;
+		dest[1] = line.start_.y_;
+		dest[2] = line.start_.z_;
+		((unsigned&)dest[3]) = line.color_;
+		dest[4] = line.end_.x_;
+		dest[5] = line.end_.y_;
+		dest[6] = line.end_.z_;
+		((unsigned&)dest[7]) = line.color_;
+
+		dest += 8;
+	}
+
+	for (unsigned i = 0; i < triangles_.size(); ++i)
+	{
+		const DebugTriangle& triangle = triangles_[i];
+
+		dest[0] = triangle.v1_.x_;
+		dest[1] = triangle.v1_.y_;
+		dest[2] = triangle.v1_.z_;
+		((unsigned&)dest[3]) = triangle.color_;
+
+		dest[4] = triangle.v2_.x_;
+		dest[5] = triangle.v2_.y_;
+		dest[6] = triangle.v2_.z_;
+		((unsigned&)dest[7]) = triangle.color_;
+
+		dest[8] = triangle.v3_.x_;
+		dest[9] = triangle.v3_.y_;
+		dest[10] = triangle.v3_.z_;
+		((unsigned&)dest[11]) = triangle.color_;
+
+		dest += 12;
+	}
+
+	for (unsigned i = 0; i < noDepthTriangles_.size(); ++i)
+	{
+		const DebugTriangle& triangle = noDepthTriangles_[i];
+
+		dest[0] = triangle.v1_.x_;
+		dest[1] = triangle.v1_.y_;
+		dest[2] = triangle.v1_.z_;
+		((unsigned&)dest[3]) = triangle.color_;
+
+		dest[4] = triangle.v2_.x_;
+		dest[5] = triangle.v2_.y_;
+		dest[6] = triangle.v2_.z_;
+		((unsigned&)dest[7]) = triangle.color_;
+
+		dest[8] = triangle.v3_.x_;
+		dest[9] = triangle.v3_.y_;
+		dest[10] = triangle.v3_.z_;
+		((unsigned&)dest[11]) = triangle.color_;
+
+		dest += 12;
+	}
+
+	vertexBuffer_->Unlock();
+
+	uint start = 0;
+	uint count = 0;
+	SourceBatch batch;
+	batch.geometryType_ = GEOM_TRANSIENT;
+	batch.geometry_ = geometry_;
+	batch.material_ = material_;
+	batch.worldTransform_ = &Matrix3x4::IDENTITY;
+	batch.numWorldTransforms_ = 1;
+	batch.primitiveTopology_ = PrimitiveTopology::LINE_LIST;
+	batch.pipelineState_ = pipelineDepth_;
+
+	if (lines_.size() > 0)
+	{
+		count = (uint)lines_.size() * 2;
+
+		batch.vertexOffset_ = start;
+		batch.vertexCount_ = count;
+		batches_.push_back(batch);
+
+		start += count;
+	}
+
+	if (noDepthLines_.size() > 0)
+	{
+		batch.primitiveTopology_ = PrimitiveTopology::LINE_LIST;
+		batch.pipelineState_ = pipelineNoDepth_;
+
+		count = (uint)noDepthLines_.size() * 2;
+
+		batch.vertexOffset_ = start;
+		batch.vertexCount_ = count;
+		batches_.push_back(batch);
+
+		start += count;
+	}
+
+	if (triangles_.size() > 0)
+	{
+		batch.primitiveTopology_ = PrimitiveTopology::TRIANGLE_LIST;
+		batch.pipelineState_ = pipelineDepth_;
+
+		count = (uint)triangles_.size() * 3;
+
+		batch.vertexOffset_ = start;
+		batch.vertexCount_ = count;
+		batches_.push_back(batch);
+
+		start += count;
+	}
+
+	if (noDepthTriangles_.size() > 0)
+	{
+		batch.primitiveTopology_ = PrimitiveTopology::TRIANGLE_LIST;
+		batch.pipelineState_ = pipelineNoDepth_;
+
+		count = (uint)noDepthTriangles_.size() * 3;
+
+		batch.vertexOffset_ = start;
+		batch.vertexCount_ = count;
+		batches_.push_back(batch);
+	}
+}
+
+void DebugRenderer::OnWorldBoundingBoxUpdate()
+{
+	worldBoundingBox_.Define(-M_LARGE_VALUE, M_LARGE_VALUE);
 }
 
 }

@@ -52,7 +52,12 @@ SourceBatch& SourceBatch::operator =(const SourceBatch& rhs)
     numWorldTransforms_ = rhs.numWorldTransforms_;
     instancingData_ = rhs.instancingData_;
     geometryType_ = rhs.geometryType_;
-
+	pipelineState_ = rhs.pipelineState_;
+	primitiveTopology_ = rhs.primitiveTopology_;
+	vertexOffset_ = rhs.vertexOffset_;
+	vertexCount_ = rhs.vertexCount_;
+	indexOffset_ = rhs.indexOffset_;
+	indexCount_ = rhs.indexCount_;
     return *this;
 }
 
@@ -175,7 +180,6 @@ void Drawable::DrawDebugGeometry(DebugRenderer* debug, bool depthTest)
 void Drawable::SetDrawDistance(float distance)
 {
     drawDistance_ = distance;
-
 }
 
 void Drawable::SetShadowDistance(float distance)
@@ -322,44 +326,6 @@ void Drawable::MarkInView(unsigned frameNumber)
         viewCameras_.clear();
     }
 }
-/*
-void Drawable::LimitLights()
-{
-    // Maximum lights value 0 means unlimited
-    if (!maxLights_ || lights_.size() <= maxLights_)
-        return;
-
-    // If more lights than allowed, move to vertex lights and cut the list
-    const BoundingBox& box = GetWorldBoundingBox();
-    for (unsigned i = 0; i < lights_.size(); ++i)
-        lights_[i]->SetIntensitySortValue(box);
-
-    std::sort(lights_.begin(), lights_.end(), CompareDrawables);
-    vertexLights_.insert(vertexLights_.end(), lights_.begin() + maxLights_, lights_.end());
-    lights_.resize(maxLights_);
-}
-
-void Drawable::LimitVertexLights(bool removeConvertedLights)
-{
-    if (removeConvertedLights)
-    {
-        for (size_t i = vertexLights_.size() - 1; i < vertexLights_.size(); --i)
-        {
-            if (!vertexLights_[i]->GetPerVertex())
-                vertexLights_.erase(vertexLights_.begin() + i);
-        }
-    }
-
-    if (vertexLights_.size() <= MAX_VERTEX_LIGHTS)
-        return;
-
-    const BoundingBox& box = GetWorldBoundingBox();
-    for (unsigned i = 0; i < vertexLights_.size(); ++i)
-        vertexLights_[i]->SetIntensitySortValue(box);
-
-    std::sort(vertexLights_.begin(), vertexLights_.end(), CompareDrawables);
-    vertexLights_.resize(MAX_VERTEX_LIGHTS);
-}*/
 
 void Drawable::OnNodeSet(Node* node)
 {

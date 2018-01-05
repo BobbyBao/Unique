@@ -12,6 +12,7 @@ static const unsigned DRAWABLE_GEOMETRY = 0x1;
 static const unsigned DRAWABLE_LIGHT = 0x2;
 static const unsigned DRAWABLE_ZONE = 0x4;
 static const unsigned DRAWABLE_GEOMETRY2D = 0x8;
+static const unsigned DRAWABLE_DEBUG = 0x10;
 static const unsigned DRAWABLE_ANY = 0xff;
 static const unsigned DEFAULT_VIEWMASK = M_MAX_UNSIGNED;
 static const unsigned DEFAULT_LIGHTMASK = M_MAX_UNSIGNED;
@@ -99,6 +100,12 @@ struct UNIQUE_API SourceBatch
     void* instancingData_;
     /// %Geometry type.
     GeometryType geometryType_;
+	PipelineState* pipelineState_;
+	PrimitiveTopology primitiveTopology_;
+	uint vertexOffset_;
+	uint vertexCount_;
+	uint indexOffset_;
+	uint indexCount_;
 };
 
 /// Base class for visible components.
@@ -263,37 +270,13 @@ public:
 #endif
     /// Return whether has a base pass.
     bool HasBasePass(unsigned batchIndex) const { return (basePassFlags_ & (1 << batchIndex)) != 0; }
-
-    /// Return per-pixel lights.
-//    const PODVector<Light*>& GetLights() const { return lights_; }
 	
-    /// Return the first added per-pixel light.
-//    Light* GetFirstLight() const { return firstLight_; }
-
     /// Return the minimum view-space depth.
     float GetMinZ() const { return minZ_; }
 
     /// Return the maximum view-space depth.
     float GetMaxZ() const { return maxZ_; }
-
-    /// Add a per-pixel light affecting the object this frame.
-//     void AddLight(Light* light)
-//     {
-//         if (!firstLight_)
-//             firstLight_ = light;
-// 
-//         // Need to store into the light list only if the per-pixel lights are being limited
-//         // Otherwise recording the first light is enough
-//         if (maxLights_)
-//             lights_.push_back(light);
-//     }
-
-    /// Add a per-vertex light affecting the object this frame.
-//     void AddVertexLight(Light* light)
-//     {
-//         vertexLights_.push_back(light);
-//     }
-
+	
 protected:
     /// Handle node being assigned.
     virtual void OnNodeSet(Node* node);
@@ -375,10 +358,7 @@ protected:
     unsigned maxLights_;
     /// List of cameras from which is seen on the current frame.
     PODVector<Camera*> viewCameras_;
-    /// First per-pixel light added this frame.
-    //Light* firstLight_;
-    /// Per-pixel lights affecting this drawable.
-    //PODVector<Light*> lights_;
+
 };
 
 inline bool CompareDrawables(Drawable* lhs, Drawable* rhs)

@@ -41,6 +41,7 @@ namespace Unique
 		defaultRenderPath_->AddPass(new ScenePass());
 
 		Subscribe(&Renderer::HandleRenderUpdate);
+		Subscribe(&Renderer::HandlePostRenderUpdate);
 		Subscribe(&Renderer::HandleEndFrame);
 	}
 
@@ -122,8 +123,20 @@ namespace Unique
 		for (unsigned i = numMainViewports; i < queuedViewports_.size(); ++i)
 			UpdateQueuedViewport(i);
 
-		queuedViewports_.clear();
 		//resetViews_ = false;
+
+		DrawDebugGeometry(true);
+	}
+
+	void Renderer::HandlePostRenderUpdate(const PostRenderUpdate& eventData)
+	{
+		auto& views = MainContext(views_);
+
+		for (auto view : views)
+		{
+			view->PostUpdate();
+		}
+
 	}
 
 	void Renderer::HandleEndFrame(const EndFrame& args)

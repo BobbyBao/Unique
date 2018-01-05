@@ -193,6 +193,11 @@ namespace Unique
 
 		graphics_.AddResource("CameraPS", cameraPS_);
 		graphics_.AddResource("MaterialPS", materialPS_);
+
+		unsigned numThreads = GetSubsystem<WorkQueue>().GetNumThreads() + 1; // Worker threads + main thread
+		tempDrawables_.resize(numThreads);
+		sceneResults_.resize(numThreads);
+		frame_.camera_ = nullptr;
 	}
 
 	View::~View()
@@ -327,8 +332,13 @@ namespace Unique
 
 		GetBatches();
 
+
+	}
+
+	void View::PostUpdate()
+	{
 		UpdateGeometries();
-		
+
 		PrepareInstancingBuffer();
 
 		SetCameraShaderParameters(camera_);
@@ -343,13 +353,44 @@ namespace Unique
 			DebugRenderer* debug = octree_->GetComponent<DebugRenderer>();
 			if (debug && debug->IsEnabledEffective() && debug->HasContent())
 			{
-				// 				IntVector2 rtSizeNow = graphics_->GetRenderTargetDimensions();
-				// 				IntRect viewport = (currentRenderTarget_ == renderTarget_) ? viewRect_ : IntRect(0, 0, rtSizeNow.x_,
-				// 					rtSizeNow.y_);
-				// 				graphics_->SetViewport(viewport);
+				debug->UpdateBatches(frame_);
 
-				debug->SetView(camera_);
-				debug->Render(this);
+				const Vector<SourceBatch>& batches = debug->GetBatches();
+				bool vertexLightsProcessed = false;
+
+				auto& scenePasses = MainContext(scenePasses_);
+
+				for (unsigned j = 0; j < batches.size(); ++j)
+				{
+					const SourceBatch& srcBatch = batches[j];
+					Shader* shader = srcBatch.material_->GetShader();
+					if (!srcBatch.geometry_ || !srcBatch.numWorldTransforms_ || !shader)
+						continue;
+
+					// Check each of the scene passes
+					for (unsigned k = 0; k < scenePasses.size(); ++k)
+					{
+						ScenePassInfo& info = scenePasses[k];
+						// Skip forward base pass if the corresponding litbase pass already exists
+						//if (info.passIndex_ == basePassIndex_ && j < 32 && drawable->HasBasePass(j))
+						//	continue;
+
+						Pass* pass = shader->GetPass(info.passIndex_);
+						if (!pass)
+							continue;
+
+						Batch destBatch(srcBatch);
+						destBatch.pass_ = pass;
+						destBatch.isBase_ = true;
+						//destBatch.lightMask_ = (unsigned char)GetLightMask(drawable);
+						//destBatch.lightQueue_ = 0;
+
+						AddBatchToQueue(*info.batchQueue_, destBatch, shader, info.allowInstancing_);
+					}
+				}
+
+				//debug->SetView(camera_);
+				//debug->Render(this);
 			}
 		}
 
@@ -470,7 +511,80 @@ namespace Unique
 		PODVector<Drawable*>& tempDrawables = tempDrawables_[0];
 		FrustumOctreeQuery query(tempDrawables, cullCamera_->GetFrustum(), DRAWABLE_GEOMETRY | DRAWABLE_LIGHT, cullCamera_->GetViewMask());
 		octree_->GetDrawables(query);
-		std::swap(geometries_, tempDrawables);
+		//std::swap(geometries_, tempDrawables);
+
+
+		// Check drawable occlusion, find zones for moved drawables and collect geometries & lights in worker threads
+		{
+			for (unsigned i = 0; i < sceneResults_.size(); ++i)
+			{
+				PerThreadSceneResult& result = sceneResults_[i];
+
+				result.geometries_.clear();
+				result.lights_.clear();
+				result.minZ_ = M_INFINITY;
+				result.maxZ_ = 0.0f;
+			}
+
+			int numWorkItems = queue.GetNumThreads() + 1; // Worker threads + main thread
+			int drawablesPerItem = tempDrawables.size() / numWorkItems;
+
+			auto start = &tempDrawables.front();
+			// Create a work item for each thread
+			for (int i = 0; i < numWorkItems; ++i)
+			{
+				SPtr<WorkItem> item = queue.GetFreeItem();
+				item->priority_ = M_MAX_UNSIGNED;
+				item->workFunction_ = CheckVisibilityWork;
+				item->aux_ = this;
+
+				auto end = &tempDrawables.back() + 1;
+				if (i < numWorkItems - 1 && end - start > drawablesPerItem)
+					end = start + drawablesPerItem;
+
+				item->start_ = start;
+				item->end_ = end;
+				queue.AddWorkItem(item);
+
+				start = end;
+			}
+
+			queue.Complete(M_MAX_UNSIGNED);
+		}
+
+		// Combine lights, geometries & scene Z range from the threads
+		geometries_.clear();
+		lights_.clear();
+		minZ_ = M_INFINITY;
+		maxZ_ = 0.0f;
+
+		if (sceneResults_.size() > 1)
+		{
+			for (unsigned i = 0; i < sceneResults_.size(); ++i)
+			{
+				PerThreadSceneResult& result = sceneResults_[i];
+				//geometries_.push_back(result.geometries_);
+				//lights_.push_back(result.lights_);
+				
+				geometries_.insert(geometries_.end(), result.geometries_.begin(), result.geometries_.end());
+				lights_.insert(lights_.end(), result.lights_.begin(), result.lights_.end());
+
+				minZ_ = Min(minZ_, result.minZ_);
+				maxZ_ = Max(maxZ_, result.maxZ_);
+			}
+		}
+		else
+		{
+			// If just 1 thread, copy the results directly
+			PerThreadSceneResult& result = sceneResults_[0];
+			minZ_ = result.minZ_;
+			maxZ_ = result.maxZ_;
+			Swap(geometries_, result.geometries_);
+			Swap(lights_, result.lights_);
+		}
+
+		if (minZ_ == M_INFINITY)
+			minZ_ = 0.0f;
 	}
 
 	void View::GetBatches()
@@ -517,8 +631,8 @@ namespace Unique
 				{
 					ScenePassInfo& info = scenePasses[k];
 					// Skip forward base pass if the corresponding litbase pass already exists
-// 					if (info.passIndex_ == basePassIndex_ && j < 32 && drawable->HasBasePass(j))
-// 						continue;
+					//if (info.passIndex_ == basePassIndex_ && j < 32 && drawable->HasBasePass(j))
+					//	continue;
 
 					Pass* pass = shader->GetPass(info.passIndex_);
 					if (!pass)

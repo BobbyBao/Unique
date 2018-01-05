@@ -381,11 +381,7 @@ void Input::Update()
         mouseMoved = true;
 
     ResetInputAccumulation();
-
-//     SDL_Event evt;
-//     while (SDL_PollEvent(&evt))
-//         HandleSDLEvent(&evt);
-
+	
 	auto& events = MainContext(events_);
 	for (auto& evt : events)
 	{

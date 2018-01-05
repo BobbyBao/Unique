@@ -149,13 +149,15 @@ Context::Context() :
 	ExecuteInitializations(this);
 
 	TypeInfo::RegisterTypeInfo();
+
+	RegisterSubsystem<Time>();
 }
 
 Context::~Context()
 {
-	for (int i = (int)subsystemVec_.size() - 1; i >=0; i--)
+	while(!subsystemVec_.empty())
 	{
-		RemoveSubsystem(subsystemVec_[i]->GetType());
+		RemoveSubsystem(subsystemVec_.back()->GetType());
 	}
 		
 	ExecuteCleanup(this);
@@ -335,7 +337,7 @@ void Context::ThreadFunction()
 	// Set the main thread ID (assuming the Context is created in it)
 	Thread::SetMainThread();
 
-	Time& timer = RegisterSubsystem<Time>();
+	auto& timer = *GetSubsystem<Time>();
 
 	SendEvent(Startup());
 	
