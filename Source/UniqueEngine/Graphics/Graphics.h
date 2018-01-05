@@ -5,6 +5,7 @@
 #include <RefCntAutoPtr.h>
 #include <RenderDevice.h>
 #include <SwapChain.h>
+#include "GraphicsBuffer.h"
 
 struct SDL_Window;
 
@@ -63,6 +64,15 @@ namespace Unique
 		bool IsOpenGL() const;
 
 		//***MainThread***
+
+		template<class T>
+		SPtr<UniformBuffer> AddUniformBuffer()
+		{
+			SPtr<UniformBuffer> uniformBuffer(new UniformBuffer(T()));
+			AddResource(TypeInfo::GetTypeName<T>(), uniformBuffer);
+			return uniformBuffer;
+		}
+
 		void AddResource(const char *Name, GPUObject* pObject, bool bIsUnique = true);
 		void AddResource(const char *Name, IDeviceObject *pObject, bool bIsUnique);   
 		void AddResourceArray(const char *Name, uint StartIndex, IDeviceObject* const* ppObjects, uint NumElements, bool bIsUnique);

@@ -343,4 +343,11 @@ namespace Unique
 		batchQueue.emplace_back(geometry, material, worldTransform);
 		return batchQueue.back();
 	}
+
+	Batch& Renderer::AddBatch(Batch&& batch)
+	{
+		auto& batchQueue = MainContext(batchQueue_);
+		batchQueue.emplace_back(batch);
+		return batchQueue.back();
+	}
 }

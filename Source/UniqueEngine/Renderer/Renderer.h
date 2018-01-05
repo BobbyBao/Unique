@@ -59,6 +59,7 @@ namespace Unique
 		bool ResizeInstancingBuffer(unsigned numInstances);
 
 		Batch& AddBatch(Geometry* geometry, Material* material, const Matrix3x4* worldTransform = nullptr);
+		Batch& AddBatch(Batch&& batch);
 	private:
 		/// Initialize when screen mode initially set.
 		void Initialize();

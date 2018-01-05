@@ -2,18 +2,9 @@ Texture2D DiffMap;
 SamplerState DiffMap_sampler;
 
 
-cbuffer CameraVS
+cbuffer UIVS
 {  
-	float4x3 cView;
-    float4x3 cViewInv;
-    float4x4 cViewProj;
-    float3 cCameraPos;
-    float cNearClip;
-    float cFarClip;
-    float3 cFrustumSize;
-    float4 cDepthMode;
-    float4 cGBufferOffsets;
-    float4 cClipPlane;
+    float4x4 UIProj;
 }
 
 struct VS_INPUT
@@ -30,16 +21,16 @@ struct PS_INPUT
   float2 uv  : TEXCOORD0;
 };
 
-PS_INPUT vs(VS_INPUT input)
+PS_INPUT VS(VS_INPUT input)
 {
   PS_INPUT output;
-  output.pos = mul(float4(input.pos.xy, 0.f, 1.f), cViewProj);
+  output.pos = mul(UIProj, float4(input.pos.xy, 0.f, 1.f));
   output.col = input.col;
   output.uv  = input.uv;
   return output;
 }
 
-float4 ps(PS_INPUT input) : SV_Target
+float4 PS(PS_INPUT input) : SV_Target
 {
-  return input.col * DiffMap.Sample(DiffMap_sampler, input.uv);
+  return input.col;// * DiffMap.Sample(DiffMap_sampler, input.uv);
 }

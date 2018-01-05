@@ -57,51 +57,12 @@ namespace Unique
 
 		delete &impl_;
 	}
-
-	void GUISystem::FontStashBegin(struct nk_font_atlas **atlas)
-	{
-		nk_font_atlas_init_default(&impl_.atlas);
-		nk_font_atlas_begin(&impl_.atlas);
-		*atlas = &impl_.atlas;
-	}
-
-	void GUISystem::FontStashEnd(void)
-	{
-		const void *image; int w, h;
 	
-		image = nk_font_atlas_bake(&impl_.atlas, &w, &h, NK_FONT_ATLAS_RGBA32);
-
-		font_texture = new Texture();
-
-		TextureDesc desc;
-		desc.Type = Diligent::RESOURCE_DIM_TEX_2D;
-		desc.Width = (uint)w;
-		desc.Height = (uint)h;
-		desc.MipLevels = 1;
-		desc.ArraySize = 1;
-		desc.Format = Diligent::TEX_FORMAT_RGBA8_UNORM;
-		desc.SampleCount = 1;
-		desc.Usage = Diligent::USAGE_DEFAULT;
-		desc.BindFlags = Diligent::BIND_SHADER_RESOURCE;
-		desc.CPUAccessFlags = 0;
-
-		static TextureSubResData subRes;
-		subRes.pData = image;
-		subRes.Stride = (uint)(w * 4);
-
-		TextureData data;
-		data.NumSubresources = 1;
-		data.pSubResources = &subRes;
-		font_texture->Create(desc, data);
-	
-		nk_font_atlas_end(&impl_.atlas, nk_handle_ptr(font_texture), &impl_.null);
-		if (impl_.atlas.default_font)
-			nk_style_set_font(&impl_.ctx, &impl_.atlas.default_font->handle);
-
-	}
-
 	void GUISystem::HandleStartup(const struct Startup& eventData)
 	{
+		auto& cache = GetSubsystem<ResourceCache>();
+		auto& graphics = GetSubsystem<Graphics>();
+
 		vertexBuffer_ = new VertexBuffer();
 
 		PODVector<VertexElement> elements
@@ -119,11 +80,11 @@ namespace Unique
 		geometry_ = new Geometry();
 		geometry_->SetVertexBuffer(0, vertexBuffer_);
 		geometry_->SetIndexBuffer(indexBuffer_);
+		geometry_->SetDrawRange(PrimitiveTopology::TRIANGLE_LIST, 0, indexBuffer_->GetIndexCount(), 0, vertexBuffer_->GetVertexCount());
 
-		ResourceCache& cache = GetSubsystem<ResourceCache>();
+		uiConstants_ = graphics.AddUniformBuffer<UIVS>();
 
 		material_ = new Material();
-
 		material_->SetShaderAttr(ResourceRef::Create<Shader>("shaders/UI.shader"));
 		pipeline_ = material_->GetPipeline("base", "");
 
@@ -149,6 +110,48 @@ namespace Unique
 			/*nk_style_load_all_cursors(ctx, atlas->cursors);*/
 			/*nk_style_set_font(ctx, &droid->handle)*/;
 		}
+	}
+
+	void GUISystem::FontStashBegin(struct nk_font_atlas **atlas)
+	{
+		nk_font_atlas_init_default(&impl_.atlas);
+		nk_font_atlas_begin(&impl_.atlas);
+		*atlas = &impl_.atlas;
+	}
+
+	void GUISystem::FontStashEnd(void)
+	{
+		const void *image; int w, h;
+
+		image = nk_font_atlas_bake(&impl_.atlas, &w, &h, NK_FONT_ATLAS_RGBA32);
+
+		font_texture = new Texture();
+
+		TextureDesc desc;
+		desc.Type = Diligent::RESOURCE_DIM_TEX_2D;
+		desc.Width = (uint)w;
+		desc.Height = (uint)h;
+		desc.MipLevels = 1;
+		desc.ArraySize = 1;
+		desc.Format = Diligent::TEX_FORMAT_RGBA8_UNORM;
+		desc.SampleCount = 1;
+		desc.Usage = Diligent::USAGE_DEFAULT;
+		desc.BindFlags = Diligent::BIND_SHADER_RESOURCE;
+		desc.CPUAccessFlags = 0;
+
+		static TextureSubResData subRes;
+		subRes.pData = image;
+		subRes.Stride = (uint)(w * 4);
+
+		TextureData data;
+		data.NumSubresources = 1;
+		data.pSubResources = &subRes;
+		font_texture->Create(desc, data);
+
+		nk_font_atlas_end(&impl_.atlas, nk_handle_ptr(font_texture), &impl_.null);
+		if (impl_.atlas.default_font)
+			nk_style_set_font(&impl_.ctx, &impl_.atlas.default_font->handle);
+
 	}
 
 	void GUISystem::HandleBeginFrame(const struct BeginFrame& eventData)
@@ -195,8 +198,27 @@ namespace Unique
 		nk_end(ctx);
 	}
 
+	static void
+		nk_get_projection_matrix(int width, int height, float *result)
+	{
+		const float L = 0.0f;
+		const float R = (float)width;
+		const float T = 0.0f;
+		const float B = (float)height;
+		float matrix[4][4] =
+		{
+			{ 2.0f / (R - L),              0.0f, 0.0f, 0.0f },
+			{ 0.0f,    2.0f / (T - B), 0.0f, 0.0f },
+			{ 0.0f,              0.0f, 0.5f, 0.0f },
+			{ (R + L) / (L - R), (T + B) / (B - T), 0.5f, 1.0f },
+		};
+		memcpy(result, matrix, sizeof(matrix));
+	}
+
 	void GUISystem::HandlePostRenderUpdate(const struct PostRenderUpdate& eventData)
 	{
+		auto& renderer = GetSubsystem<Renderer>();
+		auto& graphics = GetSubsystem<Graphics>();
 		/* Convert from command queue into draw list and draw to screen */
 		{/* load draw vertices & elements directly into vertex + element buffer */
 			const struct nk_draw_command *cmd;
@@ -235,8 +257,12 @@ namespace Unique
 			indexBuffer_->Unlock();
 
 			Batch batch(geometry_, material_, &Matrix3x4::IDENTITY);
-			batch.primitiveTopology_ = PrimitiveTopology::LINE_LIST;
+			batch.geometryType_ = GEOM_TRANSIENT;
+			batch.primitiveTopology_ = PrimitiveTopology::TRIANGLE_LIST;
 			batch.pipelineState_ = pipeline_;
+			UIVS* ui = (UIVS*)uiConstants_->Lock();
+			nk_get_projection_matrix(graphics.GetWidth(), graphics.GetHeight(), &ui->UIProj.m00_);
+			uiConstants_->Unlock();
 			/* iterate over and execute each draw command */
 			nk_draw_foreach(cmd, &impl_.ctx, &impl_.cmds)
 			{
@@ -253,12 +279,13 @@ namespace Unique
 // 				ID3D11DeviceContext_PSSetShaderResources(context, 0, 1, &texture_view);
 // 				ID3D11DeviceContext_RSSetScissorRects(context, 1, &scissor);
 // 				ID3D11DeviceContext_DrawIndexed(context, (UINT)cmd->elem_count, offset, 0);
-
-				batch.vertexOffset_ = offset;
-				batch.vertexCount_ = cmd->elem_count;
-				//view->AddBatch(batch);
+				
+				batch.indexOffset_ = offset;
+				batch.indexCount_ = cmd->elem_count;
+				renderer.AddBatch(std::move(batch));
 				offset += cmd->elem_count;
 			}
+
 			nk_clear(&impl_.ctx); }
 	}
 }
