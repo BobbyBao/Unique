@@ -28,7 +28,7 @@ namespace Unique
 		{
 			TextureSubResData subRes;
 			subRes.pData = Mips[i].data();
-			subRes.Stride = Mips[i].size() / height;
+			subRes.Stride = (uint)Mips[i].size() / height;
 			pSubResources[i] = subRes;
 			height /= 2;
 		}

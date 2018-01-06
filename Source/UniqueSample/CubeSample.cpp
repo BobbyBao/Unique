@@ -23,7 +23,7 @@ namespace Unique
 	struct ShaderConstants
 	{
 		Matrix4 WorldViewProjT;
-		Matrix4 WorldNormT;
+		Matrix3x4 WorldNormT;
 		Vector3 LightDir;
 		float LightCoeff;
 	};
@@ -41,13 +41,13 @@ namespace Unique
 	{
 		spongeRotation_ = Quaternion::IDENTITY;
 
-		m_SpongeLevel = 2;                      // number of recursions
-		m_SpongeAO = true;                      // apply ambient occlusion
-		m_LightDir.x_ = -0.5f;
-		m_LightDir.y_ = -0.2f;
-		m_LightDir.z_ = 1;
-		m_CamDistance = 0.7f;                  // camera distance
-		m_AnimationSpeed = 0.02f;               // animation speed
+		spongeLevel_ = 2;                      // number of recursions
+		spongeAO_ = true;                      // apply ambient occlusion
+		lightDir_.x_ = -0.5f;
+		lightDir_.y_ = -0.2f;
+		lightDir_.z_ = 1;
+		camDistance_ = 0.7f;                  // camera distance
+		animationSpeed_ = 0.02f;               // animation speed
 
 		Subscribe(&CubeSample::HandleStartup);
 		Subscribe(&CubeSample::HandleShutdown);
@@ -67,12 +67,10 @@ namespace Unique
 		constBuffer_ = new UniformBuffer(ShaderConstants());
 
 		// Create vertex and index buffers
-		geometry_ = BuildSponge(m_SpongeLevel, m_SpongeAO);
-
+		geometry_ = BuildSponge(spongeLevel_, spongeAO_);
 		shader_ = cache.GetResource<Shader>("Shaders/Test.shader");
 		pipeline_ = shader_->GetPipeline("base", "");
 		graphics.AddResource("Constants", constBuffer_);
-	//	graphics.Frame();	
 		
 	}
 
@@ -85,9 +83,9 @@ namespace Unique
 	{
 		float dt = (float)eventData.timeStep_;
 		
-		if (m_Animate && dt > 0 && dt < 0.2f)
+		if (animate_ && dt > 0 && dt < 0.2f)
 		{
-			yaw_ += m_AnimationSpeed * dt;
+			yaw_ += animationSpeed_ * dt;
 			spongeRotation_ = Quaternion(0, yaw_, 0.0f);
 		}
 
@@ -96,7 +94,7 @@ namespace Unique
 
 		Matrix4 proj = Matrix4::CreateProjection(M_PI / 4, aspectRatio, 0.1f, 100.0f, graphics.IsDirect3D());
 
-		float dist = m_CamDistance + 0.4f;
+		float dist = camDistance_ + 0.4f;
 		Vector3 camPosInv(dist * 0.3f, dist * 0.0f, dist * 2.0f);
 
 		Matrix4 view = Matrix4::IDENTITY;
@@ -106,8 +104,8 @@ namespace Unique
 
 		ShaderConstants *cst = (ShaderConstants *)constBuffer_->Lock();
 		cst->WorldViewProjT = (proj* view *world);
-		cst->WorldNormT = world.ToMatrix4();
-		cst->LightDir = (1.0f / m_LightDir.Length()) * m_LightDir;
+		cst->WorldNormT = world;
+		cst->LightDir = (1.0f / lightDir_.Length()) * lightDir_;
 		cst->LightCoeff = 0.85f;
 		constBuffer_->Unlock();
 	}

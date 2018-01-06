@@ -212,7 +212,7 @@ namespace Unique
 		RenderSemPost();
 	}
 
-	void Graphics::AddCommand(std::function<void()> cmd)
+	void Graphics::AddCommand(const std::function<void()>& cmd)
 	{
 		assert(Context::IsMainThread());
 		comands_.push_back(cmd);

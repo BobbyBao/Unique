@@ -131,8 +131,17 @@ namespace Unique
 			data.Transfer(*this);
 		}
 
+		virtual bool StartDocument(const String& fileName) { return true; }
+		virtual void EndDocument() {}
 		virtual bool StartObject(uint size) { return true; }
 		virtual void EndObject() {}
+		virtual SPtr<Object> CreateObject() { return nullptr; }
+		virtual bool StartAttribute(const String& key) { return true; }
+		virtual void EndAttribute() {}
+		virtual bool StartArray(uint& size) { return true; }
+		virtual void SetElement(uint index) {}
+		virtual void EndArray() {}
+
 		virtual void TransferBin(ByteArray& data) {}
 		virtual void TransferPrimitive(std::string& data) {}
 		virtual void TransferPrimitive(String& data) {}
@@ -153,14 +162,6 @@ namespace Unique
 		virtual void TransferPrimitive(Color& data) {}
 		virtual void TransferPrimitive(Quaternion& data) {}
 
-		virtual bool StartDocument(const String& fileName) { return true; }
-		virtual void EndDocument() {}
-		virtual SPtr<Object> CreateObject() { return nullptr; }
-		virtual bool StartAttribute(const String& key) { return true; }
-		virtual void EndAttribute() {}
-		virtual bool StartArray(uint& size) { return true; }
-		virtual void SetElement(uint index) {}
-		virtual void EndArray() {}
 
 	protected:
 		template <typename First, typename... Rest>

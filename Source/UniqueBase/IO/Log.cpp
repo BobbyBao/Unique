@@ -57,7 +57,7 @@ const char* logLevelPrefixes[] =
 static Log* logInstance = 0;
 static bool threadErrorDisplayed = false;
 
-Log::Log() :
+Log::Log(const String& fileName) :
 
 #ifdef _DEBUG
     level_(LOG_DEBUG),
@@ -71,6 +71,11 @@ Log::Log() :
     logInstance = this;
 
     Subscribe(&Log::HandleEndFrame);
+
+	if (!fileName.Empty())
+	{
+		Open(fileName);
+	}
 }
 
 Log::~Log()

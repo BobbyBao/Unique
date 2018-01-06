@@ -35,6 +35,8 @@ namespace Unique
 		IShaderResourceBinding* GetShaderResourceBinding() { return shaderResourceBinding_; }
 
 		void SetDepthStencilState(const DepthStencilStateDesc& dss);
+		void SetCullMode(CullMode cull);
+		void SetLineAntialiased(bool val);
 
 	private:
 		void Init();

@@ -512,9 +512,7 @@ namespace Unique
 		PODVector<Drawable*>& tempDrawables = tempDrawables_[0];
 		FrustumOctreeQuery query(tempDrawables, cullCamera_->GetFrustum(), DRAWABLE_GEOMETRY | DRAWABLE_LIGHT, cullCamera_->GetViewMask());
 		octree_->GetDrawables(query);
-		//std::swap(geometries_, tempDrawables);
-
-
+		
 		// Check drawable occlusion, find zones for moved drawables and collect geometries & lights in worker threads
 		{
 			for (unsigned i = 0; i < sceneResults_.size(); ++i)
@@ -528,7 +526,7 @@ namespace Unique
 			}
 
 			int numWorkItems = queue.GetNumThreads() + 1; // Worker threads + main thread
-			int drawablesPerItem = tempDrawables.size() / numWorkItems;
+			int drawablesPerItem = (int)tempDrawables.size() / numWorkItems;
 
 			auto start = &tempDrawables.front();
 			// Create a work item for each thread
@@ -564,8 +562,6 @@ namespace Unique
 			for (unsigned i = 0; i < sceneResults_.size(); ++i)
 			{
 				PerThreadSceneResult& result = sceneResults_[i];
-				//geometries_.push_back(result.geometries_);
-				//lights_.push_back(result.lights_);
 				
 				geometries_.insert(geometries_.end(), result.geometries_.begin(), result.geometries_.end());
 				lights_.insert(lights_.end(), result.lights_.begin(), result.lights_.end());
@@ -651,28 +647,7 @@ namespace Unique
 		}
 
 	}
-
-
-	void View::AddBatch(Batch& batch)
-	{
-		assert(batch.pass_ != nullptr);
-
-		auto& batchQueues = MainContext(batchQueues_);
-		auto it = batchQueues.find(batch.pass_->passIndex_);
-		if (it != batchQueues.end())
-		{
-			auto& batchQueue = it->second;
-			batch.transformOffset_ = GetMatrics(batch.worldTransform_, 1);
-			batchQueue.batches_.push_back(batch);
-			batchQueue.sortedBatches_.push_back(&batchQueue.batches_.back());
-		
-		}
-		else
-		{
-			UNIQUE_LOGERROR("Unknown pass index : ", batch.pass_->passIndex_);
-		}
-	}
-
+	
 	void View::AddBatchToQueue(BatchQueue& queue, Batch& batch, Shader* shader, bool allowInstancing, bool allowShadows)
 	{
 		//if (!batch.material_)

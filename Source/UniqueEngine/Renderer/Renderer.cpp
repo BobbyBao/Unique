@@ -157,7 +157,7 @@ namespace Unique
 		
 		if (views.empty())
 		{		
-			deviceContext->ClearRenderTarget(nullptr, Color::BLACK);
+			deviceContext->ClearRenderTarget(nullptr, Color::GRAY);
 			deviceContext->ClearDepthStencil(nullptr, Diligent::CLEAR_DEPTH_FLAG, 1.0f, 0);
 		}
 		
@@ -344,6 +344,11 @@ namespace Unique
 		UNIQUE_LOGDEBUG("Resized instancing buffer to " + String(newSize));
 		return true;
 	}
+
+	ushort Renderer::CacheScissor(int left, int top, int right, int bottom)
+	{
+		return 0;
+	}
 	
 	Batch& Renderer::AddBatch(Geometry* geometry, Material* material, const Matrix3x4* worldTransform)
 	{
@@ -352,7 +357,7 @@ namespace Unique
 		return batchQueue.back();
 	}
 
-	Batch& Renderer::AddBatch(Batch&& batch)
+	Batch& Renderer::AddBatch(const Batch& batch)
 	{
 		auto& batchQueue = MainContext(batchQueue_);
 		batchQueue.emplace_back(batch);

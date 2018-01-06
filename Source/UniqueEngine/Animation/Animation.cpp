@@ -89,7 +89,7 @@ void AnimationTrack::GetKeyFrameIndex(float time, unsigned& index) const
         time = 0.0f;
 
     if (index >= keyFrames_.size())
-        index = keyFrames_.size() - 1;
+        index = (uint)keyFrames_.size() - 1;
 
     // Check for being too far ahead
     while (index && time < keyFrames_[index].time_)
@@ -113,8 +113,8 @@ Animation::Animation() : length_(0.f)
 Animation::~Animation()
 {
 }
-/*
-bool Animation::BeginLoad(Deserializer& source)
+
+bool Animation::Load(IStream& source)
 {
     unsigned memoryUse = sizeof(Animation);
 
@@ -128,19 +128,19 @@ bool Animation::BeginLoad(Deserializer& source)
     // Read name and length
     animationName_ = source.ReadString();
     animationNameHash_ = animationName_;
-    length_ = source.ReadFloat();
+    length_ = source.Read<float>();
     tracks_.clear();
 
-    unsigned tracks = source.ReadUInt();
+    unsigned tracks = source.Read<uint>();
     memoryUse += tracks * sizeof(AnimationTrack);
 
     // Read tracks
     for (unsigned i = 0; i < tracks; ++i)
     {
         AnimationTrack* newTrack = CreateTrack(source.ReadString());
-        newTrack->channelMask_ = source.ReadUByte();
+        newTrack->channelMask_ = source.Read<byte>();
 
-        unsigned keyFrames = source.ReadUInt();
+        unsigned keyFrames = source.Read<uint>();
         newTrack->keyFrames_.resize(keyFrames);
         memoryUse += keyFrames * sizeof(AnimationKeyFrame);
 
@@ -148,13 +148,13 @@ bool Animation::BeginLoad(Deserializer& source)
         for (unsigned j = 0; j < keyFrames; ++j)
         {
             AnimationKeyFrame& newKeyFrame = newTrack->keyFrames_[j];
-            newKeyFrame.time_ = source.ReadFloat();
+            newKeyFrame.time_ = source.Read<float>();
             if (newTrack->channelMask_ & CHANNEL_POSITION)
-                newKeyFrame.position_ = source.ReadVector3();
+                newKeyFrame.position_ = source.Read<Vector3>();
             if (newTrack->channelMask_ & CHANNEL_ROTATION)
-                newKeyFrame.rotation_ = source.ReadQuaternion();
+                newKeyFrame.rotation_ = source.Read<Quaternion>();
             if (newTrack->channelMask_ & CHANNEL_SCALE)
-                newKeyFrame.scale_ = source.ReadVector3();
+                newKeyFrame.scale_ = source.Read<Vector3>();
         }
     }
 #if false
@@ -215,7 +215,7 @@ bool Animation::BeginLoad(Deserializer& source)
     SetMemoryUse(memoryUse);
     return true;
 }
-
+/*
 bool Animation::Save(Serializer& dest) const
 {
     // Write ID, name and length

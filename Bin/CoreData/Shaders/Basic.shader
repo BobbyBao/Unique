@@ -21,7 +21,6 @@ Shader "Basic"
 		
 		RasterizerState 
 		{
-			FillMode SOLID
 			CullMode NONE
 		}
 		

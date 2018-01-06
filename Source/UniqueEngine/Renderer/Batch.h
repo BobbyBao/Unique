@@ -47,20 +47,23 @@ namespace Unique
 		void Draw(View* view, Camera* camera) const;
 		/// Draw.
 		void Draw() const;
+
 		/// State sorting key.
 		unsigned long long sortKey_;
 		/// Distance from camera.
 		float distance_;
+		/// 16-bit render order modifier from material.
+		unsigned short renderOrder_;
+		unsigned short scissor_ = 0;
 		/// %Geometry type.
 		GeometryType geometryType_;
-		/// 8-bit render order modifier from material.
-		unsigned char renderOrder_;
 		/// 8-bit light mask for stencil marking in deferred rendering.
 		unsigned char lightMask_;
 		/// Base batch flag. This tells to draw the object fully without light optimizations.
 		bool isBase_;
 
 		PrimitiveTopology primitiveTopology_;
+
 		uint vertexOffset_;
 		uint vertexCount_;
 		uint indexOffset_;
@@ -188,8 +191,8 @@ namespace Unique
 		Material* material_;
 		/// Geometry.
 		Geometry* geometry_;
-		/// 8-bit render order modifier from material.
-		unsigned char renderOrder_;
+		/// 16-bit render order modifier from material.
+		unsigned short renderOrder_;
 
 		/// Test for equality with another batch group key.
 		bool operator ==(const BatchGroupKey& rhs) const

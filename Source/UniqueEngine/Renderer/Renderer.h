@@ -13,6 +13,15 @@ namespace Unique
 
 	static const int INSTANCING_BUFFER_DEFAULT_SIZE = 1024;
 
+	struct TransientGeometry
+	{
+		Geometry* geometry_;
+		uint vertexOffset_;
+		uint vertexCount_;
+		uint indexOffset_;
+		uint indexCount_;
+	};
+
 	class Renderer : public Object
 	{
 		uRTTI(Renderer, Object)
@@ -58,8 +67,10 @@ namespace Unique
 		void SetBatchShaders(Batch& batch, Shader* tech, bool allowShadows, const BatchQueue& queue);
 		bool ResizeInstancingBuffer(unsigned numInstances);
 
+		ushort CacheScissor(int left, int top, int right, int bottom);
+
 		Batch& AddBatch(Geometry* geometry, Material* material, const Matrix3x4* worldTransform = nullptr);
-		Batch& AddBatch(Batch&& batch);
+		Batch& AddBatch(const Batch& batch);
 	private:
 		/// Initialize when screen mode initially set.
 		void Initialize();
@@ -101,10 +112,12 @@ namespace Unique
 		int maxSortedInstances_;
 		
 		SPtr<Geometry> transientGeometry_;
+
 		SPtr<Geometry> transientIndexedGeometry_;
+		
 		bool drawDebug_ = false;
 
-
+		Vector<IntRect> scissorRect_[2];
 
 		Vector<Batch> batchQueue_[2];
 	};

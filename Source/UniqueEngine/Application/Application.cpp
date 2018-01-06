@@ -22,10 +22,7 @@ namespace Unique
 		context_->RegisterSubsystem<WorkQueue>();
 		context_->RegisterSubsystem<Profiler>();
 		context_->RegisterSubsystem<FileSystem>();
-
-		auto& log = context_->RegisterSubsystem<Log>();
-		log.Open("Unique.log");
-
+		context_->RegisterSubsystem<Log>("Unique.log");
 		context_->RegisterSubsystem<Graphics>();
 		context_->RegisterSubsystem<ResourceCache>();
 		context_->RegisterSubsystem<Renderer>();

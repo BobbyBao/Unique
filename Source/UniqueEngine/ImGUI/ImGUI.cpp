@@ -114,6 +114,7 @@ namespace Unique
 		material_ = new Material();
 		material_->SetShaderAttr(ResourceRef::Create<Shader>("shaders/UI.shader"));
 		pipeline_ = material_->GetPipeline("base", "");
+		pipeline_->SetLineAntialiased(NK_ANTI_ALIASING_ON);
 
 		nk_init_default(&impl_.ctx, 0);
 		impl_.ctx.clip.copy = nk_sdl_clipbard_copy;
@@ -127,7 +128,7 @@ namespace Unique
 		{
 			struct nk_font_atlas *atlas;
 			FontStashBegin(&atlas);
-			/*struct nk_font *droid = nk_font_atlas_add_from_file(atlas, "../../extra_font/DroidSans.ttf", 14, 0);*/
+			struct nk_font *droid = nk_font_atlas_add_from_file(atlas, "CoreData/Fonts/arial.ttf", 14, 0);
 			/*struct nk_font *robot = nk_font_atlas_add_from_file(atlas, "../../extra_font/Roboto-Regular.ttf", 14, 0);*/
 			/*struct nk_font *future = nk_font_atlas_add_from_file(atlas, "../../extra_font/kenvector_future_thin.ttf", 13, 0);*/
 			/*struct nk_font *clean = nk_font_atlas_add_from_file(atlas, "../../extra_font/ProggyClean.ttf", 12, 0);*/
@@ -135,7 +136,7 @@ namespace Unique
 			/*struct nk_font *cousine = nk_font_atlas_add_from_file(atlas, "../../extra_font/Cousine-Regular.ttf", 13, 0);*/
 			FontStashEnd();
 			/*nk_style_load_all_cursors(ctx, atlas->cursors);*/
-			/*nk_style_set_font(ctx, &droid->handle)*/;
+			nk_style_set_font(&impl_.ctx, &droid->handle);
 		}
 	}
 
@@ -281,27 +282,24 @@ namespace Unique
 
 	void GUISystem::HandleInputBegin(const struct InputBegin& eventData)
 	{
-		nk_context *ctx = &impl_.ctx;
-		nk_input_begin(ctx);
+		nk_input_begin(&impl_.ctx);
 	}
 
 	void GUISystem::HandleInputEnd(const struct InputEnd& eventData)
 	{
-		nk_context *ctx = &impl_.ctx;
-		nk_input_end(ctx);
+		nk_input_end(&impl_.ctx);
 	}
 
 	void GUISystem::HandleSDLRawInput(const SDLRawInput& eventData)
 	{	
-		nk_context *ctx = &impl_.ctx;
-		int ret = nk_sdl_handle_event(ctx, eventData.sdlEvent_);
+		int ret = nk_sdl_handle_event(&impl_.ctx, eventData.sdlEvent_);
 		const_cast<SDLRawInput&>(eventData).consumed_ = (ret != 0);
 	}
 
+	nk_color background = nk_rgb(28, 48, 62);
 	void GUISystem::HandleBeginFrame(const BeginFrame& eventData)
 	{
 		nk_context *ctx = &impl_.ctx;
-		nk_color background = nk_rgb(28, 48, 62);
 
 		/* GUI */
 		if (nk_begin(ctx, "Demo", nk_rect(50, 50, 230, 250),
@@ -347,10 +345,10 @@ namespace Unique
 		const float B = (float)height;
 		float matrix[4][4] =
 		{
-			{ 2.0f / (R - L),              0.0f, 0.0f, 0.0f },
-			{ 0.0f,    2.0f / (T - B), 0.0f, 0.0f },
-			{ 0.0f,              0.0f, 0.5f, 0.0f },
-			{ (R + L) / (L - R), (T + B) / (B - T), 0.5f, 1.0f },
+			{ 2.0f / (R - L),	0.0f,				0.0f, 0.0f },
+			{ 0.0f,				2.0f / (T - B),		0.0f, 0.0f },
+			{ 0.0f,             0.0f,				0.5f, 0.0f },
+			{ (R + L) / (L - R),(T + B) / (B - T),	0.5f, 1.0f },
 		};
 		memcpy(result, matrix, sizeof(matrix));
 	}
@@ -406,19 +404,19 @@ namespace Unique
 			/* iterate over and execute each draw command */
 			nk_draw_foreach(cmd, &impl_.ctx, &impl_.cmds)
 			{
-// 				D3D11_RECT scissor;
-// 				ID3D11ShaderResourceView *texture_view = (ID3D11ShaderResourceView *)cmd->texture.ptr;
-				if (!cmd->elem_count) continue;
+				if (!cmd->elem_count)
+					continue;
 
 				Diligent::Rect scissor;
 				scissor.left = (int)cmd->clip_rect.x;
  				scissor.right = (int)(cmd->clip_rect.x + cmd->clip_rect.w);
  				scissor.top = (int)cmd->clip_rect.y;
  				scissor.bottom = (int)(cmd->clip_rect.y + cmd->clip_rect.h);
+
 				material_->SetTexture("DiffMap", (Texture*)cmd->texture.ptr);
 				batch.indexOffset_ = offset;
 				batch.indexCount_ = cmd->elem_count;
-				renderer.AddBatch(std::move(batch));
+				renderer.AddBatch(batch);
 				offset += cmd->elem_count;
 			}
 

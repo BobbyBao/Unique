@@ -152,10 +152,10 @@ public:
 	};
 
 	/// Register a subsystem.
-	template<class T>
-	T& RegisterSubsystem()
+	template<typename T, typename... Rest>
+	T& RegisterSubsystem(Rest&... rest)
 	{
-		T* obj = new T();
+		T* obj = new T(rest...);
 		InstanceHolder<T>::Instance() = obj;
 		RegisterSubsystem(obj);
 		return *obj;

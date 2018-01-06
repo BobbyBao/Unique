@@ -26,13 +26,13 @@ namespace Unique
 		void HandleRenderUpdate(const struct RenderUpdate& eventData);
 		
 		Quaternion spongeRotation_; // model rotation
-		int m_SpongeLevel;           // number of recursions
-		bool m_SpongeAO;             // apply ambient occlusion
-		Vector3 m_LightDir;          // light direction vector
-		float m_CamDistance;         // camera distance
+		int spongeLevel_;           // number of recursions
+		bool spongeAO_;             // apply ambient occlusion
+		Vector3 lightDir_;          // light direction vector
+		float camDistance_;         // camera distance
 		Color backgroundColor_;	// background color
-		bool m_Animate = true;              // enable animation
-		float m_AnimationSpeed;      // animation speed
+		bool animate_ = true;              // enable animation
+		float animationSpeed_;      // animation speed
 		float yaw_ = 0.0f;
 
 		SPtr<UniformBuffer> constBuffer_;

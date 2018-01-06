@@ -75,7 +75,7 @@ class UNIQUE_API Log : public Object
 
 public:
     /// Construct.
-    Log();
+    Log(const String& fileName = "");
     /// Destruct. Close the log file if open.
     virtual ~Log();
 

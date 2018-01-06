@@ -21,8 +21,8 @@ Shader "UI"
 		
 		RasterizerState 
 		{
-			FillMode SOLID
 			CullMode NONE
+			AntialiasedLineEnable true
 		}
 		
 		BlendState

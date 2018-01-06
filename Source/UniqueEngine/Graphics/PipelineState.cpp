@@ -154,6 +154,16 @@ namespace Unique
 		dirty_ = true;
 	}
 
+	void PipelineState::SetCullMode(CullMode cull)
+	{
+		psoDesc_.GraphicsPipeline.RasterizerDesc.CullMode = cull;
+	}
+
+	void PipelineState::SetLineAntialiased(bool val)
+	{
+		psoDesc_.GraphicsPipeline.RasterizerDesc.AntialiasedLineEnable = val;
+	}
+
 	void PipelineState::Reload()
 	{
 		dirty_ = true;

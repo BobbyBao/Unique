@@ -22,20 +22,6 @@ namespace Unique
 	
 	using CommandQueue = Vector<std::function<void()> > ;
 
-	struct TransientVertexBuffer
-	{
-		VertexBuffer* vertexBuffer_ = nullptr;
-		uint offset_;
-		uint count_;
-	};
-
-	struct TransientIndexBuffer
-	{
-		IndexBuffer* indexBuffer_ = nullptr;
-		uint offset_;
-		uint count_;
-	};
-
 	class Graphics : public Object
 	{
 		uRTTI(Graphics, Object)
@@ -89,7 +75,7 @@ namespace Unique
 
 		static int currentContext_;
 		inline static int GetRenderContext() { return 1 - currentContext_; }
-		static void AddCommand(std::function<void()> cmd);
+		static void AddCommand(const std::function<void()>& cmd);
 		static void FrameNoRenderWait();
 	protected:
 		static void ExecuteCommands(CommandQueue& cmds);
