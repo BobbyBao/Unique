@@ -7,6 +7,7 @@
 
 namespace Unique
 {
+	extern IRenderDevice* renderDevice;
 
 	TextureImporter::TextureImporter() : ResourceImporter(Texture::GetTypeStatic())
 	{

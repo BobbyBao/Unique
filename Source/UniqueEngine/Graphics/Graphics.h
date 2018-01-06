@@ -2,10 +2,11 @@
 #include "GraphicsDefs.h"
 #include "Core/Object.h"
 #include "Core/Semaphore.h"
+#include "GraphicsEvents.h"
+#include "GraphicsBuffer.h"
 #include <RefCntAutoPtr.h>
 #include <RenderDevice.h>
 #include <SwapChain.h>
-#include "GraphicsBuffer.h"
 
 struct SDL_Window;
 
@@ -19,6 +20,8 @@ namespace Unique
 	class IndexBuffer;
 	class Texture;
 	class GPUObject;
+	class ShaderVariation;
+	class PipelineState;
 	
 	using CommandQueue = Vector<std::function<void()> > ;
 
@@ -68,11 +71,20 @@ namespace Unique
 		void Frame();
 		//****************
 
-		//Render thread
+		//*******Render thread*******
+		virtual void CreateBuffer(const Diligent::BufferDesc& buffDesc, const Diligent::BufferData& buffData, GraphicsBuffer& buffer);
+		virtual void CreateShader(const Diligent::ShaderCreationAttribs &creationAttribs, Diligent::IShader** shader);
+		virtual void CreateTexture(const Diligent::TextureDesc& texDesc, const Diligent::TextureData &data,	Texture& texture);
+		virtual void CreateSampler(const Diligent::SamplerDesc& samDesc, Diligent::ISampler **ppSampler);
+		virtual void CreateResourceMapping(const Diligent::ResourceMappingDesc &mappingDesc, Diligent::IResourceMapping **ppMapping);
+		virtual void CreatePipelineState(const Diligent::PipelineStateDesc &pipelineDesc, IPipelineState** pipelineState);
+
+
+
 		void BeginRender();
 		void EndRender();
 		void Close();
-
+		//**************************
 		static int currentContext_;
 		inline static int GetRenderContext() { return 1 - currentContext_; }
 		static void AddCommand(const std::function<void()>& cmd);
@@ -119,8 +131,7 @@ namespace Unique
 		return data[1 - Graphics::currentContext_];
 	}
 	
-	extern IRenderDevice* renderDevice;
-	extern IDeviceContext* deviceContext;
+ 	extern IDeviceContext* deviceContext;
 
 #define uCall(CODE)\
  auto fn = [=]{CODE};\

@@ -171,25 +171,8 @@ namespace Unique
 		BasicShaderSourceStreamFactory BasicSSSFactory("CoreData\\Shaders;CoreData\\Shaders\\HLSL;");
 		Attrs.pShaderSourceStreamFactory = &BasicSSSFactory;
 
-		IShader* shaderObject = nullptr;
-		renderDevice->CreateShader(Attrs, &shaderObject);
-
-		shaderVariables_.clear();
-
-		if (shaderObject)
-		{
-// 			const auto& desc = shaderObject->GetDesc();
-// 
-// 			for (uint i = 0; i < desc.NumVariables; i++)
-// 			{
-// 				const auto& svDesc = desc.VariableDesc[i];
-// 				IShaderVariable* shaderVariable = shaderObject->GetShaderVariable(svDesc.Name);
-// 				shaderVariables_[svDesc.Name] = shaderVariable;
-// 			}
-
-			deviceObject_ = shaderObject;
-		}
-
+		auto& graphics = GetSubsystem<Graphics>();
+		graphics.CreateShader(Attrs, *this);
 		return deviceObject_ != nullptr;
 	}
 

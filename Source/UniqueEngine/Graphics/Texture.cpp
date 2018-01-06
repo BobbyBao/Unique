@@ -164,15 +164,17 @@ namespace Unique
 
 	bool Texture::CreateImpl()
 	{
-		ITexture* textureObject = nullptr;
-		renderDevice->CreateTexture(desc_, texData_, (ITexture**)&textureObject);
-		deviceObject_ = textureObject;
+		auto& graphics = GetSubsystem<Graphics>();
+		graphics.CreateTexture(desc_, texData_, *this);
+		
 		if (!deviceObject_)
 		{
 			return false;
 		}
 
-		renderDevice->CreateSampler(samplerDesc_, &sampler_);
+		graphics.CreateSampler(samplerDesc_, &sampler_);
+
+		ITexture* textureObject = (ITexture*)deviceObject_;
 
 		if (desc_.BindFlags & BIND_SHADER_RESOURCE)
 		{

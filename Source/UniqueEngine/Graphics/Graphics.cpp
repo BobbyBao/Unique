@@ -1,11 +1,9 @@
 #include "Precompiled.h"
-#include <SDL/SDL.h>
 #include "Graphics.h"
 #include "Texture.h"
-#include "GraphicsBuffer.h"
-#include "GraphicsEvents.h"
 #include <iostream>
 #include <Errors.h>
+#include <SDL/SDL.h>
 
 using namespace Diligent;
 
@@ -181,7 +179,37 @@ namespace Unique
 
 		FrameNoRenderWait();
 	}
+	
+	void Graphics::CreateBuffer(const BufferDesc& buffDesc, const BufferData& buffData, GraphicsBuffer& buffer)
+	{
+		renderDevice->CreateBuffer(buffDesc, buffData, buffer);
+	}
 
+	void Graphics::CreateShader(const ShaderCreationAttribs &creationAttribs, Diligent::IShader** shader)
+	{
+		renderDevice->CreateShader(creationAttribs, shader);
+	}
+	
+	void Graphics::CreateTexture(const TextureDesc& texDesc, const TextureData &data, Texture& texture)
+	{
+		renderDevice->CreateTexture(texDesc, data, texture);
+	}
+	
+	void Graphics::CreateSampler(const SamplerDesc& samDesc, ISampler **ppSampler)
+	{
+		renderDevice->CreateSampler(samDesc, ppSampler);
+	}
+	
+	void Graphics::CreateResourceMapping(const ResourceMappingDesc &mappingDesc, IResourceMapping **ppMapping)
+	{
+		renderDevice->CreateResourceMapping(mappingDesc, ppMapping);
+	}
+	
+	void Graphics::CreatePipelineState(const PipelineStateDesc &pipelineDesc, IPipelineState** pipelineState)
+	{
+		renderDevice->CreatePipelineState(pipelineDesc, pipelineState);
+	}
+	
 	void Graphics::BeginRender()
 	{
 		GPUObject::UpdateBuffers();

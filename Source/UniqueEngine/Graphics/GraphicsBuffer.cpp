@@ -85,12 +85,13 @@ namespace Unique
 	{
 		if (!GetSizeInBytes())
 			return false;
-
+		
+		auto& graphics = GetSubsystem<Graphics>();
 		auto& currentData = IsDynamic() ? RenderContext(data_) : data_[0];
 		BufferData BuffData;
 		BuffData.pData = currentData.data();
 		BuffData.DataSize = desc_.uiSizeInBytes;
-		renderDevice->CreateBuffer(desc_, BuffData, (IBuffer**)&deviceObject_);
+		graphics.CreateBuffer(desc_, BuffData, *this);
 		return deviceObject_ != nullptr;
 	}
 
