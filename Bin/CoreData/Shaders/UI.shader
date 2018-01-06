@@ -23,6 +23,7 @@ Shader "UI"
 		{
 			CullMode NONE
 			AntialiasedLineEnable true
+			ScissorEnable true
 		}
 		
 		BlendState
