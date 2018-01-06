@@ -9,11 +9,10 @@
 #include "../Graphics/Material.h"
 #include "../Graphics/Octree.h"
 #include "../Graphics/VertexBuffer.h"
-//#include "../render/renderpass.h"
 //#include "../Graphics/Zone.h"
 #include "IO/Log.h"
 #include "../Scene/Scene.h"
-//#include "../DebugNew.h"
+#include "DebugNew.h"
 
 #ifdef _MSC_VER
 #pragma warning(disable:6293)
@@ -93,8 +92,7 @@ Drawable::Drawable(unsigned char drawableFlags) :
     maxZ_(0.0f),
     lodBias_(1.0f),
     basePassFlags_(0),
-    maxLights_(0)//,
-    //firstLight_(0)
+    maxLights_(0)
 {
 }
 
@@ -102,15 +100,6 @@ Drawable::~Drawable()
 {
     RemoveFromOctree();
 }
-/*
-void Drawable::RegisterObject()
-{
-    UNIQUE_ATTRIBUTE("Max Lights", int, maxLights_, 0, TF_DEFAULT);
-    UNIQUE_ATTRIBUTE("View Mask", int, viewMask_, DEFAULT_VIEWMASK, TF_DEFAULT);
-    UNIQUE_ATTRIBUTE("Light Mask", int, lightMask_, DEFAULT_LIGHTMASK, TF_DEFAULT);
-    UNIQUE_ATTRIBUTE("Shadow Mask", int, shadowMask_, DEFAULT_SHADOWMASK, TF_DEFAULT);
-    UNIQUE_ACCESSOR_ATTRIBUTE("Zone Mask", GetZoneMask, SetZoneMask, unsigned, DEFAULT_ZONEMASK, TF_DEFAULT);
-}*/
 
 void Drawable::OnSetEnabled()
 {
@@ -185,31 +174,26 @@ void Drawable::SetDrawDistance(float distance)
 void Drawable::SetShadowDistance(float distance)
 {
     shadowDistance_ = distance;
-
 }
 
 void Drawable::SetLodBias(float bias)
 {
     lodBias_ = Max(bias, M_EPSILON);
-
 }
 
 void Drawable::SetViewMask(unsigned mask)
 {
     viewMask_ = mask;
-
 }
 
 void Drawable::SetLightMask(unsigned mask)
 {
     lightMask_ = mask;
-
 }
 
 void Drawable::SetShadowMask(unsigned mask)
 {
     shadowMask_ = mask;
-
 }
 
 void Drawable::SetZoneMask(unsigned mask)
@@ -217,25 +201,21 @@ void Drawable::SetZoneMask(unsigned mask)
     zoneMask_ = mask;
     // Mark dirty to reset cached zone
     OnMarkedDirty(node_);
-
 }
 
 void Drawable::SetMaxLights(unsigned num)
 {
     maxLights_ = num;
-
 }
 
 void Drawable::SetCastShadows(bool enable)
 {
     castShadows_ = enable;
-
 }
 
 void Drawable::SetOccluder(bool enable)
 {
     occluder_ = enable;
-
 }
 
 void Drawable::SetOccludee(bool enable)
@@ -313,9 +293,6 @@ void Drawable::MarkInView(const FrameInfo& frame)
         viewCameras_.push_back(frame.camera_);
 
     basePassFlags_ = 0;
-//     firstLight_ = 0;
-//     lights_.clear();
-//     vertexLights_.clear();
 }
 
 void Drawable::MarkInView(unsigned frameNumber)

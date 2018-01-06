@@ -407,13 +407,12 @@ namespace Unique
 				if (!cmd->elem_count)
 					continue;
 
-				Diligent::Rect scissor;
-				scissor.left = (int)cmd->clip_rect.x;
- 				scissor.right = (int)(cmd->clip_rect.x + cmd->clip_rect.w);
- 				scissor.top = (int)cmd->clip_rect.y;
- 				scissor.bottom = (int)(cmd->clip_rect.y + cmd->clip_rect.h);
-
 				material_->SetTexture("DiffMap", (Texture*)cmd->texture.ptr);
+
+				batch.scissor_ = renderer.CacheScissor(
+					(int)cmd->clip_rect.x, (int)cmd->clip_rect.y,
+					(int)(cmd->clip_rect.x + cmd->clip_rect.w),					
+					(int)(cmd->clip_rect.y + cmd->clip_rect.h));
 				batch.indexOffset_ = offset;
 				batch.indexCount_ = cmd->elem_count;
 				renderer.AddBatch(batch);

@@ -23,7 +23,6 @@ namespace Unique
 		Subscribe(&SceneSample::HandleStartup);
 		Subscribe(&SceneSample::HandleShutdown);
 		Subscribe(&SceneSample::HandleUpdate);
-		//Subscribe(&SceneSample::HandlePostRenderUpdate);
 	}
 
 	SceneSample::~SceneSample()

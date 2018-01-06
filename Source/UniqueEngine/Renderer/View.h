@@ -2,6 +2,7 @@
 #include "Core/Object.h"
 #include "Batch.h"
 #include "../Graphics/Light.h"
+#include "RenderPass.h"
 
 namespace Unique
 {
@@ -116,8 +117,7 @@ namespace Unique
 		bool allowInstancing_;
 		/// Mark to stencil flag.
 		bool markToStencil_;
-		/// Vertex light flag.
-		bool vertexLights_;
+		RenderPassSortMode sortMode_;
 		/// Batch queue.
 		BatchQueue* batchQueue_;
 	};

@@ -68,6 +68,7 @@ namespace Unique
 		bool ResizeInstancingBuffer(unsigned numInstances);
 
 		ushort CacheScissor(int left, int top, int right, int bottom);
+		IntRect& GetScissor(ushort handler);
 
 		Batch& AddBatch(Geometry* geometry, Material* material, const Matrix3x4* worldTransform = nullptr);
 		Batch& AddBatch(const Batch& batch);

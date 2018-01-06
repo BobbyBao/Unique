@@ -266,6 +266,7 @@ namespace Unique
 				ScenePassInfo info;
 				info.passIndex_ = pass->passIndex_ = Shader::GetPassIndex(pass->pass_);
 				info.allowInstancing_ = pass->sortMode_ != RenderPassSortMode::BACKTOFRONT;
+				info.sortMode_ = pass->sortMode_;
 
 				auto j = batchQueues.find(info.passIndex_);
 				if (j == batchQueues.end())
@@ -627,10 +628,6 @@ namespace Unique
 				for (unsigned k = 0; k < scenePasses.size(); ++k)
 				{
 					ScenePassInfo& info = scenePasses[k];
-					// Skip forward base pass if the corresponding litbase pass already exists
-					//if (info.passIndex_ == basePassIndex_ && j < 32 && drawable->HasBasePass(j))
-					//	continue;
-
 					Pass* pass = shader->GetPass(info.passIndex_);
 					if (!pass)
 						continue;
@@ -803,22 +800,20 @@ namespace Unique
 
 		// Sort batches
 		{
-			auto& renderPasses = renderPath_->GetRenderPasses();
+			auto& renderPasses = MainContext(scenePasses_);
 			for (unsigned i = 0; i < renderPasses.size(); ++i)
 			{
 				const auto& command = renderPasses[i];
 				//if (!IsNecessary(command))
 				//	continue;
 
-				if (command->type_ == RenderPassType::SCENEPASS)
-				{
-					SPtr<WorkItem> item = queue.GetFreeItem();
-					item->priority_ = M_MAX_UNSIGNED;
-					item->workFunction_ =
-						command->sortMode_ == RenderPassSortMode::FRONTTOBACK ? SortBatchQueueFrontToBackWork : SortBatchQueueBackToFrontWork;
-					item->start_ = &MainContext(batchQueues_)[command->passIndex_];
-					queue.AddWorkItem(item);
-				}
+				SPtr<WorkItem> item = queue.GetFreeItem();
+				item->priority_ = M_MAX_UNSIGNED;
+				item->workFunction_ =
+					command.sortMode_ == RenderPassSortMode::FRONTTOBACK ? SortBatchQueueFrontToBackWork : SortBatchQueueBackToFrontWork;
+				item->start_ = command.batchQueue_;
+				queue.AddWorkItem(item);
+				
 			}
 #if false
 			for (auto i = lightQueues_.Begin(); i != lightQueues_.End(); ++i)

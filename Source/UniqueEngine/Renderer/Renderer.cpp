@@ -27,6 +27,12 @@ namespace Unique
 	Renderer::Renderer() : graphics_(GetSubsystem<Graphics>()), numExtraInstancingBufferElements_(3)
 	{
 		Initialize();
+
+		scissorRect_[0].reserve(64);
+		scissorRect_[0].emplace_back(0, 0, 0, 0);
+		scissorRect_[1].reserve(64);
+		scissorRect_[1].emplace_back(0, 0, 0, 0);
+
 	}
 
 	Renderer::~Renderer()
@@ -178,6 +184,12 @@ namespace Unique
 		}
 	}
 
+	void Renderer::End()
+	{
+		RenderContext(scissorRect_).resize(1);
+		graphics_.EndRender();
+	}
+
 	void Renderer::DrawDebugGeometry(bool depthTest)
 	{
 		UNIQUE_PROFILE(RendererDrawDebug);
@@ -294,11 +306,6 @@ namespace Unique
 		}
 	}
 
-	void Renderer::End()
-	{
-		graphics_.EndRender();
-	}
-
 	void Renderer::Stop()
 	{
 		graphics_.Close();
@@ -347,7 +354,15 @@ namespace Unique
 
 	ushort Renderer::CacheScissor(int left, int top, int right, int bottom)
 	{
-		return 0;
+		auto& rects = MainContext(scissorRect_);
+		rects.emplace_back(left, top, right, bottom);
+		return (ushort)rects.size() - 1;
+	}
+
+	IntRect& Renderer::GetScissor(ushort handler)
+	{
+		auto& rects = RenderContext(scissorRect_);
+		return rects[handler];
 	}
 	
 	Batch& Renderer::AddBatch(Geometry* geometry, Material* material, const Matrix3x4* worldTransform)
