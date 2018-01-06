@@ -1,6 +1,7 @@
 #include "Precompiled.h"
 #include "ModelImporter.h"
 #include "../Model.h"
+#include "Animation/Animation.h"
 
 namespace Unique
 {
@@ -23,5 +24,27 @@ namespace Unique
 		SPtr<Model> model(new Model());
 		model->Load(*file);
 		return model;
+	}
+
+
+	AnimationImporter::AnimationImporter() : ResourceImporter(Animation::GetTypeStatic())
+	{
+	}
+
+	AnimationImporter::~AnimationImporter()
+	{
+	}
+
+	SPtr<Resource> AnimationImporter::Import(const String& path)
+	{
+		SPtr<File> file = cache.GetFile(path);
+		if (!file)
+		{
+			return nullptr;
+		}
+
+		SPtr<Animation> anim(new Animation());
+		anim->Load(*file);
+		return anim;
 	}
 }

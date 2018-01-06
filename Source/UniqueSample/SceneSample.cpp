@@ -5,13 +5,17 @@
 #include "Graphics/Camera.h"
 #include "Graphics/Model.h"
 #include "Graphics/StaticModel.h"
+#include "Animation/AnimatedModel.h"
+#include "Animation/Animation.h"
+#include "Animation/AnimationState.h"
+
 #include "Graphics/Model.h"
 #include "Graphics/Geometry.h"
 #include "Graphics/DebugRenderer.h"
 #include "Serialize/JsonSerializer.h"
 #include "Input/Input.h"
 
-//UNIQUE_IMPLEMENT_MAIN(Unique::SceneSample)
+UNIQUE_IMPLEMENT_MAIN(Unique::SceneSample)
 
 namespace Unique
 {
@@ -41,7 +45,8 @@ namespace Unique
 
 		node_ = scene_->CreateChild("Model");
 
-		StaticModel* model = node_->CreateComponent<StaticModel>();
+		//StaticModel* model = node_->CreateComponent<StaticModel>();
+		AnimatedModel* model = node_->CreateComponent<AnimatedModel>();
 		model->SetModelAttr(ResourceRef::Create<Model>("Models/Kachujin/Kachujin.mdl"));
 // 		model->SetMaterialsAttr(ResourceRefList::Create<Material>(
 // 		{ "Models/Kachujin/Materials/Kachujin.material" }));
@@ -56,7 +61,7 @@ namespace Unique
 		model->SetModel(m);*/
 
 		SPtr<Material> mat(new Material());
-		mat->SetShaderAttr(ResourceRef::Create<Shader>("Shaders/Textured.shader"));
+		mat->SetShaderAttr(ResourceRef::Create<Shader>("Shaders/Skinned.shader"));
 		mat->SetTexture("DiffMap", ResourceRef::Create<Texture>("Models/Kachujin/Textures/Kachujin_diffuse.png"));
 		model->SetMaterial(mat);
 
@@ -64,6 +69,18 @@ namespace Unique
 // 			JsonSerializer jsonSer;
 // 			jsonSer.Save("test_material.json", mat);
 // 		}
+
+		Animation* walkAnimation = cache.GetResource<Animation>("Models/Kachujin/Kachujin_Walk.ani");
+
+		AnimationState* state = model->AddAnimationState(walkAnimation);
+		// The state would fail to create (return null) if the animation was not found
+		if (state)
+		{
+			// Enable full blending weight and looping
+			state->SetWeight(1.0f);
+			state->SetLooped(true);
+			state->SetTime(Random(walkAnimation->GetLength()));
+		}
 
 		auto& renderer = GetSubsystem<Renderer>();
 		Viewport* viewport = new Viewport(scene_, camera_);
@@ -121,7 +138,12 @@ namespace Unique
 			camera_->GetNode()->Translate(Vector3::RIGHT * MOVE_SPEED * timeStep);
 
 
-// 		AnimatedModel* model = characterNode->GetComponent<AnimatedModel>(true);// 		if (model && model->GetNumAnimationStates())// 		{// 			AnimationState* state = model->GetAnimationStates()[0];// 			state->AddTime(deltaTime);// 		}
+		AnimatedModel* model = node_->GetComponent<AnimatedModel>(true);
+		if (model && model->GetNumAnimationStates())
+		{
+			AnimationState* state = model->GetAnimationStates()[0];
+			state->AddTime(timeStep);
+		}
 
 	}
 }

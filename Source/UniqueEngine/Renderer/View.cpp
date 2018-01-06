@@ -180,7 +180,7 @@ namespace Unique
 		frameUniform_ = new UniformBuffer(FrameParameter());
 		cameraVS_ = new UniformBuffer(CameraVS());
 		objectVS_ = new UniformBuffer(ObjectVS());
-		skinnedVS_ = new UniformBuffer(SkinedVS());
+		skinnedVS_ = new UniformBuffer(SkinnedVS());
 		billboardVS_ = new UniformBuffer(BillboardVS());
 
 		cameraPS_ = new UniformBuffer(CameraPS());
@@ -741,9 +741,9 @@ namespace Unique
 	{
 		auto& batchMatrics = RenderContext(batchMatrics_);
 		const Matrix3x4* mat = &batchMatrics[offset];
-		void* data = objectVS_->Map();
+		void* data = skinnedVS_->Map();
 		std::memcpy(data, mat, sizeof(Matrix3x4) * count);
-		objectVS_->UnMap();
+		skinnedVS_->UnMap();
 	}
 
 	void View::PrepareInstancingBuffer()
@@ -858,10 +858,10 @@ namespace Unique
 				int numWorkItems = (int)queue.GetNumThreads() + 1; // Worker threads + main thread
 				int drawablesPerItem = (int)threadedGeometries_.size() / numWorkItems;
 
-				auto start = threadedGeometries_.begin();
+				auto start = &threadedGeometries_.front();
 				for (int i = 0; i < numWorkItems; ++i)
 				{
-					auto end = threadedGeometries_.end();
+					auto end = &threadedGeometries_.back() + 1;
 					if (i < numWorkItems - 1 && end - start > drawablesPerItem)
 						end = start + drawablesPerItem;
 
@@ -869,8 +869,8 @@ namespace Unique
 					item->priority_ = M_MAX_UNSIGNED;
 					item->workFunction_ = UpdateDrawableGeometriesWork;
 					item->aux_ = const_cast<FrameInfo*>(&frame_);
-					item->start_ = &(*start);
-					item->end_ = &(*end);
+					item->start_ = start;
+					item->end_ = end;
 					queue.AddWorkItem(item);
 
 					start = end;

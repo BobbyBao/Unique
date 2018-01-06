@@ -52,13 +52,19 @@ cbuffer MaterialVS
 cbuffer ObjectVS
 {
     float4x3 cModel;
-#ifdef BILLBOARD
-    float3x3 cBillboardRot;
-#endif
-#ifdef SKINNED
-    uniform float4x3 cSkinMatrices[MAXBONES];
-#endif
 }
+
+cbuffer SkinnedVS
+{
+    uniform float4x3 cSkinMatrices[MAXBONES];
+}
+
+cbuffer BillboardVS
+{
+	float4x3 world_;
+	float3x3 billboardRot;
+}
+
 #endif
 
 #ifdef COMPILEPS

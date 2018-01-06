@@ -57,6 +57,7 @@ namespace Unique
 		cache.RegisterImporter(new ImageImporter());
 		cache.RegisterImporter(new TextureImporter());
 		cache.RegisterImporter(new ModelImporter());
+		cache.RegisterImporter(new AnimationImporter());
 
 		graphics.Initialize(resolution_, deviceType_);
 		

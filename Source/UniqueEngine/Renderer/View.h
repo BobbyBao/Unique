@@ -61,9 +61,8 @@ namespace Unique
 	};
 
 #define MAXBONES 64
-	struct SkinedVS
+	struct SkinnedVS
 	{
-		Matrix3x4 world_; 
 		Matrix3x4 cSkinMatrices[MAXBONES];
 	};
 

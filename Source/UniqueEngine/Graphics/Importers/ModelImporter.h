@@ -16,4 +16,14 @@ namespace Unique
 
 	};
 
+	class AnimationImporter : public ResourceImporter
+	{
+	public:
+		AnimationImporter();
+		~AnimationImporter();
+
+		virtual SPtr<Resource> Import(const String& path);
+	private:
+
+	};
 }

@@ -1,17 +1,15 @@
 
 
-Shader "Textured"
+Shader "Skinned"
 {
 	Properties
 	{
-
 		TextureSlot DiffMap
 		{
 			Texture ""
 		}
 	
 	}
-
 
 	Pass base
 	{
@@ -21,33 +19,42 @@ Shader "Textured"
 			DepthWriteEnable true
 		}
 		
-		RasterizerState 
-		{
-			FillMode SOLID
-			CullMode NONE
-		}
-		
 		InputLayout
 		{
 			LayoutElement
 			{
 				NumComponents 3
 				ValueType FLOAT32
-				IsNormalized false
 			}
 
 			LayoutElement
 			{
 				NumComponents 3
 				ValueType FLOAT32
-				IsNormalized false
 			}
 			
 			LayoutElement
 			{
 				NumComponents 2
 				ValueType FLOAT32
-				IsNormalized false
+			}
+			
+			LayoutElement
+			{
+				NumComponents 4
+				ValueType FLOAT32
+			}
+			
+			LayoutElement
+			{
+				NumComponents 4
+				ValueType FLOAT32
+			}
+			
+			LayoutElement
+			{
+				NumComponents 4
+				ValueType UINT8
 			}
 		}
 	
@@ -56,7 +63,7 @@ Shader "Textured"
 			EntryPoint "VS" 
 			ShaderProfile "DX_4_0"
 			Defines ""
-			Source "Textured.hlsl"
+			Source "Skinned.hlsl"
 		}
 		
 		PixelShader
@@ -64,7 +71,7 @@ Shader "Textured"
 			EntryPoint "PS"
 			ShaderProfile "DX_4_0"
 			Defines ""
-			Source "Textured.hlsl"
+			Source "Skinned.hlsl"
 		}
 	}
 }

@@ -8,7 +8,7 @@
 #include "Math/Matrix3x4.h"
 #include "Math/Matrix4.h"
 
-UNIQUE_IMPLEMENT_MAIN(Unique::CubeSample)
+//UNIQUE_IMPLEMENT_MAIN(Unique::CubeSample)
 
 namespace Unique
 {

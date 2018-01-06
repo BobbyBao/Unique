@@ -1,6 +1,38 @@
 #include "Precompiled.h"
 #include "Semaphore.h"
 
+#ifdef USE_STL
+namespace Unique
+{
+	Semaphore::Semaphore()
+	{
+	}
+
+	///
+	Semaphore::~Semaphore()
+	{
+	}
+
+	void Semaphore::post(uint _count) {
+		std::lock_guard<std::mutex> lock{ mutex };
+		if (++count <= 0) { // have some thread suspended ?
+			++wakeups;
+			condition.notify_one(); // notify one !
+		}
+	}
+
+	bool Semaphore::wait(int _msecs) {
+		std::unique_lock<std::mutex> lock{ mutex };
+		if (--count < 0) { // count is not enough ?
+			condition.wait(lock, [&]()->bool { return wakeups > 0; }); // suspend and wait ...
+			--wakeups;  // ok, me wakeup !
+		}
+		return true;
+	}
+}
+
+#else
+
 #if UNIQUE_PLATFORM_POSIX
 #	include <errno.h>
 #	include <pthread.h>
@@ -288,3 +320,5 @@ namespace Unique
 #endif
 
 }
+
+#endif
