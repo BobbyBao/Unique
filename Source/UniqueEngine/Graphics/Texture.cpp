@@ -17,6 +17,27 @@ namespace Unique
 	{
 	}
 
+	bool Texture::Create(const TextureDesc& desc, Vector< Vector<byte> >&& texData)
+	{
+		desc_ = desc;
+		Mips = std::move(texData);
+
+		pSubResources.resize(Mips.size());
+		uint height = desc_.Height;
+		for (size_t i = 0; i < Mips.size(); i++)
+		{
+			TextureSubResData subRes;
+			subRes.pData = Mips[i].data();
+			subRes.Stride = Mips[i].size() / height;
+			pSubResources[i] = subRes;
+			height /= 2;
+		}
+
+		texData_.pSubResources = pSubResources.data();
+		texData_.NumSubresources = desc_.MipLevels;
+		return GPUObject::Create();
+	}
+
 	bool Texture::Create(const TextureDesc& desc, const TextureData& texData)
 	{
 		desc_ = desc;

@@ -131,7 +131,7 @@ public:
     /// Return float data.
     const float* Data() const { return &r_; }
 
-	operator const float*() { return &r_; }
+	operator const float*() const { return &r_; }
 
     /// Return color packed to a 32-bit integer, with R component in the lowest 8 bits. Components are clamped to [0, 1] range.
     unsigned ToUInt() const;

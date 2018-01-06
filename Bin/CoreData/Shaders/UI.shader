@@ -25,6 +25,16 @@ Shader "UI"
 			CullMode NONE
 		}
 		
+		BlendState
+		{
+			RenderTargets[0]
+			{
+				BlendEnable true
+				SrcBlend SRC_ALPHA
+				DestBlend INV_SRC_ALPHA
+			}
+		}
+		
 		InputLayout
 		{
 			LayoutElement

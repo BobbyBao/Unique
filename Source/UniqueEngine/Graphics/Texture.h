@@ -50,6 +50,7 @@ namespace Unique
 
 		bool Create(const TextureDesc& desc, const TextureData& texData);
 
+		bool Create(const TextureDesc& desc, Vector< Vector<byte> >&& texData);
 		bool Create(Image& img, const TextureLoadInfo& TexLoadInfo = TextureLoadInfo());
 
 		uint GetWidth() const { return desc_.Width; }

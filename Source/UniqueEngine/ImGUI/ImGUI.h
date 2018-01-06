@@ -20,6 +20,7 @@ namespace Unique
 		void HandleStartup(const struct Startup& eventData);
 		void FontStashBegin(nk_font_atlas **atlas);
 		void FontStashEnd(void);
+		void HandleSDLRawInput(const struct SDLRawInput& eventData);
 		void HandleBeginFrame(const struct BeginFrame& eventData);
 		void HandlePostRenderUpdate(const struct PostRenderUpdate& eventData);
 		

@@ -37,7 +37,7 @@ namespace Unique
 		/// Set the draw range.
 		void SetDrawRange(PrimitiveTopology type, unsigned vertexStart, unsigned vertexCount);
 		/// Set the indexed draw range.
-		void SetDrawRange(PrimitiveTopology type, unsigned indexStart, unsigned indexCount, unsigned vertexStart = 0, unsigned vertexCount = -1);
+		void SetDrawRange(PrimitiveTopology type, unsigned indexStart, unsigned indexCount, unsigned vertexStart, unsigned vertexCount);
 
 		/// Calculate state sorting key, which consists of base pass flag, light, pass and geometry.
 		void CalculateSortKey();

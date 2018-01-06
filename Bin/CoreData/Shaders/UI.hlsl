@@ -32,5 +32,5 @@ PS_INPUT VS(VS_INPUT input)
 
 float4 PS(PS_INPUT input) : SV_Target
 {
-  return input.col;// * DiffMap.Sample(DiffMap_sampler, input.uv);
+  return input.col * DiffMap.Sample(DiffMap_sampler, input.uv);
 }

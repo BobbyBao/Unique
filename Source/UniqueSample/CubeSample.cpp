@@ -143,7 +143,6 @@ namespace Unique
 		SPtr<IndexBuffer> pIndexBuffer(new IndexBuffer(std::move(indices)));
 
 		SPtr<Geometry> geo(new Geometry());
-		geo->SetNumVertexBuffers(1);
 		geo->SetVertexBuffer(0, pVertexBuffer);
 		geo->SetIndexBuffer(pIndexBuffer);
 		geo->SetDrawRange(PrimitiveTopology::TRIANGLE_LIST, 0, pIndexBuffer->GetIndexCount());

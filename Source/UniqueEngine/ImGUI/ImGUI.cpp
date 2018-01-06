@@ -2,6 +2,8 @@
 #include "ImGUI.h"
 #include "Graphics/Geometry.h"
 #include "Graphics/PipelineState.h"
+#include <SDL/SDL.h>
+#include "../Input/Input.h"
 
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_STANDARD_IO
@@ -45,6 +47,7 @@ namespace Unique
 		impl_.max_index_buffer = MAX_INDEX_BUFFER;
 
 		Subscribe(&GUISystem::HandleStartup);
+		Subscribe(&GUISystem::HandleSDLRawInput);
 		Subscribe(&GUISystem::HandleBeginFrame);
 		Subscribe(&GUISystem::HandlePostRenderUpdate);
 	}
@@ -124,6 +127,11 @@ namespace Unique
 		const void *image; int w, h;
 
 		image = nk_font_atlas_bake(&impl_.atlas, &w, &h, NK_FONT_ATLAS_RGBA32);
+		
+		Vector<Vector<byte>> mip(1);	
+		Vector<byte>& subData = mip.back();
+		subData.resize(w * h * 4);
+		std::memcpy(subData.data(), image, subData.size());
 
 		font_texture = new Texture();
 
@@ -138,30 +146,217 @@ namespace Unique
 		desc.Usage = Diligent::USAGE_DEFAULT;
 		desc.BindFlags = Diligent::BIND_SHADER_RESOURCE;
 		desc.CPUAccessFlags = 0;
-
-		static TextureSubResData subRes;
-		subRes.pData = image;
-		subRes.Stride = (uint)(w * 4);
-
-		TextureData data;
-		data.NumSubresources = 1;
-		data.pSubResources = &subRes;
-		font_texture->Create(desc, data);
+		
+		font_texture->Create(desc, std::move(mip));
 
 		nk_font_atlas_end(&impl_.atlas, nk_handle_ptr(font_texture), &impl_.null);
 		if (impl_.atlas.default_font)
 			nk_style_set_font(&impl_.ctx, &impl_.atlas.default_font->handle);
-
 	}
 
-	void GUISystem::HandleBeginFrame(const struct BeginFrame& eventData)
+	void GUISystem::HandleSDLRawInput(const SDLRawInput& eventData)
+	{
+		nk_context *ctx = &impl_.ctx;
+		SDL_Event& evt = *eventData.sdlEvent_;
+		nk_input_begin(ctx);
+		switch (evt.type)
+		{
+		case SDL_KEYDOWN:
+		case SDL_KEYUP:
+		//case WM_SYSKEYDOWN:
+		//case WM_SYSKEYUP:
+		{
+			int down = evt.key.state;// !((lparam >> 31) & 1);
+			int ctrl = evt.key.keysym.mod & KMOD_CTRL;// GetKeyState(VK_CONTROL) & (1 << 15);
+
+			switch (evt.key.keysym.sym)
+			{
+			//case KEY_SHIFT:
+			case KEY_LSHIFT:
+			case KEY_RSHIFT:
+				nk_input_key(ctx, NK_KEY_SHIFT, down);
+				break;
+
+			case KEY_DELETE:
+				nk_input_key(ctx, NK_KEY_DEL, down);
+				break;
+
+			case KEY_RETURN:
+				nk_input_key(ctx, NK_KEY_ENTER, down);
+				break;
+
+			case KEY_TAB:
+				nk_input_key(ctx, NK_KEY_TAB, down);
+				break;
+
+			case KEY_LEFT:
+				if (ctrl)
+					nk_input_key(ctx, NK_KEY_TEXT_WORD_LEFT, down);
+				else
+					nk_input_key(ctx, NK_KEY_LEFT, down);
+				break;
+
+			case KEY_RIGHT:
+				if (ctrl)
+					nk_input_key(ctx, NK_KEY_TEXT_WORD_RIGHT, down);
+				else
+					nk_input_key(ctx, NK_KEY_RIGHT, down);
+				break;
+
+			case KEY_BACKSPACE:
+				nk_input_key(ctx, NK_KEY_BACKSPACE, down);
+				break;
+
+			case KEY_HOME:
+				nk_input_key(ctx, NK_KEY_TEXT_START, down);
+				nk_input_key(ctx, NK_KEY_SCROLL_START, down);
+				break;
+
+			case KEY_END:
+				nk_input_key(ctx, NK_KEY_TEXT_END, down);
+				nk_input_key(ctx, NK_KEY_SCROLL_END, down);
+				break;
+
+// 			case VK_NEXT:
+// 				nk_input_key(ctx, NK_KEY_SCROLL_DOWN, down);
+// 				break;
+
+// 			case VK_PRIOR:
+// 				nk_input_key(ctx, NK_KEY_SCROLL_UP, down);
+// 				break;
+
+			case KEY_C:
+				if (ctrl) {
+					nk_input_key(ctx, NK_KEY_COPY, down);
+					break;
+				}
+				break;
+
+			case KEY_V:
+				if (ctrl) {
+					nk_input_key(ctx, NK_KEY_PASTE, down);
+					break;
+				}
+				break;
+
+			case KEY_X:
+				if (ctrl) {
+					nk_input_key(ctx, NK_KEY_CUT, down);
+					break;
+				}
+				break;
+
+			case KEY_Z:
+				if (ctrl) {
+					nk_input_key(ctx, NK_KEY_TEXT_UNDO, down);
+					break;
+				}
+				break;
+
+			case KEY_R:
+				if (ctrl) {
+					nk_input_key(ctx, NK_KEY_TEXT_REDO, down);
+					break;
+				}
+				break;
+			}
+
+		}
+
+		case SDL_TEXTINPUT:
+// 			if (wparam >= 32)
+// 			{
+// 				nk_input_unicode(ctx, (nk_rune)wparam);
+// 				break;
+// 			}
+			break;
+
+		case SDL_MOUSEBUTTONDOWN:
+			if (evt.button.button == SDL_BUTTON_LEFT)
+			{
+				nk_input_button(ctx, NK_BUTTON_LEFT, (short)evt.button.x, (short)evt.button.y, 1);
+			}
+			else if (evt.button.button == SDL_BUTTON_RIGHT)
+			{
+				nk_input_button(ctx, NK_BUTTON_RIGHT, (short)evt.button.x, (short)evt.button.y, 1);
+			}
+
+			else if (evt.button.button == SDL_BUTTON_MIDDLE)
+			{
+				nk_input_button(ctx, NK_BUTTON_MIDDLE, (short)evt.button.x, (short)evt.button.y, 1);
+			}
+			break;
+
+		case SDL_MOUSEBUTTONUP:
+			if (evt.button.button == SDL_BUTTON_LEFT)
+			{
+				nk_input_button(ctx, NK_BUTTON_DOUBLE, (short)evt.button.x, (short)evt.button.y, 0);
+				nk_input_button(ctx, NK_BUTTON_LEFT, (short)evt.button.x, (short)evt.button.y, 0);
+			}
+			else if (evt.button.button == SDL_BUTTON_RIGHT)
+			{
+				nk_input_button(ctx, NK_BUTTON_RIGHT, (short)evt.button.x, (short)evt.button.y, 0);
+			}
+
+			else if (evt.button.button == SDL_BUTTON_MIDDLE)
+			{
+				nk_input_button(ctx, NK_BUTTON_MIDDLE, (short)evt.button.x, (short)evt.button.y, 0);
+			}
+			break;
+
+		/*
+		case WM_LBUTTONDOWN:
+			nk_input_button(ctx, NK_BUTTON_LEFT, (short)LOWORD(lparam), (short)HIWORD(lparam), 1);
+			//SetCapture(wnd);
+			break;
+
+		case WM_LBUTTONUP:
+			nk_input_button(ctx, NK_BUTTON_DOUBLE, (short)LOWORD(lparam), (short)HIWORD(lparam), 0);
+			nk_input_button(ctx, NK_BUTTON_LEFT, (short)LOWORD(lparam), (short)HIWORD(lparam), 0);
+			//ReleaseCapture();
+			break;
+
+		case WM_RBUTTONDOWN:
+			nk_input_button(ctx, NK_BUTTON_RIGHT, (short)LOWORD(lparam), (short)HIWORD(lparam), 1);
+			//SetCapture(wnd);
+			break;
+
+		case WM_RBUTTONUP:
+			nk_input_button(ctx, NK_BUTTON_RIGHT, (short)LOWORD(lparam), (short)HIWORD(lparam), 0);
+			//ReleaseCapture();
+			break;
+
+		case WM_MBUTTONDOWN:
+			nk_input_button(ctx, NK_BUTTON_MIDDLE, (short)LOWORD(lparam), (short)HIWORD(lparam), 1);
+			//SetCapture(wnd);
+			break;
+
+		case WM_MBUTTONUP:
+			nk_input_button(ctx, NK_BUTTON_MIDDLE, (short)LOWORD(lparam), (short)HIWORD(lparam), 0);
+			//ReleaseCapture();
+			break;
+
+		case WM_LBUTTONDBLCLK:
+			nk_input_button(ctx, NK_BUTTON_DOUBLE, (short)LOWORD(lparam), (short)HIWORD(lparam), 1);
+			break;*/
+
+		case SDL_MOUSEWHEEL:
+			//nk_input_scroll(ctx, nk_vec2(0, evt.button. (float)(short)HIWORD(wparam) / WHEEL_DELTA));
+			break;
+
+		case SDL_MOUSEMOTION:
+			nk_input_motion(ctx, (short)evt.button.x, (short)evt.button.y);
+			break;
+
+		}
+
+		nk_input_end(ctx);
+	}
+
+	void GUISystem::HandleBeginFrame(const BeginFrame& eventData)
 	{
 		nk_context *ctx = &impl_.ctx;
 		nk_color background = nk_rgb(28, 48, 62);
-
-		nk_input_begin(ctx);
-
-		nk_input_end(ctx);
 
 		/* GUI */
 		if (nk_begin(ctx, "Demo", nk_rect(50, 50, 230, 250),
@@ -257,9 +452,9 @@ namespace Unique
 			indexBuffer_->Unlock();
 
 			Batch batch(geometry_, material_, &Matrix3x4::IDENTITY);
-			batch.geometryType_ = GEOM_TRANSIENT;
-			batch.primitiveTopology_ = PrimitiveTopology::TRIANGLE_LIST;
+			batch.SetDrawRange(PrimitiveTopology::TRIANGLE_LIST, 0, -1);
 			batch.pipelineState_ = pipeline_;
+
 			UIVS* ui = (UIVS*)uiConstants_->Lock();
 			nk_get_projection_matrix(graphics.GetWidth(), graphics.GetHeight(), &ui->UIProj.m00_);
 			uiConstants_->Unlock();
@@ -275,11 +470,7 @@ namespace Unique
  				scissor.right = (int)(cmd->clip_rect.x + cmd->clip_rect.w);
  				scissor.top = (int)cmd->clip_rect.y;
  				scissor.bottom = (int)(cmd->clip_rect.y + cmd->clip_rect.h);
-
-// 				ID3D11DeviceContext_PSSetShaderResources(context, 0, 1, &texture_view);
-// 				ID3D11DeviceContext_RSSetScissorRects(context, 1, &scissor);
-// 				ID3D11DeviceContext_DrawIndexed(context, (UINT)cmd->elem_count, offset, 0);
-				
+				material_->SetTexture("DiffMap", (Texture*)cmd->texture.ptr);
 				batch.indexOffset_ = offset;
 				batch.indexCount_ = cmd->elem_count;
 				renderer.AddBatch(std::move(batch));

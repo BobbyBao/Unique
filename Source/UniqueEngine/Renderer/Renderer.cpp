@@ -154,7 +154,13 @@ namespace Unique
 	void Renderer::Render()
 	{
 		auto& views = RenderContext(views_);
-
+		
+		if (views.empty())
+		{		
+			deviceContext->ClearRenderTarget(nullptr, Color::BLACK);
+			deviceContext->ClearDepthStencil(nullptr, Diligent::CLEAR_DEPTH_FLAG, 1.0f, 0);
+		}
+		
 		for (auto view : views)
 		{
 			view->Render();
@@ -167,12 +173,14 @@ namespace Unique
 			{
 				batch.Draw();
 			}
+
+			batchQueue.clear();
 		}
 	}
 
 	void Renderer::DrawDebugGeometry(bool depthTest)
 	{
-	//	UNIQUE_PROFILE(RendererDrawDebug);
+		UNIQUE_PROFILE(RendererDrawDebug);
 
 		/// \todo Because debug geometry is per-scene, if two cameras show views of the same area, occlusion is not shown correctly
 		HashSet<Drawable*> processedGeometries;

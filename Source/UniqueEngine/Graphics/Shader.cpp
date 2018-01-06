@@ -93,7 +93,7 @@ namespace Unique
 		uAttribute("Name", name_);
 		uAttribute("DepthState", depthState_);
 		uAttribute("RasterizerState", rasterizerState_);
-		uAttribute("BlendStateDesc", blendState_);
+		uAttribute("BlendState", blendState_);
 		uAttribute("InputLayout", inputLayout_);
 		uAttribute("VertexShader", shaderStage_[0]);
 		uAttribute("PixelShader", shaderStage_[1]);
