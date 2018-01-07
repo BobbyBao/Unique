@@ -299,9 +299,10 @@ namespace Unique
 	nk_color background = nk_rgb(28, 48, 62);
 	void GUISystem::HandleBeginFrame(const BeginFrame& eventData)
 	{
+		SendEvent(GUI());
+		/*
 		nk_context *ctx = &impl_.ctx;
 
-		/* GUI */
 		if (nk_begin(ctx, "Demo", nk_rect(50, 50, 230, 250),
 			NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE |
 			NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE))
@@ -333,7 +334,7 @@ namespace Unique
 				nk_combo_end(ctx);
 			}
 		}
-		nk_end(ctx);
+		nk_end(ctx);*/
 	}
 
 	static void

@@ -724,7 +724,6 @@ namespace Unique
 
 		batchMatrics.resize(newSize);
 		std::memcpy(&batchMatrics[offset], transform, num * sizeof(Matrix3x4));
-
 		return offset;
 	}
 

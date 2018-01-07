@@ -15,6 +15,7 @@ namespace Unique
 	private:
 		void HandleStartup(const struct Startup& eventData);
 		void HandleShutdown(const struct Shutdown& eventData);
+		void HandleGUI(const struct GUI& eventData);
 		void HandleUpdate(const struct Update& eventData);
 		void UpdateCamera(float timeStep);
 

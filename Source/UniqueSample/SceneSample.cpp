@@ -94,6 +94,11 @@ namespace Unique
 
 	}
 
+	void SceneSample::HandleGUI(const GUI& eventData)
+	{
+
+	}
+
 	void SceneSample::HandleUpdate(const struct Update& eventData)
 	{
 		auto& graphics = GetSubsystem<Graphics>();

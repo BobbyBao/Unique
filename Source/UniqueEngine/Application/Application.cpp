@@ -1,5 +1,6 @@
 #include "UniquePCH.h"
 #include "Application.h"
+#include "Application/Engine.h"
 #include "../Input/Input.h"
 #include "Core/CoreEvents.h"
 #include "Core/WorkQueue.h"
@@ -19,6 +20,7 @@ namespace Unique
 		resolution_(800, 600),
 		deviceType_(DeviceType::D3D11)
 	{
+		context_->RegisterSubsystem<Engine>();
 		context_->RegisterSubsystem<WorkQueue>();
 		context_->RegisterSubsystem<Profiler>();
 		context_->RegisterSubsystem<FileSystem>();
@@ -89,8 +91,9 @@ namespace Unique
 	
 		auto& renderer = GetSubsystem<Renderer>();
 		auto& input = GetSubsystem<Input>();
-
-		context_->Run();
+		auto& engine = GetSubsystem<Engine>();
+		
+		engine.Run();
 
 		while (input.ProcessEvents() && !quit_)
 		{
@@ -112,7 +115,7 @@ namespace Unique
 #endif
 		renderer.Stop();
 
-		context_->Stop();
+		engine.Stop();
 
 		Terminate();
 

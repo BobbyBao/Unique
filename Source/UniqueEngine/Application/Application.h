@@ -21,14 +21,14 @@ namespace Unique
 		static void Quit();
 
 		static UPtr<Context>	context_;
-		
+		static Vector<String> argv_;
 	protected:
 		virtual void Initialize();
 		virtual void Terminate();
 		virtual void OnPreRender();
 		virtual void OnPostRender();
 
-		static Vector<String> argv_;
+
 		DeviceType	deviceType_;
 		String		title_;
 		IntVector2	resolution_;
@@ -36,6 +36,7 @@ namespace Unique
 		bool		vsync_ = true;
 		bool		debugger = true;
 		bool        loadingDone_ = false;
+
 		static bool	quit_;
 
 		friend class ResizeEventHandler;

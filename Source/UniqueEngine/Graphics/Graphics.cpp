@@ -244,7 +244,7 @@ namespace Unique
 
 	void Graphics::AddCommand(const std::function<void()>& cmd)
 	{
-		assert(Context::IsMainThread());
+		assert(Thread::IsMainThread());
 		comands_.push_back(cmd);
 	}
 
