@@ -732,7 +732,7 @@ namespace Unique
 	{
 		auto& batchMatrics = RenderContext(batchMatrics_);
 		const Matrix3x4* mat  = &batchMatrics[offset];
-		void* data = objectVS_->Map();
+		void* data = objectVS_->Map(Diligent::MAP_FLAG_DISCARD);
 		std::memcpy(data, mat, sizeof(Matrix3x4));
 		objectVS_->UnMap();
 	}
@@ -741,7 +741,7 @@ namespace Unique
 	{
 		auto& batchMatrics = RenderContext(batchMatrics_);
 		const Matrix3x4* mat = &batchMatrics[offset];
-		void* data = skinnedVS_->Map();
+		void* data = skinnedVS_->Map(Diligent::MAP_FLAG_DISCARD);
 		std::memcpy(data, mat, sizeof(Matrix3x4) * count);
 		skinnedVS_->UnMap();
 	}

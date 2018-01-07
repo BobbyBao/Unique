@@ -59,6 +59,8 @@ namespace Unique
 
 		SwapChainDesc SCDesc;
 		SCDesc.SamplesCount = 1/*multiSampling_*/;
+		SCDesc.ColorBufferFormat = srgb_ ? TEX_FORMAT_RGBA8_UNORM_SRGB : TEX_FORMAT_RGBA8_UNORM;
+		SCDesc.DepthBufferFormat = TEX_FORMAT_D32_FLOAT;
 		CreateDevice(window_, deviceType, SCDesc, &renderDevice_, &deviceContext_, &swapChain_);
 		
 		renderDevice = renderDevice_;

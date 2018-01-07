@@ -51,7 +51,7 @@ namespace Unique
 
 		bool IsDirect3D() const;
 		bool IsOpenGL() const;
-
+		bool IsSRgb() const { return srgb_; }
 		//***MainThread***
 
 		template<class T>
@@ -102,8 +102,9 @@ namespace Unique
 		DeviceType deviceType_;
 		bool debugger_ = false;
 		bool vsync_ = false;
-		bool exit_ = false;
+		//bool exit_ = false;
 		int multiSampling_ = 4;
+		bool srgb_ = false;
 		Diligent::RefCntAutoPtr<IRenderDevice> renderDevice_;
 		Diligent::RefCntAutoPtr<IDeviceContext> deviceContext_;
 		Diligent::RefCntAutoPtr<ISwapChain> swapChain_;

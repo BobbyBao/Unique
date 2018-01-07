@@ -24,7 +24,8 @@ namespace Unique
 		return elements;
 	}
 
-	Renderer::Renderer() : graphics_(GetSubsystem<Graphics>()), numExtraInstancingBufferElements_(3)
+	Renderer::Renderer() 
+		: graphics_(GetSubsystem<Graphics>()), numExtraInstancingBufferElements_(3), drawDebug_(true)
 	{
 		Initialize();
 

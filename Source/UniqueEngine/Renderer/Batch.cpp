@@ -590,7 +590,7 @@ namespace Unique
 	}
 
 	void Batch::Draw(View* view, Camera* camera) const
-	{
+	{		
 		if (!geometry_->IsEmpty())
 		{
 			Prepare(view, camera, true);

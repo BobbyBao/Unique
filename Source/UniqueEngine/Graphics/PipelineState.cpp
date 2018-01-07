@@ -42,6 +42,8 @@ namespace Unique
 
 	void PipelineState::Init()
 	{
+		auto& graphics = GetSubsystem<Graphics>();
+
 		psoDesc_.GraphicsPipeline.DepthStencilDesc = shaderProgram_->shaderPass_.depthState_;
 		psoDesc_.GraphicsPipeline.RasterizerDesc = shaderProgram_->shaderPass_.rasterizerState_;
 		psoDesc_.GraphicsPipeline.BlendDesc = shaderProgram_->shaderPass_.blendState_;
@@ -51,7 +53,7 @@ namespace Unique
 		psoDesc_.IsComputePipeline = shaderProgram_->isComputePipeline_;
 
 		psoDesc_.GraphicsPipeline.NumRenderTargets = 1;
-		psoDesc_.GraphicsPipeline.RTVFormats[0] = TEX_FORMAT_RGBA8_UNORM_SRGB;
+		psoDesc_.GraphicsPipeline.RTVFormats[0] = graphics.IsSRgb() ? TEX_FORMAT_RGBA8_UNORM_SRGB : TEX_FORMAT_RGBA8_UNORM;
 		psoDesc_.GraphicsPipeline.DSVFormat = TEX_FORMAT_D32_FLOAT;
 		psoDesc_.GraphicsPipeline.PrimitiveTopologyType = PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	}

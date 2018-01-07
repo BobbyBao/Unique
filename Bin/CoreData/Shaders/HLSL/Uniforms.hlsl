@@ -54,6 +54,10 @@ cbuffer ObjectVS
     float4x3 cModel;
 }
 
+#ifndef MAXBONES
+#define MAXBONES 64
+#endif
+
 cbuffer SkinnedVS
 {
     uniform float4x3 cSkinMatrices[MAXBONES];

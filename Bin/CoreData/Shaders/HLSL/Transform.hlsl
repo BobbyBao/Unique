@@ -9,10 +9,10 @@
 #ifdef SKINNED
 float4x3 GetSkinMatrix(float4 blendWeights, int4 blendIndices)
 {
-    return cSkinMatrices[blendIndices.x] * blendWeights.x +
-        cSkinMatrices[blendIndices.y] * blendWeights.y +
-        cSkinMatrices[blendIndices.z] * blendWeights.z +
-        cSkinMatrices[blendIndices.w] * blendWeights.w;
+    return cSkinMatrices[(int)blendIndices.x] * blendWeights.x +
+        cSkinMatrices[(int)blendIndices.y] * blendWeights.y +
+        cSkinMatrices[(int)blendIndices.z] * blendWeights.z +
+        cSkinMatrices[(int)blendIndices.w] * blendWeights.w;
 }
 #endif
 

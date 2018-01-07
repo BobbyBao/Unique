@@ -116,10 +116,10 @@ namespace Unique
 
 		SPtr<Geometry> transientIndexedGeometry_;
 		
-		bool drawDebug_ = false;
+		bool drawDebug_;
 
 		Vector<IntRect> scissorRect_[2];
-
+		
 		Vector<Batch> batchQueue_[2];
 	};
 

@@ -1,5 +1,4 @@
 #define SKINNED
-#define MAXBONES 64
 #include "Uniforms.hlsl"
 #include "Samplers.hlsl"
 #include "Transform.hlsl"
@@ -13,6 +12,7 @@ void VS(
         float4 iBlendWeights : ATTRIB4,
         int4 iBlendIndices : ATTRIB5,
         out float2 oTexCoord : TEXCOORD0,
+        out float4 oColor: TEXCOORD1,
 		out float4 oPos : OUTPOSITION
     ) 
 {
@@ -22,8 +22,9 @@ void VS(
     oTexCoord = iTexCoord;
 }
 
+
 float4 PS(float2 iTexCoord : TEXCOORD0) : SV_TARGET
-{ 
+{
     float4 diffColor = float4(1,1,1,1);//cMatDiffColor;
 
     //#ifdef DIFFMAP

@@ -299,10 +299,6 @@ protected:
     BoundingBox boundingBox_;
     /// Draw call source data.
 	Vector<SourceBatch> batches_;
-	/// World transform(s). For a skinned model, these are the bone transforms.
-	const Matrix3x4* worldTransform_;
-	/// Number of world transforms.
-	unsigned numWorldTransforms_;
     /// Drawable flags.
     unsigned char drawableFlags_;
     /// Bounding box dirty flag.
