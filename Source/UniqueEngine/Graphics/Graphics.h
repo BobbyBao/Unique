@@ -72,6 +72,7 @@ namespace Unique
 		//****************
 
 		//*******Render thread*******
+
 		virtual void CreateBuffer(const Diligent::BufferDesc& buffDesc, const Diligent::BufferData& buffData, GraphicsBuffer& buffer);
 		virtual void CreateShader(const Diligent::ShaderCreationAttribs &creationAttribs, Diligent::IShader** shader);
 		virtual void CreateTexture(const Diligent::TextureDesc& texDesc, const Diligent::TextureData &data,	Texture& texture);
@@ -89,7 +90,9 @@ namespace Unique
 		inline static int GetRenderContext() { return 1 - currentContext_; }
 		static void AddCommand(const std::function<void()>& cmd);
 		static void FrameNoRenderWait();
+		static bool IsRenderThread();
 	protected:
+		static void SetRenderThread();
 		static void ExecuteCommands(CommandQueue& cmds);
 		static void MainSemPost();
 		static bool MainSemWait(int _msecs = -1);
@@ -111,7 +114,7 @@ namespace Unique
 		Diligent::RefCntAutoPtr<IResourceMapping> resourceMapping_;
 
 		SDL_Window *window_ = nullptr;
-
+		static ThreadID renderThreadID;
 		static bool singleThreaded_;
 		static Semaphore renderSem_;
 		static Semaphore mainSem_;
@@ -123,12 +126,14 @@ namespace Unique
 	template<class T>
 	inline T& MainContext(T* data)
 	{
+		assert(Thread::IsMainThread());
 		return data[Graphics::currentContext_];
 	}
 
 	template<class T>
 	inline T& RenderContext(T* data)
 	{
+		assert(Graphics::IsRenderThread());
 		return data[1 - Graphics::currentContext_];
 	}
 	

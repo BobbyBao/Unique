@@ -16,7 +16,7 @@ namespace Unique
 	
 	IRenderDevice* renderDevice = nullptr;
 	IDeviceContext* deviceContext = nullptr;
-
+	ThreadID Graphics::renderThreadID = 0;
 	int Graphics::currentContext_ = 0;
 	bool Graphics::singleThreaded_ = false;
 	Semaphore Graphics::renderSem_;
@@ -35,6 +35,7 @@ namespace Unique
 			return;
 		}
 
+		SetRenderThread();
 	}
 
 	Graphics::~Graphics()
@@ -181,7 +182,17 @@ namespace Unique
 
 		FrameNoRenderWait();
 	}
+
+	bool Graphics::IsRenderThread()
+	{
+		return renderThreadID == Thread::GetCurrentThreadID();
+	}
 	
+	void Graphics::SetRenderThread()
+	{
+		renderThreadID = Thread::GetCurrentThreadID();
+	}
+
 	void Graphics::CreateBuffer(const BufferDesc& buffDesc, const BufferData& buffData, GraphicsBuffer& buffer)
 	{
 		renderDevice->CreateBuffer(buffDesc, buffData, buffer);
