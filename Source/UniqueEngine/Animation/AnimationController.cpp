@@ -86,9 +86,9 @@ void AnimationController::OnSetEnabled()
     if (scene)
     {
         if (IsEnabledEffective())
-            Subscribe(scene, &AnimationController::HandleScenePostUpdate);
+            SubscribeTo(scene, &AnimationController::HandleScenePostUpdate);
         else
-            Unsubscribe(scene, ScenePostUpdate::Type());
+            UnsubscribeFrom(scene, ScenePostUpdate::Type());
     }
 }
 
@@ -779,7 +779,7 @@ VariantVector AnimationController::GetNodeAnimationStatesAttr() const
 void AnimationController::OnSceneSet(Scene* scene)
 {
     if (scene && IsEnabledEffective())
-        Subscribe(scene, &AnimationController::HandleScenePostUpdate);
+        SubscribeTo(scene, &AnimationController::HandleScenePostUpdate);
     else if (!scene)
         Unsubscribe(ScenePostUpdate::Type());
 }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Unique.Engine
 {
-    public partial class Application
+    public partial class Application : Object
     {
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern IntPtr Unique_Setup(int argc, [MarshalAs(UnmanagedType.LPArray)]string[] argv);

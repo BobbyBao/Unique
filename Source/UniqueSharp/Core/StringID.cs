@@ -19,7 +19,7 @@ namespace Unique.Engine
 
         public StringID(string name)
         {
-            internalData_ = Native.StringID_Create(name);
+            internalData_ = Native.StringID_new(name);
         }
 
         public StringID(IntPtr nativeData)

@@ -71,21 +71,21 @@ public:
 	}
 
 	template<class T, class E>
-	void Subscribe(Object* sender, void(T::*f)(const E&))
+	void SubscribeTo(Object* sender, void(T::*f)(const E&))
 	{
-		Subscribe(sender, E::Type(), new TEventHandler<T, E>((T*)this, f));
+		SubscribeTo(sender, E::Type(), new TEventHandler<T, E>((T*)this, f));
 	}
 
 	template<class T, class E>
-	void Subscribe(Object* sender, const StringID& eventType, void(T::*f)(const E&))
+	void SubscribeTo(Object* sender, const StringID& eventType, void(T::*f)(const E&))
 	{
-		Subscribe(sender, eventType, new TEventHandler<T, E>((T*)this, f));
+		SubscribeTo(sender, eventType, new TEventHandler<T, E>((T*)this, f));
 	}
 
 	/// Subscribe to an event that can be sent by any sender.
 	void Subscribe(const StringID& eventType, EventHandler* handler);
 	/// Subscribe to a specific sender's event.
-	void Subscribe(Object* sender, const StringID& eventType, EventHandler* handler);
+	void SubscribeTo(Object* sender, const StringID& eventType, EventHandler* handler);
 
 protected:
 
@@ -96,21 +96,21 @@ protected:
 	}
 
 	template<class E>
-	void Unsubscribe(Object* sender)
+	void UnsubscribeFrom(Object* sender)
 	{
-		Unsubscribe(sender, E::Type());
+		UnsubscribeFrom(sender, E::Type());
 	}
 
 	/// Unsubscribe from an event.
 	void Unsubscribe(StringID eventType);
 	/// Unsubscribe from a specific sender's event.
-	void Unsubscribe(Object* sender, StringID eventType);
+	void UnsubscribeFrom(Object* sender, StringID eventType);
 	/// Unsubscribe from a specific sender's events.
 	void UnsubscribeFromEvents(Object* sender);
 	/// Unsubscribe from all events.
-	void UnsubscribeFromAllEvents();
+	void UnsubscribeAllEvents();
 	/// Unsubscribe from all events except those listed, and optionally only those with userdata (script registered events.)
-	void UnsubscribeFromAllEventsExcept(const PODVector<StringID>& exceptions, bool onlyUserData);
+	void UnsubscribeAllEventsExcept(const PODVector<StringID>& exceptions, bool onlyUserData);
 
 private:
     /// Find the first event handler with no specific sender.

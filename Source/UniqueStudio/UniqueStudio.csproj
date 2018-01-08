@@ -55,6 +55,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\UniqueEditor\UniqueEditor.csproj">
+      <Project>{69059ebe-6229-483b-bb6f-f6510bf0ad8a}</Project>
+      <Name>UniqueEditor</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UniqueSharp\UniqueSharp.csproj">
       <Project>{0ed28173-42bc-45df-afb1-1058ec0ea568}</Project>
       <Name>UniqueSharp</Name>

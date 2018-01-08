@@ -87,7 +87,7 @@ void SmoothedTransform::Update(float constant, float squaredSnapThreshold)
     // If smoothing has completed, unsubscribe from the update event
     if (!smoothingMask_)
     {
-        Unsubscribe(GetScene(), UpdateSmoothing::Type());
+        UnsubscribeFrom(GetScene(), UpdateSmoothing::Type());
         subscribed_ = false;
     }
 }

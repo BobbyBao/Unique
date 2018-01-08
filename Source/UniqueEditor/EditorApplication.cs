@@ -5,6 +5,10 @@ using Unique.Engine;
 
 namespace Unique.Editor
 {
+    struct TestEvent
+    {
+        public string str;
+    }
     public class EditorApplication : Application
     {
         Scene scene;
@@ -13,20 +17,26 @@ namespace Unique.Editor
         Node floorNode;
         Node characterNode;
 
-        protected override void Init()
+        protected override void Start()
         {
-            base.Init();
+            base.Start();
 
-            scene = new Scene();
-            scene.Component<Octree>();
-            scene.Component<DebugRenderer>();
+            (scene = new Scene())
+                .Component<Octree>()
+                .Component<DebugRenderer>()
+                .Child("Light", c => c
+                    .Component<Light>()
+                )
+                .Child("Floor", c => c
+                    .Position(Vector3.Zero)
+                    .Scaling(new Vector3(30.0f, 30.0f, 30.0f))
+                    .Component<StaticModel>( sm => sm
+                        .Model(new ResourceRef("models/Plane.mdl"))
+                        .Material(new ResourceRefList(new List<string> { "materials/ground.mat" }))
+                    )
+                );
 
-            (lightNode = scene.Child("Light")).Component<Light>();
-
-            floorNode = scene.Child("Floor")
-                .Position(Vector3.Zero)
-                .Scaling(new Vector3(30.0f, 30.0f, 30.0f));
-
+            /*
             StaticModel floor = floorNode.Component<StaticModel>();
             floor.Model(new ResourceRef("models/Plane.mdl"));
             floor.Material(
@@ -39,23 +49,17 @@ namespace Unique.Editor
                 .Position(eye)
                 .LookAt(at);
 
-           var camera = cameraNode.Component<Camera>()            
-                .Fov(60.0f)
-                .AspectRatio((float)window_.Width / window_.Height);
-            
+            var camera = cameraNode.Component<Camera>()            
+                .Fov(60.0f);
+
             Renderer.Viewport(0)
                 .Rect(new IntRect(0, 0, window_.Width, window_.Height))
                 .Scene(scene)
                 .Camera(camera)
-                .Debug(true);
+                .Debug(true);*/
 
         }
-
-        protected override void Setup()
-        {
-            base.Setup();
-        }
-
+        
         protected override void Shutdown()
         {
             base.Shutdown();
@@ -66,13 +70,6 @@ namespace Unique.Editor
 
         protected override void OnGUI()
         {
-            unsafe
-            {
-                fixed (float* p = &val)
-                    ImGui.DragFloat("test", p);
-
-                ImGUI.ShowStyleEditor((ImGuiStyle*)ImGui.GetStyle());
-            }
         }
 
         protected override void UpdateFrame(float timeStep)
@@ -91,6 +88,8 @@ namespace Unique.Editor
         void UpdateCamera(float timeStep)
         {
             Vector3 offset = Vector3.Zero;
+            /*
+            var input = input.
 
             Input.GetMouse(ref mouseNow_);
      
@@ -136,7 +135,7 @@ namespace Unique.Editor
 
             cameraNode.Translate(offset * moveSpeed_ * timeStep + Vector3.Forward * (float)mouseDelta.z);
 
-            mouseLast_ = mouseNow_;
+            mouseLast_ = mouseNow_;*/
           
         }
     }

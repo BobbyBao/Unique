@@ -14,7 +14,7 @@ Object::Object()
 
 Object::~Object()
 {
-    UnsubscribeFromAllEvents();
+    UnsubscribeAllEvents();
 	
 	if(GetContext())
 		GetContext()->RemoveEventSender(this);
@@ -140,7 +140,7 @@ void Object::Subscribe(const StringID& eventType, EventHandler* handler)
     }
 }
 
-void Object::Subscribe(Object* sender, const StringID& eventType, EventHandler* handler)
+void Object::SubscribeTo(Object* sender, const StringID& eventType, EventHandler* handler)
 {
     // If a null sender was specified, the event can not be subscribed to. Delete the handler in that case
     if (!sender || !handler)
@@ -184,7 +184,7 @@ void Object::Unsubscribe(StringID eventType)
     }
 }
 
-void Object::Unsubscribe(Object* sender, StringID eventType)
+void Object::UnsubscribeFrom(Object* sender, StringID eventType)
 {
     if (!sender)
         return;
@@ -217,7 +217,7 @@ void Object::UnsubscribeFromEvents(Object* sender)
     }
 }
 
-void Object::UnsubscribeFromAllEvents()
+void Object::UnsubscribeAllEvents()
 {
 	if (!GetContext())
 	{
@@ -240,7 +240,7 @@ void Object::UnsubscribeFromAllEvents()
     }
 }
 
-void Object::UnsubscribeFromAllEventsExcept(const PODVector<StringID>& exceptions, bool onlyUserData)
+void Object::UnsubscribeAllEventsExcept(const PODVector<StringID>& exceptions, bool onlyUserData)
 {
     EventHandler* handler = eventHandlers_.first();
     EventHandler* previous = 0;

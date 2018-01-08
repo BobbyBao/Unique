@@ -19,15 +19,15 @@ namespace Unique.Engine
 
         public void Subscribe<T>(Action<T> action)
         {
-            Object_SubscribeToGlobalEvent(native_, ref TypeOf<T>(), (receiver, eventType, eventData) =>
+            Object_Subscribe(native_, ref TypeOf<T>(), (receiver, eventType, eventData) =>
             {
                 action(Utilities.As<T>(eventData));
             });
         }
 
-        public void Subscribe<T>(Object sender, Action<T> action)
+        public void SubscribeTo<T>(Object sender, Action<T> action)
         {
-            Object_SubscribeToEvent(native_, sender.native_, ref TypeOf<T>(), (r, et, ed) =>
+            Object_SubscribeTo(native_, sender.native_, ref TypeOf<T>(), (r, et, ed) =>
             {
                 action(Utilities.As<T>(ed));
             });
@@ -35,15 +35,15 @@ namespace Unique.Engine
 
         public void Subscribe<T>(ref StringID eventType, Action<T> action)
         {
-            Object_SubscribeToGlobalEvent(native_, ref eventType, (r, et, ed) =>
+            Object_Subscribe(native_, ref eventType, (r, et, ed) =>
             {
                 action(Utilities.As<T>(ed));
             });
         }
 
-        public void Subscribe<T>(Object sender, ref StringID eventType, Action<T> action)
+        public void SubscribeTo<T>(Object sender, ref StringID eventType, Action<T> action)
         {
-            Object_SubscribeToEvent(native_, sender.native_, ref eventType, (r, et, ed) =>
+            Object_SubscribeTo(native_, sender.native_, ref eventType, (r, et, ed) =>
             {
                 action(Utilities.As<T>(ed));
             });
@@ -93,7 +93,7 @@ namespace Unique.Engine
 
         public static IntPtr CreateNative<T>()
         {
-            return Object_Create(ref TypeOf<T>());
+            return Context.CreateObject(ref TypeOf<T>());
         }
 
         public static RefCounted PtrToObject(IntPtr nativePtr)

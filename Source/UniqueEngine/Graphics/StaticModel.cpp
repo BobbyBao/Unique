@@ -241,13 +241,13 @@ void StaticModel::SetModel(Model* model)
 
     // Unsubscribe from the reload event of previous model (if any), then subscribe to the new
     if (model_)
-        Unsubscribe<ReloadFinished>(model_);
+        UnsubscribeFrom<ReloadFinished>(model_);
 
     model_ = model;
 
     if (model)
     {
-        Subscribe(model, &StaticModel::HandleModelReloadFinished);
+        SubscribeTo(model, &StaticModel::HandleModelReloadFinished);
 
         // Copy the subgeometry & LOD level structure
         SetNumGeometries(model->GetNumGeometries());

@@ -2,26 +2,27 @@
 
 using namespace Unique;
 
-UNIQUE_C_API void* StringID_Create(const char* name)
+UNIQUE_C_API void* StringID_new(const char* name)
 {
-	StringID id(name);
-	return id.GetInternalData();
+	return StringID(name).GetInternalData();
 }
 
 uExport(Context, void, RegisterSubsystem, Object*, obj)
 uExport(Context, void, RemoveSubsystem, StringID, objectType)
 uExport(Context, const Vector<Object*>&, GetSubsystems)
-uExport(Context, Object*, CreateObject, const StringID&, type)
+UNIQUE_C_API Object* Context_CreateObject(Context* context, const StringID& type)
+{
+	SPtr<Object> ret = context->CreateObject(type);
+	ret->AddRef();
+	return ret.Get();
+}
 
 uExport(RefCounted, void, AddRef)
 uExport(RefCounted, void, ReleaseRef)
 uExport(RefCounted, int, WeakRefs)
 uExport(RefCounted, int, Refs)
 
-UNIQUE_C_API void Object_Delete(RefCount* refCount)
-{
-	delete refCount;
-}
+uExportDelete(RefCount)
 
 UNIQUE_C_API const void* Object_GetType(Object* obj)
 {
@@ -29,19 +30,19 @@ UNIQUE_C_API const void* Object_GetType(Object* obj)
 	return id.GetInternalData();
 }
 
-// uExport(Object, void, SendEvent, const StringID&, eventType, const Event&, eventData)
+//uExport(Object, void, SendEvent, const StringID&, eventType, const Event&, eventData)
 
 UNIQUE_C_API void Object_SendEvent(Object* self, const StringID& eventType, const void* eventData)
 {
 	self->SendEvent(eventType, *(const Event*)eventData);
 }
 
-UNIQUE_C_API void Object_SubscribeToGlobalEvent(Object* self, const StringID& eventType, EventFn handler)
+UNIQUE_C_API void Object_Subscribe(Object* self, const StringID& eventType, EventFn handler)
 {
 	self->Subscribe(eventType, new StaticEventHandler(self, handler));
 }
 
-UNIQUE_C_API void Object_SubscribeToEvent(Object* self, Object* sender, const StringID& eventType, EventFn handler)
+UNIQUE_C_API void Object_SubscribeTo(Object* self, Object* sender, const StringID& eventType, EventFn handler)
 {
-	self->Subscribe(sender, eventType, new StaticEventHandler(self, handler));
+	self->SubscribeTo(sender, eventType, new StaticEventHandler(self, handler));
 }

@@ -313,13 +313,13 @@ void AnimatedModel::SetModel(Model* model, bool createBones)
 
     // Unsubscribe from the reload event of previous model (if any), then subscribe to the new
     if (model_)
-        Unsubscribe(model_, ReloadFinished::Type());
+        UnsubscribeFrom(model_, ReloadFinished::Type());
 
     model_ = model;
 
     if (model)
     {
-        Subscribe(model, &AnimatedModel::HandleModelReloadFinished);
+        SubscribeTo(model, &AnimatedModel::HandleModelReloadFinished);
 
         // Copy the subgeometry & LOD level structure
         SetNumGeometries(model->GetNumGeometries());

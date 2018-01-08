@@ -10,11 +10,12 @@ namespace Unique.Engine
     internal unsafe static partial class Native
     {
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)]
-        public static extern IntPtr StringID_Create([MarshalAs(UnmanagedType.LPStr)]string name);
+        public static extern IntPtr StringID_new([MarshalAs(UnmanagedType.LPStr)]string name);
 
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr Object_Create(ref StringID type);
+        public static extern IntPtr Context_CreateObject(IntPtr conext, ref StringID type);
+
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void Object_AddRef(IntPtr intPtr);
@@ -38,10 +39,10 @@ namespace Unique.Engine
         public static extern void Object_SendEvent(IntPtr self, ref StringID eventType, IntPtr eventData);
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void Object_SubscribeToGlobalEvent(IntPtr self, ref StringID eventType, EventFn handler);
+        public static extern void Object_Subscribe(IntPtr self, ref StringID eventType, EventFn handler);
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void Object_SubscribeToEvent(IntPtr self, IntPtr sender, ref StringID eventType, EventFn handler);
+        public static extern void Object_SubscribeTo(IntPtr self, IntPtr sender, ref StringID eventType, EventFn handler);
         
     }
 }

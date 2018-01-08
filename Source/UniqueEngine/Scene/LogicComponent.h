@@ -89,12 +89,10 @@ private:
     void HandleSceneUpdate(const struct SceneUpdate& eventData);
     /// Handle scene post-update event.
     void HandleScenePostUpdate(const struct ScenePostUpdate& eventData);
-#if defined(UNIQUE_PHYSICS) || defined(UNIQUE_URHO2D)
     /// Handle physics pre-step event.
-    void HandlePhysicsPreStep(VariantMap& eventData);
+    void HandlePhysicsPreStep(const struct PhysicsPreStep& eventData);
     /// Handle physics post-step event.
-    void HandlePhysicsPostStep(VariantMap& eventData);
-#endif
+    void HandlePhysicsPostStep(const struct PhysicsPostStep& eventData);
     /// Requested event subscription mask.
     unsigned char updateEventMask_;
     /// Current event subscription mask.

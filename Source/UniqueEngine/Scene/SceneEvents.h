@@ -30,29 +30,29 @@ namespace Unique
 /// Variable timestep scene update.
 uEvent(SceneUpdate)
 {
-    Scene* scene_;              // scene_ pointer
-    float timeStep_;            // float
+    Scene* scene_;
+    float timeStep_;
 };
 
 /// scene_ subsystem update.
 uEvent(SceneSubsystemUpdate)
 {
-    Scene* scene_;                  // scene_ pointer
-    float timeStep_;            // float
+    Scene* scene_;
+    float timeStep_;
 };
 
 /// scene_ transform smoothing update.
 uEvent(UpdateSmoothing)
 {
-    float constant_;            // float
-    float squaredSnapThreshold_;  // float
+    float constant_;
+    float squaredSnapThreshold_;
 };
 
 /// scene_ drawable update finished. Custom animation (eg. IK) can be done at this point.
 uEvent(SceneDrawableUpdateFinished)
 {
-    Scene* scene_;                  // scene_ pointer
-    float timeStep_;            // float
+    Scene* scene_;
+    float timeStep_;
 };
 
 /// SmoothedTransform target position changed.
@@ -68,119 +68,132 @@ uEvent(TargetRotationChanged)
 /// scene_ attribute animation update.
 uEvent(AttributeAnimationUpdate)
 {
-    Scene* scene_;                  // scene_ pointer
-    float timeStep_;            // float
+    Scene* scene_;
+    float timeStep_;
 };
 
 /// Variable timestep scene post-update.
 uEvent(ScenePostUpdate)
 {
-    Scene* scene_;                  // scene_ pointer
-    float timeStep_;            // float
+    Scene* scene_;
+    float timeStep_;
 };
 
 /// Asynchronous scene loading progress.
 uEvent(AsyncLoadProgress)
 {
-    Scene* scene_;                  // scene_ pointer
-    float Progress;            // float
-    int LoadedNodes;      // int
-    int TotalNodes;        // int
-    int LoadedResources; // int
-    int TotalResources;   // int
+    Scene* scene_;
+    float Progress;
+    int LoadedNodes;
+    int TotalNodes;
+    int LoadedResources;
+    int TotalResources;
 };
 
 /// Asynchronous scene loading finished.
 uEvent(AsyncLoadFinished)
 {
-    Scene* scene_;                  // scene_ pointer
+    Scene* scene_;
 };
 
 /// A child node has been added to a parent node.
 uEvent(NodeAdded)
 {
-    Scene* scene_;                  // scene_ pointer
-    Node* parent_;                // Node pointer
-    Node* node_;                    // Node pointer
+    Scene* scene_;
+    Node* parent_;
+    Node* node_;
 };
 
 /// A child node is about to be removed from a parent node. Note that individual component removal events will not be sent.
 uEvent(NodeRemoved)
 {
-    Scene* scene_;                  // scene_ pointer
-    Node* parent_;                // Node pointer
-    Node* node_;                    // Node pointer
+    Scene* scene_;
+    Node* parent_;
+    Node* node_;
 };
 
 /// A component has been created to a node.
 uEvent(ComponentAdded)
 {
-    Scene* scene_;                  // scene_ pointer
-    Node* node_;                    // Node pointer
-    Component* component_;          // Component pointer
+    Scene* scene_;
+    Node* node_;
+    Component* component_;
 };
 
 /// A component is about to be removed from a node.
 uEvent(ComponentRemoved)
 {
-    Scene* scene_;                  // scene_ pointer
-    Node* node_;                    // Node pointer
-    Component* component_;          // Component pointer
+    Scene* scene_;
+    Node* node_;
+    Component* component_;
 };
 
 /// A node's name has changed.
 uEvent(NodeNameChanged)
 {
-    Scene* scene_;                  // scene_ pointer
-    Node* node_;                    // Node pointer
+    Scene* scene_;
+    Node* node_;
 };
 
 /// A node's enabled state has changed.
 uEvent(NodeEnabledChanged)
 {
-    Scene* scene_;                  // scene_ pointer
-    Node* node_;                    // Node pointer
+    Scene* scene_;
+    Node* node_;
 };
 
 /// A node's tag has been added.
 uEvent(NodeTagAdded)
 {
-    Scene* scene_;                  // scene_ pointer
-    Node* node_;                    // Node pointer
-    String tag_;                      // String tag
+    Scene* scene_;
+    Node* node_;
+    String tag_;
 };
 
 /// A node's tag has been removed.
 uEvent(NodeTagRemoved)
 {
-    Scene* scene_;                  // scene_ pointer
-    Node* node_;                    // Node pointer
-    String tag_;                      // String tag
+    Scene* scene_;
+    Node* node_;
+    String tag_;
 };
 
 /// A component's enabled state has changed.
 uEvent(ComponentEnabledChanged)
 {
-    Scene* scene_;                  // scene_ pointer
-    Node* node_;                    // Node pointer
-    Component* component_;          // Component pointer
+    Scene* scene_;
+    Node* node_;
+    Component* component_;
 };
 
 /// A node (and its children and components) has been cloned.
 uEvent(NodeCloned)
 {
-    Scene* scene_;                  // scene_ pointer
-    Node* node_;                    // Node pointer
-    Node* cloneNode_;          // Node pointer
+    Scene* scene_;
+    Node* node_;
+    Node* cloneNode_;
 };
 
 /// A component has been cloned.
 uEvent(ComponentCloned)
 {
-    Scene* scene_;                  // scene_ pointer
-    Component* component_;          // Component pointer
-    Component* cloneComponent_; // Component pointer
+    Scene* scene_;
+    Component* component_;
+    Component* cloneComponent_;
 };
 
+/// Physics world is about to be stepped.
+uEvent(PhysicsPreStep)
+{
+	class PhysicsWorld* world_;
+	float timeStep_;
+};
+
+/// Physics world has been stepped.
+uEvent(PhysicsPostStep)
+{
+	class PhysicsWorld* world_;
+	float timeStep_;
+};
 
 }

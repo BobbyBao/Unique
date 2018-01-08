@@ -10,10 +10,11 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Unique.Engine\Unique.Engine.csproj" />
+    <ProjectReference Include="..\UniqueSharp\UniqueSharp.csproj" />
   </ItemGroup>
 
 </Project>

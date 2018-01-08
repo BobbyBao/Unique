@@ -115,28 +115,27 @@ void LogicComponent::UpdateEventSubscription()
     bool needUpdate = enabled && ((updateEventMask_ & USE_UPDATE) || !delayedStartCalled_);
     if (needUpdate && !(currentEventMask_ & USE_UPDATE))
     {
-        Subscribe(scene, &LogicComponent::HandleSceneUpdate);
+		SubscribeTo(scene, &LogicComponent::HandleSceneUpdate);
         currentEventMask_ |= USE_UPDATE;
     }
     else if (!needUpdate && (currentEventMask_ & USE_UPDATE))
     {
-        Unsubscribe(scene, SceneUpdate::Type());
+        UnsubscribeFrom(scene, SceneUpdate::Type());
         currentEventMask_ &= ~USE_UPDATE;
     }
 
     bool needPostUpdate = enabled && (updateEventMask_ & USE_POSTUPDATE);
     if (needPostUpdate && !(currentEventMask_ & USE_POSTUPDATE))
     {
-        Subscribe(scene, &LogicComponent::HandleScenePostUpdate);
+		SubscribeTo(scene, &LogicComponent::HandleScenePostUpdate);
         currentEventMask_ |= USE_POSTUPDATE;
     }
     else if (!needPostUpdate && (currentEventMask_ & USE_POSTUPDATE))
     {
-        Unsubscribe(scene, ScenePostUpdate::Type());
+        UnsubscribeFrom(scene, ScenePostUpdate::Type());
         currentEventMask_ &= ~USE_POSTUPDATE;
     }
 
-#if defined(UNIQUE_PHYSICS)
     Component* world = GetFixedUpdateSource();
     if (!world)
         return;
@@ -144,27 +143,27 @@ void LogicComponent::UpdateEventSubscription()
     bool needFixedUpdate = enabled && (updateEventMask_ & USE_FIXEDUPDATE);
     if (needFixedUpdate && !(currentEventMask_ & USE_FIXEDUPDATE))
     {
-        Subscribe(world, E_PHYSICSPRESTEP, UNIQUE_HANDLER(LogicComponent, HandlePhysicsPreStep));
+        SubscribeTo(world, &LogicComponent::HandlePhysicsPreStep);
         currentEventMask_ |= USE_FIXEDUPDATE;
     }
     else if (!needFixedUpdate && (currentEventMask_ & USE_FIXEDUPDATE))
     {
-        Unsubscribe(world, E_PHYSICSPRESTEP);
+        UnsubscribeFrom(world, PhysicsPreStep::Type());
         currentEventMask_ &= ~USE_FIXEDUPDATE;
     }
 
     bool needFixedPostUpdate = enabled && (updateEventMask_ & USE_FIXEDPOSTUPDATE);
     if (needFixedPostUpdate && !(currentEventMask_ & USE_FIXEDPOSTUPDATE))
     {
-        Subscribe(world, E_PHYSICSPOSTSTEP, UNIQUE_HANDLER(LogicComponent, HandlePhysicsPostStep));
+        SubscribeTo(world, &LogicComponent::HandlePhysicsPostStep);
         currentEventMask_ |= USE_FIXEDPOSTUPDATE;
     }
     else if (!needFixedPostUpdate && (currentEventMask_ & USE_FIXEDPOSTUPDATE))
     {
-        Unsubscribe(world, E_PHYSICSPOSTSTEP);
+        UnsubscribeFrom(world, PhysicsPostStep::Type());
         currentEventMask_ &= ~USE_FIXEDPOSTUPDATE;
     }
-#endif
+
 }
 
 void LogicComponent::HandleSceneUpdate(const SceneUpdate& eventData)
@@ -178,7 +177,7 @@ void LogicComponent::HandleSceneUpdate(const SceneUpdate& eventData)
         // If did not need actual update events, unsubscribe now
         if (!(updateEventMask_ & USE_UPDATE))
         {
-            Unsubscribe(GetScene(), SceneUpdate::Type());
+            UnsubscribeFrom(GetScene(), SceneUpdate::Type());
             currentEventMask_ &= ~USE_UPDATE;
             return;
         }
@@ -194,12 +193,8 @@ void LogicComponent::HandleScenePostUpdate(const ScenePostUpdate& eventData)
 	PostUpdate(eventData.timeStep_);
 }
 
-#if defined(UNIQUE_PHYSICS)
-
-void LogicComponent::HandlePhysicsPreStep(VariantMap& eventData)
+void LogicComponent::HandlePhysicsPreStep(const struct PhysicsPreStep& eventData)
 {
-    using namespace PhysicsPreStep;
-
     // Execute user-defined delayed start function before first fixed update if not called yet
     if (!delayedStartCalled_)
     {
@@ -208,17 +203,14 @@ void LogicComponent::HandlePhysicsPreStep(VariantMap& eventData)
     }
 
     // Execute user-defined fixed update function
-    FixedUpdate(eventData[P_TIMESTEP].GetFloat());
+    FixedUpdate(eventData.timeStep_);
 }
 
-void LogicComponent::HandlePhysicsPostStep(VariantMap& eventData)
+void LogicComponent::HandlePhysicsPostStep(const struct PhysicsPostStep& eventData)
 {
-    using namespace PhysicsPostStep;
-
     // Execute user-defined fixed post-update function
-    FixedPostUpdate(eventData[P_TIMESTEP].GetFloat());
+    FixedPostUpdate(eventData.timeStep_);
 }
 
-#endif
 
 }

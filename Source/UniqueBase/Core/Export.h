@@ -161,6 +161,18 @@ UNIQUE_C_API typeRet clss##_##func(type1 param1, type2 param2, type3 param3, typ
 }
 */
 
+#define uExportNew(clss)\
+UNIQUE_C_API clss* clss##_##new()\
+{\
+	return new clss();\
+}
+
+#define uExportDelete(clss)\
+UNIQUE_C_API void clss##_##delete(clss* c)\
+{\
+	delete c;\
+}
+
 #if UNIQUE_COMPILER_MSVC
 #	define uExport(...) UNIQUE_MACRO_DISPATCHER(DEFINE_FUNC_, __VA_ARGS__) UNIQUE_VA_ARGS_PASS(__VA_ARGS__)
 #else

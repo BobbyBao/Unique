@@ -18,6 +18,10 @@ namespace Unique.Engine
     {
         public static OS OS => os_;
         private static OS os_;
+
+        public Application() : this(new string[0])
+        {
+        }
                 
         public Application(string[] args)
         {

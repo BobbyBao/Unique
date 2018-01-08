@@ -84,19 +84,43 @@ namespace Unique.Engine
             return this;
         }
 
-        public Node Child(StringID name, bool temp = false)
+        public Node Child(StringID name, Action<Node> action = null)
         {
-            return new Node(Node_CreateChild(native_, ref name, temp));
+            Node node = new Node(Node_CreateChild(native_, ref name, false));
+            if(action != null)
+            {
+                action(node);
+            }
+            return this;
         }
 
-        public Component Component(StringID type)
+        public Node TempChild(StringID name, Action<Node> action = null)
         {
-            return PtrToObject(Node_GetOrCreateComponent(native_, ref type)) as Component;
+            Node node = new Node(Node_CreateChild(native_, ref name, true));
+            if(action != null)
+            {
+                action(node);
+            }
+            return this;
         }
 
-        public T Component<T>() where T : Component
+        public Node Component(StringID type, Action<Component> action = null)
         {
-            return PtrToObject(Node_GetOrCreateComponent(native_, ref TypeOf<T>())) as T;
+            Component c = PtrToObject(Node_GetOrCreateComponent(native_, ref type)) as Component;
+            if(action != null)
+            {
+                action(c);
+            }
+            return this;
+        }
+
+        public Node Component<T>(Action<T> action = null) where T : Component
+        {
+            return Component(TypeOf<T>(), (c)=> 
+            {
+                if(action != null)
+                    action(c as T);
+            });
         }
     }
 }

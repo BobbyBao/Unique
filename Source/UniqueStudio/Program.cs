@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Unique.Editor;
 using Unique.Engine;
 
 namespace UniqueStudio
@@ -11,7 +12,7 @@ namespace UniqueStudio
     {
         static void Main(string[] args)
         {
-            Application app = new Application(new string[] {"Test"});
+            EditorApplication app = new EditorApplication();
             app.Run();
         }
     }

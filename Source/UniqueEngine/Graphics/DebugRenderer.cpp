@@ -42,7 +42,6 @@ DebugRenderer::DebugRenderer() : Drawable(DRAWABLE_DEBUG), lineAntiAlias_(false)
 
 	vertexBuffer_ = new VertexBuffer();
 	geometry_ = new Geometry();
-	geometry_->SetNumVertexBuffers(1);
 	geometry_->SetVertexBuffer(0, vertexBuffer_);
 
 	ResourceCache& cache = GetSubsystem<ResourceCache>();
