@@ -42,8 +42,13 @@ namespace Unique
 	{
 		if (shader_)
 		{
-			uniforms_ = shader_->GetUniforms();
-			textureSlots_ = shader_->GetTextureSlots();
+			//uniforms_ = shader_->GetUniforms();
+			//textureSlots_ = shader_->GetTextureSlots();
+			
+			for (auto& sl : textureSlots_)
+			{
+				sl.Create();
+			}
 		}
 
 		return true;

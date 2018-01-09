@@ -1,9 +1,25 @@
 #include "UniquePCH.h"
 #include "Engine.h"
+#include "Core/CoreEvents.h"
+#include "Core/WorkQueue.h"
+#include "../Input/Input.h"
+#include "ImGUI/ImGUI.h"
+
+#include "Resource/Image.h"
+#include "Graphics/Importers/ShaderImporter.h"
+#include "Graphics/Importers/TextureImporter.h"
+#include "Graphics/Importers/ModelImporter.h"
 
 namespace Unique
 {
+	SPtr<Context> Engine::context_;
+	Vector<String> Engine::argv_;
+	bool Engine::quit_ = false;
+
+
 	Engine::Engine() :
+		resolution_(800, 600),
+		deviceType_(DeviceType::D3D11),
 		timeStep_(0.0f),
 		timeStepSmoothing_(2),
 		minFps_(10),
@@ -17,11 +33,86 @@ namespace Unique
 		pauseMinimized_(false)
 #endif
 	{
-	}
+		context_->RegisterSubsystem(this);
+		context_->RegisterSubsystem<WorkQueue>();
+		context_->RegisterSubsystem<Profiler>();
+		context_->RegisterSubsystem<FileSystem>();
+		context_->RegisterSubsystem<Log>("Unique.log");
+		context_->RegisterSubsystem<Graphics>();
+		context_->RegisterSubsystem<ResourceCache>();
+		context_->RegisterSubsystem<Renderer>();
+		context_->RegisterSubsystem<Input>();
+		context_->RegisterSubsystem<GUI>();
 
+	}
 
 	Engine::~Engine()
 	{
+	}
+
+	void Engine::Setup(int argc, char* argv[])
+	{
+		for (int i = 0; i < argc; i++)
+		{
+			argv_.push_back(argv[i]);
+		}
+	}
+
+	void Engine::SetTitle(const String& title)
+	{
+		title_ = title;
+	}
+
+	void Engine::SetResolution(const IntVector2& res)
+	{
+		resolution_ = res;
+	}
+
+	void Engine::Initialize()
+	{
+		auto& cache = GetSubsystem<ResourceCache>();
+		auto& graphics = GetSubsystem<Graphics>();
+
+		cache.SetAutoReloadResources(true);
+		cache.AddResourceDir("Assets");
+		cache.AddResourceDir("CoreData");
+		cache.AddResourceDir("Cache");
+
+		cache.RegisterImporter(new ShaderImporter());
+		cache.RegisterImporter(new ImageImporter());
+		cache.RegisterImporter(new TextureImporter());
+		cache.RegisterImporter(new ModelImporter());
+		cache.RegisterImporter(new AnimationImporter());
+
+		graphics.Initialize(resolution_, deviceType_);
+
+		loadingDone_ = true;
+	}
+
+
+	void Engine::Start()
+	{
+		auto& renderer = GetSubsystem<Renderer>();
+		auto& input = GetSubsystem<Input>();
+		
+		Run();
+
+		while (input.ProcessEvents() && !quit_)
+		{
+			renderer.Begin();
+			renderer.Render();
+			renderer.End();
+		}
+
+#ifdef __EMSCRIPTEN__
+
+		emscripten_cancel_main_loop();
+
+#endif
+		renderer.Stop();
+
+		Stop();
+
 	}
 
 	void Engine::ThreadFunction()
@@ -64,7 +155,6 @@ namespace Unique
 
 	void Engine::ApplyFrameLimit()
 	{
-
 		unsigned maxFps = maxFps_;
 
 		long long elapsed = 0;

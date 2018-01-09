@@ -98,6 +98,7 @@ namespace Unique
 	{
 		void SetTexture(Texture* tex);
 		void SetTextureAttr(const ResourceRef& texAttr);
+		void Create();
 
 		StringID name_;
 		ResourceRef texAttr_;

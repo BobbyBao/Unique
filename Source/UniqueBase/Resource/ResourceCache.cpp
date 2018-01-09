@@ -1154,17 +1154,24 @@ SPtr<Resource> ResourceCache::LoadResource(StringID type, const String& name)
 	if (it != resourceImporters_.end())
 	{
 		resource = it->second->Import(name);
-		if (resource)
-		{
-			resource->SetName(name);
-			if (!resource->Load())
-			{
-				return SPtr<Resource>();
-			}
-		}
+
 
 	}
+	else
+	{
 
+		ResourceImporter resImporter(type);
+		resource = resImporter.Import(name);
+	}
+
+	if (resource)
+	{
+		resource->SetName(name);
+		if (!resource->Load())
+		{
+			return SPtr<Resource>();
+		}
+	}
 
 	return resource;
 }

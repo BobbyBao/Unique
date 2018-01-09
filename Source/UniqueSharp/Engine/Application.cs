@@ -52,7 +52,7 @@ namespace Unique.Engine
             }
         }
         
-        public void Run()
+        public void Start()
         {
             Unique_Start(native_, DeviceType.D3D11, IntPtr.Zero);
 
@@ -67,7 +67,7 @@ namespace Unique.Engine
         {
             Subscribe((Startup e) =>
             {
-                Start();
+                Initialize();
             });
 
             Subscribe((Shutdown e) =>
@@ -86,7 +86,7 @@ namespace Unique.Engine
             });
         }
 
-        protected virtual void Start()
+        protected virtual void Initialize()
         {
         }
 

@@ -1,46 +1,28 @@
 #pragma once
-
-#include "Core/Context.h"
 #include <iostream>
 
 namespace Unique
 {
+	class Engine;
+
 	class Application : public Object
 	{
 	public:
-		Application();
+		Application(int argc = 0, char* argv[] = nullptr);
 		virtual ~Application();
 
-		void SetDeviceType(DeviceType deviceType) { deviceType_ = deviceType; }
-		void SetTitle(const String& title);
-		void SetResolution(const IntVector2& res);
+		void SetDeviceType(DeviceType deviceType);
+		void Start();
 
-		void Run();
-
-		static void Setup(int argc, char* argv[]);
 		static void Quit();
 
-		static SPtr<Context> context_;
-		static Vector<String> argv_;
 	protected:
+		virtual void Setup();
 		virtual void Initialize();
 		virtual void Terminate();
-		virtual void OnPreRender();
-		virtual void OnPostRender();
 
-
-		DeviceType	deviceType_;
-		String		title_;
-		IntVector2	resolution_;
-		uint		multiSampling_ = 8;
-		bool		vsync_ = true;
-		bool		debugger = true;
-		bool        loadingDone_ = false;
-
-		static bool	quit_;
-
-		friend class ResizeEventHandler;
-
+		SPtr<Engine> engine_;
+		
 	};
 
 	template <typename T>
@@ -48,12 +30,9 @@ namespace Unique
 	{
 		try
 		{
-			Application::context_ = new Context();
-			Application::Setup(argc, argv);
-			auto app = SPtr<T>(new T());
-			app->Run();
+			auto app = SPtr<T>(new T(argc, argv));
+			app->Start();
 			app = nullptr;
-			Application::context_ = nullptr;
 		}
 		catch (const std::exception& e)
 		{

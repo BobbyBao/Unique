@@ -13,7 +13,7 @@ namespace UniqueStudio
         static void Main(string[] args)
         {
             EditorApplication app = new EditorApplication();
-            app.Run();
+            app.Start();
         }
     }
 }

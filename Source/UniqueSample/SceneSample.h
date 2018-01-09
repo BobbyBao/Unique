@@ -9,7 +9,7 @@ namespace Unique
 	class SceneSample : public Application
 	{
 	public:
-		SceneSample();
+		SceneSample(int argc, char* argv[]);
 		~SceneSample();
 
 	private:

@@ -2,6 +2,7 @@
 #include "ResourceImporter.h"
 #include "ResourceCache.h"
 #include "../io/FileSystem.h"
+#include "Serialize/JsonDeserializer.h"
 
 namespace Unique
 {
@@ -16,7 +17,10 @@ namespace Unique
 
 	SPtr<Resource> ResourceImporter::Import(const String& filePath)
 	{
-		return nullptr;
+		SPtr<Resource> res = DynamicCast<Resource>(GetContext()->CreateObject(type_));
+		JsonDeserializer reader;
+		reader.Load(filePath, res);
+		return res;
 	}
 
 	

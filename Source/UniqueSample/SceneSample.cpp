@@ -22,7 +22,7 @@ namespace Unique
 	extern void Test();
 	extern SPtr<Geometry> BuildSponge(int levelMax, bool aoEnabled);
 
-	SceneSample::SceneSample()
+	SceneSample::SceneSample(int argc, char* argv[]) : Application(argc, argv)
 	{
 		Subscribe(&SceneSample::HandleStartup);
 		Subscribe(&SceneSample::HandleShutdown);
@@ -48,8 +48,8 @@ namespace Unique
 		//StaticModel* model = node_->CreateComponent<StaticModel>();
 		AnimatedModel* model = node_->CreateComponent<AnimatedModel>();
 		model->SetModelAttr(ResourceRef::Create<Model>("Models/Kachujin/Kachujin.mdl"));
-// 		model->SetMaterialsAttr(ResourceRefList::Create<Material>(
-// 		{ "Models/Kachujin/Materials/Kachujin.material" }));
+  		model->SetMaterialsAttr(ResourceRefList::Create<Material>(
+  		{ "Models/Kachujin/Materials/Kachujin.material" }));
 		
 		/*
 		Model* m = new Model();
@@ -59,11 +59,11 @@ namespace Unique
 		m->SetGeometry(0, 0, geo);
 		m->SetBoundingBox(BoundingBox(-10, 10));
 		model->SetModel(m);*/
-
-		SPtr<Material> mat(new Material());
-		mat->SetShaderAttr(ResourceRef::Create<Shader>("Shaders/Skinned.shader"));
-		mat->SetTexture("DiffMap", ResourceRef::Create<Texture>("Models/Kachujin/Textures/Kachujin_diffuse.png"));
-		model->SetMaterial(mat);
+		
+// 		SPtr<Material> mat(new Material());
+// 		mat->SetShaderAttr(ResourceRef::Create<Shader>("Shaders/Skinned.shader"));
+// 		mat->SetTexture("DiffMap", ResourceRef::Create<Texture>("Models/Kachujin/Textures/Kachujin_diffuse.png"));
+// 		model->SetMaterial(mat);
 
 // 		{
 // 			JsonSerializer jsonSer;

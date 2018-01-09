@@ -2,68 +2,25 @@
 #include "Application.h"
 #include "Application/Engine.h"
 #include "../Input/Input.h"
-#include "Core/CoreEvents.h"
-#include "Core/WorkQueue.h"
-#include "Graphics/Importers/ShaderImporter.h"
-#include "Resource/Image.h"
-#include "Graphics/Importers/TextureImporter.h"
-#include "Graphics/Importers/ModelImporter.h"
-#include "ImGUI/ImGUI.h"
+
 
 namespace Unique
 {
-	SPtr<Context> Application::context_;
-	Vector<String> Application::argv_;
-	bool Application::quit_ = false;
-
-	Application::Application():
-		resolution_(800, 600),
-		deviceType_(DeviceType::D3D11)
+	Application::Application(int argc, char* argv[])
 	{
-		context_->RegisterSubsystem<Engine>();
-		context_->RegisterSubsystem<WorkQueue>();
-		context_->RegisterSubsystem<Profiler>();
-		context_->RegisterSubsystem<FileSystem>();
-		context_->RegisterSubsystem<Log>("Unique.log");
-		context_->RegisterSubsystem<Graphics>();
-		context_->RegisterSubsystem<ResourceCache>();
-		context_->RegisterSubsystem<Renderer>();
-		context_->RegisterSubsystem<Input>();
-		context_->RegisterSubsystem<GUI>();
-
+		Engine::context_ = new Context();
+		Engine::Setup(argc, argv);
+		engine_ = new Engine();
 	}
 
 	Application::~Application()
 	{
+		Engine::context_ = nullptr;
 	}
 
-	void Application::Setup(int argc, char* argv[])
+	void Application::SetDeviceType(DeviceType deviceType)
 	{
-		for (int i = 0; i < argc; i++)
-		{
-			argv_.push_back(argv[i]);
-		}
-	}
-
-	void Application::Initialize()
-	{
-		auto& cache = GetSubsystem<ResourceCache>();
-		auto& graphics = GetSubsystem<Graphics>();
-
-		cache.SetAutoReloadResources(true);
-		cache.AddResourceDir("Assets");
-		cache.AddResourceDir("CoreData");
-		cache.AddResourceDir("Cache");
-
-		cache.RegisterImporter(new ShaderImporter());
-		cache.RegisterImporter(new ImageImporter());
-		cache.RegisterImporter(new TextureImporter());
-		cache.RegisterImporter(new ModelImporter());
-		cache.RegisterImporter(new AnimationImporter());
-
-		graphics.Initialize(resolution_, deviceType_);
-		
-		loadingDone_ = true;
+		GetSubsystem<Engine>().SetDeviceType(deviceType);
 	}
 
 	void Application::Terminate()
@@ -72,68 +29,33 @@ namespace Unique
 
 	void Application::Quit()
 	{
-		quit_ = true;
+		Engine::quit_ = true;
 	}
 
-	void Application::SetTitle(const String& title) 
+	void Application::Setup()
 	{
-		title_ = title;
 	}
 
-	void Application::SetResolution(const IntVector2& res)
-	{ 
-		resolution_ = res; 
-	}
-
-	void Application::Run()
+	void Application::Initialize()
 	{
+	}
+
+	void Application::Start()
+	{
+		Setup();
+
+		engine_->Initialize();
+
 		Initialize();
-	
-		auto& renderer = GetSubsystem<Renderer>();
-		auto& input = GetSubsystem<Input>();
-		auto& engine = GetSubsystem<Engine>();
-		
-		engine.Run();
-		
-		while (input.ProcessEvents() && !quit_)
-		{
-			renderer.Begin();
-			
-			OnPreRender();
 
-			renderer.Render();
-
-			OnPostRender();
-
-			renderer.End();
-		}
-
-#ifdef __EMSCRIPTEN__
-		
-		emscripten_cancel_main_loop();
-		
-#endif
-		renderer.Stop();
-
-		engine.Stop();
+		engine_->Start();
 
 		Terminate();
-
-	}
-
-	void Application::OnPreRender()
-	{
-	}
-
-	void Application::OnPostRender()
-	{
 	}
 
 	UNIQUE_C_API Application* Unique_Setup(int argc, char* argv[])
 	{
-		Application::context_ = new Context();
-		Application::Setup(argc, argv);
-		Application* app = new Application();
+		Application* app = new Application(argc, argv);
 		app->AddRef();
 		return app;
 	}
@@ -143,9 +65,8 @@ namespace Unique
 		try
 		{	
 			app->SetDeviceType(deviceType);
-			app->Run();
+			app->Start();
 			app->ReleaseRef();
-			Application::context_ = nullptr;
 		}
 		catch (const std::exception& e)
 		{

@@ -77,7 +77,12 @@ namespace Unique
 	void TextureSlot::SetTextureAttr(const ResourceRef& texAttr)
 	{
 		texAttr_ = texAttr;
-		Texture* tex = GetSubsystem<ResourceCache>().GetResource<Texture>(texAttr.name_);
+		Create();
+	}
+
+	void TextureSlot::Create()
+	{
+		Texture* tex = GetSubsystem<ResourceCache>().GetResource<Texture>(texAttr_.name_);
 		texture_ = tex;
 	}
 }

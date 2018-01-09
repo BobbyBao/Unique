@@ -10,12 +10,28 @@ namespace Unique
 		Engine();
 		~Engine();
 
+		void SetDeviceType(DeviceType deviceType) { deviceType_ = deviceType; }
+		void SetTitle(const String& title);
+		void SetResolution(const IntVector2& res);
+		void Initialize();
+		void Start();
+
+		static SPtr<Context> context_;
+		static Vector<String> argv_;
+
+		static bool	quit_;
+		static void Setup(int argc, char* argv[]);
 
 	private:
+
 		virtual void ThreadFunction();
 
 		void ApplyFrameLimit();
 
+		DeviceType	deviceType_;
+		String		title_;
+		IntVector2	resolution_;
+		bool        loadingDone_ = false;
 		/// Frame update timer.
 		HiresTimer frameTimer_;
 		/// Previous timesteps for smoothing.

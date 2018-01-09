@@ -13,9 +13,9 @@ namespace Unique.Editor
         Node floorNode;
         Node characterNode;
 
-        protected override void Start()
+        protected override void Initialize()
         {
-            base.Start();
+            base.Initialize();
 
             /*
             (scene = new Scene())
