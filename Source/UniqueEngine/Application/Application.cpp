@@ -12,7 +12,7 @@
 
 namespace Unique
 {
-	UPtr<Context> Application::context_;
+	SPtr<Context> Application::context_;
 	Vector<String> Application::argv_;
 	bool Application::quit_ = false;
 
@@ -29,7 +29,7 @@ namespace Unique
 		context_->RegisterSubsystem<ResourceCache>();
 		context_->RegisterSubsystem<Renderer>();
 		context_->RegisterSubsystem<Input>();
-		context_->RegisterSubsystem<GUISystem>();
+		context_->RegisterSubsystem<GUI>();
 
 	}
 
@@ -94,7 +94,7 @@ namespace Unique
 		auto& engine = GetSubsystem<Engine>();
 		
 		engine.Run();
-
+		
 		while (input.ProcessEvents() && !quit_)
 		{
 			renderer.Begin();
@@ -131,10 +131,10 @@ namespace Unique
 
 	UNIQUE_C_API Application* Unique_Setup(int argc, char* argv[])
 	{
-		Application::context_.reset(new Context());
+		Application::context_ = new Context();
 		Application::Setup(argc, argv);
 		Application* app = new Application();
-
+		app->AddRef();
 		return app;
 	}
 	

@@ -21,29 +21,40 @@ namespace Unique.Engine
         NK_WINDOW_NO_INPUT = (1 << 10) /* Prevents window of scaling, moving or getting focus */
     };
 
-    public struct nk_color { byte r, g, b, a; }
-    public struct nk_colorf { float r, g, b, a; }
-    public struct nk_vec2 { float x, y; }
-    public struct nk_vec2i { short x, y; }
-    public struct nk_rect { float x, y, w, h; }
-    public struct nk_recti { short x, y, w, h; }
+    public struct nk_color { public byte r, g, b, a; }
+    public struct nk_colorf { public float r, g, b, a; }
+    public struct nk_vec2 { public float x, y; }
+    public struct nk_vec2i { public short x, y; }
+    public struct nk_rect
+    {
+        public float x, y, w, h;
+        public nk_rect(float x, float y, float w, float h)
+        {
+            this.x = x;
+            this.y = y;
+            this.w = w;
+            this.h = h;
+        }
+    }
+    public struct nk_recti { public short x, y, w, h; }
 
     //typedef char nk_glyph[NK_UTF_SIZE];
     // typedef union {void *ptr; int id; }
     // nk_handle;
     public unsafe struct nk_image
     {
-        IntPtr handle;
-        ushort w, h;
-        fixed ushort region[4];
+        public IntPtr handle;
+        public ushort w, h;
+        public fixed ushort region[4];
     };
 
     public struct nk_cursor
     {
-        nk_image img;
-        nk_vec2 size, offset;
+        public nk_image img;
+        public nk_vec2 size, offset;
     };
-    public struct nk_scroll { uint x, y; };
+
+    public struct nk_scroll { public uint x, y; };
 
     public enum nk_heading { NK_UP, NK_RIGHT, NK_DOWN, NK_LEFT };
     public enum nk_button_behavior { NK_BUTTON_DEFAULT, NK_BUTTON_REPEATER };
@@ -59,8 +70,11 @@ namespace Unique.Engine
     public enum nk_tree_type { NK_TREE_NODE, NK_TREE_TAB };
 
     [SuppressUnmanagedCodeSecurity]
-    public unsafe static partial class ImGui
+    public unsafe static partial class ImGUI
     {
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern IntPtr nk_ctx();
+
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern int nk_begin(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string title, nk_rect bounds, uint flags);
 

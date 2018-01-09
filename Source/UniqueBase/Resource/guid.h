@@ -1,7 +1,5 @@
 #pragma once
 
-#include <type_traits>
-#include <xhash>
 namespace Unique
 {
 
@@ -10,9 +8,6 @@ namespace Unique
 	struct UNIQUE_API Guid
 	{
 		uint data[4];
-
-//		DECLARE_SERIALIZE_OPTIMIZE_TRANSFER(Guid);
-
 		Guid(uint a, uint b, uint c, uint d) { data[0] = a; data[1] = b; data[2] = c; data[3] = d; }
 		Guid() { data[0] = 0; data[1] = 0; data[2] = 0; data[3] = 0; }
 
@@ -58,15 +53,6 @@ namespace Unique
 	}
 
 	bool CompareGUIDStringLess(const Guid& lhs, const Guid& rhs);
-	/*
-	template<class TransferFunction>
-	inline void Guid::Transfer(TransferFunction& transfer)
-	{
-		TRANSFER("Data1", data[0]);
-		TRANSFER("Data2", data[1]);
-		TRANSFER("Data3", data[2]);
-		TRANSFER("Data4", data[3]);
-	}*/
 
 }
 

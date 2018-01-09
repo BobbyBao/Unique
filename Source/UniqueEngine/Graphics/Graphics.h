@@ -85,12 +85,14 @@ namespace Unique
 		void BeginRender();
 		void EndRender();
 		void Close();
-		//**************************
-		static int currentContext_;
-		inline static int GetRenderContext() { return 1 - currentContext_; }
 		static void AddCommand(const std::function<void()>& cmd);
 		static void FrameNoRenderWait();
 		static bool IsRenderThread();
+
+		//**************************
+		static int currentContext_;
+		inline static int GetRenderContext() { return 1 - currentContext_; }
+
 	protected:
 		static void SetRenderThread();
 		static void ExecuteCommands(CommandQueue& cmds);
@@ -121,6 +123,11 @@ namespace Unique
 		static long long waitSubmit_;
 		static long long waitRender_;
 		static CommandQueue comands_;
+
+		template<class T>
+		friend T& MainContext(T* data);
+		template<class T>
+		friend T& RenderContext(T* data);
 	};
 
 	template<class T>

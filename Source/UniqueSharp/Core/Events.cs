@@ -40,7 +40,7 @@ namespace Unique.Engine
         public float timeStep;
     }
 
-    public struct GUI
+    public struct GUIEvent
     {
     }
 

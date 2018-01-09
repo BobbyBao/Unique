@@ -5,10 +5,6 @@ using Unique.Engine;
 
 namespace Unique.Editor
 {
-    struct TestEvent
-    {
-        public string str;
-    }
     public class EditorApplication : Application
     {
         Scene scene;
@@ -21,6 +17,7 @@ namespace Unique.Editor
         {
             base.Start();
 
+            /*
             (scene = new Scene())
                 .Component<Octree>()
                 .Component<DebugRenderer>()
@@ -30,13 +27,12 @@ namespace Unique.Editor
                 .Child("Floor", c => c
                     .Position(Vector3.Zero)
                     .Scaling(new Vector3(30.0f, 30.0f, 30.0f))
-                    .Component<StaticModel>( sm => sm
-                        .Model(new ResourceRef("models/Plane.mdl"))
-                        .Material(new ResourceRefList(new List<string> { "materials/ground.mat" }))
+                    .Component<StaticModel>(sm => sm
+                       .Model(new ResourceRef("models/Plane.mdl"))
+                       .Material(new ResourceRefList(new List<string> { "materials/ground.mat" }))
                     )
                 );
 
-            /*
             StaticModel floor = floorNode.Component<StaticModel>();
             floor.Model(new ResourceRef("models/Plane.mdl"));
             floor.Material(
@@ -70,6 +66,10 @@ namespace Unique.Editor
 
         protected override void OnGUI()
         {
+            ImGUI.Begin("test", new nk_rect(50, 50, 230, 250),
+            nk_panel_flags.NK_WINDOW_BORDER | nk_panel_flags.NK_WINDOW_MOVABLE | nk_panel_flags.NK_WINDOW_SCALABLE |
+            nk_panel_flags.NK_WINDOW_MINIMIZABLE | nk_panel_flags.NK_WINDOW_TITLE);
+            ImGUI.End();
         }
 
         protected override void UpdateFrame(float timeStep)

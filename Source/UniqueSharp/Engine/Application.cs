@@ -75,7 +75,7 @@ namespace Unique.Engine
                 Shutdown();
             });
 
-            Subscribe((GUI e) =>
+            Subscribe((GUIEvent e) =>
             {
                 OnGUI();
             });

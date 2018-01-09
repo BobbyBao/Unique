@@ -12,6 +12,7 @@
 #include "Batch.h"
 #include "RenderPath.h"
 #include "ScenePass.h"
+#include <Errors.h>
 
 namespace Unique
 {
@@ -303,6 +304,7 @@ namespace Unique
 
 	void View::Update(const FrameInfo& frame)
 	{
+		LOG_INFO_MESSAGE("Update : ", Graphics::currentContext_);
 		frame_.camera_ = camera_;
 		frame_.timeStep_ = frame.timeStep_;
 		frame_.frameNumber_ = frame.frameNumber_;
@@ -400,6 +402,7 @@ namespace Unique
 
 	void View::Render()
 	{
+		LOG_INFO_MESSAGE("Render : ", Graphics::GetRenderContext());
 		renderPath_->Render(this);
 	}
 

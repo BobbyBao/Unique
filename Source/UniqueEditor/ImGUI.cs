@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Unique.Editor
 {
-    class ImGUI
+    class ImGUIEditor
     {
 
     }

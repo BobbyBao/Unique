@@ -11,11 +11,11 @@ namespace Unique
 		Matrix4 UIProj;
 	};
 
-	class GUISystem : public Object
+	class GUI : public Object
 	{
 	public:
-		GUISystem();
-		~GUISystem();
+		GUI();
+		~GUI();
 	private:
 		void HandleStartup(const struct Startup& eventData);
 		void FontStashBegin(nk_font_atlas **atlas);

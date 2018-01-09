@@ -48,7 +48,7 @@ uEvent(PostRenderUpdate)
 };
 
 /// GUI render event.
-uEvent(GUI)
+uEvent(GUIEvent)
 {
 };
 

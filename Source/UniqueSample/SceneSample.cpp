@@ -71,7 +71,6 @@ namespace Unique
 // 		}
 
 		Animation* walkAnimation = cache.GetResource<Animation>("Models/Kachujin/Kachujin_Walk.ani");
-
 		AnimationState* state = model->AddAnimationState(walkAnimation);
 		// The state would fail to create (return null) if the animation was not found
 		if (state)

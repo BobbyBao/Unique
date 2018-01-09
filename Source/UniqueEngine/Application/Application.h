@@ -20,7 +20,7 @@ namespace Unique
 		static void Setup(int argc, char* argv[]);
 		static void Quit();
 
-		static UPtr<Context>	context_;
+		static SPtr<Context> context_;
 		static Vector<String> argv_;
 	protected:
 		virtual void Initialize();
@@ -48,7 +48,7 @@ namespace Unique
 	{
 		try
 		{
-			Application::context_.reset(new Context());
+			Application::context_ = new Context();
 			Application::Setup(argc, argv);
 			auto app = SPtr<T>(new T());
 			app->Run();

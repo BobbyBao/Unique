@@ -38,16 +38,14 @@ namespace Unique
 		unsigned int max_index_buffer;
 	};
 
-	static void
-		nk_sdl_clipbard_paste(nk_handle usr, struct nk_text_edit *edit)
+	static void	nk_sdl_clipbard_paste(nk_handle usr, struct nk_text_edit *edit)
 	{
 		const char *text = SDL_GetClipboardText();
 		if (text) nk_textedit_paste(edit, text, nk_strlen(text));
 		(void)usr;
 	}
 
-	static void
-		nk_sdl_clipbard_copy(nk_handle usr, const char *text, int len)
+	static void nk_sdl_clipbard_copy(nk_handle usr, const char *text, int len)
 	{
 		char *str = 0;
 		(void)usr;
@@ -63,20 +61,26 @@ namespace Unique
 #define MAX_VERTEX_BUFFER 32 * 1024
 #define MAX_INDEX_BUFFER 8 * 1024
 
-	GUISystem::GUISystem() : impl_(*new NkImpl)
+	nk_context *ctx = nullptr;
+	UNIQUE_C_API nk_context* nk_ctx()
+	{
+		return ctx;
+	}
+
+	GUI::GUI() : impl_(*new NkImpl)
 	{
 		impl_.max_vertex_buffer = MAX_VERTEX_BUFFER;
 		impl_.max_index_buffer = MAX_INDEX_BUFFER;
 
-		Subscribe(&GUISystem::HandleStartup);
-		Subscribe(&GUISystem::HandleInputBegin);
-		Subscribe(&GUISystem::HandleInputEnd);
-		Subscribe(&GUISystem::HandleSDLRawInput);
-		Subscribe(&GUISystem::HandleBeginFrame);
-		Subscribe(&GUISystem::HandlePostRenderUpdate);
+		Subscribe(&GUI::HandleStartup);
+		Subscribe(&GUI::HandleInputBegin);
+		Subscribe(&GUI::HandleInputEnd);
+		Subscribe(&GUI::HandleSDLRawInput);
+		Subscribe(&GUI::HandleBeginFrame);
+		Subscribe(&GUI::HandlePostRenderUpdate);
 	}
 
-	GUISystem::~GUISystem()
+	GUI::~GUI()
 	{
 		nk_font_atlas_clear(&impl_.atlas);
 		nk_buffer_free(&impl_.cmds);
@@ -85,7 +89,7 @@ namespace Unique
 		delete &impl_;
 	}
 	
-	void GUISystem::HandleStartup(const struct Startup& eventData)
+	void GUI::HandleStartup(const struct Startup& eventData)
 	{
 		auto& cache = GetSubsystem<ResourceCache>();
 		auto& graphics = GetSubsystem<Graphics>();
@@ -116,6 +120,7 @@ namespace Unique
 		pipeline_ = material_->GetPipeline("base", "");
 		pipeline_->SetLineAntialiased(NK_ANTI_ALIASING_ON);
 
+		ctx = &impl_.ctx;
 		nk_init_default(&impl_.ctx, 0);
 		impl_.ctx.clip.copy = nk_sdl_clipbard_copy;
 		impl_.ctx.clip.paste = nk_sdl_clipbard_paste;
@@ -140,14 +145,14 @@ namespace Unique
 		}
 	}
 
-	void GUISystem::FontStashBegin(struct nk_font_atlas **atlas)
+	void GUI::FontStashBegin(struct nk_font_atlas **atlas)
 	{
 		nk_font_atlas_init_default(&impl_.atlas);
 		nk_font_atlas_begin(&impl_.atlas);
 		*atlas = &impl_.atlas;
 	}
 
-	void GUISystem::FontStashEnd(void)
+	void GUI::FontStashEnd(void)
 	{
 		const void *image; int w, h;
 
@@ -280,26 +285,26 @@ namespace Unique
 		return 0;
 	}
 
-	void GUISystem::HandleInputBegin(const struct InputBegin& eventData)
+	void GUI::HandleInputBegin(const struct InputBegin& eventData)
 	{
 		nk_input_begin(&impl_.ctx);
 	}
 
-	void GUISystem::HandleInputEnd(const struct InputEnd& eventData)
+	void GUI::HandleInputEnd(const struct InputEnd& eventData)
 	{
 		nk_input_end(&impl_.ctx);
 	}
 
-	void GUISystem::HandleSDLRawInput(const SDLRawInput& eventData)
+	void GUI::HandleSDLRawInput(const SDLRawInput& eventData)
 	{	
 		int ret = nk_sdl_handle_event(&impl_.ctx, eventData.sdlEvent_);
 		const_cast<SDLRawInput&>(eventData).consumed_ = (ret != 0);
 	}
 
 	nk_color background = nk_rgb(28, 48, 62);
-	void GUISystem::HandleBeginFrame(const BeginFrame& eventData)
+	void GUI::HandleBeginFrame(const BeginFrame& eventData)
 	{
-		SendEvent(GUI());
+		SendEvent(GUIEvent());
 		/*
 		nk_context *ctx = &impl_.ctx;
 
@@ -354,7 +359,7 @@ namespace Unique
 		memcpy(result, matrix, sizeof(matrix));
 	}
 
-	void GUISystem::HandlePostRenderUpdate(const struct PostRenderUpdate& eventData)
+	void GUI::HandlePostRenderUpdate(const struct PostRenderUpdate& eventData)
 	{
 		auto& renderer = GetSubsystem<Renderer>();
 		auto& graphics = GetSubsystem<Graphics>();

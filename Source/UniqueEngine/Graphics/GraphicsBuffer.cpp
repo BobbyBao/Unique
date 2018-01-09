@@ -178,8 +178,8 @@ namespace Unique
 			ByteArray& currentData = MainContext(data_);
 			std::memcpy(currentData.data() + start * GetStride(), data, count * GetStride());
 			MarkDirty();
-			lockStart_[Graphics::currentContext_] = start;
-			lockCount_[Graphics::currentContext_] = count;
+			MainContext(lockStart_) = start;
+			MainContext(lockCount_) = count;
 		}
 		else
 		{

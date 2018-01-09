@@ -1,6 +1,6 @@
 #pragma once
 #include "../Core/CoreDefs.h"
-#define USE_STL
+//#define USE_STL
 
 #ifdef USE_STL
 

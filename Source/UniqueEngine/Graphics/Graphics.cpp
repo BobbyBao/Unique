@@ -92,7 +92,6 @@ namespace Unique
 		(
 			swapChain_->Resize(size.x_, size.y_);
 			deviceContext_->Flush();
-
 		);
 		
 	}
@@ -179,7 +178,6 @@ namespace Unique
 		RenderSemWait();
 
 		//LOG_INFO_MESSAGE("Update");
-
 		FrameNoRenderWait();
 	}
 
@@ -276,11 +274,11 @@ namespace Unique
 	void Graphics::SwapContext()
 	{
 		currentContext_ = 1 - currentContext_;
+		//LOG_INFO_MESSAGE("===============SwapContext : ", currentContext_);
 	}
 
 	void Graphics::FrameNoRenderWait()
 	{
-		//SwapContext();
 		// release render thread
 		MainSemPost();
 	}

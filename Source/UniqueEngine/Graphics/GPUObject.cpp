@@ -59,13 +59,13 @@ namespace Unique
 
 	void GPUObject::MarkDirty()
 	{
-		auto& renderContext = updateQueue_[Graphics::currentContext_];
+		auto& renderContext = MainContext(updateQueue_);
 		renderContext.push_back(this);
 	}
 
 	void GPUObject::UpdateBuffers()
 	{
-		auto& buffers = updateQueue_[Graphics::GetRenderContext()];
+		auto& buffers = RenderContext(updateQueue_);
 		if (!buffers.empty())
 		{
 			for (auto buffer : buffers)

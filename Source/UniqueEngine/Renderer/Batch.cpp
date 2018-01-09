@@ -804,6 +804,7 @@ namespace Unique
 			Batch* batch = *i;
 			batch->Draw(view, camera);
 		}
+		
 	}
 
 	size_t BatchQueue::GetNumInstances(View* view)
