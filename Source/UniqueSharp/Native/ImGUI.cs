@@ -34,8 +34,8 @@ namespace Unique.Engine
     public struct nk_colorf { public float r, g, b, a; }
     public struct nk_vec2 { public float x, y; }
     public struct nk_vec2i { public short x, y; }
-    public struct nk_rect
-    {
+    public struct nk_rect { public float x, y, w, h; }
+    public struct nk_recti { public short x, y, w, h; }
         public float x, y, w, h;
         public nk_rect(float x, float y, float w, float h)
         {
@@ -101,6 +101,14 @@ namespace Unique.Engine
     [SuppressUnmanagedCodeSecurity]
     public unsafe static partial class ImGUI
     {
+        /*  nk_begin - starts a new window; needs to be called every frame for every window (unless hidden) or otherwise the window gets removed
+         *  Parameters:
+         *      @ctx must point to an previously initialized `nk_context` struct
+         *      @title window title and identifier. Needs to be persistent over frames to identify the window
+         *      @bounds initial position and window size. However if you do not define `NK_WINDOW_SCALABLE` or `NK_WINDOW_MOVABLE` you can set window position and size every frame
+         *      @flags window flags defined in `enum nk_panel_flags` with a number of different window behaviors
+         *  Return values:
+         *      returns 1 if the window can be filled up with widgets from this point until `nk_end or 0 otherwise for example if minimized `*/
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern IntPtr nk_ctx();
        
