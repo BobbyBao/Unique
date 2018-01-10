@@ -34,8 +34,8 @@ namespace Unique.Engine
     public struct nk_colorf { public float r, g, b, a; }
     public struct nk_vec2 { public float x, y; }
     public struct nk_vec2i { public short x, y; }
-    public struct nk_rect { public float x, y, w, h; }
-    public struct nk_recti { public short x, y, w, h; }
+    public struct nk_rect
+    {
         public float x, y, w, h;
         public nk_rect(float x, float y, float w, float h)
         {
@@ -46,7 +46,7 @@ namespace Unique.Engine
         }
     }
 
-    public struct nk_recti { public short x, y, w, h; }
+    public struct nk_recti { public short x, y, w, h; }       
 
     //typedef char nk_glyph[NK_UTF_SIZE];
     // typedef union {void *ptr; int id; }

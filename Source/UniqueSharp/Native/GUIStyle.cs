@@ -9,476 +9,479 @@ namespace Unique.Engine
     {
         NK_STYLE_ITEM_COLOR,
         NK_STYLE_ITEM_IMAGE
-    };
+    }
 
+    [StructLayout(LayoutKind.Explicit)]
     public struct nk_style_item_data
     {
-        nk_image image;
-        nk_color color;
-    };
+        [FieldOffset(0)]
+        public nk_image image;
+        [FieldOffset(0)]
+        public nk_color color;        
+    }
 
     public struct nk_style_item
     {
-        nk_style_item_type type;
-        nk_style_item_data data;
-    };
+        public nk_style_item_type type;
+        public nk_style_item_data data;
+    }
 
-    struct nk_style_text
+    public struct nk_style_text
     {
-        nk_color color;
-        nk_vec2 padding;
-    };
+        public nk_color color;
+        public nk_vec2 padding;
+    }
 
-    struct nk_style_button
+    public struct nk_style_button
     {
         /* background */
-        nk_style_item normal;
-        nk_style_item hover;
-        nk_style_item active;
-        nk_color border_color;
+        public nk_style_item normal;
+        public nk_style_item hover;
+        public nk_style_item active;
+        public nk_color border_color;
 
         /* text */
-        nk_color text_background;
-        nk_color text_normal;
-        nk_color text_hover;
-        nk_color text_active;
-        uint text_alignment;
+        public nk_color text_background;
+        public nk_color text_normal;
+        public nk_color text_hover;
+        public nk_color text_active;
+        public uint text_alignment;
 
         /* properties */
-        float border;
-        float rounding;
-        nk_vec2 padding;
-        nk_vec2 image_padding;
-        nk_vec2 touch_padding;
+        public float border;
+        public float rounding;
+        public nk_vec2 padding;
+        public nk_vec2 image_padding;
+        public nk_vec2 touch_padding;
 
         /* optional user callbacks */
-        IntPtr userdata;
-        IntPtr draw_begin;
-        IntPtr draw_end;
+        public IntPtr userdata;
+        public IntPtr draw_begin;
+        public IntPtr draw_end;
         //void (* draw_begin) (struct nk_command_buffer*, IntPtr userdata);
         //void (* draw_end) (struct nk_command_buffer*, IntPtr userdata);
     };
 
-    struct nk_style_toggle
+    public struct nk_style_toggle
     {
         /* background */
-        nk_style_item normal;
-        nk_style_item hover;
-        nk_style_item active;
-        nk_color border_color;
+        public nk_style_item normal;
+        public nk_style_item hover;
+        public nk_style_item active;
+        public nk_color border_color;
 
         /* cursor */
-        nk_style_item cursor_normal;
-        nk_style_item cursor_hover;
+        public nk_style_item cursor_normal;
+        public nk_style_item cursor_hover;
 
         /* text */
-        nk_color text_normal;
-        nk_color text_hover;
-        nk_color text_active;
-        nk_color text_background;
-        uint text_alignment;
+        public nk_color text_normal;
+        public nk_color text_hover;
+        public nk_color text_active;
+        public nk_color text_background;
+        public uint text_alignment;
 
         /* properties */
-        nk_vec2 padding;
-        nk_vec2 touch_padding;
-        float spacing;
-        float border;
+        public nk_vec2 padding;
+        public nk_vec2 touch_padding;
+        public float spacing;
+        public float border;
 
         /* optional user callbacks */
-        IntPtr userdata;
-        IntPtr draw_begin;
-        IntPtr draw_end;
+        public IntPtr userdata;
+        public IntPtr draw_begin;
+        public IntPtr draw_end;
         //void (* draw_begin) (struct nk_command_buffer*, nk_handle);
         //void (* draw_end) (struct nk_command_buffer*, nk_handle);
-    };
+    }
 
-    struct nk_style_selectable
+    public struct nk_style_selectable
     {
         /* background (inactive) */
-        nk_style_item normal;
-        nk_style_item hover;
-        nk_style_item pressed;
+        public nk_style_item normal;
+        public nk_style_item hover;
+        public nk_style_item pressed;
 
         /* background (active) */
-        nk_style_item normal_active;
-        nk_style_item hover_active;
-        nk_style_item pressed_active;
+        public nk_style_item normal_active;
+        public nk_style_item hover_active;
+        public nk_style_item pressed_active;
 
         /* text color (inactive) */
-        nk_color text_normal;
-        nk_color text_hover;
-        nk_color text_pressed;
+        public nk_color text_normal;
+        public nk_color text_hover;
+        public nk_color text_pressed;
 
         /* text color (active) */
-        nk_color text_normal_active;
-        nk_color text_hover_active;
-        nk_color text_pressed_active;
-        nk_color text_background;
-        uint text_alignment;
+        public nk_color text_normal_active;
+        public nk_color text_hover_active;
+        public nk_color text_pressed_active;
+        public nk_color text_background;
+        public uint text_alignment;
 
         /* properties */
-        float rounding;
-        nk_vec2 padding;
-        nk_vec2 touch_padding;
-        nk_vec2 image_padding;
+        public float rounding;
+        public nk_vec2 padding;
+        public nk_vec2 touch_padding;
+        public nk_vec2 image_padding;
 
         /* optional user callbacks */
-        IntPtr userdata;
-        IntPtr draw_begin;
-        IntPtr draw_end;
+        public IntPtr userdata;
+        public IntPtr draw_begin;
+        public IntPtr draw_end;
         //void (* draw_begin) (struct nk_command_buffer*, nk_handle);
         //void (* draw_end) (struct nk_command_buffer*, nk_handle);
-    };
+    }
 
-    struct nk_style_slider
+    public struct nk_style_slider
     {
         /* background */
-        nk_style_item normal;
-        nk_style_item hover;
-        nk_style_item active;
-        nk_color border_color;
+        public nk_style_item normal;
+        public nk_style_item hover;
+        public nk_style_item active;
+        public nk_color border_color;
 
         /* background bar */
-        nk_color bar_normal;
-        nk_color bar_hover;
-        nk_color bar_active;
-        nk_color bar_filled;
+        public nk_color bar_normal;
+        public nk_color bar_hover;
+        public nk_color bar_active;
+        public nk_color bar_filled;
 
         /* cursor */
-        nk_style_item cursor_normal;
-        nk_style_item cursor_hover;
-        nk_style_item cursor_active;
+        public nk_style_item cursor_normal;
+        public nk_style_item cursor_hover;
+        public nk_style_item cursor_active;
 
         /* properties */
-        float border;
-        float rounding;
-        float bar_height;
-        nk_vec2 padding;
-        nk_vec2 spacing;
-        nk_vec2 cursor_size;
+        public float border;
+        public float rounding;
+        public float bar_height;
+        public nk_vec2 padding;
+        public nk_vec2 spacing;
+        public nk_vec2 cursor_size;
 
         /* optional buttons */
-        int show_buttons;
-        nk_style_button inc_button;
-        nk_style_button dec_button;
-        nk_symbol_type inc_symbol;
-        nk_symbol_type dec_symbol;
+        public int show_buttons;
+        public nk_style_button inc_button;
+        public nk_style_button dec_button;
+        public nk_symbol_type inc_symbol;
+        public nk_symbol_type dec_symbol;
 
         /* optional user callbacks */
-        IntPtr userdata;
-        IntPtr draw_begin;
-        IntPtr draw_end;
+        public IntPtr userdata;
+        public IntPtr draw_begin;
+        public IntPtr draw_end;
         // void (* draw_begin) (struct nk_command_buffer*, nk_handle);
         // void (* draw_end) (struct nk_command_buffer*, nk_handle);
-    };
+    }
 
-    struct nk_style_progress
+    public struct nk_style_progress
     {
         /* background */
-        nk_style_item normal;
-        nk_style_item hover;
-        nk_style_item active;
-        nk_color border_color;
+        public nk_style_item normal;
+        public nk_style_item hover;
+        public nk_style_item active;
+        public nk_color border_color;
 
         /* cursor */
-        nk_style_item cursor_normal;
-        nk_style_item cursor_hover;
-        nk_style_item cursor_active;
-        nk_color cursor_border_color;
+        public nk_style_item cursor_normal;
+        public nk_style_item cursor_hover;
+        public nk_style_item cursor_active;
+        public nk_color cursor_border_color;
 
         /* properties */
-        float rounding;
-        float border;
-        float cursor_border;
-        float cursor_rounding;
-        nk_vec2 padding;
+        public float rounding;
+        public float border;
+        public float cursor_border;
+        public float cursor_rounding;
+        public nk_vec2 padding;
 
         /* optional user callbacks */
-        IntPtr userdata;
-        IntPtr draw_begin;
-        IntPtr draw_end;
+        public IntPtr userdata;
+        public IntPtr draw_begin;
+        public IntPtr draw_end;
         //void (* draw_begin) (struct nk_command_buffer*, nk_handle);
         //void (* draw_end) (struct nk_command_buffer*, nk_handle);
-    };
+    }
 
-    struct nk_style_scrollbar
+    public struct nk_style_scrollbar
     {
         /* background */
-        nk_style_item normal;
-        nk_style_item hover;
-        nk_style_item active;
-        nk_color border_color;
+        public nk_style_item normal;
+        public nk_style_item hover;
+        public nk_style_item active;
+        public nk_color border_color;
 
         /* cursor */
-        nk_style_item cursor_normal;
-        nk_style_item cursor_hover;
-        nk_style_item cursor_active;
-        nk_color cursor_border_color;
+        public nk_style_item cursor_normal;
+        public nk_style_item cursor_hover;
+        public nk_style_item cursor_active;
+        public nk_color cursor_border_color;
 
         /* properties */
-        float border;
-        float rounding;
-        float border_cursor;
-        float rounding_cursor;
-        nk_vec2 padding;
+        public float border;
+        public float rounding;
+        public float border_cursor;
+        public float rounding_cursor;
+        public nk_vec2 padding;
 
         /* optional buttons */
-        int show_buttons;
-        nk_style_button inc_button;
-        nk_style_button dec_button;
-        nk_symbol_type inc_symbol;
-        nk_symbol_type dec_symbol;
+        public int show_buttons;
+        public nk_style_button inc_button;
+        public nk_style_button dec_button;
+        public nk_symbol_type inc_symbol;
+        public nk_symbol_type dec_symbol;
 
         /* optional user callbacks */
-        IntPtr userdata;
-        IntPtr draw_begin;
-        IntPtr draw_end;
+        public IntPtr userdata;
+        public IntPtr draw_begin;
+        public IntPtr draw_end;
         //void (* draw_begin) (struct nk_command_buffer*, nk_handle);
         //void (* draw_end) (struct nk_command_buffer*, nk_handle);
-    };
+    }
 
-    struct nk_style_edit
+    public struct nk_style_edit
     {
         /* background */
-        nk_style_item normal;
-        nk_style_item hover;
-        nk_style_item active;
-        nk_color border_color;
-        nk_style_scrollbar scrollbar;
+        public nk_style_item normal;
+        public nk_style_item hover;
+        public nk_style_item active;
+        public nk_color border_color;
+        public nk_style_scrollbar scrollbar;
 
         /* cursor  */
-        nk_color cursor_normal;
-        nk_color cursor_hover;
-        nk_color cursor_text_normal;
-        nk_color cursor_text_hover;
+        public nk_color cursor_normal;
+        public nk_color cursor_hover;
+        public nk_color cursor_text_normal;
+        public nk_color cursor_text_hover;
 
         /* text (unselected) */
-        nk_color text_normal;
-        nk_color text_hover;
-        nk_color text_active;
+        public nk_color text_normal;
+        public nk_color text_hover;
+        public nk_color text_active;
 
         /* text (selected) */
-        nk_color selected_normal;
-        nk_color selected_hover;
-        nk_color selected_text_normal;
-        nk_color selected_text_hover;
+        public nk_color selected_normal;
+        public nk_color selected_hover;
+        public nk_color selected_text_normal;
+        public nk_color selected_text_hover;
 
         /* properties */
-        float border;
-        float rounding;
-        float cursor_size;
-        nk_vec2 scrollbar_size;
-        nk_vec2 padding;
-        float row_padding;
-    };
+        public float border;
+        public float rounding;
+        public float cursor_size;
+        public nk_vec2 scrollbar_size;
+        public nk_vec2 padding;
+        public float row_padding;
+    }
 
-    struct nk_style_property
+    public struct nk_style_property
     {
         /* background */
-        nk_style_item normal;
-        nk_style_item hover;
-        nk_style_item active;
-        nk_color border_color;
+        public nk_style_item normal;
+        public nk_style_item hover;
+        public nk_style_item active;
+        public nk_color border_color;
 
         /* text */
-        nk_color label_normal;
-        nk_color label_hover;
-        nk_color label_active;
+        public nk_color label_normal;
+        public nk_color label_hover;
+        public nk_color label_active;
 
         /* symbols */
-        nk_symbol_type sym_left;
-        nk_symbol_type sym_right;
+        public nk_symbol_type sym_left;
+        public nk_symbol_type sym_right;
 
         /* properties */
-        float border;
-        float rounding;
-        nk_vec2 padding;
+        public float border;
+        public float rounding;
+        public nk_vec2 padding;
 
-        nk_style_edit edit;
-        nk_style_button inc_button;
-        nk_style_button dec_button;
+        public nk_style_edit edit;
+        public nk_style_button inc_button;
+        public nk_style_button dec_button;
 
         /* optional user callbacks */
-        IntPtr userdata;
-        IntPtr draw_begin;
-        IntPtr draw_end;
+        public IntPtr userdata;
+        public IntPtr draw_begin;
+        public IntPtr draw_end;
         // void (* draw_begin) (struct nk_command_buffer*, nk_handle);
         // void (* draw_end) (struct nk_command_buffer*, nk_handle);
-    };
+    }
 
-    struct nk_style_chart
+    public struct nk_style_chart
     {
         /* colors */
-        nk_style_item background;
-        nk_color border_color;
-        nk_color selected_color;
-        nk_color color;
+        public nk_style_item background;
+        public nk_color border_color;
+        public nk_color selected_color;
+        public nk_color color;
 
         /* properties */
-        float border;
-        float rounding;
-        nk_vec2 padding;
-    };
+        public float border;
+        public float rounding;
+        public nk_vec2 padding;
+    }
 
-    struct nk_style_combo
+    public struct nk_style_combo
     {
         /* background */
-        nk_style_item normal;
-        nk_style_item hover;
-        nk_style_item active;
-        nk_color border_color;
+        public nk_style_item normal;
+        public nk_style_item hover;
+        public nk_style_item active;
+        public nk_color border_color;
 
         /* label */
-        nk_color label_normal;
-        nk_color label_hover;
-        nk_color label_active;
+        public nk_color label_normal;
+        public nk_color label_hover;
+        public nk_color label_active;
 
         /* symbol */
-        nk_color symbol_normal;
-        nk_color symbol_hover;
-        nk_color symbol_active;
+        public nk_color symbol_normal;
+        public nk_color symbol_hover;
+        public nk_color symbol_active;
 
         /* button */
-        nk_style_button button;
-        nk_symbol_type sym_normal;
-        nk_symbol_type sym_hover;
-        nk_symbol_type sym_active;
+        public nk_style_button button;
+        public nk_symbol_type sym_normal;
+        public nk_symbol_type sym_hover;
+        public nk_symbol_type sym_active;
 
         /* properties */
-        float border;
-        float rounding;
-        nk_vec2 content_padding;
-        nk_vec2 button_padding;
-        nk_vec2 spacing;
-    };
+        public float border;
+        public float rounding;
+        public nk_vec2 content_padding;
+        public nk_vec2 button_padding;
+        public nk_vec2 spacing;
+    }
 
-    struct nk_style_tab
+    public struct nk_style_tab
     {
         /* background */
-        nk_style_item background;
-        nk_color border_color;
-        nk_color text;
+        public nk_style_item background;
+        public nk_color border_color;
+        public nk_color text;
 
         /* button */
-        nk_style_button tab_maximize_button;
-        nk_style_button tab_minimize_button;
-        nk_style_button node_maximize_button;
-        nk_style_button node_minimize_button;
-        nk_symbol_type sym_minimize;
-        nk_symbol_type sym_maximize;
+        public nk_style_button tab_maximize_button;
+        public nk_style_button tab_minimize_button;
+        public nk_style_button node_maximize_button;
+        public nk_style_button node_minimize_button;
+        public nk_symbol_type sym_minimize;
+        public nk_symbol_type sym_maximize;
 
         /* properties */
-        float border;
-        float rounding;
-        float indent;
-        nk_vec2 padding;
-        nk_vec2 spacing;
-    };
+        public float border;
+        public float rounding;
+        public float indent;
+        public nk_vec2 padding;
+        public nk_vec2 spacing;
+    }
 
-    enum nk_style_header_align
+    public enum nk_style_header_align
     {
         NK_HEADER_LEFT,
         NK_HEADER_RIGHT
-    };
+    }
 
-    struct nk_style_window_header
+    public struct nk_style_window_header
     {
         /* background */
-        nk_style_item normal;
-        nk_style_item hover;
-        nk_style_item active;
+        public nk_style_item normal;
+        public nk_style_item hover;
+        public nk_style_item active;
 
         /* button */
-        nk_style_button close_button;
-        nk_style_button minimize_button;
-        nk_symbol_type close_symbol;
-        nk_symbol_type minimize_symbol;
-        nk_symbol_type maximize_symbol;
+        public nk_style_button close_button;
+        public nk_style_button minimize_button;
+        public nk_symbol_type close_symbol;
+        public nk_symbol_type minimize_symbol;
+        public nk_symbol_type maximize_symbol;
 
         /* title */
-        nk_color label_normal;
-        nk_color label_hover;
-        nk_color label_active;
+        public nk_color label_normal;
+        public nk_color label_hover;
+        public nk_color label_active;
 
         /* properties */
-        nk_style_header_align align;
-        nk_vec2 padding;
-        nk_vec2 label_padding;
-        nk_vec2 spacing;
-    };
+        public nk_style_header_align align;
+        public nk_vec2 padding;
+        public nk_vec2 label_padding;
+        public nk_vec2 spacing;
+    }
 
-    struct nk_style_window
+    public struct nk_style_window
     {
-        nk_style_window_header header;
-        nk_style_item fixed_background;
-        nk_color background;
+        public nk_style_window_header header;
+        public nk_style_item fixed_background;
+        public nk_color background;
 
-        nk_color border_color;
-        nk_color popup_border_color;
-        nk_color combo_border_color;
-        nk_color contextual_border_color;
-        nk_color menu_border_color;
-        nk_color group_border_color;
-        nk_color tooltip_border_color;
-        nk_style_item scaler;
+        public nk_color border_color;
+        public nk_color popup_border_color;
+        public nk_color combo_border_color;
+        public nk_color contextual_border_color;
+        public nk_color menu_border_color;
+        public nk_color group_border_color;
+        public nk_color tooltip_border_color;
+        public nk_style_item scaler;
 
-        float border;
-        float combo_border;
-        float contextual_border;
-        float menu_border;
-        float group_border;
-        float tooltip_border;
-        float popup_border;
-        float min_row_height_padding;
+        public float border;
+        public float combo_border;
+        public float contextual_border;
+        public float menu_border;
+        public float group_border;
+        public float tooltip_border;
+        public float popup_border;
+        public float min_row_height_padding;
 
-        float rounding;
-        nk_vec2 spacing;
-        nk_vec2 scrollbar_size;
-        nk_vec2 min_size;
+        public float rounding;
+        public nk_vec2 spacing;
+        public nk_vec2 scrollbar_size;
+        public nk_vec2 min_size;
 
-        nk_vec2 padding;
-        nk_vec2 group_padding;
-        nk_vec2 popup_padding;
-        nk_vec2 combo_padding;
-        nk_vec2 contextual_padding;
-        nk_vec2 menu_padding;
-        nk_vec2 tooltip_padding;
-    };
+        public nk_vec2 padding;
+        public nk_vec2 group_padding;
+        public nk_vec2 popup_padding;
+        public nk_vec2 combo_padding;
+        public nk_vec2 contextual_padding;
+        public nk_vec2 menu_padding;
+        public nk_vec2 tooltip_padding;
+    }
 
     public unsafe struct nk_style
     {
         //nk_user_font *font;
-        IntPtr font;
-        fixed /*nk_cursor**/long cursors[(int)nk_style_cursor.NK_CURSOR_COUNT];
-        nk_cursor* cursor_active;
-        nk_cursor* cursor_last;
-        int cursor_visible;
+        public IntPtr font;
+        public fixed /*nk_cursor**/long cursors[(int)nk_style_cursor.NK_CURSOR_COUNT];
+        public nk_cursor* cursor_active;
+        public nk_cursor* cursor_last;
+        public int cursor_visible;
 
-        nk_style_text text;
-        nk_style_button button;
-        nk_style_button contextual_button;
-        nk_style_button menu_button;
-        nk_style_toggle option;
-        nk_style_toggle checkbox;
-        nk_style_selectable selectable;
-        nk_style_slider slider;
-        nk_style_progress progress;
-        nk_style_property property;
-        nk_style_edit edit;
-        nk_style_chart chart;
-        nk_style_scrollbar scrollh;
-        nk_style_scrollbar scrollv;
-        nk_style_tab tab;
-        nk_style_combo combo;
-        nk_style_window window;
-    };
+        public nk_style_text text;
+        public nk_style_button button;
+        public nk_style_button contextual_button;
+        public nk_style_button menu_button;
+        public nk_style_toggle option;
+        public nk_style_toggle checkbox;
+        public nk_style_selectable selectable;
+        public nk_style_slider slider;
+        public nk_style_progress progress;
+        public nk_style_property property;
+        public nk_style_edit edit;
+        public nk_style_chart chart;
+        public nk_style_scrollbar scrollh;
+        public nk_style_scrollbar scrollv;
+        public nk_style_tab tab;
+        public nk_style_combo combo;
+        public nk_style_window window;
+    }
 
     /* =============================================================================
      *
      *                                  STYLE
      *
      * ============================================================================= */
-    enum nk_style_colors
+    public enum nk_style_colors
     {
         NK_COLOR_TEXT,
         NK_COLOR_WINDOW,
@@ -509,9 +512,9 @@ namespace Unique.Engine
         NK_COLOR_SCROLLBAR_CURSOR_ACTIVE,
         NK_COLOR_TAB_HEADER,
         NK_COLOR_COUNT
-    };
+    }
 
-    enum nk_style_cursor
+    public enum nk_style_cursor
     {
         NK_CURSOR_ARROW,
         NK_CURSOR_TEXT,
@@ -521,15 +524,18 @@ namespace Unique.Engine
         NK_CURSOR_RESIZE_TOP_LEFT_DOWN_RIGHT,
         NK_CURSOR_RESIZE_TOP_RIGHT_DOWN_LEFT,
         NK_CURSOR_COUNT
-    };
+    }
 
     public unsafe class GUIStyle
     {
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern nk_style_item nk_style_item_image(nk_image img);
 
-        /*
-NK_API nk_style_item nk_style_item_image(nk_image img);
-NK_API nk_style_item nk_style_item_color(nk_color);
-NK_API nk_style_item nk_style_item_hide(void);*/
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern nk_style_item nk_style_item_color(nk_color c);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern nk_style_item nk_style_item_hide();
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern void nk_style_default(IntPtr ctx);

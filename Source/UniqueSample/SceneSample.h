@@ -22,10 +22,6 @@ namespace Unique
 		SPtr<Scene> scene_;
 		SPtr<Camera> camera_;
 		Node* node_;
-
-		IntVector3 mouseNow_;
-		IntVector3 mouseLast_;
-
 		/// Camera yaw angle.
 		float yaw_;
 		/// Camera pitch angle.

@@ -162,22 +162,25 @@ namespace Unique
 	{
 		auto& views = RenderContext(views_);
 		
-		if (views.empty())
+		//if (views.empty())
 		{		
 			deviceContext->ClearRenderTarget(nullptr, Color::GRAY);
 			deviceContext->ClearDepthStencil(nullptr, Diligent::CLEAR_DEPTH_FLAG, 1.0f, 0);
 		}
 		
-		for (auto view : views)
+		//for (auto view : views)
+		for(int i = 0; i < views.size(); i++)
 		{
+			auto& view = views[i];
 			view->Render();
 		}
 		
 		auto& batchQueue = RenderContext(batchQueue_);
 		if(!batchQueue.empty())
 		{
-			for(auto& batch : batchQueue)
+			for(int i = 0; i < batchQueue.size(); i++)
 			{
+				auto& batch = batchQueue[i];
 				batch.Draw();
 			}
 

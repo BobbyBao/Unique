@@ -239,7 +239,7 @@ namespace Unique
 
 			//LOG_INFO_MESSAGE("Render");
 
-			SwapContext();
+			//SwapContext();
 
 			RenderSemPost();
 		}
@@ -274,11 +274,12 @@ namespace Unique
 	void Graphics::SwapContext()
 	{
 		currentContext_ = 1 - currentContext_;
-		//LOG_INFO_MESSAGE("===============SwapContext : ", currentContext_);
+		LOG_INFO_MESSAGE("===============SwapContext : ", currentContext_);
 	}
 
 	void Graphics::FrameNoRenderWait()
 	{
+		SwapContext();
 		// release render thread
 		MainSemPost();
 	}

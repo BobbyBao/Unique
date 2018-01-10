@@ -54,13 +54,13 @@ namespace Unique
 		Vector3 zoneMax;
 	};
 
-
 	struct ObjectVS
 	{
 		Matrix3x4 world_;
 	};
 
 #define MAXBONES 64
+
 	struct SkinnedVS
 	{
 		Matrix3x4 cSkinMatrices[MAXBONES];
@@ -72,7 +72,7 @@ namespace Unique
 		Matrix3 billboardRot;
 	};
 
-	struct MaterialPS //: register(b4)
+	struct MaterialPS
 	{
 		float4 matDiffColor;
 		float3 matEmissiveColor;
@@ -116,6 +116,7 @@ namespace Unique
 		bool allowInstancing_;
 		/// Mark to stencil flag.
 		bool markToStencil_;
+
 		RenderPassSortMode sortMode_;
 		/// Batch queue.
 		BatchQueue* batchQueue_;

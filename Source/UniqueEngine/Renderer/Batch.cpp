@@ -630,8 +630,8 @@ namespace Unique
 
 			if (scissor_ != 0)
 			{
-				auto& scissor = GetSubsystem<Renderer>().GetScissor(scissor_);
-				deviceContext->SetScissorRects(1, (Diligent::Rect*)&scissor, 0, 0);
+			//	auto& scissor = GetSubsystem<Renderer>().GetScissor(scissor_);
+			//	deviceContext->SetScissorRects(1, (Diligent::Rect*)&scissor, 0, 0);
 			}
 
 			if (geometryType_ == GEOM_TRANSIENT )
@@ -793,15 +793,17 @@ namespace Unique
 	void BatchQueue::Draw(View* view, Camera* camera) const
 	{
 		// Instanced
-		for (auto i = sortedBatchGroups_.begin(); i != sortedBatchGroups_.end(); ++i)
+		//for (auto i = sortedBatchGroups_.begin(); i != sortedBatchGroups_.end(); ++i)
+		for (int i = 0; i < sortedBatchGroups_.size(); ++i)
 		{
-			BatchGroup* group = *i;
+			BatchGroup* group = sortedBatchGroups_[i];//*i;
 			group->Draw(view, camera);
 		}
 		// Non-instanced
-		for (auto i = sortedBatches_.begin(); i != sortedBatches_.end(); ++i)
+		//for (auto i = sortedBatches_.begin(); i != sortedBatches_.end(); ++i)
+		for (int i = 0; i < sortedBatches_.size(); ++i)
 		{
-			Batch* batch = *i;
+			Batch* batch = sortedBatches_[i];//*i;
 			batch->Draw(view, camera);
 		}
 		

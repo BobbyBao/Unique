@@ -95,6 +95,9 @@ namespace Unique
 		auto& renderer = GetSubsystem<Renderer>();
 		auto& input = GetSubsystem<Input>();
 		
+		
+		renderer.Render();
+
 		Run();
 
 		while (input.ProcessEvents() && !quit_)

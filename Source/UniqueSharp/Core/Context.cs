@@ -5,23 +5,26 @@ using System.Text;
 
 namespace Unique.Engine
 {
+    [System.Security.SuppressUnmanagedCodeSecurity]
+    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+    public delegate void ObjectFn(IntPtr objPtr);
+
     public static class Context
     {
         static Dictionary<StringID, Object> subsystemDict_ = new Dictionary<StringID, Object>();
         static IntPtr context_;
         public static void Init()
         {
-            VectorBase subsystems = Marshal.PtrToStructure< VectorBase >(Context_GetSubsystems(context));
-            for(int i = 0; i < subsystems.size; i++)
+            Context_GetSubsystems(context, (ss) =>
             {
-                IntPtr ss = Utilities.At<IntPtr>(subsystems.buffer_, i);
                 StringID type = Object.GetNativeType(ss);
                 Object subsystem = Object.CreateObject(type, ss);
-                if(subsystem != null)
+                if (subsystem != null)
                 {
                     subsystemDict_[type] = subsystem;
                 }
-            }
+               
+            });
             
         }
 
@@ -76,7 +79,7 @@ namespace Unique.Engine
         static extern void Context_RemoveSubsystem(IntPtr context, StringID objectType);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern IntPtr Context_GetSubsystems(IntPtr context);
+        static extern void Context_GetSubsystems(IntPtr context, ObjectFn fn);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern IntPtr Context_CreateObject(IntPtr context, ref StringID type);

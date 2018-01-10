@@ -11,9 +11,15 @@ uExport(Context, void, RegisterSubsystem, Object*, obj)
 uExport(Context, void, RemoveSubsystem, StringID, objectType)
 //uExport(Context, const Vector<Object*>&, GetSubsystems)
 
-UNIQUE_C_API const Vector<Object*>* Context_GetSubsystems(Context* context)
+typedef void(__stdcall *SubsystemFn)(Object* subsystem);
+
+UNIQUE_C_API void Context_GetSubsystems(Context* context, SubsystemFn fn)
 {
-	return &context->GetSubsystems();
+	auto& subsystems = context->GetSubsystems();
+	for (size_t i = 0; i < subsystems.size(); i++)
+	{
+		fn(subsystems[i]);
+	}
 }
 
 UNIQUE_C_API Object* Context_CreateObject(Context* context, const StringID& type)

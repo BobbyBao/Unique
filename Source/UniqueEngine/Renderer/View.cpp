@@ -304,7 +304,6 @@ namespace Unique
 
 	void View::Update(const FrameInfo& frame)
 	{
-		LOG_INFO_MESSAGE("Update : ", Graphics::currentContext_);
 		frame_.camera_ = camera_;
 		frame_.timeStep_ = frame.timeStep_;
 		frame_.frameNumber_ = frame.frameNumber_;
@@ -333,7 +332,8 @@ namespace Unique
 		GetDrawables();
 
 		GetBatches();
-
+		
+		LOG_INFO_MESSAGE("Update : ", Graphics::currentContext_);
 
 	}
 
@@ -403,7 +403,15 @@ namespace Unique
 	void View::Render()
 	{
 		LOG_INFO_MESSAGE("Render : ", Graphics::GetRenderContext());
-		renderPath_->Render(this);
+	//	renderPath_->Render(this);
+		
+		auto& passes = RenderContext(scenePasses_);
+		for(int i = 0; i < passes.size(); i++)
+		{
+			auto& scenePassInfo = passes[i];
+			scenePassInfo.batchQueue_->Draw(this, camera_);
+		}
+
 	}
 
 	void View::SetGlobalShaderParameters()
