@@ -104,6 +104,12 @@ namespace Unique.Engine
             return this;
         }
 
+        public Node GetChild(StringID name, bool recursive = false)
+        {
+            Node node = PtrToObject(Node_GetChild(native_, ref name, recursive)) as Node;
+            return node;
+        }
+
         public Node Component(StringID type, Action<Component> action = null)
         {
             Component c = PtrToObject(Node_GetOrCreateComponent(native_, ref type)) as Component;
@@ -121,6 +127,16 @@ namespace Unique.Engine
                 if(action != null)
                     action(c as T);
             });
+        }
+
+        public T GetComponent<T>(bool recursive = false) where T : Component
+        {
+            return PtrToObject(Node_GetComponent(native_, ref TypeOf<T>(), recursive)) as T;
+        }
+
+        public Component GetComponent(StringID type, bool recursive = false)
+        {
+            return PtrToObject(Node_GetComponent(native_, ref type, recursive)) as Component;
         }
     }
 }

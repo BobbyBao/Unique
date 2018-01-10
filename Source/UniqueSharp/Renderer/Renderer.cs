@@ -46,7 +46,7 @@ namespace Unique.Engine
         }
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr Render_GetViewport(int index);
+        public static extern IntPtr Renderer_GetViewport(int index);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void Renderer_SetViewport(int index, IntPtr viewport);

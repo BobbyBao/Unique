@@ -1,0 +1,25 @@
+{
+    "Type": "Material",
+    "Shader": {
+        "Type": "Shader",
+        "Name": "Shaders/Textured.shader"
+    },
+    "ShaderDefines": "",
+    "Uniforms": [],
+    "TextureSlots": [
+        {
+            "Name": "DiffMap",
+            "Texture": {
+                "Type": "Texture",
+                "Name": "Textures/StoneDiffuse.dds"
+            }
+        },
+        {
+            "Name": "NormalMap",
+            "Texture": {
+                "Type": "Texture",
+                "Name": "Textures/StoneNormal.dds"
+            }
+        }
+    ]
+}

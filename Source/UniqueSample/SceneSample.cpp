@@ -105,8 +105,6 @@ namespace Unique
 		
 		UpdateCamera(eventData.timeStep_);
 
-		node_->Rotate(Quaternion(0, 0.1f * eventData.timeStep_, 0));
-
 	}
 	
 	void SceneSample::UpdateCamera(float timeStep)

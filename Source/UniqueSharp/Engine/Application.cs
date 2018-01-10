@@ -29,6 +29,8 @@ namespace Unique.Engine
 
             native_ = Unique_Setup(args.Length, args);
 
+            Context.Init();
+
             Setup();
         }
 

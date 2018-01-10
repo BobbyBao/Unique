@@ -30,8 +30,8 @@ namespace Unique.Engine
         /// Buffer capacity.
         public IntPtr capacity_;
 
-        public long size => end_.ToInt64() - buffer_.ToInt64();
-        public long capacity => capacity_.ToInt64() - buffer_.ToInt64();
+        public long size => (end_.ToInt64() - buffer_.ToInt64()) / Unsafe.SizeOf<T>();
+        public long capacity => (capacity_.ToInt64() - buffer_.ToInt64()) / Unsafe.SizeOf<T>();
 
         public ref T this[int index]
         {
@@ -134,13 +134,16 @@ namespace Unique.Engine
             if(buffer_ == IntPtr.Zero)
             {
                 buffer_ = Utilities.AllocArray<T>(cap);
+                end_ = buffer_;
             }
             else
             {
+                int sz = (int)size;
                 buffer_ = Utilities.Resize<T>(buffer_, cap);
+                end_ = buffer_ + sz * Unsafe.SizeOf<T>();
             }
 
-            capacity_ = buffer_ + cap;
+            capacity_ = buffer_ + cap * Unsafe.SizeOf<T>();
         }
     }
     

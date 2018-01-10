@@ -82,7 +82,6 @@ namespace Unique
 
 	void TextureSlot::Create()
 	{
-		Texture* tex = GetSubsystem<ResourceCache>().GetResource<Texture>(texAttr_.name_);
-		texture_ = tex;
+		texture_ = GetSubsystem<ResourceCache>().GetResource<Texture>(texAttr_.name_);
 	}
 }

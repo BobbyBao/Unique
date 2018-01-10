@@ -133,7 +133,7 @@ namespace Unique
 		{
 			struct nk_font_atlas *atlas;
 			FontStashBegin(&atlas);
-			struct nk_font *droid = nk_font_atlas_add_from_file(atlas, "CoreData/Fonts/arial.ttf", 14, 0);
+			struct nk_font *droid = nk_font_atlas_add_from_file(atlas, "CoreData/Fonts/arial.ttf", 16, 0);
 			/*struct nk_font *robot = nk_font_atlas_add_from_file(atlas, "../../extra_font/Roboto-Regular.ttf", 14, 0);*/
 			/*struct nk_font *future = nk_font_atlas_add_from_file(atlas, "../../extra_font/kenvector_future_thin.ttf", 13, 0);*/
 			/*struct nk_font *clean = nk_font_atlas_add_from_file(atlas, "../../extra_font/ProggyClean.ttf", 12, 0);*/

@@ -518,10 +518,6 @@ SPtr<File> ResourceCache::GetFile(const String& nameIn, bool sendEventOnFailure)
 
         if (Thread::IsMainThread())
         {
-            //using namespace ResourceNotFound;
-
-            //VariantMap& eventData = GetEventDataMap();
-            //eventData[P_RESOURCENAME] = name.Length() ? name : nameIn;
 			ResourceNotFound eventData;
 			eventData.resourceName_ = name.Length() ? name : nameIn;
             SendEvent(eventData);

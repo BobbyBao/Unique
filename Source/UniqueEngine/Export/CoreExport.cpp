@@ -9,7 +9,13 @@ UNIQUE_C_API void* StringID_new(const char* name)
 
 uExport(Context, void, RegisterSubsystem, Object*, obj)
 uExport(Context, void, RemoveSubsystem, StringID, objectType)
-uExport(Context, const Vector<Object*>&, GetSubsystems)
+//uExport(Context, const Vector<Object*>&, GetSubsystems)
+
+UNIQUE_C_API const Vector<Object*>* Context_GetSubsystems(Context* context)
+{
+	return &context->GetSubsystems();
+}
+
 UNIQUE_C_API Object* Context_CreateObject(Context* context, const StringID& type)
 {
 	SPtr<Object> ret = context->CreateObject(type);

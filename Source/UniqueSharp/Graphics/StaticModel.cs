@@ -37,7 +37,7 @@ namespace Unique.Engine
 
         public StaticModel Material(ResourceRefList mat)
         {
-            StaticModel_SetMaterialAttr(nativePtr, ref mat.data);
+            StaticModel_SetMaterialsAttr(nativePtr, ref mat.data);
             return this;
         }
 
@@ -54,7 +54,7 @@ namespace Unique.Engine
         static extern void StaticModel_SetModelAttr(IntPtr self, ref ResourceRef.Data model);
           
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern void StaticModel_SetMaterialAttr(IntPtr self, ref ResourceRefList.Data material);
+        static extern void StaticModel_SetMaterialsAttr(IntPtr self, ref ResourceRefList.Data material);
 
     }
 }

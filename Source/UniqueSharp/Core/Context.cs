@@ -11,9 +11,7 @@ namespace Unique.Engine
         static IntPtr context_;
         public static void Init()
         {
-            context_ = GetContext();
-
-            VectorBase subsystems = Context_GetSubsystems(context_);
+            VectorBase subsystems = Marshal.PtrToStructure< VectorBase >(Context_GetSubsystems(context));
             for(int i = 0; i < subsystems.size; i++)
             {
                 IntPtr ss = Utilities.At<IntPtr>(subsystems.buffer_, i);
@@ -24,6 +22,7 @@ namespace Unique.Engine
                     subsystemDict_[type] = subsystem;
                 }
             }
+            
         }
 
         public static void Register(Object obj)
@@ -77,7 +76,7 @@ namespace Unique.Engine
         static extern void Context_RemoveSubsystem(IntPtr context, StringID objectType);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern ref VectorBase Context_GetSubsystems(IntPtr context);
+        static extern IntPtr Context_GetSubsystems(IntPtr context);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern IntPtr Context_CreateObject(IntPtr context, ref StringID type);

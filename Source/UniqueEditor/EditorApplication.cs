@@ -9,7 +9,7 @@ namespace Unique.Editor
     {
         Scene scene;
         Node lightNode;
-        Node cameraNode;
+        Camera camera;
         Node floorNode;
         Node characterNode;
 
@@ -17,7 +17,6 @@ namespace Unique.Editor
         {
             base.Initialize();
 
-            /*
             (scene = new Scene())
                 .Component<Octree>()
                 .Component<DebugRenderer>()
@@ -28,31 +27,23 @@ namespace Unique.Editor
                     .Position(Vector3.Zero)
                     .Scaling(new Vector3(30.0f, 30.0f, 30.0f))
                     .Component<StaticModel>(sm => sm
-                       .Model(new ResourceRef("models/Plane.mdl"))
-                       .Material(new ResourceRefList(new List<string> { "materials/ground.mat" }))
+                       .Model(new ResourceRef("Models/Plane.mdl"))
+                       .Material(new ResourceRefList(new List<string> { "Models/Stone.material" }))
                     )
+                )
+                .Child("Camera", c => c
+                    .Position(new Vector3(0.0f, 20.0f, -30.0f))
+                    .LookAt(new Vector3(0.0f, 0.0f, 0.0f))
+                    .Component<Camera>()
                 );
 
-            StaticModel floor = floorNode.Component<StaticModel>();
-            floor.Model(new ResourceRef("models/Plane.mdl"));
-            floor.Material(
-                new ResourceRefList(new List<string>{ "materials/ground.mat" }));
-
-            Vector3 eye = new Vector3(0.0f, 20.0f, -30.0f);
-            Vector3 at = new Vector3(0.0f, 0.0f, 0.0f);
-
-            cameraNode = scene.Child("Camera")
-                .Position(eye)
-                .LookAt(at);
-
-            var camera = cameraNode.Component<Camera>()            
-                .Fov(60.0f);
-
             Renderer.Viewport(0)
-                .Rect(new IntRect(0, 0, window_.Width, window_.Height))
+                .Rect(new IntRect(0, 0, 1280, 720))
                 .Scene(scene)
-                .Camera(camera)
-                .Debug(true);*/
+                .Camera(
+                    scene.GetChild("Camera").GetComponent<Camera>()
+                )
+                .Debug(true);
 
         }
         

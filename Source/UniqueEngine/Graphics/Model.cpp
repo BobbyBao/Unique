@@ -107,20 +107,36 @@ bool Model::Load(IStream& source)
     for (unsigned i = 0; i < numVertexBuffers; ++i)
     {
         uint vertexCount = source.Read<uint>();
-		unsigned elementMask = source.Read<uint>();
-
+		Vector<VertexElement> vertexElements;
+		if (!hasVertexDeclarations)
+		{
+			unsigned elementMask = source.Read<uint>();
+			vertexElements = VertexBuffer::GetElements(elementMask);
+		}
+		else
+		{
+			vertexElements.clear();
+			unsigned numElements = source.Read<uint>();
+			for (unsigned j = 0; j < numElements; ++j)
+			{
+				unsigned elementDesc = source.Read<uint>();
+				VertexElementType type = (VertexElementType)(elementDesc & 0xff);
+				VertexElementSemantic semantic = (VertexElementSemantic)((elementDesc >> 8) & 0xff);
+				unsigned char index = (unsigned char)((elementDesc >> 16) & 0xff);
+				vertexElements.push_back(VertexElement(type, semantic, index));
+			}
+		}
+		
         morphRangeStarts_[i] = source.Read<uint>();
         morphRangeCounts_[i] = source.Read<uint>();
 
-		//desc.vertexElements_ = VertexBuffer::GetElements(elementMask);
-		unsigned vertexSize = VertexBuffer::GetVertexSize(elementMask);
+		unsigned vertexSize = VertexBuffer::GetVertexSize(vertexElements);
         uint dataSize = vertexCount * vertexSize;
-
 		ByteArray data;
 		data.resize(dataSize);
 		source.Read(data.data(), (uint)data.size());
 		
-		SPtr<VertexBuffer> buffer(new VertexBuffer(elementMask, std::move(data), USAGE_STATIC));
+		SPtr<VertexBuffer> buffer(new VertexBuffer(vertexElements, std::move(data), USAGE_STATIC));
 		memoryUse += sizeof(VertexBuffer) + dataSize;
         vertexBuffers_.push_back(buffer);
     }

@@ -20,7 +20,7 @@ namespace Unique
 
 	void Application::SetDeviceType(DeviceType deviceType)
 	{
-		GetSubsystem<Engine>().SetDeviceType(deviceType);
+		engine_->SetDeviceType(deviceType);
 	}
 
 	void Application::Terminate()

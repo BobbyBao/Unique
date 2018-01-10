@@ -1,0 +1,25 @@
+{
+    "Type": "Material",
+    "Shader": {
+        "Type": "Shader",
+        "Name": "Shaders/Textured.shader"
+    },
+    "ShaderDefines": "",
+    "Uniforms": [],
+    "TextureSlots": [
+        {
+            "Name": "DiffMap",
+            "Texture": {
+                "Type": "Texture",
+                "Name": "Models/Mutant/Textures/Mutant_diffuse.jpg"
+            }
+        },
+        {
+            "Name": "NormalMap",
+            "Texture": {
+                "Type": "Texture",
+                "Name": "Models/Mutant/Textures/Mutant_normal.jpg"
+            }
+        }
+    ]
+}

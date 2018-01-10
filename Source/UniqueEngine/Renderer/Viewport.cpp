@@ -33,6 +33,10 @@
 
 namespace Unique
 {
+	uObject(Viewport)
+	{
+		uFactory("Renderer")
+	}
 
 Viewport::Viewport() : rect_(IntRect::ZERO), drawDebug_(true)
 {
