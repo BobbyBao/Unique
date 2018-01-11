@@ -27,7 +27,7 @@ namespace Unique.Engine
             });
             
         }
-
+        
         public static void Register(Object obj)
         {
             StringID type = obj.GetType().Name;
@@ -49,6 +49,16 @@ namespace Unique.Engine
                 Context_RemoveSubsystem(context_, type);
             }
 
+        }
+
+        public static Object Get(StringID type)
+        {
+            if( subsystemDict_.TryGetValue(type, out var obj))
+            {
+                return obj;
+            }
+
+            return null;
         }
 
         public static IntPtr context

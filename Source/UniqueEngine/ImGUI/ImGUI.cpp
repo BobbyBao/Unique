@@ -298,7 +298,7 @@ namespace Unique
 	void GUI::HandleSDLRawInput(const SDLRawInput& eventData)
 	{	
 		int ret = nk_sdl_handle_event(&impl_.ctx, eventData.sdlEvent_);
-		const_cast<SDLRawInput&>(eventData).consumed_ = (ret != 0);
+	//	const_cast<SDLRawInput&>(eventData).consumed_ = (ret != 0);
 	}
 
 	nk_color background = nk_rgb(28, 48, 62);

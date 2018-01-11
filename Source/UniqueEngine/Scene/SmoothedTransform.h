@@ -76,7 +76,7 @@ protected:
 
 private:
     /// Handle smoothing update event.
-    void HandleUpdateSmoothing(StringID eventType, const UpdateSmoothing& eventData);
+    void HandleUpdateSmoothing(const UpdateSmoothing& eventData);
 
     /// Target position.
     Vector3 targetPosition_;

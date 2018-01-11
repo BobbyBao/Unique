@@ -4,26 +4,35 @@ using System.Text;
 
 namespace Unique.Engine
 {
+    public enum MouseButton : byte
+    {
+        Left = 1,
+        Middle = 2,
+        Right = 3,
+        X1 = 4,
+        X2 = 5,
+    }
+
     public partial class Input : Object
     {
-        public bool GetKeyDown(int key)
+        public bool GetKeyDown(Keycode key)
         {
-            return Input_GetKeyDown(native_, key);
+            return Input_GetKeyDown(native_, (int)key);
         }
 
-        public bool GetKeyPress(int key)
+        public bool GetKeyPress(Keycode key)
         {
-            return Input_GetKeyPress(native_, key);
+            return Input_GetKeyPress(native_, (int)key);
         }
 
-        public bool GetMouseButtonDown(int button)
+        public bool GetMouseButtonDown(MouseButton button)
         {
-            return Input_GetMouseButtonDown(native_, button);
+            return Input_GetMouseButtonDown(native_, (1 << (((int)button) - 1)));
         }
 
-        public bool GetMouseButtonPress(int button)
+        public bool GetMouseButtonPress(MouseButton button)
         {
-            return Input_GetMouseButtonPress(native_, button);
+            return Input_GetMouseButtonPress(native_, (1 << ((int)(button) - 1)));
         }
 
         public IntVector2 GetMousePosition()

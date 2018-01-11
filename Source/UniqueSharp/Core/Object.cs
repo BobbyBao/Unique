@@ -59,6 +59,18 @@ namespace Unique.Engine
             Object_SendEvent(native_, ref eventType, Utilities.As(ref eventData));
         }
 
+        public T New<T>(ref T val) where T : Object, new()
+        {
+            val = new T();
+            return val;
+        }
+
+        public T Store<T>(ref T val) where T : Object
+        {
+            val = (T)this;
+            return val;
+        }
+
         class TypeID<T>
         {
             public static StringID typeID = typeof(T).Name;
@@ -132,6 +144,11 @@ namespace Unique.Engine
             T ret = new T();
             ret.Attach(nativePtr);
             return ret;
+        }
+
+        public static T GetSubsystem<T>() where T : Object
+        {
+            return Context.Get(TypeOf<T>()) as T;
         }
 
     }

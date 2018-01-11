@@ -27,7 +27,7 @@
 #include "../Scene/SceneEvents.h"
 #include "../Scene/SmoothedTransform.h"
 
-//#include "../DebugNew.h"
+#include "DebugNew.h"
 
 namespace Unique
 {
@@ -96,28 +96,28 @@ void SmoothedTransform::SetTargetPosition(const Vector3& position)
 {
     targetPosition_ = position;
     smoothingMask_ |= SMOOTH_POSITION;
-	/**********************************************************
+
     // Subscribe to smoothing update if not yet subscribed
     if (!subscribed_)
     {
-        SubscribeToEvent(GetScene(), E_UPDATESMOOTHING, UNIQUE_HANDLER(SmoothedTransform, HandleUpdateSmoothing));
+        SubscribeTo(GetScene(), &SmoothedTransform::HandleUpdateSmoothing);
         subscribed_ = true;
     }
 
-    SendEvent(E_TARGETPOSITION);*/
+    //SendEvent(TargetPosition::Type());
 }
 
 void SmoothedTransform::SetTargetRotation(const Quaternion& rotation)
 {
     targetRotation_ = rotation;
     smoothingMask_ |= SMOOTH_ROTATION;
-	/*****************************************
     if (!subscribed_)
-    {
-		SubscribeToEvent(GetScene(), E_UPDATESMOOTHING, UNIQUE_HANDLER(SmoothedTransform, HandleUpdateSmoothing));
+	{
+		SubscribeTo(GetScene(), &SmoothedTransform::HandleUpdateSmoothing);
         subscribed_ = true;
     }
 
+	/*****************************************
     SendEvent(E_TARGETROTATION);*/
 }
 
@@ -163,7 +163,7 @@ void SmoothedTransform::OnNodeSet(Node* node)
     }
 }
 
-void SmoothedTransform::HandleUpdateSmoothing(StringID eventType, const UpdateSmoothing& eventData)
+void SmoothedTransform::HandleUpdateSmoothing(const UpdateSmoothing& eventData)
 {
     Update(eventData.constant_, eventData.squaredSnapThreshold_);
 }
