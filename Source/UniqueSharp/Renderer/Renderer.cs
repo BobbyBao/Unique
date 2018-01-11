@@ -8,7 +8,7 @@ namespace Unique.Engine
     public class Renderer : Object
     {
         static Viewport[] viewports_ = new Viewport[0];
-        public static Viewport Viewport(int index)
+        public Viewport Viewport(int index)
         {
             if(index >= viewports_.Length)
             {
@@ -20,13 +20,13 @@ namespace Unique.Engine
             {
                 viewport = new Viewport();
                 viewports_[index] = viewport;
-                Renderer_SetViewport(index, viewport.nativePtr);
+                Renderer_SetViewport(native_, index, viewport.nativePtr);
             }
 
             return viewport;
         }
 
-        public static void SetViewport(int index, Viewport viewport)
+        public void SetViewport(int index, Viewport viewport)
         {
             if(index >= viewports_.Length)
             {
@@ -42,14 +42,14 @@ namespace Unique.Engine
             }
 
             viewports_[index] = viewport;
-            Renderer_SetViewport(index, viewport.nativePtr);
+            Renderer_SetViewport(native_, index, viewport.nativePtr);
         }
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr Renderer_GetViewport(int index);
+        public static extern IntPtr Renderer_GetViewport(IntPtr self, int index);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void Renderer_SetViewport(int index, IntPtr viewport);
+        public static extern void Renderer_SetViewport(IntPtr self, int index, IntPtr viewport);
 
 
     }

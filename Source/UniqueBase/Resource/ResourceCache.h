@@ -210,6 +210,8 @@ public:
 
     /// Returns a formatted string containing the memory actively used.
     String PrintMemoryUsage() const;
+	
+	void RegisterResource(StringID type, Resource* resource);
 
 	void RegisterImporter(ResourceImporter* importer);
 private:

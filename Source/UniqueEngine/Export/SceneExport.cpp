@@ -2,6 +2,12 @@
 
 using namespace Unique;
 
+
+uExport(Component, unsigned, GetID)
+uExport(Component, Node*, GetNode)
+uExport(Component, Scene*, GetScene)
+uExport(Component, bool, IsEnabled)
+
 uExport(Node, void, SetPosition, const Vector3&)
 uExport(Node, void, SetRotation, const Quaternion&)
 uExport(Node, void, SetScale, const Vector3&)

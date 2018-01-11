@@ -6,6 +6,22 @@ using System.Text;
 
 namespace Unique.Engine
 {
+    public partial class Component
+    {
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern uint Component_GetID(IntPtr self);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern IntPtr Component_GetNode(IntPtr self);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern IntPtr Component_GetScene(IntPtr self);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.I1)]
+        static extern bool Component_IsEnabled(IntPtr self);
+    }
+
     [SuppressUnmanagedCodeSecurity]
     public partial class Node
     {

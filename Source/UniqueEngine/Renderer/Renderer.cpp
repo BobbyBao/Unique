@@ -46,15 +46,44 @@ namespace Unique
 		defaultRenderPath_ = new RenderPath();
 		defaultRenderPath_->AddPass(new ClearPass());
 		defaultRenderPath_->AddPass(new ScenePass());
-
+		
+		Subscribe(&Renderer::HandleStartup);
 		Subscribe(&Renderer::HandleRenderUpdate);
 		Subscribe(&Renderer::HandlePostRenderUpdate);
 		Subscribe(&Renderer::HandleEndFrame);
-		
 	}
 
 	void Renderer::LoadShaders()
 	{
+		auto& cache = GetSubsystem<ResourceCache>();
+
+		defaultMaterial_ = new Material();
+		defaultMaterial_->SetShaderAttr(ResourceRef::Create<Shader>("Shaders/Textured.shader"));
+		/*
+		SPtr<Texture> defaultTexture(new Texture());
+		
+		int w = 4;
+		int h = 4;
+		Vector<Vector<byte>> mip(1);	
+		Vector<byte>& subData = mip.back();
+		subData.resize(w * h * 4, 255);
+
+		TextureDesc desc;
+		desc.Type = Diligent::RESOURCE_DIM_TEX_2D;
+		desc.Width = (uint)w;
+		desc.Height = (uint)h;
+		desc.MipLevels = 1;
+		desc.ArraySize = 1;
+		desc.Format = Diligent::TEX_FORMAT_RGBA8_UNORM;
+		desc.SampleCount = 1;
+		desc.Usage = Diligent::USAGE_DEFAULT;
+		desc.BindFlags = Diligent::BIND_SHADER_RESOURCE;
+		desc.CPUAccessFlags = 0;
+		
+		defaultTexture->Create(desc, std::move(mip));
+		//cache.RegisterResource(Texture::GetTypeStatic(), defaultTexture);
+		defaultMaterial_->SetTexture("DiffMap", defaultTexture);
+		*/
 
 	}
 
@@ -96,6 +125,11 @@ namespace Unique
 	Viewport* Renderer::GetViewport(unsigned index) const
 	{
 		return index < viewports_.size() ? viewports_[index] : (Viewport*)0;
+	}
+			
+	void Renderer::HandleStartup(const Startup& eventData)
+	{
+		LoadShaders();
 	}
 
 	void Renderer::HandleRenderUpdate(const RenderUpdate& eventData)

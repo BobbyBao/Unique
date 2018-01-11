@@ -15,6 +15,10 @@ namespace Unique.Engine
 
     public partial class Node : Object
     {
+        public Node()
+        {
+        }
+
         internal Node(IntPtr nativePtr) : base(nativePtr)
         {
         }

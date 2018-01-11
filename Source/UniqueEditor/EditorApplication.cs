@@ -10,7 +10,6 @@ namespace Unique.Editor
         Scene scene;
         Node lightNode;
         Camera camera;
-        Node cameraNode;
         Node floorNode;
         Node characterNode;
 
@@ -18,34 +17,34 @@ namespace Unique.Editor
         {
             base.Initialize();
 
-                New(ref scene)
-                .Component<Octree>()
-                .Component<DebugRenderer>()
-                .Child("Light", c => c
-                    .Component<Light>()
+            New(ref scene)
+            .Component<Octree>()
+            .Component<DebugRenderer>()
+            .Child("Light", c => c
+                .Component<Light>()
+            )
+            .Child("Floor", c => c
+                .Position(Vector3.Zero)
+                .Scaling(new Vector3(30.0f, 30.0f, 30.0f))
+                .Component<StaticModel>(sm => sm
+                    .Model(new ResourceRef("Models/Plane.mdl"))
+                    .Material(new ResourceRefList(new List<string> { "Models/Stone.material" }))
                 )
-                .Child("Floor", c => c
-                    .Position(Vector3.Zero)
-                    .Scaling(new Vector3(30.0f, 30.0f, 30.0f))
-                    .Component<StaticModel>(sm => sm
-                       .Model(new ResourceRef("Models/Plane.mdl"))
-                       .Material(new ResourceRefList(new List<string> { "Models/Stone.material" }))
-                    )
+            )
+            .Child("Camera", c => c
+                .Position(new Vector3(0.0f, 20.0f, -30.0f))
+                .LookAt(new Vector3(0.0f, 0.0f, 0.0f))
+                .Component<Camera>( cam => cam
+                    .Store(ref camera)
                 )
-                .Child("Camera", c => c
-                    .Store(ref cameraNode)
-                    .Position(new Vector3(0.0f, 20.0f, -30.0f))
-                    .LookAt(new Vector3(0.0f, 0.0f, 0.0f))
-                    .Component<Camera>( cam => cam
-                        .Store(ref camera)
-                    )
-                );
+            );
 
-            Renderer.Viewport(0)
-                .Rect(new IntRect(0, 0, 1280, 720))
-                .Scene(scene)
-                .Camera(camera)
-                .Debug(true);
+            GetSubsystem<Renderer>()
+            .Viewport(0)
+            .Rect(new IntRect(0, 0, 1280, 720))               
+            .Camera(camera)
+            .Debug(true)
+            .Scene(scene);
 
         }
         
@@ -100,19 +99,19 @@ namespace Unique.Editor
                 pitch_ = MathHelper.Clamp(pitch_, -90.0f, 90.0f);
 
                 // Construct new orientation for the camera scene node from yaw and pitch. Roll is fixed to zero
-                cameraNode.Rotation(new Quaternion(pitch_, yaw_, 0.0f));
+                camera.node.Rotation(new Quaternion(pitch_, yaw_, 0.0f));
             }
 
             // Read WASD keys and move the camera scene node to the corresponding direction if they are pressed
             // Use the Translate() function (default local space) to move relative to the node's orientation.
             if (input.GetKeyDown(Keycode.W))
-                cameraNode.Translate(Vector3.Forward * MOVE_SPEED * timeStep);
+                camera.node.Translate(Vector3.Forward * MOVE_SPEED * timeStep);
             if (input.GetKeyDown(Keycode.S))
-                cameraNode.Translate(Vector3.Back * MOVE_SPEED * timeStep);
+                camera.node.Translate(Vector3.Back * MOVE_SPEED * timeStep);
             if (input.GetKeyDown(Keycode.A))
-                cameraNode.Translate(Vector3.Left * MOVE_SPEED * timeStep);
+                camera.node.Translate(Vector3.Left * MOVE_SPEED * timeStep);
             if (input.GetKeyDown(Keycode.D))
-                cameraNode.Translate(Vector3.Right * MOVE_SPEED * timeStep);
+                camera.node.Translate(Vector3.Right * MOVE_SPEED * timeStep);
             
         }
     }

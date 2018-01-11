@@ -1135,6 +1135,12 @@ File* ResourceCache::SearchPackages(const String& nameIn)
     return 0;
 }
 
+void ResourceCache::RegisterResource(StringID type, Resource* resource)
+{
+    std::lock_guard<Mutex> lock(resourceMutex_);
+
+    resourceGroups_[type].resources_[resource->GetNameHash()] = resource;
+}
 
 void ResourceCache::RegisterImporter(ResourceImporter* importer)
 {

@@ -3,14 +3,14 @@
 using namespace Unique;
 
 
-UNIQUE_C_API Viewport* Renderer_GetViewport(int index)
+UNIQUE_C_API Viewport* Renderer_GetViewport(Renderer* self, int index)
 {
-	return GetSubsystem<Renderer>().GetViewport(index);
+	return self->GetViewport(index);
 }
 
-UNIQUE_C_API void Renderer_SetViewport(int index, Viewport* vp)
+UNIQUE_C_API void Renderer_SetViewport(Renderer* self, int index, Viewport* vp)
 {
-	GetSubsystem<Renderer>().SetViewport(index, vp);
+	self->SetViewport(index, vp);
 }
 
 UNIQUE_C_API void Viewport_SetRect(Viewport* self, const IntRect& rect)

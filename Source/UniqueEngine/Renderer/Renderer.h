@@ -51,6 +51,8 @@ namespace Unique
 
 		RenderPath* GetDefaultRenderPath() { return defaultRenderPath_; }
 
+		Material* GetDefaultMaterial() { return defaultMaterial_.Get(); }
+
 		/// Return number of extra instancing buffer elements.
 		int GetNumExtraInstancingBufferElements() const { return numExtraInstancingBufferElements_; };
 
@@ -77,6 +79,7 @@ namespace Unique
 		void Initialize();
 		/// Reload shaders.
 		void LoadShaders();
+		void HandleStartup(const Startup& eventData);
 		void HandleEndFrame(const EndFrame& eventData);
 		void HandleRenderUpdate(const RenderUpdate& eventData);
 		void HandlePostRenderUpdate(const PostRenderUpdate& eventData);
@@ -89,7 +92,9 @@ namespace Unique
 
 		/// Default renderpath.
 		SPtr<RenderPath> defaultRenderPath_;
-		/// Default non-textured material technique.
+		/// Default material.
+		SPtr<Material> defaultMaterial_;
+		/// Default shader.
 		SPtr<Shader> defaultTechnique_;
 		/// Backbuffer viewports.
 		Vector<SPtr<Viewport> > viewports_;

@@ -4,10 +4,18 @@ using System.Text;
 
 namespace Unique.Engine
 {
-    public class Component : Object
+    public partial class Component : Object
     {
         public Component()
         {
+        }
+
+        public Node node
+        {
+            get
+            {
+                return PtrToObject<Node>(Component_GetNode(native_));
+            }
         }
     }
 }

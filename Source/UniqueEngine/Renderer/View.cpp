@@ -526,6 +526,7 @@ namespace Unique
 		octree_->GetDrawables(query);
 		
 		// Check drawable occlusion, find zones for moved drawables and collect geometries & lights in worker threads
+		if(tempDrawables.size() > 0)
 		{
 			for (unsigned i = 0; i < sceneResults_.size(); ++i)
 			{
@@ -631,10 +632,17 @@ namespace Unique
 			for (unsigned j = 0; j < batches.size(); ++j)
 			{
 				const SourceBatch& srcBatch = batches[j];
-				Shader* shader = srcBatch.material_->GetShader();
-				if (!srcBatch.geometry_ || !srcBatch.numWorldTransforms_ || !shader)
-					continue;
 
+				if (!srcBatch.geometry_ || !srcBatch.numWorldTransforms_)
+					continue;
+						
+				Material* material = srcBatch.material_;
+				if(material == nullptr)
+				{
+					material = renderer_.GetDefaultMaterial();
+				}
+
+				Shader* shader = material->GetShader();
 				// Check each of the scene passes
 				for (unsigned k = 0; k < scenePasses.size(); ++k)
 				{
@@ -658,8 +666,8 @@ namespace Unique
 	
 	void View::AddBatchToQueue(BatchQueue& queue, Batch& batch, Shader* shader, bool allowInstancing, bool allowShadows)
 	{
-		//if (!batch.material_)
-		//	batch.material_ = renderer_->GetDefaultMaterial();
+		if (!batch.material_)
+			batch.material_ = renderer_.GetDefaultMaterial();
 
 		// Convert to instanced if possible
 		if (allowInstancing && batch.geometryType_ == GEOM_STATIC && batch.geometry_->GetIndexBuffer())
