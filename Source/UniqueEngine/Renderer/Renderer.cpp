@@ -207,6 +207,11 @@ namespace Unique
 		for(int i = 0; i < views.size(); i++)
 		{
 			auto& view = views[i];
+			if(view.Expired())
+			{
+				continue;
+			}
+
 			view->Render();
 		}
 		
@@ -247,6 +252,7 @@ namespace Unique
 			Octree* octree = view->GetOctree();
 			if (!octree)
 				continue;
+
 			DebugRenderer* debug = octree->GetComponent<DebugRenderer>();
 			if (!debug || !debug->IsEnabledEffective())
 				continue;

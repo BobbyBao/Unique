@@ -494,6 +494,7 @@ namespace Unique
 		memcpy(result, matrix, sizeof(matrix));
 	}
 
+	int lastDP = 0;
 	void GUI::HandlePostRenderUpdate(const struct PostRenderUpdate& eventData)
 	{
 		auto& renderer = GetSubsystem<Renderer>();
@@ -542,6 +543,7 @@ namespace Unique
 			UIVS* ui = (UIVS*)uiConstants_->Lock();
 			nk_get_projection_matrix(graphics.GetWidth(), graphics.GetHeight(), &ui->UIProj.m00_);
 			uiConstants_->Unlock();
+			int dp = 0;
 			/* iterate over and execute each draw command */
 			nk_draw_foreach(cmd, &impl_.ctx, &impl_.cmds)
 			{
@@ -558,9 +560,17 @@ namespace Unique
 				batch.indexCount_ = cmd->elem_count;
 				renderer.AddBatch(batch);
 				offset += cmd->elem_count;
+				dp++;
 			}
 
-			nk_clear(&impl_.ctx); 
+			nk_clear(&impl_.ctx);
+
+			if(lastDP != 0)
+			{
+				assert(lastDP == dp);
+			}
+
+			lastDP = dp;
 		}
 	}
 }

@@ -148,7 +148,7 @@ namespace Unique.Engine
             return ret;
         }
 
-        public static T GetSubsystem<T>() where T : Object
+        public static T Subsystem<T>() where T : Object
         {
             return Context.Get(TypeOf<T>()) as T;
         }

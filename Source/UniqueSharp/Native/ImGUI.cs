@@ -96,8 +96,16 @@ namespace Unique.Engine
         NK_SYMBOL_MINUS,
         NK_SYMBOL_MAX
     }
+    
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    delegate int nk_plugin_filter(IntPtr text_edit, uint unicode);
 
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    delegate float value_getter(IntPtr user, int index);
 
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    delegate void item_getter(IntPtr user, int p, [MarshalAs(UnmanagedType.LPArray)] string[] items);
+    
     [SuppressUnmanagedCodeSecurity]
     public unsafe static partial class ImGUI
     {
@@ -740,8 +748,8 @@ namespace Unique.Engine
         //static extern void nk_image(IntPtr ctx, nk_image image);
 
 #if NK_INCLUDE_STANDARD_VARARGS
-NK_API void nk_labelf(IntPtr ctx, nk_flags, [MarshalAs(UnmanagedType.LPStr)]string, ...);
-        NK_API void nk_labelf_colored(IntPtr ctx, nk_flags align, struct nk_color, [MarshalAs(UnmanagedType.LPStr)]string,...);
+NK_API void nk_labelf(IntPtr ctx, uint, [MarshalAs(UnmanagedType.LPStr)]string, ...);
+        NK_API void nk_labelf_colored(IntPtr ctx, uint align, struct nk_color, [MarshalAs(UnmanagedType.LPStr)]string,...);
         NK_API void nk_labelf_wrap(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string,...);
         NK_API void nk_labelf_colored_wrap(IntPtr ctx, struct nk_color, [MarshalAs(UnmanagedType.LPStr)]string,...);
 #endif
@@ -970,6 +978,308 @@ NK_API void nk_labelf(IntPtr ctx, nk_flags, [MarshalAs(UnmanagedType.LPStr)]stri
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern double nk_propertyd(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string name, double min, double val, double max, double step, float inc_per_pixel);
+
+        /* =============================================================================
+         *
+         *                                  TEXT EDIT
+         *
+         * ============================================================================= */
+        enum nk_edit_flags
+        {
+            NK_EDIT_DEFAULT = 0,
+            NK_EDIT_READ_ONLY = (1 << 0),
+            NK_EDIT_AUTO_SELECT = (1 << 1),
+            NK_EDIT_SIG_ENTER = (1 << 2),
+            NK_EDIT_ALLOW_TAB = (1 << 3),
+            NK_EDIT_NO_CURSOR = (1 << 4),
+            NK_EDIT_SELECTABLE = (1 << 5),
+            NK_EDIT_CLIPBOARD = (1 << 6),
+            NK_EDIT_CTRL_ENTER_NEWLINE = (1 << 7),
+            NK_EDIT_NO_HORIZONTAL_SCROLL = (1 << 8),
+            NK_EDIT_ALWAYS_INSERT_MODE = (1 << 9),
+            NK_EDIT_MULTILINE = (1 << 10),
+            NK_EDIT_GOTO_END_ON_ACTIVATE = (1 << 11)
+        }
+
+        enum nk_edit_types
+        {
+            NK_EDIT_SIMPLE = nk_edit_flags.NK_EDIT_ALWAYS_INSERT_MODE,
+            NK_EDIT_FIELD = nk_edit_types.NK_EDIT_SIMPLE | nk_edit_flags.NK_EDIT_SELECTABLE | nk_edit_flags.NK_EDIT_CLIPBOARD,
+            NK_EDIT_BOX = nk_edit_flags.NK_EDIT_ALWAYS_INSERT_MODE | nk_edit_flags.NK_EDIT_SELECTABLE | nk_edit_flags.NK_EDIT_MULTILINE | nk_edit_flags.NK_EDIT_ALLOW_TAB | nk_edit_flags.NK_EDIT_CLIPBOARD,
+            NK_EDIT_EDITOR = nk_edit_flags.NK_EDIT_SELECTABLE | nk_edit_flags.NK_EDIT_MULTILINE | nk_edit_flags.NK_EDIT_ALLOW_TAB | nk_edit_flags.NK_EDIT_CLIPBOARD
+        }
+
+        enum nk_edit_events
+        {
+            NK_EDIT_ACTIVE = (1 << 0), /* edit widget is currently being modified */
+            NK_EDIT_INACTIVE = (1 << 1), /* edit widget is not active and is not being modified */
+            NK_EDIT_ACTIVATED = (1 << 2), /* edit widget went from state inactive to state active */
+            NK_EDIT_DEACTIVATED = (1 << 3), /* edit widget went from state active to state inactive */
+            NK_EDIT_COMMITED = (1 << 4) /* edit widget has received an enter and lost focus */
+        }
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern uint nk_edit_string(IntPtr ctx, uint p, char* buffer, int* len, int max, nk_plugin_filter filter);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern uint nk_edit_string_zero_terminated(IntPtr ctx, uint p, char* buffer, int max, nk_plugin_filter filter);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern uint nk_edit_buffer(IntPtr ctx, uint p, IntPtr text_edit/*nk_text_edit**/, nk_plugin_filter filter);
+        
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern void nk_edit_focus(IntPtr ctx, uint flags);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern void nk_edit_unfocus(IntPtr ctx);
+
+        /* =============================================================================
+         *
+         *                                  CHART
+         *
+         * ============================================================================= */
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_chart_begin(IntPtr ctx, nk_chart_type chart_type, int num, float min, float max);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_chart_begin_colored(IntPtr ctx, nk_chart_type chart_type, nk_color c, nk_color active, int num, float min, float max);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern void nk_chart_add_slot(IntPtr ctx, nk_chart_type chart_type, int count, float min_value, float max_value);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern void nk_chart_add_slot_colored(IntPtr ctx, nk_chart_type chart_type, nk_color c, nk_color active, int count, float min_value, float max_value);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern uint nk_chart_push(IntPtr ctx, float p1);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern uint nk_chart_push_slot(IntPtr ctx, float p1, int p2);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern void nk_chart_end(IntPtr ctx);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern void nk_plot(IntPtr ctx, nk_chart_type chart_type, IntPtr values, int count, int offset);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern void nk_plot_function(IntPtr ctx, nk_chart_type chart_type, IntPtr userdata, value_getter val_getter, int count, int offset);
+       
+        /* =============================================================================
+         *
+         *                                  POPUP
+         *
+         * ============================================================================= */
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_popup_begin(IntPtr ctx, nk_popup_type type, [MarshalAs(UnmanagedType.LPStr)]string text, uint p1, nk_rect bounds);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern void nk_popup_close(IntPtr ctx);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern void nk_popup_end(IntPtr ctx);
+
+        /* =============================================================================
+         *
+         *                                  COMBOBOX
+         *
+         * ============================================================================= */
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_combo(IntPtr ctx, [MarshalAs(UnmanagedType.LPArray)]string[] items, int count, int selected, int item_height, nk_vec2 size);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_combo_separator(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string items_separated_by_separator, int separator, int selected, int count, int item_height, nk_vec2 size);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_combo_string(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string items_separated_by_zeros, int selected, int count, int item_height, nk_vec2 size);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_combo_callback(IntPtr ctx, item_getter item_Getter, IntPtr userdata, int selected, int count, int item_height, nk_vec2 size);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern void nk_combobox(IntPtr ctx, [MarshalAs(UnmanagedType.LPArray)]string[] items, int count, int* selected, int item_height, nk_vec2 size);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern void nk_combobox_string(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string items_separated_by_zeros, int* selected, int count, int item_height, nk_vec2 size);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern void nk_combobox_separator(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string items_separated_by_separator, int separator, int* selected, int count, int item_height, nk_vec2 size);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern void nk_combobox_callback(IntPtr ctx, item_getter item_Getter, IntPtr userdata, IntPtr selected, int count, int item_height, nk_vec2 size);
+  
+        /* =============================================================================
+         *
+         *                                  ABSTRACT COMBOBOX
+         *
+         * ============================================================================= */
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_combo_begin_text(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string selected, int p1, nk_vec2 size);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_combo_begin_label(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string selected, nk_vec2 size);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_combo_begin_color(IntPtr ctx, nk_color color, nk_vec2 size);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_combo_begin_symbol(IntPtr ctx,  nk_symbol_type symbol,  nk_vec2 size);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_combo_begin_symbol_label(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string selected, nk_symbol_type symbol, nk_vec2 size);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_combo_begin_symbol_text(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string selected, int p1, nk_symbol_type symbol, nk_vec2 size);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_combo_begin_image(IntPtr ctx, nk_image img,  nk_vec2 size);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_combo_begin_image_label(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string selected, nk_image image, nk_vec2 size);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_combo_begin_image_text(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string selected, int p1, nk_image image, nk_vec2 size);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_combo_item_label(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string text, uint alignment);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_combo_item_text(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string text, int p1, uint alignment);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_combo_item_image_label(IntPtr ctx, nk_image image, [MarshalAs(UnmanagedType.LPStr)]string label, uint alignment);
+  
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_combo_item_image_text(IntPtr ctx, nk_image image, [MarshalAs(UnmanagedType.LPStr)]string label, int p1, uint alignment);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_combo_item_symbol_label(IntPtr ctx, nk_symbol_type symbol, [MarshalAs(UnmanagedType.LPStr)]string label, uint alignment);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_combo_item_symbol_text(IntPtr ctx, nk_symbol_type symbol, [MarshalAs(UnmanagedType.LPStr)]string text, int p1, uint alignment);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern void nk_combo_close(IntPtr ctx);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern void nk_combo_end(IntPtr ctx);
+      
+        /* =============================================================================
+         *
+         *                                  CONTEXTUAL
+         *
+         * ============================================================================= */
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_contextual_begin(IntPtr ctx, uint p1, nk_vec2 p2, nk_rect trigger_bounds);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_contextual_item_text(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string label, int p1,uint align);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_contextual_item_label(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string label, uint align);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_contextual_item_image_label(IntPtr ctx, nk_image image, [MarshalAs(UnmanagedType.LPStr)]string label, uint alignment);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_contextual_item_image_text(IntPtr ctx, nk_image image, [MarshalAs(UnmanagedType.LPStr)]string text, int len, uint alignment);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_contextual_item_symbol_label(IntPtr ctx, nk_symbol_type symbol, [MarshalAs(UnmanagedType.LPStr)]string label, uint alignment);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_contextual_item_symbol_text(IntPtr ctx, nk_symbol_type symbol, [MarshalAs(UnmanagedType.LPStr)]string text, int p1, uint alignment);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern void nk_contextual_close(IntPtr ctx);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern void nk_contextual_end(IntPtr ctx);
+
+        /* =============================================================================
+         *
+         *                                  TOOLTIP
+         *
+         * ============================================================================= */
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern void nk_tooltip(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string tip);
+
+#if NK_INCLUDE_STANDARD_VARARGS
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern void nk_tooltipf(IntPtr ctx, const char*, ...);
+#endif
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_tooltip_begin(IntPtr ctx, float width);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern void nk_tooltip_end(IntPtr ctx);
+        
+        /* =============================================================================
+         *
+         *                                  MENU
+         *
+         * ============================================================================= */
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern void nk_menubar_begin(IntPtr ctx);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern void nk_menubar_end(IntPtr ctx);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_menu_begin_text(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string title, int title_len, uint align, nk_vec2 size);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_menu_begin_label(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string label, uint align, nk_vec2 size);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_menu_begin_image(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string label, nk_image image, nk_vec2 size);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_menu_begin_image_text(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string label, int p, uint align, nk_image image, nk_vec2 size);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_menu_begin_image_label(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string label, uint align, nk_image image, nk_vec2 size);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_menu_begin_symbol(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string label, nk_symbol_type symbol, nk_vec2 size);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_menu_begin_symbol_text(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string text, int p1, uint align, nk_symbol_type symbol, nk_vec2 size);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_menu_begin_symbol_label(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string label, uint align, nk_symbol_type symbol, nk_vec2 size);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_menu_item_text(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string text, int p1, uint align);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_menu_item_label(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string label, uint alignment);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_menu_item_image_label(IntPtr ctx, nk_image image, [MarshalAs(UnmanagedType.LPStr)]string label, uint alignment);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_menu_item_image_text(IntPtr ctx, nk_image image, [MarshalAs(UnmanagedType.LPStr)]string text, int len, uint alignment);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_menu_item_symbol_text(IntPtr ctx, nk_symbol_type symol, [MarshalAs(UnmanagedType.LPStr)]string text, int p1, uint alignment);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern int nk_menu_item_symbol_label(IntPtr ctx, nk_symbol_type symol, [MarshalAs(UnmanagedType.LPStr)]string label, uint alignment);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern void nk_menu_close(IntPtr ctx);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern void nk_menu_end(IntPtr ctx);
 
     }
 }

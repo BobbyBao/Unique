@@ -39,11 +39,11 @@ namespace Unique.Editor
                 )
             );
 
-            GetSubsystem<Renderer>()
+            Subsystem<Renderer>()
             .Viewport(0)
             .Rect(new IntRect(0, 0, 1280, 720))               
             .Camera(camera)
-            .Debug(true)
+            .Debug(false)
             .Scene(scene);
 
         }
@@ -82,7 +82,7 @@ namespace Unique.Editor
 
         void UpdateCamera(float timeStep)
         {
-            var input = GetSubsystem<Input>();
+            var input = Subsystem<Input>();
             Vector3 offset = Vector3.Zero;
 
             // Movement speed as world units per second
