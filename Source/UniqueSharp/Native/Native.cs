@@ -9,7 +9,7 @@ namespace Unique.Engine
 {
     [SuppressUnmanagedCodeSecurity]
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    delegate void EventFn(IntPtr receiver, StringID eventType, IntPtr eventData);
+    delegate void EventFn(IntPtr receiver, IntPtr eventData);
 
     [SuppressUnmanagedCodeSecurity]
     internal unsafe static partial class Native

@@ -210,7 +210,13 @@ public:
 
     /// Returns a formatted string containing the memory actively used.
     String PrintMemoryUsage() const;
-	
+
+	template<class T>
+	void RegisterResource(const SPtr<T>& resource)
+	{
+		RegisterResource(T::GetTypeStatic(), resource);
+	}
+
 	void RegisterResource(StringID type, Resource* resource);
 
 	void RegisterImporter(ResourceImporter* importer);

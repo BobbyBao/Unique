@@ -58,10 +58,10 @@ namespace Unique
 		auto& cache = GetSubsystem<ResourceCache>();
 
 		defaultMaterial_ = new Material();
+		defaultMaterial_->SetName("DefaultMaterial");
 		defaultMaterial_->SetShaderAttr(ResourceRef::Create<Shader>("Shaders/Textured.shader"));
-		/*
-		SPtr<Texture> defaultTexture(new Texture());
 		
+		SPtr<Texture> defaultTexture(new Texture());
 		int w = 4;
 		int h = 4;
 		Vector<Vector<byte>> mip(1);	
@@ -76,14 +76,15 @@ namespace Unique
 		desc.ArraySize = 1;
 		desc.Format = Diligent::TEX_FORMAT_RGBA8_UNORM;
 		desc.SampleCount = 1;
-		desc.Usage = Diligent::USAGE_DEFAULT;
+		desc.Usage = Diligent::USAGE_STATIC;
 		desc.BindFlags = Diligent::BIND_SHADER_RESOURCE;
 		desc.CPUAccessFlags = 0;
 		
 		defaultTexture->Create(desc, std::move(mip));
-		//cache.RegisterResource(Texture::GetTypeStatic(), defaultTexture);
+		defaultTexture->SetName("White");
+		cache.RegisterResource(defaultTexture);
 		defaultMaterial_->SetTexture("DiffMap", defaultTexture);
-		*/
+		
 
 	}
 

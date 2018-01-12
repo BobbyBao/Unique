@@ -46,8 +46,6 @@ namespace Unique
 
 		/// Invoke event handler function.
 		virtual void Invoke(const Event& eventData) = 0;
-		/// Return a unique copy of the event handler.
-		virtual EventHandler* Clone() const = 0;
 
 		/// Return event receiver.
 		Object* GetReceiver() const { return receiver_; }
@@ -93,19 +91,13 @@ namespace Unique
 			T* receiver = static_cast<T*>(receiver_);
 			(receiver->*function_)((const E&)eventData);
 		}
-
-		/// Return a unique copy of the event handler.
-		virtual EventHandler* Clone() const
-		{
-			return new TEventHandler(static_cast<T*>(receiver_), function_, userData_);
-		}
-
+		
 	private:
 		/// Class-specific pointer to handler function.
 		HandlerFunctionPtr function_;
 	};
 
-	typedef void(__stdcall *EventFn)(Object* self, const void* eventData);
+	typedef void(__stdcall *EventFn)(Object* receiver, const void* eventData);
 
 	class StaticEventHandler : public EventHandler
 	{
@@ -123,11 +115,6 @@ namespace Unique
 			function_(receiver_, &eventData);
 		}
 
-		/// Return a unique copy of the event handler.
-		virtual EventHandler* Clone() const
-		{
-			return new StaticEventHandler(receiver_, function_);
-		}
 	private:
 		/// Class-specific pointer to handler function.
 		EventFn function_;

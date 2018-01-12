@@ -677,6 +677,10 @@ namespace Unique
 
 		if (instances_.size() && !geometry_->IsEmpty())
 		{
+			if (isBase_ && material_)
+			{
+				material_->Apply(pipelineState_);
+			}
 			// Draw as individual objects if instancing not supported or could not fill the instancing buffer
 			VertexBuffer* instanceBuffer = renderer.GetInstancingBuffer();
 			if (!instanceBuffer || geometryType_ != GEOM_INSTANCED || startIndex_ == M_MAX_UNSIGNED)
