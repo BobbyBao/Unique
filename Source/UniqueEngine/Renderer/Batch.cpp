@@ -630,8 +630,8 @@ namespace Unique
 
 			if (scissor_ != 0)
 			{
-			//	auto& scissor = GetSubsystem<Renderer>().GetScissor(scissor_);
-			//	deviceContext->SetScissorRects(1, (Diligent::Rect*)&scissor, 0, 0);
+				auto& scissor = GetSubsystem<Renderer>().GetScissor(scissor_);
+				deviceContext->SetScissorRects(1, (Diligent::Rect*)&scissor, 0, 0);
 			}
 
 			if (geometryType_ == GEOM_TRANSIENT )

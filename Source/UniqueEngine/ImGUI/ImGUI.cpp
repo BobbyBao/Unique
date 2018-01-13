@@ -69,7 +69,7 @@ namespace Unique
 
 	enum theme { THEME_BLACK, THEME_WHITE, THEME_RED, THEME_BLUE, THEME_DARK };
 
-	void set_style(struct nk_context *ctx, enum theme theme)
+	UNIQUE_C_API void set_style(struct nk_context *ctx, enum theme theme)
 	{
 		struct nk_color table[NK_COLOR_COUNT];
 		if (theme == THEME_WHITE) {
@@ -278,7 +278,7 @@ namespace Unique
 			nk_style_set_font(&impl_.ctx, &droid->handle);
 		}
 
-		set_style(ctx, THEME_DARK);
+		//set_style(ctx, THEME_DARK);
 	}
 
 	void GUI::FontStashBegin(struct nk_font_atlas **atlas)
@@ -441,7 +441,7 @@ namespace Unique
 	void GUI::HandleBeginFrame(const BeginFrame& eventData)
 	{
 		SendEvent(GUIEvent());
-		/*
+		
 		nk_context *ctx = &impl_.ctx;
 
 		if (nk_begin(ctx, "Demo", nk_rect(50, 50, 230, 250),
@@ -475,7 +475,8 @@ namespace Unique
 				nk_combo_end(ctx);
 			}
 		}
-		nk_end(ctx);*/
+		nk_end(ctx);
+		
 	}
 
 	static void nk_get_projection_matrix(int width, int height, float *result)
@@ -494,7 +495,6 @@ namespace Unique
 		memcpy(result, matrix, sizeof(matrix));
 	}
 
-	int lastDP = 0;
 	void GUI::HandlePostRenderUpdate(const struct PostRenderUpdate& eventData)
 	{
 		auto& renderer = GetSubsystem<Renderer>();
@@ -565,12 +565,6 @@ namespace Unique
 
 			nk_clear(&impl_.ctx);
 
-			if(lastDP != 0)
-			{
-				assert(lastDP == dp);
-			}
-
-			lastDP = dp;
 		}
 	}
 }

@@ -96,7 +96,7 @@ namespace Unique
 		auto& input = GetSubsystem<Input>();
 		
 		
-		renderer.Render();
+		//renderer.Render();
 
 		Run();
 
@@ -126,11 +126,22 @@ namespace Unique
 		auto& timer = GetSubsystem<Time>();
 
 		SendEvent(Startup());
-
+		
 		frameTimer_.Reset();
 
+		int lastUpdateFrame = 0;
 		while (shouldRun_)
 		{
+			if (lastUpdateFrame != 0)
+			{
+				if (lastUpdateFrame == Graphics::currentFrame_)
+				{
+					continue;
+				}
+			}
+
+			lastUpdateFrame = Graphics::currentFrame_;
+
 			timer.BeginFrame(timeStep_);
 
 			{

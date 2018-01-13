@@ -8,10 +8,7 @@ namespace Unique.Editor
     public class EditorApplication : Application
     {
         Scene scene;
-        Node lightNode;
         Camera camera;
-        Node floorNode;
-        Node characterNode;
 
         protected override void Initialize()
         {
@@ -52,10 +49,7 @@ namespace Unique.Editor
         {
             base.Shutdown();
         }
-
-
-        float val;
-
+                
         protected override void OnGUI()
         {
             ImGUI.Begin("test", new nk_rect(50, 50, 230, 250),
@@ -68,11 +62,7 @@ namespace Unique.Editor
         {
             UpdateCamera(timeStep);
         }
-
-        IntVector3 mouseNow_;
-        IntVector3 mouseLast_;
-        float mouseSpeed_ = 0.10f;
-        float moveSpeed_ = 30.0f;
+        
         /// Camera yaw angle.
         float yaw_;
         /// Camera pitch angle.

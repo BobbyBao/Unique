@@ -91,6 +91,7 @@ namespace Unique
 
 		//**************************
 		static int currentContext_;
+		static int currentFrame_;
 		inline static int GetRenderContext() { return 1 - currentContext_; }
 
 	protected:

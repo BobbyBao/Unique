@@ -18,6 +18,7 @@ namespace Unique
 	IDeviceContext* deviceContext = nullptr;
 	ThreadID Graphics::renderThreadID = 0;
 	int Graphics::currentContext_ = 0;
+	int Graphics::currentFrame_ = 0;
 	bool Graphics::singleThreaded_ = false;
 	Semaphore Graphics::renderSem_;
 	Semaphore Graphics::mainSem_;
@@ -239,7 +240,7 @@ namespace Unique
 
 			//LOG_INFO_MESSAGE("Render");
 
-			//SwapContext();
+			SwapContext();
 
 			RenderSemPost();
 		}
@@ -273,13 +274,14 @@ namespace Unique
 	
 	void Graphics::SwapContext()
 	{
+		currentFrame_++;
 		currentContext_ = 1 - currentContext_;
 		LOG_INFO_MESSAGE("===============SwapContext : ", currentContext_);
 	}
 
 	void Graphics::FrameNoRenderWait()
 	{
-		SwapContext();
+		//SwapContext();
 		// release render thread
 		MainSemPost();
 	}

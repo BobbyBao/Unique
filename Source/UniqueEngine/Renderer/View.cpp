@@ -302,6 +302,7 @@ namespace Unique
 		return true;
 	}
 
+	int lastUpdateFrame = 0;
 	void View::Update(const FrameInfo& frame)
 	{
 		frame_.camera_ = camera_;
@@ -332,8 +333,17 @@ namespace Unique
 		GetDrawables();
 
 		GetBatches();
-		
-		LOG_INFO_MESSAGE("Update : ", Graphics::currentContext_);
+// 
+// 		if (lastUpdateFrame != 0)
+// 		{
+// 			if (lastUpdateFrame == Graphics::currentFrame_)
+// 			{
+// 				assert(false);
+// 			}
+// 		}
+// 		lastUpdateFrame = Graphics::currentFrame_;
+// 		
+ 		LOG_INFO_MESSAGE("Update : ", Graphics::currentContext_);
 
 	}
 
@@ -400,9 +410,9 @@ namespace Unique
 
 	}
 
+	int lastRenderFrame = 0;
 	void View::Render()
 	{
-		LOG_INFO_MESSAGE("Render : ", Graphics::GetRenderContext());
 	//	renderPath_->Render(this);
 		
 		auto& passes = RenderContext(scenePasses_);
@@ -412,6 +422,17 @@ namespace Unique
 			scenePassInfo.batchQueue_->Draw(this, camera_);
 		}
 
+		if (lastRenderFrame != 0)
+		{
+			if (lastRenderFrame == Graphics::currentFrame_)
+			{
+				assert(false);
+			}
+		}
+
+		lastRenderFrame = Graphics::currentFrame_;
+
+		LOG_INFO_MESSAGE("Render : ", Graphics::GetRenderContext());
 	}
 
 	void View::SetGlobalShaderParameters()
