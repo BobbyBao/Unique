@@ -441,7 +441,7 @@ namespace Unique
 	void GUI::HandleBeginFrame(const BeginFrame& eventData)
 	{
 		SendEvent(GUIEvent());
-		
+		/*
 		nk_context *ctx = &impl_.ctx;
 
 		if (nk_begin(ctx, "Demo", nk_rect(50, 50, 230, 250),
@@ -476,7 +476,7 @@ namespace Unique
 			}
 		}
 		nk_end(ctx);
-		
+		*/
 	}
 
 	static void nk_get_projection_matrix(int width, int height, float *result)
@@ -543,7 +543,7 @@ namespace Unique
 			UIVS* ui = (UIVS*)uiConstants_->Lock();
 			nk_get_projection_matrix(graphics.GetWidth(), graphics.GetHeight(), &ui->UIProj.m00_);
 			uiConstants_->Unlock();
-			int dp = 0;
+			
 			/* iterate over and execute each draw command */
 			nk_draw_foreach(cmd, &impl_.ctx, &impl_.cmds)
 			{
@@ -560,7 +560,6 @@ namespace Unique
 				batch.indexCount_ = cmd->elem_count;
 				renderer.AddBatch(batch);
 				offset += cmd->elem_count;
-				dp++;
 			}
 
 			nk_clear(&impl_.ctx);

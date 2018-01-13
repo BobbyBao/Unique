@@ -105,16 +105,16 @@ namespace Unique.Engine
         NK_SYMBOL_MAX
     }
 
-    enum Theme { BLACK, WHITE, RED, BLUE, DARK }
+    public enum Theme { BLACK, WHITE, RED, BLUE, DARK }
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    delegate int nk_plugin_filter(IntPtr text_edit, uint unicode);
+    public delegate int nk_plugin_filter(IntPtr text_edit, uint unicode);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    delegate float value_getter(IntPtr user, int index);
+    public delegate float value_getter(IntPtr user, int index);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    delegate void item_getter(IntPtr user, int p, [MarshalAs(UnmanagedType.LPArray)] string[] items);
+    public delegate void item_getter(IntPtr user, int p, [MarshalAs(UnmanagedType.LPArray)] string[] items);
     
     [SuppressUnmanagedCodeSecurity]
     public unsafe static partial class ImGUI

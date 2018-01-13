@@ -31,7 +31,7 @@ namespace Unique.Engine
 
         public StaticModel Model(ResourceRef model)
         {
-            StaticModel_SetModelAttr(nativePtr, ref model.data);
+            StaticModel_SetModelAttr(nativePtr, ref model.name);
             return this;
         }
 

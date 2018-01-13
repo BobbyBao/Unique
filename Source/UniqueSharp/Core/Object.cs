@@ -20,35 +20,54 @@ namespace Unique.Engine
 
         public void Subscribe<T>(Action<T> action)
         {
-            Object_Subscribe(native_, ref TypeOf<T>(), (receiver, eventData) =>
+            EventFn cb = (receiver, eventData) =>
             {
-                T t = Marshal.PtrToStructure<T>(eventData);
                 action(Utilities.As<T>(eventData));
-            });
+            };
+
+            Object_Subscribe(native_, ref TypeOf<T>(), cb);
+
+            GC.KeepAlive(action);
+            GC.KeepAlive(cb);
         }
 
         public void SubscribeTo<T>(Object sender, Action<T> action)
         {
-            Object_SubscribeTo(native_, sender.native_, ref TypeOf<T>(), (receiver, ed) =>
+            EventFn cb = (receiver, eventData) =>
             {
-                action(Utilities.As<T>(ed));
-            });
+                action(Utilities.As<T>(eventData));
+            };
+
+            Object_SubscribeTo(native_, sender.native_, ref TypeOf<T>(), cb);
+
+            GC.KeepAlive(action);
+            GC.KeepAlive(cb);
         }
 
         public void Subscribe<T>(ref StringID eventType, Action<T> action)
         {
-            Object_Subscribe(native_, ref eventType, (receiver, eventData) =>
+            EventFn cb = (receiver, eventData) =>
             {
                 action(Utilities.As<T>(eventData));
-            });
+            };
+
+            Object_Subscribe(native_, ref eventType, cb);
+
+            GC.KeepAlive(action);
+            GC.KeepAlive(cb);
         }
 
         public void SubscribeTo<T>(Object sender, ref StringID eventType, Action<T> action)
         {
-            Object_SubscribeTo(native_, sender.native_, ref eventType, (receiver, eventData) =>
+            EventFn cb = (receiver, eventData) =>
             {
                 action(Utilities.As<T>(eventData));
-            });
+            };
+
+            Object_SubscribeTo(native_, sender.native_, ref eventType, cb);
+
+            GC.KeepAlive(action);
+            GC.KeepAlive(cb);
         }
         
         public void SendEvent<T>(ref T eventData) where T : struct

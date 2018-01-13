@@ -276,7 +276,7 @@ namespace Unique
 	{
 		currentFrame_++;
 		currentContext_ = 1 - currentContext_;
-		LOG_INFO_MESSAGE("===============SwapContext : ", currentContext_);
+	//	LOG_INFO_MESSAGE("===============SwapContext : ", currentContext_);
 	}
 
 	void Graphics::FrameNoRenderWait()

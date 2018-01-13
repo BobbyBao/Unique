@@ -13,9 +13,9 @@ namespace Unique
 		/// Construct.
 		ResourceRef();
 		/// Construct with type only and empty id.
-		ResourceRef(StringID type);
+		ResourceRef(const StringID& type);
 		/// Construct with type and resource name.
-		ResourceRef(StringID type, const String& name);
+		ResourceRef(const StringID& type, const String& name);
 		/// Construct with type and resource name.
 		ResourceRef(const String& type, const String& name);
 		/// Construct with type and resource name.
@@ -54,17 +54,11 @@ namespace Unique
 		}
 
 		/// Construct with type only.
-		ResourceRefList(StringID type) :
-			type_(type)
-		{
-		}
-
+		ResourceRefList(const StringID& type);
 		/// Construct with type and id list.
-		ResourceRefList(StringID type, const StringVector& names) :
-			type_(type),
-			names_(names)
-		{
-		}
+		ResourceRefList(const StringID& type, const StringVector& names);
+		/// Construct with type and id list.
+		ResourceRefList(const StringID& type, const char** names, int count);
 
 		/// Object type.
 		StringID type_;

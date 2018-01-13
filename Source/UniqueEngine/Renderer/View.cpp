@@ -177,13 +177,11 @@ namespace Unique
 		sceneResults_.resize(numThreads);
 		frame_.camera_ = nullptr;
 		
-		
 		frameUniform_ = new UniformBuffer(FrameParameter());
 		cameraVS_ = new UniformBuffer(CameraVS());
 		objectVS_ = new UniformBuffer(ObjectVS());
 		skinnedVS_ = new UniformBuffer(SkinnedVS());
 		billboardVS_ = new UniformBuffer(BillboardVS());
-
 		cameraPS_ = new UniformBuffer(CameraPS());
 		materialPS_ = new UniformBuffer(MaterialPS());
 
@@ -343,7 +341,7 @@ namespace Unique
 // 		}
 // 		lastUpdateFrame = Graphics::currentFrame_;
 // 		
- 		LOG_INFO_MESSAGE("Update : ", Graphics::currentContext_);
+ 		//LOG_INFO_MESSAGE("Update : ", Graphics::currentContext_);
 
 	}
 
@@ -432,7 +430,7 @@ namespace Unique
 
 		lastRenderFrame = Graphics::currentFrame_;
 
-		LOG_INFO_MESSAGE("Render : ", Graphics::GetRenderContext());
+		//LOG_INFO_MESSAGE("Render : ", Graphics::GetRenderContext());
 	}
 
 	void View::SetGlobalShaderParameters()

@@ -77,16 +77,13 @@ namespace Unique.Engine
                 Shutdown();
             });
 
-            Subscribe((GUIEvent e) =>
-            {
-                OnGUI();
-            });
+            Subscribe<GUIEvent>(HandleGUIEvent);
 
-            Subscribe((Update e) =>
-            {
-                UpdateFrame(e.timeStep);
-            });
+            Subscribe<Update>(HandleUpdate);
         }
+
+        void HandleGUIEvent(GUIEvent e) => OnGUI();
+        void HandleUpdate(Update e) => UpdateFrame(e.timeStep);
 
         protected virtual void Initialize()
         {

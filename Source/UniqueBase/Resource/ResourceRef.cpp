@@ -10,13 +10,13 @@ ResourceRef::ResourceRef()
 }
 
 /// Construct with type only and empty id.
-ResourceRef::ResourceRef(StringID type) :
+ResourceRef::ResourceRef(const StringID& type) :
 	type_(type)
 {
 }
 
 /// Construct with type and resource name.
-ResourceRef::ResourceRef(StringID type, const String& name) :
+ResourceRef::ResourceRef(const StringID& type, const String& name) :
 	type_(type),
 	name_(name)
 {
@@ -43,5 +43,27 @@ ResourceRef::ResourceRef(const ResourceRef& rhs) :
 {
 }
 
+/// Construct with type only.
+ResourceRefList::ResourceRefList(const StringID& type) :
+	type_(type)
+{
+}
+
+/// Construct with type and id list.
+ResourceRefList::ResourceRefList(const StringID& type, const StringVector& names) :
+	type_(type),
+	names_(names)
+{
+}
+		
+/// Construct with type and id list.
+ResourceRefList::ResourceRefList(const StringID& type, const char** names, int count) :
+	type_(type)
+{
+	for(int i = 0; i < count; i++)
+	{
+		names_.push_back(names[i]);
+	}
+}
 
 }

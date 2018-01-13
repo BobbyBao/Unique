@@ -12,10 +12,8 @@ namespace Unique.Engine
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)]
         public static extern IntPtr StringID_new([MarshalAs(UnmanagedType.LPStr)]string name);
 
-
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr Context_CreateObject(IntPtr conext, ref StringID type);
-
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void Object_AddRef(IntPtr intPtr);

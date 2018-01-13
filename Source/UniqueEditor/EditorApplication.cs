@@ -40,7 +40,7 @@ namespace Unique.Editor
             .Viewport(0)
             .Rect(new IntRect(0, 0, 1280, 720))               
             .Camera(camera)
-            .Debug(true)
+            .Debug(false)
             .Scene(scene);
 
         }
@@ -49,15 +49,25 @@ namespace Unique.Editor
         {
             base.Shutdown();
         }
-                
+
+        int selected = 0;
         protected override void OnGUI()
         {
-            ImGUI.Begin("test", new nk_rect(50, 50, 230, 250),
-            nk_panel_flags.NK_WINDOW_BORDER | nk_panel_flags.NK_WINDOW_MOVABLE | nk_panel_flags.NK_WINDOW_SCALABLE |
-            nk_panel_flags.NK_WINDOW_MINIMIZABLE | nk_panel_flags.NK_WINDOW_TITLE);
-            ImGUI.LayoutRowDynamic(35);
-            ImGUI.Combo(new string[] { "111", "222" }, 0, 20, new nk_vec2(100, 20));
-            ImGUI.End();
+            if(ImGUI.Begin("Demo", new nk_rect(50, 50, 230, 250),
+                nk_panel_flags.NK_WINDOW_BORDER | nk_panel_flags.NK_WINDOW_MOVABLE | nk_panel_flags.NK_WINDOW_SCALABLE |
+                nk_panel_flags.NK_WINDOW_MINIMIZABLE | nk_panel_flags.NK_WINDOW_TITLE))
+            {
+                ImGUI.LayoutRowDynamic(35);
+                
+                int sel =  ImGUI.Combo(typeof(Theme).GetEnumNames(), selected, 20, new nk_vec2(100, 200));
+                if (sel != selected)
+                {
+                    selected = sel;
+                    ImGUI.SetStyle((Theme)selected);
+                }
+            }
+
+            ImGUI.End();            
         }
 
         protected override void UpdateFrame(float timeStep)
@@ -69,9 +79,6 @@ namespace Unique.Editor
         float yaw_;
         /// Camera pitch angle.
         float pitch_;
-        /// Flag to indicate whether touch input has been enabled.
-        bool touchEnabled_;
-
         void UpdateCamera(float timeStep)
         {
             var input = Subsystem<Input>();
@@ -86,8 +93,8 @@ namespace Unique.Editor
             {
                 // Use this frame's mouse motion to adjust camera node yaw and pitch. Clamp the pitch between -90 and 90 degrees
                 IntVector2 mouseMove = input.GetMouseMove();
-                yaw_ += MOUSE_SENSITIVITY * mouseMove.x;
-                pitch_ += MOUSE_SENSITIVITY * mouseMove.y;
+                yaw_ += MOUSE_SENSITIVITY * mouseMove.x * timeStep;
+                pitch_ += MOUSE_SENSITIVITY * mouseMove.y * timeStep;
                 pitch_ = MathHelper.Clamp(pitch_, -90.0f, 90.0f);
 
                 // Construct new orientation for the camera scene node from yaw and pitch. Roll is fixed to zero
