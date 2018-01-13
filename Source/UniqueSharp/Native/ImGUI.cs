@@ -32,7 +32,15 @@ namespace Unique.Engine
     
     public struct nk_color { public byte r, g, b, a; }
     public struct nk_colorf { public float r, g, b, a; }
-    public struct nk_vec2 { public float x, y; }
+    public struct nk_vec2
+    {
+        public nk_vec2(float x, float y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+        public float x, y;
+    }
     public struct nk_vec2i { public short x, y; }
     public struct nk_rect
     {
@@ -96,7 +104,9 @@ namespace Unique.Engine
         NK_SYMBOL_MINUS,
         NK_SYMBOL_MAX
     }
-    
+
+    enum Theme { BLACK, WHITE, RED, BLUE, DARK }
+
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     delegate int nk_plugin_filter(IntPtr text_edit, uint unicode);
 
@@ -119,7 +129,9 @@ namespace Unique.Engine
          *      returns 1 if the window can be filled up with widgets from this point until `nk_end or 0 otherwise for example if minimized `*/
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern IntPtr nk_ctx();
-       
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern IntPtr nk_set_style(IntPtr ctx, Theme theme);
         /*  nk_begin - starts a new window; needs to be called every frame for every window (unless hidden) or otherwise the window gets removed
          *  Parameters:
          *      @ctx must point to an previously initialized `nk_context` struct

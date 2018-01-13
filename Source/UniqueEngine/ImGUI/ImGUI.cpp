@@ -69,7 +69,7 @@ namespace Unique
 
 	enum theme { THEME_BLACK, THEME_WHITE, THEME_RED, THEME_BLUE, THEME_DARK };
 
-	UNIQUE_C_API void set_style(struct nk_context *ctx, enum theme theme)
+	UNIQUE_C_API void nk_set_style(struct nk_context *ctx, enum theme theme)
 	{
 		struct nk_color table[NK_COLOR_COUNT];
 		if (theme == THEME_WHITE) {

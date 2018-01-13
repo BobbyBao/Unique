@@ -40,7 +40,7 @@ namespace Unique.Editor
             .Viewport(0)
             .Rect(new IntRect(0, 0, 1280, 720))               
             .Camera(camera)
-            .Debug(false)
+            .Debug(true)
             .Scene(scene);
 
         }
@@ -55,6 +55,8 @@ namespace Unique.Editor
             ImGUI.Begin("test", new nk_rect(50, 50, 230, 250),
             nk_panel_flags.NK_WINDOW_BORDER | nk_panel_flags.NK_WINDOW_MOVABLE | nk_panel_flags.NK_WINDOW_SCALABLE |
             nk_panel_flags.NK_WINDOW_MINIMIZABLE | nk_panel_flags.NK_WINDOW_TITLE);
+            ImGUI.LayoutRowDynamic(35);
+            ImGUI.Combo(new string[] { "111", "222" }, 0, 20, new nk_vec2(100, 20));
             ImGUI.End();
         }
 
