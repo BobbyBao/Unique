@@ -161,12 +161,19 @@ namespace Unique
 
 		return GPUObject::Create();
 	}
-
+	
 	bool Texture::CreateImpl()
 	{
 		auto& graphics = GetSubsystem<Graphics>();
 		graphics.CreateTexture(desc_, texData_, *this);
-		
+		CreateTextureView();
+		return deviceObject_ != nullptr;
+	}
+
+	
+	bool Texture::CreateTextureView()
+	{
+		auto& graphics = GetSubsystem<Graphics>();
 		if (!deviceObject_)
 		{
 			return false;
@@ -200,7 +207,7 @@ namespace Unique
 			shaderResourceView_->SetSampler(sampler_);
 		}
 
-		return deviceObject_ != nullptr;
+		return true;
 	}
 
 	void Texture::ReleaseImpl()

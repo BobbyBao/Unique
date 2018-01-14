@@ -57,13 +57,10 @@ ResourceRefList::ResourceRefList(const StringID& type, const StringVector& names
 }
 		
 /// Construct with type and id list.
-ResourceRefList::ResourceRefList(const StringID& type, const char** names, int count) :
+ResourceRefList::ResourceRefList(const char* type, const char* names) :
 	type_(type)
 {
-	for(int i = 0; i < count; i++)
-	{
-		names_.push_back(names[i]);
-	}
+	names_ = String::Split(names, ';');
 }
 
 }

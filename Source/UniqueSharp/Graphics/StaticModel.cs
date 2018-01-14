@@ -31,13 +31,13 @@ namespace Unique.Engine
 
         public StaticModel Model(ResourceRef model)
         {
-            StaticModel_SetModelAttr(nativePtr, ref model.name);
+            StaticModel_SetModelAttr(nativePtr, model.native_);
             return this;
         }
 
         public StaticModel Material(ResourceRefList mat)
         {
-            StaticModel_SetMaterialsAttr(nativePtr, ref mat.data);
+            StaticModel_SetMaterialsAttr(nativePtr, mat.native_);
             return this;
         }
 
@@ -51,10 +51,10 @@ namespace Unique.Engine
         static extern void StaticModel_SetMaterialAt(IntPtr self, int index, IntPtr material);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern void StaticModel_SetModelAttr(IntPtr self, ref ResourceRef.Data model);
+        static extern void StaticModel_SetModelAttr(IntPtr self, IntPtr model);
           
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern void StaticModel_SetMaterialsAttr(IntPtr self, ref ResourceRefList.Data material);
+        static extern void StaticModel_SetMaterialsAttr(IntPtr self, IntPtr material);
 
     }
 }

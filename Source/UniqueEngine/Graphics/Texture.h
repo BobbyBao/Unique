@@ -52,7 +52,7 @@ namespace Unique
 
 		bool Create(const TextureDesc& desc, Vector< Vector<byte> >&& texData);
 		bool Create(Image& img, const TextureLoadInfo& TexLoadInfo = TextureLoadInfo());
-
+		
 		uint GetWidth() const { return desc_.Width; }
 
 		uint GetHeight() const { return desc_.Height; }
@@ -64,6 +64,7 @@ namespace Unique
 		ISampler*	GetSampler() { return sampler_; }
 	protected:
 		bool CreateImpl();
+		bool CreateTextureView();
 		void ReleaseImpl();
 
 		TextureDesc desc_;
@@ -77,6 +78,8 @@ namespace Unique
 
 		Vector<TextureSubResData> pSubResources;
 		Vector< Vector<byte> > Mips;
+
+		friend class TextureImporter;
 	};
 
 	class TextureView : public RefCounted

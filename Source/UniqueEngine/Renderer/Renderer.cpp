@@ -62,11 +62,13 @@ namespace Unique
 		defaultMaterial_->SetShaderAttr(ResourceRef::Create<Shader>("Shaders/Textured.shader"));
 		
 		SPtr<Texture> defaultTexture(new Texture());
-		int w = 4;
-		int h = 4;
+		int w = 1;
+		int h = 1;
+
 		Vector<Vector<byte>> mip(1);	
 		Vector<byte>& subData = mip.back();
 		subData.resize(w * h * 4, 255);
+		subData[1] = 0;
 
 		TextureDesc desc;
 		desc.Type = Diligent::RESOURCE_DIM_TEX_2D;
@@ -81,10 +83,9 @@ namespace Unique
 		desc.CPUAccessFlags = 0;
 		
 		defaultTexture->Create(desc, std::move(mip));
-		defaultTexture->SetName("White");
+		defaultTexture->SetName("Magenta");
 		cache.RegisterResource(defaultTexture);
 		defaultMaterial_->SetTexture("DiffMap", defaultTexture);
-		
 
 	}
 

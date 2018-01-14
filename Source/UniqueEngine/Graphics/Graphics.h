@@ -52,8 +52,8 @@ namespace Unique
 		bool IsDirect3D() const;
 		bool IsOpenGL() const;
 		bool IsSRgb() const { return srgb_; }
-		//***MainThread***
 
+		//***MainThread***
 		template<class T>
 		SPtr<UniformBuffer> AddUniformBuffer()
 		{
@@ -79,8 +79,6 @@ namespace Unique
 		virtual void CreateSampler(const Diligent::SamplerDesc& samDesc, Diligent::ISampler **ppSampler);
 		virtual void CreateResourceMapping(const Diligent::ResourceMappingDesc &mappingDesc, Diligent::IResourceMapping **ppMapping);
 		virtual void CreatePipelineState(const Diligent::PipelineStateDesc &pipelineDesc, IPipelineState** pipelineState);
-
-
 
 		void BeginRender();
 		void EndRender();

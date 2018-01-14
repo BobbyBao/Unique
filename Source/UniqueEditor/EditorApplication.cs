@@ -24,8 +24,8 @@ namespace Unique.Editor
                 .Position(Vector3.Zero)
                 .Scaling(new Vector3(30.0f, 30.0f, 30.0f))
                 .Component<StaticModel>(sm => sm
-                    .Model(new ResourceRef("Models/Plane.mdl"))
-                    .Material(new ResourceRefList(new List<string> { "Models/Stone.material" }))
+                    .Model(new ResourceRef(TypeOf<Model>(), "Models/Plane.mdl"))
+                    .Material(new ResourceRefList(TypeOf<Material>(), "Models/Stone.material"))
                 )
             )
             .Child("Camera", c => c
@@ -87,7 +87,7 @@ namespace Unique.Editor
             // Movement speed as world units per second
             const float MOVE_SPEED = 20.0f;
             // Mouse sensitivity as degrees per pixel
-            const float MOUSE_SENSITIVITY = 1.0f;
+            const float MOUSE_SENSITIVITY = 10.0f;
 
             if (input.GetMouseButtonDown(MouseButton.Right))
             {

@@ -2,7 +2,7 @@
     "Type": "Material",
     "Shader": {
         "Type": "Shader",
-        "Name": "Shaders/Textured.shader"
+        "Name": "Shaders/Normal.shader"
     },
     "ShaderDefines": "",
     "Uniforms": [],
@@ -12,13 +12,6 @@
             "Texture": {
                 "Type": "Texture",
                 "Name": "Textures/StoneDiffuse.dds"
-            }
-        },
-        {
-            "Name": "NormalMap",
-            "Texture": {
-                "Type": "Texture",
-                "Name": "Textures/StoneNormal.dds"
             }
         }
     ]

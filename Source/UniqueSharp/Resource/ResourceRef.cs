@@ -7,25 +7,31 @@ namespace Unique.Engine
 {
     public partial class ResourceRef : DisposeBase
     {
-        IntPtr native_;
-        public string name { get; set; }
+        public IntPtr native_;
+        public StringID type_;
+        public string name_;
 
-        public ResourceRef(string name)
+        public ResourceRef(StringID type, string name)
         {
-            this.name = name;
+            type_ = type;
+            name_ = name;
+            native_ = ResourceRef_new(type, name);
         }
         
     }
 
     public partial class ResourceRefList : DisposeBase
     {
-        IntPtr native_;
-        public ResourceRefList(List<string> n)
+        public IntPtr native_;
+        public StringID type_;
+        public string names_;
+        public ResourceRefList(StringID type, string names)
         {
-            names = n;
+            type_ = type;
+            names_ = names;
+            native_ = ResourceRefList_new(type, names);
         }
         
-        public List<string> names { get; set; }
         
         
     }

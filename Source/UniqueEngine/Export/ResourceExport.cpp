@@ -2,8 +2,16 @@
 
 using namespace Unique;
 
-uExportNew(ResourceRef, const StringID&, type, const String&, name)
+UNIQUE_C_API ResourceRef* ResourceRef_new(const char* type, const char* name)
+{
+	return new ResourceRef(type, name);
+}
+
 uExportDelete(ResourceRef)
 
-uExportNew(ResourceRefList, const StringID&, type, const char**, name, int, count)
+UNIQUE_C_API ResourceRefList* ResourceRefList_new(const char* type, const char* name)
+{
+	return new ResourceRefList(type, name);
+}
+
 uExportDelete(ResourceRefList)

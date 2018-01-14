@@ -26,6 +26,16 @@ uExport(Camera, void, SetFlipVertical, bool)
 uExport(StaticModel, void, SetModel, Model*, model)
 uExport(StaticModel, void, SetMaterial, Material*, material)
 //uExport(StaticModel, void, SetMaterialAt, int, index, Material*, material)
-uExport (StaticModel, void, SetModelAttr, const ResourceRef&, model)
-uExport (StaticModel, void, SetMaterialsAttr, const ResourceRefList&, material)
 
+UNIQUE_C_API void StaticModel_SetModelAttr(StaticModel* self, ResourceRef* model)
+{
+	self->SetModelAttr(*model);
+}
+
+UNIQUE_C_API void StaticModel_SetMaterialsAttr(StaticModel* self, ResourceRefList* material)
+{
+	self->SetMaterialsAttr(*material);
+}
+
+uExport(Graphics, int, GetWidth)
+uExport(Graphics, int, GetHeight)

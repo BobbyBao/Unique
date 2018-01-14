@@ -58,7 +58,7 @@ namespace Unique
 		/// Construct with type and id list.
 		ResourceRefList(const StringID& type, const StringVector& names);
 		/// Construct with type and id list.
-		ResourceRefList(const StringID& type, const char** names, int count);
+		ResourceRefList(const char* type, const char* names);
 
 		/// Object type.
 		StringID type_;
