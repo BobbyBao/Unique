@@ -29,7 +29,7 @@ namespace Unique.Editor
                 )
             )
             .Child("Camera", c => c
-                .Position(new Vector3(0.0f, 20.0f, -30.0f))
+                .Position(new Vector3(0.0f, 10.0f, -30.0f))
                 .LookAt(new Vector3(0.0f, 0.0f, 0.0f))
                 .Component<Camera>( cam => cam
                     .Store(ref camera)

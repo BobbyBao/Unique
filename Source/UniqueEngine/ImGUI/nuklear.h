@@ -16465,7 +16465,7 @@ nk_do_color_picker(nk_flags *state,
  * ===============================================================*/
 NK_API void nk_style_default(struct nk_context *ctx){nk_style_from_table(ctx, 0);}
 #define NK_COLOR_MAP(NK_COLOR)\
-    NK_COLOR(NK_COLOR_TEXT,                 175,175,175,255) \
+    NK_COLOR(NK_COLOR_TEXT,                 225,225,225,255) \
     NK_COLOR(NK_COLOR_WINDOW,               45, 45, 45, 255) \
     NK_COLOR(NK_COLOR_HEADER,               40, 40, 40, 255) \
     NK_COLOR(NK_COLOR_BORDER,               65, 65, 65, 255) \
