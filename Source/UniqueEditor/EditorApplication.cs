@@ -20,6 +20,13 @@ namespace Unique.Editor
             .Child("Light", c => c
                 .Component<Light>()
             )
+            .Child("Camera", c => c
+                .Position(new Vector3(0.0f, 10.0f, -30.0f))
+                .LookAt(new Vector3(0.0f, 0.0f, 0.0f))
+                .Component<Camera>( cam => cam
+                    .Store(ref camera)
+                )
+            )
             .Child("Floor", c => c
                 .Position(Vector3.Zero)
                 .Scaling(new Vector3(30.0f, 30.0f, 30.0f))
@@ -28,13 +35,15 @@ namespace Unique.Editor
                     .Material(new ResourceRefList(TypeOf<Material>(), "Models/Stone.material"))
                 )
             )
-            .Child("Camera", c => c
-                .Position(new Vector3(0.0f, 10.0f, -30.0f))
-                .LookAt(new Vector3(0.0f, 0.0f, 0.0f))
-                .Component<Camera>( cam => cam
-                    .Store(ref camera)
+            /*
+            .Child("Mushroom", c => c
+                .Position(Vector3.Zero)
+                .Component<StaticModel>(sm => sm
+                    .Model(new ResourceRef(TypeOf<Model>(), "Models/Mushroom.mdl"))
+                    .Material(new ResourceRefList(TypeOf<Material>(), "Models/Mushroom.material"))
                 )
-            );
+            )*/
+            ;
 
             Subsystem<Renderer>()
             .Viewport(0)
@@ -54,20 +63,42 @@ namespace Unique.Editor
         protected override void OnGUI()
         {
 
-            if(ImGUI.Begin("Demo", new nk_rect(50, 50, 230, 250),
+            if(ImGUI.Begin("Demo", new nk_rect(50, 50, 230, 250), 
                 nk_panel_flags.NK_WINDOW_BORDER | nk_panel_flags.NK_WINDOW_MOVABLE | nk_panel_flags.NK_WINDOW_SCALABLE |
                 nk_panel_flags.NK_WINDOW_MINIMIZABLE | nk_panel_flags.NK_WINDOW_TITLE))
             {
                 ImGUI.MenubarBegin();
-                ImGUI.LayoutRowStatic(40, 40, 1);
-                if(ImGUI.MenuBeginText("File", 4, (uint)nk_text_alignment.NK_TEXT_LEFT,  new nk_vec2(100, 20)))
+                ImGUI.LayoutRowStatic(40, 40, 2);
+                if(ImGUI.MenuBeginText("File", 4, nk_text_alignment.NK_TEXT_LEFT,  new nk_vec2(100, 100)))
                 {
+                    ImGUI.LayoutRowDynamic(25);
+                    if (ImGUI.MenuItemText("Open", nk_text_alignment.NK_TEXT_LEFT))
+                    {
+
+                    }
                    
                     ImGUI.MenuEnd();
                 }
 
+                if (ImGUI.MenuBeginText("Skin", 4, nk_text_alignment.NK_TEXT_LEFT, new nk_vec2(100, 160)))
+                {
+                    ImGUI.LayoutRowDynamic(25);
+                    string[] names = typeof(Theme).GetEnumNames();
+                    for(int i = 0; i < names.Length; i++)
+                    {
+                        if (ImGUI.MenuItemSymbolText(i == selected ? nk_symbol_type.NK_SYMBOL_X : nk_symbol_type.NK_SYMBOL_NONE, names[i], nk_text_alignment.NK_TEXT_CENTERED))
+                        {
+                            selected = i;
+                            ImGUI.SetStyle((Theme)selected);
+                        }
+                    }
+          
+
+                    ImGUI.MenuEnd();
+                }
                 ImGUI.MenubarEnd();
 
+                /*
                 ImGUI.LayoutRowDynamic(35);
                 
                 int sel =  ImGUI.Combo(typeof(Theme).GetEnumNames(), selected, 20, new nk_vec2(100, 200));
@@ -75,7 +106,7 @@ namespace Unique.Editor
                 {
                     selected = sel;
                     ImGUI.SetStyle((Theme)selected);
-                }
+                }*/
             }
 
             ImGUI.End();            

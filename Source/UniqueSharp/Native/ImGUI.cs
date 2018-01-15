@@ -1270,7 +1270,7 @@ NK_API void nk_labelf(IntPtr ctx, uint, [MarshalAs(UnmanagedType.LPStr)]string, 
         static extern int nk_menu_begin_symbol_label(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string label, uint align, nk_symbol_type symbol, nk_vec2 size);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_menu_item_text(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string text, int p1, uint align);
+        static extern int nk_menu_item_text(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string text, int len, uint align);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern int nk_menu_item_label(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string label, uint alignment);

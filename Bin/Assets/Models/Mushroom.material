@@ -11,7 +11,7 @@
             "Name": "DiffMap",
             "Texture": {
                 "Type": "Texture",
-                "Name": ""Textures/Mushroom.dds""
+                "Name": "Textures/Mushroom.dds"
             }
         }
 

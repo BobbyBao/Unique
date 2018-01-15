@@ -77,8 +77,8 @@ namespace Unique.Engine
         public static nk_rect LayoutWidgetBounds() => nk_layout_widget_bounds(ctx);
         public static float LayoutRatioFromPixel(float pixel_width) => nk_layout_ratio_from_pixel(ctx, pixel_width);
         public static void LayoutRowDynamic(float height, int cols = 1) => nk_layout_row_dynamic(ctx, height, cols);
+        public static void LayoutRowStatic(float height, int itemWidth, int cols) => nk_layout_row_static(ctx, height, itemWidth, cols);
 #if false
-        public static void nk_layout_row_static(IntPtr ctx, float height, int item_width, int cols);
         public static void nk_layout_row_begin(IntPtr ctx, nk_layout_format fmt, float row_height, int cols);
         public static void nk_layout_row_push(IntPtr ctx, float value);
         public static void nk_layout_row_end(IntPtr ctx);
@@ -101,7 +101,7 @@ namespace Unique.Engine
         public static bool ButtonLabel(string label) => nk_button_label(ctx, label) != 0;
         public static bool ButtonText(string text) => nk_button_text(ctx, text, text.Length) != 0;
         public static bool ButtonText(char c) => ButtonText(c.ToString());
-        public static void LayoutRowStatic(float height, int itemWidth, int cols) => nk_layout_row_static(ctx, height, itemWidth, cols);
+
         //public static void LayoutRowDynamic(float height = 0, int cols = 1) => nk_layout_row_dynamic(ctx, height, cols);
         //public static nk_rect WindowGetBounds() => nk_window_get_bounds(ctx);        
         public static int Combo(string[] items, int selected, int item_height, nk_vec2 size) => nk_combo(ctx, items, items.Length, selected, item_height, size);
@@ -110,10 +110,10 @@ namespace Unique.Engine
 
         public static void MenubarBegin() => nk_menubar_begin(ctx);
         public static void MenubarEnd() => nk_menubar_end(ctx);
-        public static bool MenuBeginText(string title, int title_len, uint align, nk_vec2 size) => nk_menu_begin_text(ctx, title, title_len, align, size) != 0;
-        public static bool MenuBeginLabel(string label, uint align, nk_vec2 size) => nk_menu_begin_label(ctx, label, align, size) != 0;
+        public static bool MenuBeginText(string title, int title_len, nk_text_alignment align, nk_vec2 size) => nk_menu_begin_text(ctx, title, title_len, (uint)align, size) != 0;
+        public static bool MenuBeginLabel(string label, nk_text_alignment align, nk_vec2 size) => nk_menu_begin_label(ctx, label, (uint)align, size) != 0;
         public static bool MenuBeginImage(string label, nk_image image, nk_vec2 size) => nk_menu_begin_image(ctx, label, image, size) != 0;
-        public static bool MenuBeginImageText(string label, int p, uint align, nk_image image, nk_vec2 size) => nk_menu_begin_image_text(ctx, label, p, align, image, size) != 0;
+        public static bool MenuBeginImageText(string label, int p, nk_text_alignment align, nk_image image, nk_vec2 size) => nk_menu_begin_image_text(ctx, label, p, (uint)align, image, size) != 0;
         /*
         public static int nk_menu_begin_image_label(IntPtr ctx, string label, uint align, nk_image image, nk_vec2 size);
         public static int nk_menu_begin_symbol(IntPtr ctx, string label, nk_symbol_type symbol, nk_vec2 size);
@@ -122,15 +122,17 @@ namespace Unique.Engine
         */
 
 
-        public static void MenuItemText(string text, int p1, uint align) => nk_menu_item_text(ctx, text, p1, align);
+        public static bool MenuItemText(string text, nk_text_alignment align) => nk_menu_item_text(ctx, text, text.Length, (uint)align) != 0;
         /*
         public static int nk_menu_item_text(IntPtr ctx, string text, int p1, uint align);
         public static int nk_menu_item_label(IntPtr ctx, string label, uint alignment);
         public static int nk_menu_item_image_label(IntPtr ctx, nk_image image, string label, uint alignment);
         public static int nk_menu_item_image_text(IntPtr ctx, nk_image image, string text, int len, uint alignment);
-        public static int nk_menu_item_symbol_text(IntPtr ctx, nk_symbol_type symol, string text, int p1, uint alignment);
-        public static int nk_menu_item_symbol_label(IntPtr ctx, nk_symbol_type symol, string label, uint alignment);
         */
+
+        public static bool MenuItemSymbolText(nk_symbol_type symol, string text, nk_text_alignment align) => nk_menu_item_symbol_text(ctx, symol, text, text.Length, (uint)align) != 0;
+        public static bool MenuItemSymbolLabel(nk_symbol_type symol, string label, nk_text_alignment align) => nk_menu_item_symbol_label(ctx, symol, label, (uint)align) != 0;
+
         public static void MenuClose() => nk_menu_close(ctx);
         public static void MenuEnd() => nk_menu_end(ctx);
 
