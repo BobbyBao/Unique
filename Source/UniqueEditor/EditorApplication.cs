@@ -53,10 +53,21 @@ namespace Unique.Editor
         int selected = 0;
         protected override void OnGUI()
         {
+
             if(ImGUI.Begin("Demo", new nk_rect(50, 50, 230, 250),
                 nk_panel_flags.NK_WINDOW_BORDER | nk_panel_flags.NK_WINDOW_MOVABLE | nk_panel_flags.NK_WINDOW_SCALABLE |
                 nk_panel_flags.NK_WINDOW_MINIMIZABLE | nk_panel_flags.NK_WINDOW_TITLE))
             {
+                ImGUI.MenubarBegin();
+                ImGUI.LayoutRowStatic(40, 40, 1);
+                if(ImGUI.MenuBeginText("File", 4, (uint)nk_text_alignment.NK_TEXT_LEFT,  new nk_vec2(100, 20)))
+                {
+
+                    ImGUI.MenuEnd();
+                }
+
+                ImGUI.MenubarEnd();
+
                 ImGUI.LayoutRowDynamic(35);
                 
                 int sel =  ImGUI.Combo(typeof(Theme).GetEnumNames(), selected, 20, new nk_vec2(100, 200));
