@@ -62,7 +62,7 @@ namespace Unique.Editor
                 ImGUI.LayoutRowStatic(40, 40, 1);
                 if(ImGUI.MenuBeginText("File", 4, (uint)nk_text_alignment.NK_TEXT_LEFT,  new nk_vec2(100, 20)))
                 {
-
+                   
                     ImGUI.MenuEnd();
                 }
 
