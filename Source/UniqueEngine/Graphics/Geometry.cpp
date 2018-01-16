@@ -176,7 +176,7 @@ namespace Unique
 		{
 			drawAttribs.FirstIndexLocation = indexStart_;
 			drawAttribs.NumIndices = indexCount_; 
-			drawAttribs.IndexType = indexBuffer_->GetStride() == 4 ? ValueType::VT_UINT32 : ValueType::VT_UINT16;
+			drawAttribs.IndexType = indexBuffer_->GetStride() == 4 ? (VALUE_TYPE)ValueType::VT_UINT32 : (VALUE_TYPE)ValueType::VT_UINT16;
 			deviceContext->SetIndexBuffer(*indexBuffer_, 0);
 		}
 		else if (vertexCount_ > 0)
@@ -220,7 +220,7 @@ namespace Unique
 		{
 			drawAttribs.FirstIndexLocation = indexStart;
 			drawAttribs.NumIndices = indexCount;
-			drawAttribs.IndexType = indexBuffer_->GetStride() == 4 ? ValueType::VT_UINT32 : ValueType::VT_UINT16;
+			drawAttribs.IndexType = indexBuffer_->GetStride() == 4 ? (VALUE_TYPE)ValueType::VT_UINT32 : (VALUE_TYPE)ValueType::VT_UINT16;
 			deviceContext->SetIndexBuffer(*indexBuffer_, 0);
 		}
 		else if (vertexCount_ > 0)
@@ -261,7 +261,7 @@ namespace Unique
 		if (indexBuffer_ && indexCount_ > 0)
 		{	
 			drawAttribs.NumIndices = indexCount_;
-			drawAttribs.IndexType = indexBuffer_->GetStride() == 4 ? ValueType::VT_UINT32 : ValueType::VT_UINT16;
+			drawAttribs.IndexType = indexBuffer_->GetStride() == 4 ? (VALUE_TYPE)ValueType::VT_UINT32 : (VALUE_TYPE)ValueType::VT_UINT16;
 			deviceContext->SetIndexBuffer(*indexBuffer_, 0);
 	
 		}

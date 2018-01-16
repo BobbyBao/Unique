@@ -47,7 +47,7 @@ namespace Unique
 		psoDesc_.GraphicsPipeline.DepthStencilDesc = shaderProgram_->shaderPass_.depthState_;
 		psoDesc_.GraphicsPipeline.RasterizerDesc = shaderProgram_->shaderPass_.rasterizerState_;
 		psoDesc_.GraphicsPipeline.BlendDesc = shaderProgram_->shaderPass_.blendState_;
-		psoDesc_.GraphicsPipeline.InputLayout.LayoutElements = shaderProgram_->shaderPass_.inputLayout_.layoutElements_.data();
+		psoDesc_.GraphicsPipeline.InputLayout.LayoutElements = (Diligent::LayoutElement*)shaderProgram_->shaderPass_.inputLayout_.layoutElements_.data();
 		psoDesc_.GraphicsPipeline.InputLayout.NumElements = (uint)shaderProgram_->shaderPass_.inputLayout_.layoutElements_.size();
 
 		psoDesc_.IsComputePipeline = shaderProgram_->isComputePipeline_;

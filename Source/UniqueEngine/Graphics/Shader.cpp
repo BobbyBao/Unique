@@ -80,7 +80,7 @@ namespace Unique
 		LayoutElement, 
 		"BufferSlot", self.BufferSlot,
 		"NumComponents", self.NumComponents,
-		"ValueType", self.ValueType,
+		"ValueType", self.valueType,
 		"IsNormalized", self.IsNormalized,
 		"RelativeOffset", self.RelativeOffset,
 		"Frequency", self.Frequency,

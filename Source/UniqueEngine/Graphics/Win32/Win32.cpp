@@ -13,7 +13,7 @@
 #include <RenderDeviceFactoryD3D11.h>
 #include <RenderDeviceFactoryD3D12.h>
 #include <RenderDeviceFactoryOpenGL.h>
-
+#include "../GraphicsDefs.h"
 #include <Windows.h>
 
 using namespace Diligent;
@@ -32,7 +32,7 @@ namespace Unique
 	}
 
 	// Create Direct3D device and swap chain
-	void CreateDevice(SDL_Window* window, DeviceType DevType, const SwapChainDesc& SCDesc, IRenderDevice **ppRenderDevice, IDeviceContext **ppImmediateContext, ISwapChain **ppSwapChain)
+	void CreateDevice(SDL_Window* window, Unique::DeviceType DevType, const SwapChainDesc& SCDesc, IRenderDevice **ppRenderDevice, IDeviceContext **ppImmediateContext, ISwapChain **ppSwapChain)
 	{
 		HWND hWnd = GetWindowHandle(window);
 

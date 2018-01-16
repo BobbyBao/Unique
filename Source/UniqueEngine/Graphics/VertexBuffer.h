@@ -5,47 +5,6 @@
 namespace Unique
 {
 
-	/// Vertex element description for arbitrary vertex declarations.
-	struct UNIQUE_API VertexElement
-	{
-		/// Default-construct.
-		VertexElement() :
-			type_(TYPE_VECTOR3),
-			semantic_(SEM_POSITION),
-			index_(0),
-			perInstance_(false),
-			offset_(0)
-		{
-		}
-
-		/// Construct with type, semantic, index and whether is per-instance data.
-		VertexElement(VertexElementType type, VertexElementSemantic semantic, unsigned char index = 0, bool perInstance = false) :
-			type_(type),
-			semantic_(semantic),
-			index_(index),
-			perInstance_(perInstance),
-			offset_(0)
-		{
-		}
-
-		/// Test for equality with another vertex element. Offset is intentionally not compared, as it's relevant only when an element exists within a vertex buffer.
-		bool operator ==(const VertexElement& rhs) const { return type_ == rhs.type_ && semantic_ == rhs.semantic_ && index_ == rhs.index_ && perInstance_ == rhs.perInstance_; }
-
-		/// Test for inequality with another vertex element.
-		bool operator !=(const VertexElement& rhs) const { return !(*this == rhs); }
-
-		/// Data type of element.
-		VertexElementType type_;
-		/// Semantic of element.
-		VertexElementSemantic semantic_;
-		/// Semantic index of element, for example multi-texcoords.
-		unsigned char index_;
-		/// Per-instance flag.
-		bool perInstance_;
-		/// Offset of element from vertex start. Filled by VertexBuffer once the vertex declaration is built.
-		unsigned offset_;
-
-	};
 
 	class UNIQUE_API VertexBuffer : public GraphicsBuffer
 	{

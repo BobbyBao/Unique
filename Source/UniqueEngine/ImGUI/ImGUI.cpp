@@ -492,7 +492,8 @@ namespace Unique
 			{ 0.0f,             0.0f,				0.5f, 0.0f },
 			{ (R + L) / (L - R),(T + B) / (B - T),	0.5f, 1.0f },
 		};
-		memcpy(result, matrix, sizeof(matrix));
+		//memcpy(result, matrix, sizeof(matrix));
+		Matrix4::BulkTranspose(result, &matrix[0][0], 1);
 	}
 
 	void GUI::HandlePostRenderUpdate(const struct PostRenderUpdate& eventData)

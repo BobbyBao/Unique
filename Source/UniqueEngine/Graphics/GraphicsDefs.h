@@ -7,8 +7,29 @@
 
 namespace Unique
 {
-	using DeviceType = Diligent::DeviceType;
-	using ValueType = Diligent::VALUE_TYPE;
+	enum class DeviceType : int
+	{
+		Undefined = 0,  ///< Undefined device
+		D3D11,      ///< D3D11 device
+		D3D12,      ///< D3D12 device
+		OpenGL,     ///< OpenGL device 
+		OpenGLES    ///< OpenGLES device
+	};
+
+	enum ValueType : int
+	{
+		VT_UNDEFINED = 0, ///< Undefined type
+		VT_INT8,          ///< Signed 8-bit integer
+		VT_INT16,         ///< Signed 16-bit integer
+		VT_INT32,         ///< Signed 32-bit integer
+		VT_UINT8,         ///< Unsigned 8-bit integer
+		VT_UINT16,        ///< Unsigned 16-bit integer
+		VT_UINT32,        ///< Unsigned 32-bit integer
+		VT_FLOAT16,       ///< Half-precision 16-bit floating point
+		VT_FLOAT32,       ///< Full-precision 32-bit floating point
+		VT_NUM_TYPES      ///< Helper value storing total number of types in the enumeration
+	};
+
 	using BindFlags = Diligent::BIND_FLAGS;
 	using Usage = Diligent::USAGE;
 	using CPUAccessFlag = Diligent::CPU_ACCESS_FLAG;
@@ -79,7 +100,7 @@ namespace Unique
 	};
 
 	/// Arbitrary vertex declaration element datatypes.
-	enum VertexElementType
+	enum VertexElementType : byte
 	{
 		TYPE_INT = 0,
 		TYPE_FLOAT,
@@ -92,7 +113,7 @@ namespace Unique
 	};
 
 	/// Arbitrary vertex declaration element semantics.
-	enum VertexElementSemantic
+	enum VertexElementSemantic : byte
 	{
 		SEM_POSITION = 0,
 		SEM_NORMAL,
@@ -141,7 +162,49 @@ namespace Unique
 
 	ENABLE_BITMASK_OPERATORS(ColorMask)
 	uFlags(ColorMask, {"RED", COLOR_MASK_RED}, {"GREEN", COLOR_MASK_GREEN}, {"BLUE", COLOR_MASK_BLUE}, {"ALPHA", COLOR_MASK_ALPHA}, { "ALL", COLOR_MASK_ALL })
+
+	/// Vertex element description for arbitrary vertex declarations.
 	
+	struct UNIQUE_API VertexElement
+	{
+		/// Default-construct.
+		VertexElement() :
+			type_(TYPE_VECTOR3),
+			semantic_(SEM_POSITION),
+			index_(0),
+			perInstance_(false),
+			offset_(0)
+		{
+		}
+
+		/// Construct with type, semantic, index and whether is per-instance data.
+		VertexElement(VertexElementType type, VertexElementSemantic semantic, unsigned char index = 0, bool perInstance = false) :
+			type_(type),
+			semantic_(semantic),
+			index_(index),
+			perInstance_(perInstance),
+			offset_(0)
+		{
+		}
+
+		/// Test for equality with another vertex element. Offset is intentionally not compared, as it's relevant only when an element exists within a vertex buffer.
+		bool operator ==(const VertexElement& rhs) const { return type_ == rhs.type_ && semantic_ == rhs.semantic_ && index_ == rhs.index_ && perInstance_ == rhs.perInstance_; }
+
+		/// Test for inequality with another vertex element.
+		bool operator !=(const VertexElement& rhs) const { return !(*this == rhs); }
+
+		/// Data type of element.
+		VertexElementType type_;
+		/// Semantic of element.
+		VertexElementSemantic semantic_;
+		/// Semantic index of element, for example multi-texcoords.
+		unsigned char index_;
+		/// Per-instance flag.
+		bool perInstance_;
+		/// Offset of element from vertex start. Filled by VertexBuffer once the vertex declaration is built.
+		unsigned offset_;
+
+	};
 
 	static const Vector3 DOT_SCALE(1 / 3.0f, 1 / 3.0f, 1 / 3.0f);
 
