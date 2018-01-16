@@ -696,7 +696,7 @@ namespace Unique
 			}
 			else
 			{
-				Batch::Prepare(view, camera, false);
+				//Batch::Prepare(view, camera, false);
 
 				// Get the geometry vertex buffers, then add the instancing stream buffer
 				// Hack: use a const_cast to avoid dynamic allocation of new temp vectors

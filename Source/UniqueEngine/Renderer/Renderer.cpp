@@ -25,7 +25,7 @@ namespace Unique
 	}
 
 	Renderer::Renderer() 
-		: graphics_(GetSubsystem<Graphics>()), numExtraInstancingBufferElements_(3), drawDebug_(true)
+		: graphics_(GetSubsystem<Graphics>()), numExtraInstancingBufferElements_(0), drawDebug_(true)
 	{
 		Initialize();
 
@@ -132,6 +132,8 @@ namespace Unique
 	void Renderer::HandleStartup(const Startup& eventData)
 	{
 		LoadShaders();
+
+		CreateInstancingBuffer();
 	}
 
 	void Renderer::HandleRenderUpdate(const RenderUpdate& eventData)

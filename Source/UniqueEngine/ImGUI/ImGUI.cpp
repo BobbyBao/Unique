@@ -1,23 +1,23 @@
 #include "UniquePCH.h"
+
+#define NK_IMPLEMENTATION
+#define NK_API UNIQUE_API
+#define NK_INCLUDE_FIXED_TYPES
+//#define NK_INCLUDE_STANDARD_IO
+//#define NK_INCLUDE_STANDARD_VARARGS
+#define NK_INCLUDE_DEFAULT_ALLOCATOR
+#define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
+#define NK_INCLUDE_FONT_BAKING
+#define NK_INCLUDE_DEFAULT_FONT
+
 #include "ImGUI.h"
+
 #include "Graphics/Geometry.h"
 #include "Graphics/PipelineState.h"
 #include <SDL/SDL.h>
 #include "../Input/Input.h"
 
-#define NK_INCLUDE_FIXED_TYPES
-#define NK_INCLUDE_STANDARD_IO
-#define NK_INCLUDE_STANDARD_VARARGS
-#define NK_INCLUDE_DEFAULT_ALLOCATOR
-#define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
-#define NK_INCLUDE_FONT_BAKING
-#define NK_INCLUDE_DEFAULT_FONT
-#define NK_IMPLEMENTATION
-
-#define NK_API UNIQUE_API
-
-#include "nuklear.h"
-
+#undef NK_IMPLEMENTATION
 
 namespace Unique
 {
@@ -267,7 +267,7 @@ namespace Unique
 		{
 			struct nk_font_atlas *atlas;
 			FontStashBegin(&atlas);
-			struct nk_font *droid = nk_font_atlas_add_from_file(atlas, "CoreData/Fonts/arial.ttf", 16, 0);
+			//struct nk_font *droid = nk_font_atlas_add_from_file(atlas, "CoreData/Fonts/arial.ttf", 16, 0);
 			/*struct nk_font *robot = nk_font_atlas_add_from_file(atlas, "../../extra_font/Roboto-Regular.ttf", 14, 0);*/
 			/*struct nk_font *future = nk_font_atlas_add_from_file(atlas, "../../extra_font/kenvector_future_thin.ttf", 13, 0);*/
 			/*struct nk_font *clean = nk_font_atlas_add_from_file(atlas, "../../extra_font/ProggyClean.ttf", 12, 0);*/
@@ -275,7 +275,7 @@ namespace Unique
 			/*struct nk_font *cousine = nk_font_atlas_add_from_file(atlas, "../../extra_font/Cousine-Regular.ttf", 13, 0);*/
 			FontStashEnd();
 			/*nk_style_load_all_cursors(ctx, atlas->cursors);*/
-			nk_style_set_font(&impl_.ctx, &droid->handle);
+			nk_style_set_font(&impl_.ctx, &atlas->default_font->handle);
 		}
 
 		//set_style(ctx, THEME_DARK);

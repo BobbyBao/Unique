@@ -35,14 +35,21 @@ namespace Unique.Editor
                     .Material(new ResourceRefList(TypeOf<Material>(), "Models/Stone.material"))
                 )
             )
-            /*
+            
             .Child("Mushroom", c => c
-                .Position(Vector3.Zero)
+                .Position(new Vector3(10, 0, 0))
                 .Component<StaticModel>(sm => sm
                     .Model(new ResourceRef(TypeOf<Model>(), "Models/Mushroom.mdl"))
                     .Material(new ResourceRefList(TypeOf<Material>(), "Models/Mushroom.material"))
                 )
-            )*/
+            )
+            .Child("Mushroom", c => c
+                .Position(Vector3.One)
+                .Component<StaticModel>(sm => sm
+                    .Model(new ResourceRef(TypeOf<Model>(), "Models/Mushroom.mdl"))
+                    .Material(new ResourceRefList(TypeOf<Material>(), "Models/Mushroom.material"))
+                )
+            )
             ;
 
             Subsystem<Renderer>()
@@ -68,11 +75,11 @@ namespace Unique.Editor
                 nk_panel_flags.NK_WINDOW_MINIMIZABLE | nk_panel_flags.NK_WINDOW_TITLE))
             {
                 ImGUI.MenubarBegin();
-                ImGUI.LayoutRowStatic(40, 40, 2);
-                if(ImGUI.MenuBeginText("File", 4, nk_text_alignment.NK_TEXT_LEFT,  new nk_vec2(100, 100)))
+                ImGUI.LayoutRowStatic(20, 40, 2);
+                if(ImGUI.MenuBeginText("Sample", 4, nk_text_alignment.NK_TEXT_LEFT,  new nk_vec2(100, 100)))
                 {
                     ImGUI.LayoutRowDynamic(25);
-                    if (ImGUI.MenuItemText("Open", nk_text_alignment.NK_TEXT_LEFT))
+                    if (ImGUI.MenuItemText("Scene", nk_text_alignment.NK_TEXT_LEFT))
                     {
 
                     }

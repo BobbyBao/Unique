@@ -1,5 +1,7 @@
 #pragma once
 
+#include "nuklear.h"
+
 struct nk_font_atlas;
 
 namespace Unique
