@@ -1,6 +1,5 @@
 #include "UniquePCH.h"
 #include "CubeSample.h"
-#include "Graphics/Shader.h"
 #include "Graphics/PipelineState.h"
 #include "MapHelper.h"
 #include "Graphics/Geometry.h"

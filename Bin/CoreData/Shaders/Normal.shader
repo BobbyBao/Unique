@@ -71,7 +71,7 @@ Shader "Normal"
 			EntryPoint "VS" 
 			ShaderProfile "DX_4_0"
 			Defines ""
-			Source "Textured.hlsl"
+			Source "Normal.hlsl"
 		}
 		
 		PixelShader
@@ -79,7 +79,7 @@ Shader "Normal"
 			EntryPoint "PS"
 			ShaderProfile "DX_4_0"
 			Defines ""
-			Source "Textured.hlsl"
+			Source "Normal.hlsl"
 		}
 	}
 }

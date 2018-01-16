@@ -48,7 +48,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Octree.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\OctreeQuery.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Renderer\Renderer.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Shader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\ShaderEffect.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\ShaderVariation.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Skeleton.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\StaticModel.h" />
@@ -112,7 +112,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Material.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Model.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Renderer\Renderer.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Shader.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\ShaderEffect.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\ShaderVariation.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Texture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Renderer\View.cpp" />

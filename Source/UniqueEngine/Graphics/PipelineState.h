@@ -1,10 +1,11 @@
 #pragma once
 #include "GPUObject.h"
-#include "../Graphics/ShaderVariation.h"
+#include "ShaderEffect.h"
 
 namespace Unique
 {
 	using DepthStencilStateDesc = Diligent::DepthStencilStateDesc;
+	using IShaderVariable = Diligent::IShaderVariable;
 
 	class ShaderVariation;
 	class Shader;
@@ -16,7 +17,6 @@ namespace Unique
 		ShaderProgram(Pass& shaderPass) : shaderPass_(shaderPass){}
 		Pass& shaderPass_;
 		Vector<SPtr<ShaderVariation>> shaders_;
-		HashMap<StringID, IShaderVariable*> shaderVariables_;
 		bool isComputePipeline_ = false;
 	};
 	

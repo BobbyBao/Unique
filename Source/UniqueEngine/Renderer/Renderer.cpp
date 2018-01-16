@@ -82,9 +82,11 @@ namespace Unique
 		desc.BindFlags = Diligent::BIND_SHADER_RESOURCE;
 		desc.CPUAccessFlags = 0;
 		
-		defaultTexture->Create(desc, std::move(mip));
 		defaultTexture->SetName("Magenta");
+		defaultTexture->Create(desc, std::move(mip));
+
 		cache.RegisterResource(defaultTexture);
+
 		defaultMaterial_->SetTexture("DiffMap", defaultTexture);
 
 	}

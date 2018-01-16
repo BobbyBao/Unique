@@ -9,13 +9,10 @@ namespace Unique
 	{
 		if (Thread::IsMainThread())
 		{
-			state_ = State::Creating;
-
 			uCall
 			(
 				ReleaseImpl();
 				CreateImpl();
-				state_ = State::Created;
 			);
 
 		}
@@ -23,7 +20,6 @@ namespace Unique
 		{
 			ReleaseImpl();
 			CreateImpl();
-			state_ = State::Created;
 		}
 
 		return true;
@@ -31,11 +27,9 @@ namespace Unique
 
 	void GPUObject::Release()
 	{
-		state_ = State::Dying;
 		uCall
 		(
 			ReleaseImpl();
-			state_ = State::Dead;
 		);
 	}
 

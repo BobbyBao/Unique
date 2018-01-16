@@ -123,6 +123,8 @@ private:
     unsigned vertexCount_;
     /// LOD distance.
     float lodDistance_;
+
+	friend class Graphics;
 };
 
 }

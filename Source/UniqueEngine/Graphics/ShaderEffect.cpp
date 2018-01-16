@@ -1,5 +1,5 @@
 #include "Precompiled.h"
-#include "Shader.h"
+#include "ShaderEffect.h"
 #include "Graphics/Graphics.h"
 #include "PipelineState.h"
 

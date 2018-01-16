@@ -6,15 +6,6 @@ namespace Unique
 	class UNIQUE_API GPUObject
 	{
 	public:
-		enum class State
-		{
-			None,
-			Creating,
-			Created,
-			Dying,
-			Dead
-		};
-
 		virtual bool Create();
 		virtual void Release();
 
@@ -31,9 +22,8 @@ namespace Unique
 		virtual void ReleaseImpl();
 		virtual void UpdateBuffer();
 		void MarkDirty();
-		static void UpdateBuffers();
 
-		State state_ = State::None;
+		static void UpdateBuffers();
 		IDeviceObject* deviceObject_ = nullptr;
 		static Vector<GPUObject*> updateQueue_[2];
 		friend class Graphics;

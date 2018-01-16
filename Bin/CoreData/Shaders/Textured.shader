@@ -31,23 +31,38 @@ Shader "Textured"
 		{
 			LayoutElement
 			{
-				NumComponents 3
 				ValueType FLOAT32
-				IsNormalized false
+				NumComponents 3
 			}
 
 			LayoutElement
 			{
-				NumComponents 3
 				ValueType FLOAT32
-				IsNormalized false
+				NumComponents 3
 			}
 			
 			LayoutElement
 			{
-				NumComponents 2
 				ValueType FLOAT32
-				IsNormalized false
+				NumComponents 2
+			}
+			
+			LayoutElement
+			{
+				ValueType FLOAT32
+				NumComponents 4
+			}
+			
+			LayoutElement
+			{
+				ValueType FLOAT32
+				NumComponents 4
+			}
+			
+			LayoutElement
+			{
+				ValueType FLOAT32
+				NumComponents 4
 			}
 		}
 	

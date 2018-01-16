@@ -267,7 +267,10 @@ namespace Unique
 		{
 			struct nk_font_atlas *atlas;
 			FontStashBegin(&atlas);
-			//struct nk_font *droid = nk_font_atlas_add_from_file(atlas, "CoreData/Fonts/arial.ttf", 16, 0);
+			//"CoreData/Fonts/arial.ttf"
+			SPtr<File> file = cache.GetFile("Fonts/arial.ttf");
+			ByteArray bytes = file->ReadAll();
+			struct nk_font *droid = nk_font_atlas_add_from_memory(atlas, bytes.data(), bytes.size(), 16, 0);
 			/*struct nk_font *robot = nk_font_atlas_add_from_file(atlas, "../../extra_font/Roboto-Regular.ttf", 14, 0);*/
 			/*struct nk_font *future = nk_font_atlas_add_from_file(atlas, "../../extra_font/kenvector_future_thin.ttf", 13, 0);*/
 			/*struct nk_font *clean = nk_font_atlas_add_from_file(atlas, "../../extra_font/ProggyClean.ttf", 12, 0);*/
@@ -275,7 +278,8 @@ namespace Unique
 			/*struct nk_font *cousine = nk_font_atlas_add_from_file(atlas, "../../extra_font/Cousine-Regular.ttf", 13, 0);*/
 			FontStashEnd();
 			/*nk_style_load_all_cursors(ctx, atlas->cursors);*/
-			nk_style_set_font(&impl_.ctx, &atlas->default_font->handle);
+			//nk_style_set_font(&impl_.ctx, &atlas->default_font->handle);
+			nk_style_set_font(&impl_.ctx, &droid->handle);
 		}
 
 		//set_style(ctx, THEME_DARK);

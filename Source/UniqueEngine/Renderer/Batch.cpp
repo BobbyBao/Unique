@@ -621,6 +621,7 @@ namespace Unique
 	
 	void Batch::Draw() const
 	{
+		auto& graphics = GetSubsystem<Graphics>();
 		if (!geometry_->IsEmpty())
 		{			
 			if (isBase_ && material_)
@@ -636,12 +637,12 @@ namespace Unique
 
 			if (geometryType_ == GEOM_TRANSIENT )
 			{
-				geometry_->Draw(pipelineState_, primitiveTopology_, 
+				graphics.Draw(geometry_, pipelineState_, primitiveTopology_, 
 					vertexOffset_, vertexCount_, indexOffset_, indexCount_);
 			}
 			else
 			{
-				geometry_->Draw(pipelineState_);
+				graphics.Draw(geometry_, pipelineState_);
 			}
 		}
 		
@@ -691,7 +692,7 @@ namespace Unique
 				{
 // 					if (graphics->NeedParameterUpdate(SP_OBJECT, instances_[i].worldTransform_))
 // 						graphics->SetShaderParameter(VSP_MODEL, *instances_[i].worldTransform_);
-					geometry_->Draw(pipelineState_);
+					graphics.Draw(geometry_, pipelineState_);
 				}
 			}
 			else
@@ -704,7 +705,7 @@ namespace Unique
 					geometry_->GetVertexBuffers());
 				vertexBuffers.push_back(SPtr<VertexBuffer>(instanceBuffer));
 				//to do check
-				geometry_->DrawInstanced(pipelineState_, 0, (uint)instances_.size());
+				graphics.DrawInstanced(geometry_, pipelineState_, 0, (uint)instances_.size());
 				// Remove the instancing buffer & element mask now
 				vertexBuffers.pop_back();
 			}

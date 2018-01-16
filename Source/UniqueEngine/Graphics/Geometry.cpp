@@ -24,7 +24,7 @@
 #include "Geometry.h"
 #include "Graphics.h"
 #include "VertexBuffer.h"
-#include "Graphics/Shader.h"
+#include "Graphics/ShaderEffect.h"
 #include "Graphics/PipelineState.h"
 #include "IO/Log.h"
 #include "Math/Ray.h"

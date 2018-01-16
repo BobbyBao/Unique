@@ -1,5 +1,5 @@
 #include "UniquePCH.h"
-#include "Graphics/Shader.h"
+#include "Graphics/ShaderEffect.h"
 #include "Serialize/JsonSerializer.h"
 #include "Serialize/JsonDeserializer.h"
 #include "Serialize/HjsonDeserializer.h"

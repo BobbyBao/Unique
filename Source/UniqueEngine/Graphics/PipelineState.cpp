@@ -1,6 +1,7 @@
 #include "UniquePCH.h"
 #include "PipelineState.h"
 #include "Shader.h"
+#include "../Graphics/ShaderVariation.h"
 
 using namespace Diligent;
 
@@ -73,9 +74,7 @@ namespace Unique
 
 			shaderDirty_ = false;
 		}
-
-		shaderProgram_->shaderVariables_.clear();
-
+		
 		if (shaderProgram_->isComputePipeline_)
 		{
 			for (auto shader : shaderProgram_->shaders_)

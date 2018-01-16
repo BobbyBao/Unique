@@ -4,6 +4,10 @@
 #include <iostream>
 #include <Errors.h>
 #include <SDL/SDL.h>
+//#include "ShaderVariation.h"
+#include "PipelineState.h"
+#include "VertexBuffer.h"
+#include "Geometry.h"
 
 using namespace Diligent;
 
@@ -245,6 +249,135 @@ namespace Unique
 			RenderSemPost();
 		}
 	}
+		
+	void Graphics::Draw(Geometry* geometry, PipelineState* pipeline)
+	{
+		IBuffer *buffer[8] = { nullptr };
+		uint offsets[8] = { 0 };
+		uint strides[8] = { 0 };
+		for (size_t i = 0; i < geometry->vertexBuffers_.size(); i++)
+		{
+			buffer[i] = *geometry->vertexBuffers_[i];
+			offsets[i] = 0;
+			strides[i] = geometry->vertexBuffers_[i]->GetStride();
+		}
+		
+		deviceContext->SetVertexBuffers(0, (uint)geometry->vertexBuffers_.size(), buffer, strides, offsets, SET_VERTEX_BUFFERS_FLAG_RESET);
+
+		DrawAttribs drawAttribs;
+		drawAttribs.Topology = (Diligent::PRIMITIVE_TOPOLOGY)geometry->primitiveType_;
+		drawAttribs.IsIndexed = (geometry->indexBuffer_ != nullptr);
+		
+		if (geometry->indexBuffer_ && geometry->indexCount_ > 0)
+		{
+			drawAttribs.FirstIndexLocation = geometry->indexStart_;
+			drawAttribs.NumIndices = geometry->indexCount_; 
+			drawAttribs.IndexType = geometry->indexBuffer_->GetStride() == 4 ? (VALUE_TYPE)ValueType::VT_UINT32 : (VALUE_TYPE)ValueType::VT_UINT16;
+			deviceContext->SetIndexBuffer(*geometry->indexBuffer_, 0);
+		}
+		else if (geometry->vertexCount_ > 0)
+		{
+			drawAttribs.StartVertexLocation = geometry->vertexStart_;
+			drawAttribs.NumVertices = geometry->vertexCount_;
+		}
+
+		deviceContext->SetPipelineState(pipeline->GetPipeline());
+
+		auto& graphics = GetSubsystem<Graphics>();
+
+		graphics.BindResources(pipeline->GetShaderResourceBinding(),
+			SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED | BIND_SHADER_RESOURCES_ALL_RESOLVED);
+
+		deviceContext->CommitShaderResources(pipeline->GetShaderResourceBinding(), COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
+
+		deviceContext->Draw(drawAttribs);
+	}
+		
+	void Graphics::Draw(Geometry* geometry, PipelineState* pipeline, PrimitiveTopology primitiveType, 
+		unsigned vertexStart, unsigned vertexCount, unsigned indexStart, unsigned indexCount)
+	{
+		IBuffer *buffer[8] = { nullptr };
+		uint offsets[8] = { 0 };
+		uint strides[8] = { 0 };
+		for (size_t i = 0; i < geometry->vertexBuffers_.size(); i++)
+		{
+			buffer[i] = *geometry->vertexBuffers_[i];
+			offsets[i] = vertexStart * geometry->vertexBuffers_[i]->GetStride();
+			strides[i] = geometry->vertexBuffers_[i]->GetStride();
+		}
+
+		deviceContext->SetVertexBuffers(0, (uint)geometry->vertexBuffers_.size(), buffer, strides, offsets, SET_VERTEX_BUFFERS_FLAG_RESET);
+
+		DrawAttribs drawAttribs;
+		drawAttribs.Topology = (Diligent::PRIMITIVE_TOPOLOGY)primitiveType;
+		drawAttribs.IsIndexed = (geometry->indexBuffer_ != nullptr);
+		
+		if (geometry->indexBuffer_ && geometry->indexCount_ > 0)
+		{
+			drawAttribs.FirstIndexLocation = indexStart;
+			drawAttribs.NumIndices = indexCount;
+			drawAttribs.IndexType = geometry->indexBuffer_->GetStride() == 4 ? (VALUE_TYPE)ValueType::VT_UINT32 : (VALUE_TYPE)ValueType::VT_UINT16;
+			deviceContext->SetIndexBuffer(*geometry->indexBuffer_, 0);
+		}
+		else if (geometry->vertexCount_ > 0)
+		{
+			drawAttribs.NumVertices = vertexCount;
+		}
+
+		deviceContext->SetPipelineState(pipeline->GetPipeline());
+
+		auto& graphics = GetSubsystem<Graphics>();
+
+		graphics.BindResources(pipeline->GetShaderResourceBinding(),
+			SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED | BIND_SHADER_RESOURCES_ALL_RESOLVED);
+
+		deviceContext->CommitShaderResources(pipeline->GetShaderResourceBinding(), COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
+
+		deviceContext->Draw(drawAttribs);
+	}
+
+	void Graphics::DrawInstanced(Geometry* geometry, PipelineState* pipeline, uint instanceOffset, uint numInstances)
+	{
+		IBuffer *buffer[8] = { nullptr };
+		uint offsets[8] = { 0 };
+		uint strides[8] = { 0 };
+		for (size_t i = 0; i < geometry->vertexBuffers_.size(); i++)
+		{
+			buffer[i] = *geometry->vertexBuffers_[i];
+			offsets[i] = 0;
+			strides[i] = geometry->vertexBuffers_[i]->GetStride();
+		}
+
+		DrawAttribs drawAttribs;
+		drawAttribs.Topology = (Diligent::PRIMITIVE_TOPOLOGY)geometry->primitiveType_;
+		drawAttribs.IsIndexed = (geometry->indexBuffer_ != nullptr);
+		
+		deviceContext->SetVertexBuffers(0, (uint)geometry->vertexBuffers_.size(), buffer, strides, offsets, SET_VERTEX_BUFFERS_FLAG_RESET);
+
+		if (geometry->indexBuffer_ && geometry->indexCount_ > 0)
+		{	
+			drawAttribs.NumIndices = geometry->indexCount_;
+			drawAttribs.IndexType = geometry->indexBuffer_->GetStride() == 4 ? (VALUE_TYPE)ValueType::VT_UINT32 : (VALUE_TYPE)ValueType::VT_UINT16;
+			deviceContext->SetIndexBuffer(*geometry->indexBuffer_, 0);
+		}
+		else if (geometry->vertexCount_ > 0)
+		{
+			drawAttribs.NumVertices = geometry->vertexCount_;
+		}
+
+		drawAttribs.NumInstances = numInstances;
+		drawAttribs.FirstInstanceLocation = instanceOffset;
+		deviceContext->SetPipelineState(pipeline->GetPipeline());
+
+		auto& graphics = GetSubsystem<Graphics>();
+
+		graphics.BindResources(pipeline->GetShaderResourceBinding(),
+			SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED | BIND_SHADER_RESOURCES_ALL_RESOLVED);
+
+		deviceContext->CommitShaderResources(pipeline->GetShaderResourceBinding(), COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
+
+		deviceContext->Draw(drawAttribs);
+	}
 
 	void Graphics::Close()
 	{
@@ -262,8 +395,10 @@ namespace Unique
 	{
 		if (!cmds.empty())
 		{
-			for (auto& fn : cmds)
+			//for (auto& fn : cmds)
+			for(size_t i = 0; i < cmds.size(); i++)
 			{
+				auto&fn = cmds[i];
 				fn();
 			}
 

@@ -1,3 +1,4 @@
+#define INSTANCED
 #include "Uniforms.hlsl"
 //#include "Samplers.hlsl"
 #include "Transform.hlsl"
@@ -9,6 +10,10 @@ void VS(
 		float4 iPos : ATTRIB0, 
         float3 iNormal : ATTRIB1,
         float2 iTexCoord : ATTRIB2,
+		float4x3 iModelInstance : ATTRIB3,
+        //float4 iData1 : ATTRIB3,
+        //float4 iData2 : ATTRIB4,
+        //float4 iData3 : ATTRIB5,
         out float2 oTexCoord : TEXCOORD0,
 		out float4 oPos : OUTPOSITION
     ) 

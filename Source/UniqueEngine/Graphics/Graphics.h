@@ -18,6 +18,7 @@ namespace Unique
 
 	class VertexBuffer;
 	class IndexBuffer;
+	class Geometry;
 	class Texture;
 	class GPUObject;
 	class ShaderVariation;
@@ -83,11 +84,17 @@ namespace Unique
 		void BeginRender();
 		void EndRender();
 		void Close();
+
+		void Draw(Geometry* geometry, PipelineState* pipeline);
+		void Draw(Geometry* geometry, PipelineState* pipeline, PrimitiveTopology primitiveType, 
+		unsigned vertexStart, unsigned vertexCount, unsigned indexStart, unsigned indexCount);
+		void DrawInstanced(Geometry* geometry, PipelineState* pipeline, uint instanceOffset, uint numInstances);
+	
+
+		//**************************
 		static void AddCommand(const std::function<void()>& cmd);
 		static void FrameNoRenderWait();
 		static bool IsRenderThread();
-
-		//**************************
 		static int currentContext_;
 		static int currentFrame_;
 		inline static int GetRenderContext() { return 1 - currentContext_; }
