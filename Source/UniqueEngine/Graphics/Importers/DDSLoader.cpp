@@ -45,6 +45,7 @@
 #include <memory>
 #include <algorithm>
 #include "DDSLoader.h"
+#include "../Graphics.h"
 
 #ifndef _In_
 #   define _In_
@@ -921,7 +922,6 @@ static void FillInitData(
 
 //--------------------------------------------------------------------------------------
 static void CreateTexture(
-    _In_ IRenderDevice* pDevice,
     _In_ Uint32 resDim,
     _In_ size_t width,
     _In_ size_t height,
@@ -937,15 +937,9 @@ static void CreateTexture(
     _In_ bool forceSRGB,
     _In_ bool isCubeMap,
     _In_ TextureSubResData* initData,
-    _Outptr_opt_ ITexture** texture
+    _Outptr_opt_ Unique::Texture* texture
     )
 {
-    if (!pDevice || !initData)
-    {
-		UNIQUE_LOGERROR("Invalid arguments");
-    }
-
-
     if (forceSRGB)
     {
         format = MakeSRGB(format);
@@ -965,13 +959,14 @@ static void CreateTexture(
     TextureData InitData;
     InitData.pSubResources = initData;
     InitData.NumSubresources = static_cast<Uint32>(mipCount * arraySize);
+	auto& graphics = Unique::GetSubsystem<Unique::Graphics>();
 
     switch (resDim)
     {
         case D3D11_RESOURCE_DIMENSION_TEXTURE1D:
             {
                 desc.Type = arraySize > 1 ? RESOURCE_DIM_TEX_1D_ARRAY : RESOURCE_DIM_TEX_1D;
-                pDevice->CreateTexture( desc, InitData, texture );
+                graphics.CreateTexture( desc, InitData, *texture );
                 
             //    ID3D11Texture1D* tex = nullptr;
             //    hr = d3dDevice->CreateTexture1D(&desc, initData, &tex);
@@ -1033,7 +1028,7 @@ static void CreateTexture(
                 //    desc.MiscFlags = miscFlags & ~D3D11_RESOURCE_MISC_TEXTURECUBE;
                 //}
 
-                pDevice->CreateTexture( desc, InitData, texture );
+                graphics.CreateTexture( desc, InitData, *texture );
 
                 //ID3D11Texture2D* tex = nullptr;
                 //hr = d3dDevice->CreateTexture2D(&desc, initData, &tex);
@@ -1103,7 +1098,7 @@ static void CreateTexture(
 
                 //desc.MiscFlags = miscFlags & ~D3D11_RESOURCE_MISC_TEXTURECUBE;
 
-                pDevice->CreateTexture( desc, InitData, texture );
+                graphics.CreateTexture( desc, InitData, *texture );
 
                 //ID3D11Texture3D* tex = nullptr;
                 //hr = d3dDevice->CreateTexture3D(&desc, initData, &tex);
@@ -1146,7 +1141,6 @@ static void CreateTexture(
 
 //--------------------------------------------------------------------------------------
 static void CreateTextureFromDDS(
-    _In_ IRenderDevice* pDevice,
     _In_ const DDS_HEADER* header,
     _In_ const Uint8* bitData,
     _In_ size_t bitSize,
@@ -1157,7 +1151,7 @@ static void CreateTextureFromDDS(
     _In_ unsigned int cpuAccessFlags,
     _In_ unsigned int miscFlags,
     _In_ bool forceSRGB,
-    _Outptr_opt_ ITexture** texture
+    _Outptr_opt_ Unique::Texture* texture
     )
 {
     size_t width = header->width;
@@ -1322,7 +1316,7 @@ static void CreateTextureFromDDS(
     size_t tdepth = 0;
     FillInitData(width, height, depth, mipCount, arraySize, format, maxsize, bitSize, bitData, twidth, theight, tdepth, skipMip, initData.get());
 
-    CreateTexture(pDevice, resDim, twidth, theight, tdepth, mipCount - skipMip, arraySize, format, usage, name, bindFlags, cpuAccessFlags, miscFlags, forceSRGB, isCubeMap, initData.get(), texture/*, textureView*/);
+    CreateTexture(resDim, twidth, theight, tdepth, mipCount - skipMip, arraySize, format, usage, name, bindFlags, cpuAccessFlags, miscFlags, forceSRGB, isCubeMap, initData.get(), texture/*, textureView*/);
 
 #if 0
     if (FAILED(hr) && !maxsize && (mipCount > 1))
@@ -1402,21 +1396,19 @@ static D2D1_ALPHA_MODE GetAlphaMode(_In_ const DDS_HEADER* header)
 
 //--------------------------------------------------------------------------------------
 void CreateDDSTextureFromMemory(
-    IRenderDevice* pDevice,
     const Uint8* ddsData,
     size_t ddsDataSize,
-    ITexture** texture,
+    Unique::Texture* texture,
     size_t maxsize,
     /*D2D1_ALPHA_MODE* alphaMode,*/
     const char* name)
 {
-    return CreateDDSTextureFromMemoryEx(pDevice, ddsData, ddsDataSize, maxsize, USAGE_DEFAULT, name, BIND_SHADER_RESOURCE, 0, 0, false, texture/*, alphaMode*/);
+    return CreateDDSTextureFromMemoryEx(ddsData, ddsDataSize, maxsize, USAGE_DEFAULT, name, BIND_SHADER_RESOURCE, 0, 0, false, texture/*, alphaMode*/);
 }
 
 
 //--------------------------------------------------------------------------------------
 void CreateDDSTextureFromMemoryEx(
-    IRenderDevice* pDevice,
     const Uint8* ddsData,
     size_t ddsDataSize,
     size_t maxsize,
@@ -1426,7 +1418,7 @@ void CreateDDSTextureFromMemoryEx(
     unsigned int cpuAccessFlags,
     unsigned int miscFlags,
     bool forceSRGB,
-    ITexture** texture/*,
+    Unique::Texture* texture/*,
     D2D1_ALPHA_MODE* alphaMode*/
     )
 {
@@ -1444,7 +1436,7 @@ void CreateDDSTextureFromMemoryEx(
     //    *alphaMode = D2D1_ALPHA_MODE_UNKNOWN;
     //}
 
-    if (!pDevice || !ddsData || (!texture /*&& !textureView*/))
+    if (!ddsData || (!texture /*&& !textureView*/))
     {
         UNIQUE_LOGERROR("Invalid arguments");
     }
@@ -1486,7 +1478,7 @@ void CreateDDSTextureFromMemoryEx(
 
     ptrdiff_t offset = sizeof(Uint32) + sizeof(DDS_HEADER) + (bDXT10Header ? sizeof(DDS_HEADER_DXT10) : 0);
 
-    CreateTextureFromDDS(pDevice, header, ddsData + offset, ddsDataSize - offset, maxsize, usage, name, bindFlags, cpuAccessFlags, miscFlags, forceSRGB, texture/*, textureView*/);
+    CreateTextureFromDDS(header, ddsData + offset, ddsDataSize - offset, maxsize, usage, name, bindFlags, cpuAccessFlags, miscFlags, forceSRGB, texture/*, textureView*/);
 
     //if (alphaMode)
     //    *alphaMode = GetAlphaMode(header);

@@ -4,7 +4,6 @@
 #include <iostream>
 #include <Errors.h>
 #include <SDL/SDL.h>
-//#include "ShaderVariation.h"
 #include "PipelineState.h"
 #include "VertexBuffer.h"
 #include "Geometry.h"
@@ -21,8 +20,6 @@ namespace Unique
 		uFactory("Graphics")
 	}
 	
-	IRenderDevice* renderDevice = nullptr;
-	IDeviceContext* deviceContext = nullptr;
 	ThreadID Graphics::renderThreadID = 0;
 	int Graphics::currentContext_ = 0;
 	int Graphics::currentFrame_ = 0;
@@ -72,11 +69,7 @@ namespace Unique
 		SCDesc.DepthBufferFormat = TEX_FORMAT_D32_FLOAT;
 		CreateDevice(window_, deviceType, SCDesc, &renderDevice_, &deviceContext_, &swapChain_);
 		
-		renderDevice = renderDevice_;
-
-		deviceContext = deviceContext_;
-
-		renderDevice->CreateResourceMapping(ResourceMappingDesc(), &resourceMapping_);
+		renderDevice_->CreateResourceMapping(ResourceMappingDesc(), &resourceMapping_);
 
 		FrameNoRenderWait();
 		
@@ -208,27 +201,27 @@ namespace Unique
 		buffData.pData = data.data();
 		buffData.DataSize = (uint)data.size();
 
-		renderDevice->CreateBuffer(buffDesc, buffData, buffer);
+		renderDevice_->CreateBuffer(buffDesc, buffData, buffer);
 	}
 
 	void Graphics::CreateShader(const ShaderCreationAttribs &creationAttribs, Diligent::IShader** shader)
 	{
-		renderDevice->CreateShader(creationAttribs, shader);
+		renderDevice_->CreateShader(creationAttribs, shader);
 	}
 	
 	void Graphics::CreateTexture(const TextureDesc& texDesc, const TextureData &data, Texture& texture)
 	{
-		renderDevice->CreateTexture(texDesc, data, texture);
+		renderDevice_->CreateTexture(texDesc, data, texture);
 	}
 	
 	void Graphics::CreateSampler(const SamplerDesc& samDesc, ISampler **ppSampler)
 	{
-		renderDevice->CreateSampler(samDesc, ppSampler);
+		renderDevice_->CreateSampler(samDesc, ppSampler);
 	}
 	
 	void Graphics::CreatePipelineState(const PipelineStateDesc &pipelineDesc, PipelineState* pipelineState)
 	{
-		renderDevice->CreatePipelineState(pipelineDesc, *pipelineState);
+		renderDevice_->CreatePipelineState(pipelineDesc, *pipelineState);
 	}
 
 	void Graphics::ReleaseDeviceObject(void* deviceObject)
@@ -315,7 +308,7 @@ namespace Unique
 			strides[i] = geometry->vertexBuffers_[i]->GetStride();
 		}
 		
-		deviceContext->SetVertexBuffers(0, (uint)geometry->vertexBuffers_.size(), buffer, strides, offsets, SET_VERTEX_BUFFERS_FLAG_RESET);
+		deviceContext_->SetVertexBuffers(0, (uint)geometry->vertexBuffers_.size(), buffer, strides, offsets, SET_VERTEX_BUFFERS_FLAG_RESET);
 
 		DrawAttribs drawAttribs;
 		drawAttribs.Topology = (Diligent::PRIMITIVE_TOPOLOGY)geometry->primitiveType_;
@@ -326,7 +319,7 @@ namespace Unique
 			drawAttribs.FirstIndexLocation = geometry->indexStart_;
 			drawAttribs.NumIndices = geometry->indexCount_; 
 			drawAttribs.IndexType = geometry->indexBuffer_->GetStride() == 4 ? (VALUE_TYPE)ValueType::VT_UINT32 : (VALUE_TYPE)ValueType::VT_UINT16;
-			deviceContext->SetIndexBuffer(*geometry->indexBuffer_, 0);
+			deviceContext_->SetIndexBuffer(*geometry->indexBuffer_, 0);
 		}
 		else if (geometry->vertexCount_ > 0)
 		{
@@ -334,14 +327,14 @@ namespace Unique
 			drawAttribs.NumVertices = geometry->vertexCount_;
 		}
 
-		deviceContext->SetPipelineState(pipeline->GetPipeline());
+		deviceContext_->SetPipelineState(pipeline->GetPipeline());
 
 		auto& graphics = GetSubsystem<Graphics>();
 
 		pipeline->GetShaderResourceBinding()->BindResources(SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL,
 			resourceMapping_, BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED | BIND_SHADER_RESOURCES_ALL_RESOLVED);
-		deviceContext->CommitShaderResources(pipeline->GetShaderResourceBinding(), COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
-		deviceContext->Draw(drawAttribs);
+		deviceContext_->CommitShaderResources(pipeline->GetShaderResourceBinding(), COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
+		deviceContext_->Draw(drawAttribs);
 	}
 		
 	void Graphics::Draw(Geometry* geometry, PipelineState* pipeline, PrimitiveTopology primitiveType, 
@@ -357,7 +350,7 @@ namespace Unique
 			strides[i] = geometry->vertexBuffers_[i]->GetStride();
 		}
 
-		deviceContext->SetVertexBuffers(0, (uint)geometry->vertexBuffers_.size(), buffer, strides, offsets, SET_VERTEX_BUFFERS_FLAG_RESET);
+		deviceContext_->SetVertexBuffers(0, (uint)geometry->vertexBuffers_.size(), buffer, strides, offsets, SET_VERTEX_BUFFERS_FLAG_RESET);
 
 		DrawAttribs drawAttribs;
 		drawAttribs.Topology = (Diligent::PRIMITIVE_TOPOLOGY)primitiveType;
@@ -368,23 +361,23 @@ namespace Unique
 			drawAttribs.FirstIndexLocation = indexStart;
 			drawAttribs.NumIndices = indexCount;
 			drawAttribs.IndexType = geometry->indexBuffer_->GetStride() == 4 ? (VALUE_TYPE)ValueType::VT_UINT32 : (VALUE_TYPE)ValueType::VT_UINT16;
-			deviceContext->SetIndexBuffer(*geometry->indexBuffer_, 0);
+			deviceContext_->SetIndexBuffer(*geometry->indexBuffer_, 0);
 		}
 		else if (geometry->vertexCount_ > 0)
 		{
 			drawAttribs.NumVertices = vertexCount;
 		}
 
-		deviceContext->SetPipelineState(pipeline->GetPipeline());
+		deviceContext_->SetPipelineState(pipeline->GetPipeline());
 
 		auto& graphics = GetSubsystem<Graphics>();
 
 		pipeline->GetShaderResourceBinding()->BindResources(SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL,
 			resourceMapping_, BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED | BIND_SHADER_RESOURCES_ALL_RESOLVED);
 
-		deviceContext->CommitShaderResources(pipeline->GetShaderResourceBinding(), COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
+		deviceContext_->CommitShaderResources(pipeline->GetShaderResourceBinding(), COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
 
-		deviceContext->Draw(drawAttribs);
+		deviceContext_->Draw(drawAttribs);
 	}
 
 	void Graphics::DrawInstanced(Geometry* geometry, PipelineState* pipeline, uint instanceOffset, uint numInstances)
@@ -403,13 +396,13 @@ namespace Unique
 		drawAttribs.Topology = (Diligent::PRIMITIVE_TOPOLOGY)geometry->primitiveType_;
 		drawAttribs.IsIndexed = (geometry->indexBuffer_ != nullptr);
 		
-		deviceContext->SetVertexBuffers(0, (uint)geometry->vertexBuffers_.size(), buffer, strides, offsets, SET_VERTEX_BUFFERS_FLAG_RESET);
+		deviceContext_->SetVertexBuffers(0, (uint)geometry->vertexBuffers_.size(), buffer, strides, offsets, SET_VERTEX_BUFFERS_FLAG_RESET);
 
 		if (geometry->indexBuffer_ && geometry->indexCount_ > 0)
 		{	
 			drawAttribs.NumIndices = geometry->indexCount_;
 			drawAttribs.IndexType = geometry->indexBuffer_->GetStride() == 4 ? (VALUE_TYPE)ValueType::VT_UINT32 : (VALUE_TYPE)ValueType::VT_UINT16;
-			deviceContext->SetIndexBuffer(*geometry->indexBuffer_, 0);
+			deviceContext_->SetIndexBuffer(*geometry->indexBuffer_, 0);
 		}
 		else if (geometry->vertexCount_ > 0)
 		{
@@ -418,7 +411,7 @@ namespace Unique
 
 		drawAttribs.NumInstances = numInstances;
 		drawAttribs.FirstInstanceLocation = instanceOffset;
-		deviceContext->SetPipelineState(pipeline->GetPipeline());
+		deviceContext_->SetPipelineState(pipeline->GetPipeline());
 
 		auto& graphics = GetSubsystem<Graphics>();
 
@@ -426,9 +419,9 @@ namespace Unique
 			SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, resourceMapping_,
 			BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED | BIND_SHADER_RESOURCES_ALL_RESOLVED);
 
-		deviceContext->CommitShaderResources(pipeline->GetShaderResourceBinding(), COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
+		deviceContext_->CommitShaderResources(pipeline->GetShaderResourceBinding(), COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
 
-		deviceContext->Draw(drawAttribs);
+		deviceContext_->Draw(drawAttribs);
 	}
 
 	void Graphics::Close()

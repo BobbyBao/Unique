@@ -1,14 +1,9 @@
 #pragma once
 #include "GPUObject.h"
 #include "ShaderEffect.h"
-/*
-#include <DepthStencilState.h>
-#include <BlendState.h>
-#include <RasterizerState.h>*/
 
 namespace Unique
 {
-	//using DepthStencilStateDesc = Diligent::DepthStencilStateDesc;
 	using IShaderVariable = Diligent::IShaderVariable;
 	using IPipelineState = Diligent::IPipelineState;
 	using IShaderResourceBinding = Diligent::IShaderResourceBinding;

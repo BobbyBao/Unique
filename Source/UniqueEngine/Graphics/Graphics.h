@@ -118,9 +118,9 @@ namespace Unique
 		DeviceType deviceType_;
 		bool debugger_ = false;
 		bool vsync_ = false;
-		//bool exit_ = false;
 		int multiSampling_ = 4;
 		bool srgb_ = false;
+
 		Diligent::RefCntAutoPtr<IRenderDevice> renderDevice_;
 		Diligent::RefCntAutoPtr<IDeviceContext> deviceContext_;
 		Diligent::RefCntAutoPtr<ISwapChain> swapChain_;
@@ -155,8 +155,6 @@ namespace Unique
 		return data[1 - Graphics::currentContext_];
 	}
 	
- 	//extern IDeviceContext* deviceContext;
-
 #define uCall(CODE)\
  auto fn = [=]{CODE};\
 	if (Thread::IsMainThread())\

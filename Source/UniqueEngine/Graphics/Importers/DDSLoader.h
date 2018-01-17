@@ -47,7 +47,6 @@
 #include <Texture.h>
 
 void CreateDDSTextureFromMemory(
-    Diligent::IRenderDevice* pDevice,
     const Diligent::Uint8* ddsData,
     size_t ddsDataSize,
     Diligent::ITexture** texture,
@@ -57,7 +56,6 @@ void CreateDDSTextureFromMemory(
     );
 
 void CreateDDSTextureFromMemoryEx(
-    Diligent::IRenderDevice* pDevice,
     const Diligent::Uint8* ddsData,
     size_t ddsDataSize,
     size_t maxsize,
@@ -67,6 +65,6 @@ void CreateDDSTextureFromMemoryEx(
     unsigned int cpuAccessFlags,
     unsigned int miscFlags,
     bool forceSRGB,
-    Diligent::ITexture** texture/*,
+    Unique::Texture* texture/*,
     D2D1_ALPHA_MODE* alphaMode*/
     );
