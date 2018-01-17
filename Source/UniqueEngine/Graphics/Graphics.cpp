@@ -8,6 +8,9 @@
 #include "PipelineState.h"
 #include "VertexBuffer.h"
 #include "Geometry.h"
+#include <GraphicsTypes.h>
+#include <DeviceContext.h>
+#include <Buffer.h>
 
 using namespace Diligent;
 
@@ -192,8 +195,19 @@ namespace Unique
 		renderThreadID = Thread::GetCurrentThreadID();
 	}
 
-	void Graphics::CreateBuffer(const BufferDesc& buffDesc, const BufferData& buffData, GraphicsBuffer& buffer)
+	void Graphics::CreateBuffer(GraphicsBuffer& buffer, const ByteArray& data)
 	{
+		BufferDesc buffDesc;
+		buffDesc.BindFlags = buffer.bindFlags_;
+		buffDesc.Usage = (Diligent::USAGE)buffer.usage_;
+		buffDesc.ElementByteStride = buffer.stride_;
+		buffDesc.uiSizeInBytes = buffer.sizeInBytes_;
+		buffDesc.CPUAccessFlags = buffer.cpuAccessFlags_;
+
+		BufferData buffData;
+		buffData.pData = data.data();
+		buffData.DataSize = (uint)data.size();
+
 		renderDevice->CreateBuffer(buffDesc, buffData, buffer);
 	}
 
@@ -212,11 +226,6 @@ namespace Unique
 		renderDevice->CreateSampler(samDesc, ppSampler);
 	}
 	
-	void Graphics::CreateResourceMapping(const ResourceMappingDesc &mappingDesc, IResourceMapping **ppMapping)
-	{
-		renderDevice->CreateResourceMapping(mappingDesc, ppMapping);
-	}
-	
 	void Graphics::CreatePipelineState(const PipelineStateDesc &pipelineDesc, PipelineState* pipelineState)
 	{
 		renderDevice->CreatePipelineState(pipelineDesc, *pipelineState);
@@ -225,6 +234,20 @@ namespace Unique
 	void Graphics::ReleaseDeviceObject(void* deviceObject)
 	{
 		((IDeviceObject*)deviceObject)->Release();
+	}
+	
+	void* Graphics::Map(GraphicsBuffer* buffer, uint mapFlags)
+	{
+		IBuffer* pBuffer = *buffer;
+		void* bufferData = nullptr;
+		pBuffer->Map(deviceContext_, MAP_WRITE, mapFlags, bufferData);
+		return bufferData;
+	}
+
+	void Graphics::Unmap(GraphicsBuffer* buffer, uint mapFlags)
+	{
+		IBuffer* pBuffer = *buffer;
+		pBuffer->Unmap(deviceContext_, MAP_WRITE, mapFlags);
 	}
 	
 	void Graphics::BeginRender()
@@ -253,12 +276,26 @@ namespace Unique
 	
 	void Graphics::ClearDepthStencil(TextureView *pView, uint ClearFlags, float fDepth, byte Stencil)
 	{
-		deviceContext_->ClearDepthStencil(*pView, ClearFlags, fDepth, Stencil);
+		if(pView)
+		{
+			deviceContext_->ClearDepthStencil(*pView, ClearFlags, fDepth, Stencil);
+		}
+		else
+		{
+			deviceContext_->ClearDepthStencil(nullptr, ClearFlags, fDepth, Stencil);
+		}
 	}
 
 	void Graphics::ClearRenderTarget(TextureView *pView, const float *RGBA)
 	{
-		deviceContext_->ClearRenderTarget(*pView, RGBA);
+		if(pView)
+		{
+			deviceContext_->ClearRenderTarget(*pView, RGBA);
+		}
+		else
+		{
+			deviceContext_->ClearRenderTarget(nullptr, RGBA);
+		}
 	}
 
 	void Graphics::SetScissorRects(uint NumRects, const IntRect *pRects, uint RTWidth, uint RTHeight)

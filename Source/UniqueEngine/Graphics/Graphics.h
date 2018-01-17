@@ -74,13 +74,15 @@ namespace Unique
 
 		//*******Render thread*******
 
-		virtual void CreateBuffer(const Diligent::BufferDesc& buffDesc, const Diligent::BufferData& buffData, GraphicsBuffer& buffer);
-		virtual void CreateShader(const Diligent::ShaderCreationAttribs &creationAttribs, Diligent::IShader** shader);
-		virtual void CreateTexture(const Diligent::TextureDesc& texDesc, const Diligent::TextureData &data,	Texture& texture);
-		virtual void CreateSampler(const Diligent::SamplerDesc& samDesc, Diligent::ISampler **ppSampler);
-		virtual void CreateResourceMapping(const Diligent::ResourceMappingDesc &mappingDesc, Diligent::IResourceMapping **ppMapping);
-		virtual void CreatePipelineState(const Diligent::PipelineStateDesc &pipelineDesc, PipelineState* pipelineState);
-		virtual void ReleaseDeviceObject(void* deviceObject);
+		void CreateBuffer(GraphicsBuffer& buffer, const ByteArray& data);
+		void CreateShader(const Diligent::ShaderCreationAttribs &creationAttribs, Diligent::IShader** shader);
+		void CreateTexture(const Diligent::TextureDesc& texDesc, const Diligent::TextureData &data,	Texture& texture);
+		void CreateSampler(const Diligent::SamplerDesc& samDesc, Diligent::ISampler **ppSampler);
+		void CreatePipelineState(const Diligent::PipelineStateDesc &pipelineDesc, PipelineState* pipelineState);
+		void ReleaseDeviceObject(void* deviceObject);
+
+		void* Map(GraphicsBuffer* buffer, uint mapFlags = MAP_FLAG_DISCARD);
+		void Unmap(GraphicsBuffer* buffer, uint mapFlags = MAP_FLAG_DISCARD);
 		
 		void BeginRender();
 		void EndRender();    

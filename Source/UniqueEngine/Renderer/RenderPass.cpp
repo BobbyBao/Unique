@@ -30,7 +30,7 @@ namespace Unique
 
 	}
 
-	RenderPass::RenderPass(RenderPassType type) : type_(type)
+	RenderPass::RenderPass(RenderPassType type) : type_(type), clearColor_(0.2f, 0.2f, 0.2f)
 	{
 	}
 
@@ -51,7 +51,7 @@ namespace Unique
 		uFactory()
 	}
 
-	ClearPass::ClearPass() : RenderPass(RenderPassType::CLEAR), clearColor_(0.2f, 0.2f, 0.2f)
+	ClearPass::ClearPass() : RenderPass(RenderPassType::CLEAR)
 	{
 	}
 

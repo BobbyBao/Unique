@@ -3,7 +3,9 @@
 #include "../Graphics/GraphicsDefs.h"
 #include "../Graphics/GPUObject.h"
 #include <RefCntAutoPtr.h>
+#include <Texture.h>
 #include <TextureView.h>
+#include <Sampler.h>
 
 
 namespace Unique
@@ -52,7 +54,6 @@ namespace Unique
 		~Texture();
 
 		bool Create(const TextureDesc& desc, const TextureData& texData);
-
 		bool Create(const TextureDesc& desc, Vector< Vector<byte> >&& texData);
 		bool Create(Image& img, const TextureLoadInfo& TexLoadInfo = TextureLoadInfo());
 		

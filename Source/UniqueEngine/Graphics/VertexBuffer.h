@@ -11,7 +11,7 @@ namespace Unique
 		uRTTI(VertexBuffer, GraphicsBuffer)
 
 	public:
-		VertexBuffer() : GraphicsBuffer(Diligent::BIND_VERTEX_BUFFER) {}
+		VertexBuffer() : GraphicsBuffer(BIND_VERTEX_BUFFER) {}
 		VertexBuffer(uint elementMask, ByteArray&& data, Usage usage = USAGE_STATIC);
 		VertexBuffer(const PODVector<VertexElement>& elements, ByteArray&& data, Usage usage = USAGE_STATIC);
 

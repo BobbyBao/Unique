@@ -50,7 +50,7 @@ DebugRenderer::DebugRenderer() : Drawable(DRAWABLE_DEBUG), lineAntiAlias_(false)
 	material_->SetShaderAttr(ResourceRef::Create<Shader>("shaders/basic.shader"));
 	pipelineDepth_ = material_->GetPipeline("base", "");
 	pipelineNoDepth_ = new PipelineState(pipelineDepth_->GetShaderProgram());
-	pipelineNoDepth_->SetDepthStencilState(DepthStencilStateDesc(false, false));
+	pipelineNoDepth_->SetDepthStencilState(DepthStencilState(false, false));
 }
 
 DebugRenderer::~DebugRenderer()

@@ -6,9 +6,6 @@
 
 namespace Unique
 {
-	using BlendFactor = Diligent::BLEND_FACTOR;
-	using BlendOperation = Diligent::BLEND_OPERATION;
-
 	class Shader;
 	class PipelineState;
 
@@ -104,9 +101,9 @@ namespace Unique
 
 		String					name_;
 		uint					passIndex_ = 0;
-		Diligent::BlendStateDesc		blendState_;
-		DepthStencilState		depthState_;
 		RasterizerState			rasterizerState_;
+		DepthStencilState		depthState_;
+		BlendState		blendState_;
 		InputLayout				inputLayout_;
 		ShaderStage				shaderStage_[6];
 

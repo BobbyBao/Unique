@@ -63,15 +63,6 @@ namespace Unique
 	void TextureSlot::SetTexture(Texture* tex)
 	{
 		texture_ = tex;
-
-		SPtr<Texture> texture = texture_;
-		uCall
-		(
-			if (shaderVarible_.IsValid())
-			{
-				shaderVarible_.Lock()->Set(*texture);
-			}
-		);
 	}
 
 	void TextureSlot::SetTextureAttr(const ResourceRef& texAttr)

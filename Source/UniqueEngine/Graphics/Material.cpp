@@ -120,11 +120,6 @@ namespace Unique
 	{
 		for (auto& uniform : uniforms_)
 		{
-			if (uniform.shaderVarible_.IsValid())
-			{
-			//	uniform.shaderVarible_.Lock()->Set();
-			}
-
 		}
 
 		for (auto& ts : textureSlots_)

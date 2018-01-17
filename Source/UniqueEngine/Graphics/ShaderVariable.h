@@ -1,7 +1,5 @@
 #pragma once
 #include "Texture.h"
-#include <RefCntAutoPtr.h>
-#include <Sampler.h>
 
 namespace Unique
 {
@@ -53,8 +51,6 @@ namespace Unique
 		Uniform::Type type_ = Uniform::Type::INT;
 		UniformData value_;
 
-		Diligent::RefCntWeakPtr<Diligent::IShaderVariable> shaderVarible_;
-
 		template<class TransferFunction>
 		void Transfer(TransferFunction& transfer)
 		{
@@ -103,25 +99,9 @@ namespace Unique
 		StringID name_;
 		ResourceRef texAttr_;
 		SPtr<Texture> texture_;
-		Diligent::RefCntWeakPtr<Diligent::IShaderVariable> shaderVarible_;
 		
 		uClass("Name", name_, "Texture", texAttr_)
 	};
 
-	class Sampler
-	{		
-	public:
-		StringID name_;
-		Diligent::SamplerDesc desc_;
-		Diligent::RefCntWeakPtr<Diligent::IShaderVariable> shaderVarible_;
-		
-		uClass("Name", name_, "MinFilter", desc_.MinFilter)
-	};
-
-	class ShaderVariable : public RefCounted
-	{
-	public:
-		Diligent::RefCntWeakPtr<Diligent::IShaderVariable> shaderVarible_;
-	};
 }
 

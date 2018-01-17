@@ -1,7 +1,7 @@
 #include "Precompiled.h"
 #include "GraphicsBuffer.h"
 #include "Graphics/Graphics.h"
-#include <InputLayout.h>
+
 
 using namespace Diligent;
 
@@ -88,18 +88,7 @@ namespace Unique
 		
 		auto& graphics = GetSubsystem<Graphics>();
 		auto& currentData = IsDynamic() ? RenderContext(data_) : data_[0];
-		
-		BufferDesc desc;
-		desc.BindFlags = bindFlags_;
-		desc.Usage = (Diligent::USAGE)usage_;
-		desc.ElementByteStride = stride_;
-		desc.uiSizeInBytes = sizeInBytes_;
-		desc.CPUAccessFlags = cpuAccessFlags_;
-
-		BufferData BuffData;
-		BuffData.pData = currentData.data();
-		BuffData.DataSize = desc.uiSizeInBytes;
-		graphics.CreateBuffer(desc, BuffData, *this);
+		graphics.CreateBuffer(*this, currentData);
 		return deviceObject_ != nullptr;
 	}
 
@@ -137,11 +126,10 @@ namespace Unique
 
 			uCall
 			(
-				IBuffer* buffer = *this;
-				void* bufferData = nullptr;
-				buffer->Map(deviceContext, MAP_WRITE, MAP_FLAG_DISCARD, bufferData);
+				auto& graphics = GetSubsystem<Graphics>();
+				void* bufferData = graphics.Map(this);
 				memcpy(bufferData, data_[0].data(), data_[0].size());
-				buffer->Unmap(deviceContext, MAP_WRITE, MAP_FLAG_DISCARD);
+				graphics.Unmap(this);
 			);
 		}
 
@@ -195,11 +183,10 @@ namespace Unique
 			
 			uCall
 			(
-				IBuffer* buffer = *this; 
-				void* bufferData = nullptr;
-				buffer->Map(deviceContext, MAP_WRITE, MAP_FLAG_DISCARD, bufferData);
+				auto& graphics = GetSubsystem<Graphics>();
+				void* bufferData = graphics.Map(this);
 				memcpy(bufferData, data_[0].data() + start * GetStride(), count * GetStride());
-				buffer->Unmap(deviceContext, MAP_WRITE, MAP_FLAG_DISCARD);
+				graphics.Unmap(this);
 			);
 		}
 
@@ -236,11 +223,10 @@ namespace Unique
 			uint count = lockCount_[0];
 			uCall
 			(
-				IBuffer* buffer = *this;
-				void* bufferData = nullptr;
-				buffer->Map(deviceContext, MAP_WRITE, MAP_FLAG_DISCARD, bufferData);
+				auto& graphics = GetSubsystem<Graphics>();
+				void* bufferData = graphics.Map(this);
 				memcpy(bufferData, data_[0].data() + start * GetStride(), count * GetStride());
-				buffer->Unmap(deviceContext, MAP_WRITE, MAP_FLAG_DISCARD);
+				graphics.Unmap(this);
 			);
 		}
 	}
@@ -248,27 +234,25 @@ namespace Unique
 
 	void* GraphicsBuffer::Map(uint mapFlags)
 	{
-		IBuffer* buffer = *this;
-		void* bufferData = nullptr;
-		buffer->Map(deviceContext, MAP_WRITE, mapFlags, bufferData);
+		auto& graphics = GetSubsystem<Graphics>();
+		void* bufferData = graphics.Map(this, mapFlags);
 		mapFlags_ = mapFlags;
 		return bufferData;
 	}
 
 	void GraphicsBuffer::UnMap()
 	{
-		IBuffer* buffer = *this;
-		buffer->Unmap(deviceContext, MAP_WRITE, mapFlags_);
+		auto& graphics = GetSubsystem<Graphics>();
+		graphics.Unmap(this, mapFlags_);
 	}
 
 	void GraphicsBuffer::UpdateBuffer()
 	{
-		IBuffer* buffer = *this;
-		void* bufferData = nullptr;
-		buffer->Map(deviceContext, MAP_WRITE, MAP_FLAG_DISCARD, bufferData);
+		auto& graphics = GetSubsystem<Graphics>();
+		void* bufferData = graphics.Map(this);
 		memcpy(bufferData, RenderContext(data_).data() + RenderContext(lockStart_) * GetStride(),
 			RenderContext(lockCount_) * GetStride());
-		buffer->Unmap(deviceContext, MAP_WRITE, MAP_FLAG_DISCARD);
+		graphics.Unmap(this);
 	}
 
 	bool IndexBuffer::SetSize(unsigned indexCount, bool largeIndices, bool dynamic)

@@ -1,19 +1,22 @@
 #pragma once
 #include "Core/Object.h"
-#include <Buffer.h>
 #include "GPUObject.h"
 
 namespace Unique
-{
-	using BufferDesc = Diligent::BufferDesc;
-	using MapType = Diligent::MAP_TYPE;
-	using MapFlags = Diligent::MAP_FLAGS;
+{    
+
+	enum MapFlags : int
+    {
+        MAP_FLAG_DO_NOT_WAIT = 0x001,
+	    MAP_FLAG_DISCARD = 0x002,
+	    MAP_FLAG_DO_NOT_SYNCHRONIZE = 0x004
+    };
 
 	class UNIQUE_API GraphicsBuffer : public Object, public GPUObject
 	{
 		uRTTI(GraphicsBuffer, Object)
 	public:
-		GraphicsBuffer(uint flags = Diligent::BIND_NONE);
+		GraphicsBuffer(uint flags = BIND_NONE);
 		~GraphicsBuffer();
 
 		template<class T>
@@ -50,7 +53,7 @@ namespace Unique
 		void* Lock(uint lockStart = 0, uint lockCount = -1);
 		void Unlock();
 
-		void* Map(uint mapFlags = Diligent::MAP_FLAG_DISCARD);
+		void* Map(uint mapFlags = MAP_FLAG_DISCARD);
 		void UnMap();
 
 		inline char* GetShadowData() { return data_[0].data(); }
@@ -66,22 +69,24 @@ namespace Unique
 		uint lockStart_[2];
 		uint lockCount_[2];
 		uint mapFlags_;
+
+		friend class Graphics;
 	};
 
 	class UNIQUE_API IndexBuffer : public GraphicsBuffer
 	{
 		uRTTI(IndexBuffer, GraphicsBuffer)
 	public:
-		IndexBuffer() : GraphicsBuffer(Diligent::BIND_INDEX_BUFFER) {}
+		IndexBuffer() : GraphicsBuffer(BIND_INDEX_BUFFER) {}
 
 		IndexBuffer(Vector<uint>&& data, Usage usage = USAGE_STATIC, uint flags = 0) 
-			: GraphicsBuffer(Diligent::BIND_INDEX_BUFFER)
+			: GraphicsBuffer(BIND_INDEX_BUFFER)
 		{
 			Create(std::move(data), usage, flags);
 		}
 
 		IndexBuffer(Vector<ushort>&& data, Usage usage = USAGE_STATIC, uint flags = 0) 
-			: GraphicsBuffer(Diligent::BIND_INDEX_BUFFER)
+			: GraphicsBuffer(BIND_INDEX_BUFFER)
 		{
 			Create(std::move(data), usage, flags);
 		}
@@ -98,11 +103,11 @@ namespace Unique
 	{
 		uRTTI(UniformBuffer, GraphicsBuffer)
 	public:
-		UniformBuffer() : GraphicsBuffer(Diligent::BIND_UNIFORM_BUFFER) {}
+		UniformBuffer() : GraphicsBuffer(BIND_UNIFORM_BUFFER) {}
 
 		template<class T>
-		UniformBuffer(const T& data, Usage usage = USAGE_DYNAMIC, uint flags = Diligent::CPU_ACCESS_WRITE)
-			: GraphicsBuffer(Diligent::BIND_UNIFORM_BUFFER)
+		UniformBuffer(const T& data, Usage usage = USAGE_DYNAMIC, uint flags = CPU_ACCESS_WRITE)
+			: GraphicsBuffer(BIND_UNIFORM_BUFFER)
 		{
 			Create(data, usage, flags);
 		}

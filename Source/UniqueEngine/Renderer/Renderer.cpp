@@ -202,10 +202,10 @@ namespace Unique
 	{
 		auto& views = RenderContext(views_);
 		
-		if (views.empty())
+		//if (views.empty())
 		{		
 			graphics_.ClearRenderTarget(nullptr, Color::GRAY);
-			graphics_.ClearDepthStencil(nullptr, Diligent::CLEAR_DEPTH_FLAG, 1.0f, 0xff);
+			graphics_.ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.0f, 0xff);
 		}
 		
 		//for (auto view : views)
