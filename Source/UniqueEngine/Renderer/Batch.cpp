@@ -593,6 +593,8 @@ namespace Unique
 	{		
 		if (!geometry_->IsEmpty())
 		{
+			auto& graphics = GetSubsystem<Graphics>();
+
 			Prepare(view, camera, true);
 			
 			if (isBase_)
@@ -603,17 +605,17 @@ namespace Unique
 			if (scissor_ != 0)
 			{
 				auto& scissor = GetSubsystem<Renderer>().GetScissor(scissor_);
-				deviceContext->SetScissorRects(1, (Diligent::Rect*)&scissor, 0, 0);
+				graphics.SetScissorRects(1, &scissor, 0, 0);
 			}
 
 			if (geometryType_ == GEOM_TRANSIENT )
 			{
-				geometry_->Draw(pipelineState_, primitiveTopology_, 
+				graphics.Draw(geometry_, pipelineState_, primitiveTopology_,
 					vertexOffset_, vertexCount_, indexOffset_, indexCount_);
 			}
 			else
 			{
-				geometry_->Draw(pipelineState_);
+				graphics.Draw(geometry_, pipelineState_);
 			}
 		}
 		
@@ -621,9 +623,10 @@ namespace Unique
 	
 	void Batch::Draw() const
 	{
-		auto& graphics = GetSubsystem<Graphics>();
 		if (!geometry_->IsEmpty())
-		{			
+		{
+			auto& graphics = GetSubsystem<Graphics>();
+
 			if (isBase_ && material_)
 			{
 				material_->Apply(pipelineState_);
@@ -632,7 +635,7 @@ namespace Unique
 			if (scissor_ != 0)
 			{
 				auto& scissor = GetSubsystem<Renderer>().GetScissor(scissor_);
-				deviceContext->SetScissorRects(1, (Diligent::Rect*)&scissor, 0, 0);
+				graphics.SetScissorRects(1, &scissor, 0, 0);
 			}
 
 			if (geometryType_ == GEOM_TRANSIENT )

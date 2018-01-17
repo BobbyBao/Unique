@@ -7,41 +7,6 @@ using namespace Diligent;
 
 namespace Unique
 {	
-	uClassTraits
-	(
-		StencilOpDesc, 
-		"StencilFailOp", self.StencilFailOp, 
-		"StencilDepthFailOp", self.StencilDepthFailOp, 
-		"StencilPassOp", self.StencilPassOp,
-		"StencilFunc", self.StencilFunc
-	)
-	
-	uClassTraits
-	(
-		DepthStencilStateDesc, 
-		"DepthEnable", self.DepthEnable, 
-		"DepthWriteEnable", self.DepthWriteEnable, 
-		"ComparisonFunction", self.DepthFunc,
-		"StencilEnable", self.StencilEnable, 
-		"StencilReadMask", self.StencilReadMask,
-		"StencilWriteMask", self.StencilWriteMask,
-		"FrontFace", self.FrontFace,
-		"BackFace", self.BackFace
-	)
-
-	uClassTraits
-	(
-		RasterizerStateDesc, 
-		"FillMode", self.FillMode, 
-		"CullMode", self.CullMode, 
-		"FrontCounterClockwise", self.FrontCounterClockwise,
-		"DepthBias", self.DepthBias, 
-		"DepthBiasClamp", self.DepthBiasClamp,
-		"SlopeScaledDepthBias", self.SlopeScaledDepthBias,
-		"DepthClipEnable", self.DepthClipEnable,
-		"ScissorEnable", self.ScissorEnable,
-		"AntialiasedLineEnable", self.AntialiasedLineEnable
-	)
 
 	uClassTraits
 	(
@@ -170,7 +135,7 @@ namespace Unique
 
 		for (size_t i = 0; i < inputLayout_.layoutElements_.size(); i++)
 		{
-			inputLayout_.layoutElements_[i].InputIndex = (uint)i;
+			inputLayout_.layoutElements_[i].inputIndex_ = (uint)i;
 		}
 
 		auto& computeShader = shaderStage_[5];

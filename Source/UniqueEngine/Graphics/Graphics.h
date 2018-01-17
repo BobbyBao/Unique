@@ -20,6 +20,7 @@ namespace Unique
 	class IndexBuffer;
 	class Geometry;
 	class Texture;
+	class TextureView;
 	class GPUObject;
 	class ShaderVariation;
 	class PipelineState;
@@ -64,11 +65,10 @@ namespace Unique
 		}
 
 		void AddResource(const char *Name, GPUObject* pObject, bool bIsUnique = true);
-		void AddResource(const char *Name, IDeviceObject *pObject, bool bIsUnique);   
-		void AddResourceArray(const char *Name, uint StartIndex, IDeviceObject* const* ppObjects, uint NumElements, bool bIsUnique);
+// 		void AddResource(const char *Name, IDeviceObject *pObject, bool bIsUnique);   
+// 		void AddResourceArray(const char *Name, uint StartIndex, IDeviceObject* const* ppObjects, uint NumElements, bool bIsUnique);
 		void RemoveResourceByName(const char *Name, uint ArrayIndex = 0);
-		void BindShaderResources(IPipelineState* pipelineState, uint flags);
-		void BindResources(IShaderResourceBinding* shaderResourceBinding, uint shaderFlags, uint flags);
+		void BindShaderResources(PipelineState* pipelineState, uint flags);
 		void Frame();
 		//****************
 
@@ -79,17 +79,20 @@ namespace Unique
 		virtual void CreateTexture(const Diligent::TextureDesc& texDesc, const Diligent::TextureData &data,	Texture& texture);
 		virtual void CreateSampler(const Diligent::SamplerDesc& samDesc, Diligent::ISampler **ppSampler);
 		virtual void CreateResourceMapping(const Diligent::ResourceMappingDesc &mappingDesc, Diligent::IResourceMapping **ppMapping);
-		virtual void CreatePipelineState(const Diligent::PipelineStateDesc &pipelineDesc, IPipelineState** pipelineState);
-
+		virtual void CreatePipelineState(const Diligent::PipelineStateDesc &pipelineDesc, PipelineState* pipelineState);
+		virtual void ReleaseDeviceObject(void* deviceObject);
+		
 		void BeginRender();
-		void EndRender();
-		void Close();
-
+		void EndRender();    
+		void ClearDepthStencil(TextureView *pView, uint ClearFlags, float fDepth, byte Stencil);
+		void ClearRenderTarget(TextureView *pView, const float *RGBA);
+		void SetScissorRects(uint NumRects, const IntRect *pRects, uint RTWidth = 0, uint RTHeight = 0);
 		void Draw(Geometry* geometry, PipelineState* pipeline);
 		void Draw(Geometry* geometry, PipelineState* pipeline, PrimitiveTopology primitiveType, 
 		unsigned vertexStart, unsigned vertexCount, unsigned indexStart, unsigned indexCount);
 		void DrawInstanced(Geometry* geometry, PipelineState* pipeline, uint instanceOffset, uint numInstances);
-	
+
+		void Close();
 
 		//**************************
 		static void AddCommand(const std::function<void()>& cmd);
@@ -119,7 +122,7 @@ namespace Unique
 		Diligent::RefCntAutoPtr<IRenderDevice> renderDevice_;
 		Diligent::RefCntAutoPtr<IDeviceContext> deviceContext_;
 		Diligent::RefCntAutoPtr<ISwapChain> swapChain_;
-		Diligent::RefCntAutoPtr<IResourceMapping> resourceMapping_;
+		Diligent::RefCntAutoPtr<Diligent::IResourceMapping> resourceMapping_;
 
 		SDL_Window *window_ = nullptr;
 		static ThreadID renderThreadID;
@@ -150,7 +153,7 @@ namespace Unique
 		return data[1 - Graphics::currentContext_];
 	}
 	
- 	extern IDeviceContext* deviceContext;
+ 	//extern IDeviceContext* deviceContext;
 
 #define uCall(CODE)\
  auto fn = [=]{CODE};\

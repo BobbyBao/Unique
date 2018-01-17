@@ -143,7 +143,7 @@ namespace Unique
 			resourceMapping_->AddResource(Name, *pObject, bIsUnique);
 		);
 	}
-
+	/*
 	void Graphics::AddResource(const char *Name, IDeviceObject *pObject, bool bIsUnique)
 	{
 		uCall
@@ -158,7 +158,7 @@ namespace Unique
 		(
 			resourceMapping_->AddResourceArray(Name, StartIndex, ppObjects, NumElements, bIsUnique);
 		);
-	}
+	}*/
 
 	void Graphics::RemoveResourceByName(const char *Name, uint ArrayIndex)
 	{
@@ -168,16 +168,12 @@ namespace Unique
 		);
 	}
 
-	void Graphics::BindShaderResources(IPipelineState* pipelineState, uint flags)
+	void Graphics::BindShaderResources(PipelineState* pipelineState, uint flags)
 	{
-		pipelineState->BindShaderResources(resourceMapping_, flags);
+		IPipelineState* pIPipelineState = *pipelineState;
+		pIPipelineState->BindShaderResources(resourceMapping_, flags);
 	}
-
-	void Graphics::BindResources(IShaderResourceBinding* shaderResourceBinding, uint shaderFlags, uint flags)
-	{
-		shaderResourceBinding->BindResources(shaderFlags, resourceMapping_, flags);
-	}
-
+	
 	void Graphics::Frame()
 	{
 		RenderSemWait();
@@ -221,9 +217,14 @@ namespace Unique
 		renderDevice->CreateResourceMapping(mappingDesc, ppMapping);
 	}
 	
-	void Graphics::CreatePipelineState(const PipelineStateDesc &pipelineDesc, IPipelineState** pipelineState)
+	void Graphics::CreatePipelineState(const PipelineStateDesc &pipelineDesc, PipelineState* pipelineState)
 	{
-		renderDevice->CreatePipelineState(pipelineDesc, pipelineState);
+		renderDevice->CreatePipelineState(pipelineDesc, *pipelineState);
+	}
+
+	void Graphics::ReleaseDeviceObject(void* deviceObject)
+	{
+		((IDeviceObject*)deviceObject)->Release();
 	}
 	
 	void Graphics::BeginRender()
@@ -248,6 +249,21 @@ namespace Unique
 
 			RenderSemPost();
 		}
+	}
+	
+	void Graphics::ClearDepthStencil(TextureView *pView, uint ClearFlags, float fDepth, byte Stencil)
+	{
+		deviceContext_->ClearDepthStencil(*pView, ClearFlags, fDepth, Stencil);
+	}
+
+	void Graphics::ClearRenderTarget(TextureView *pView, const float *RGBA)
+	{
+		deviceContext_->ClearRenderTarget(*pView, RGBA);
+	}
+
+	void Graphics::SetScissorRects(uint NumRects, const IntRect *pRects, uint RTWidth, uint RTHeight)
+	{
+		deviceContext_->SetScissorRects(NumRects, (Diligent::Rect*)pRects, RTWidth, RTHeight);
 	}
 		
 	void Graphics::Draw(Geometry* geometry, PipelineState* pipeline)
@@ -285,11 +301,9 @@ namespace Unique
 
 		auto& graphics = GetSubsystem<Graphics>();
 
-		graphics.BindResources(pipeline->GetShaderResourceBinding(),
-			SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED | BIND_SHADER_RESOURCES_ALL_RESOLVED);
-
+		pipeline->GetShaderResourceBinding()->BindResources(SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL,
+			resourceMapping_, BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED | BIND_SHADER_RESOURCES_ALL_RESOLVED);
 		deviceContext->CommitShaderResources(pipeline->GetShaderResourceBinding(), COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
-
 		deviceContext->Draw(drawAttribs);
 	}
 		
@@ -328,8 +342,8 @@ namespace Unique
 
 		auto& graphics = GetSubsystem<Graphics>();
 
-		graphics.BindResources(pipeline->GetShaderResourceBinding(),
-			SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED | BIND_SHADER_RESOURCES_ALL_RESOLVED);
+		pipeline->GetShaderResourceBinding()->BindResources(SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL,
+			resourceMapping_, BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED | BIND_SHADER_RESOURCES_ALL_RESOLVED);
 
 		deviceContext->CommitShaderResources(pipeline->GetShaderResourceBinding(), COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
 
@@ -371,8 +385,9 @@ namespace Unique
 
 		auto& graphics = GetSubsystem<Graphics>();
 
-		graphics.BindResources(pipeline->GetShaderResourceBinding(),
-			SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED | BIND_SHADER_RESOURCES_ALL_RESOLVED);
+		pipeline->GetShaderResourceBinding()->BindResources(
+			SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, resourceMapping_,
+			BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED | BIND_SHADER_RESOURCES_ALL_RESOLVED);
 
 		deviceContext->CommitShaderResources(pipeline->GetShaderResourceBinding(), COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
 

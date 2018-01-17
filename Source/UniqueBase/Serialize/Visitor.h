@@ -128,6 +128,12 @@ namespace Unique
 		template<class T>
 		void Transfer(T& data)
 		{
+// 			TypeInfo* typeInfo = TypeInfo.Get<T>();
+// 			if (typeInfo)
+// 			{
+// 				typeInfo->Transfer(*this, &data);
+// 			}
+
 			data.Transfer(*this);
 		}
 

@@ -103,10 +103,10 @@ namespace Unique
 
 		UpdateOffsets();
 
-		desc_.ElementByteStride = GetVertexSize(elements_);
-		desc_.uiSizeInBytes = (uint)data.size();
-		desc_.Usage = usage;
-		desc_.CPUAccessFlags |= (usage == Diligent::USAGE_DYNAMIC ? Diligent::CPU_ACCESS_WRITE : 0);
+		stride_ = GetVertexSize(elements_);
+		sizeInBytes_ = (uint)data.size();
+		usage_ = usage;
+		cpuAccessFlags_ |= (usage == USAGE_DYNAMIC ? Diligent::CPU_ACCESS_WRITE : 0);
 		auto& currentData = IsDynamic() ? MainContext(data_) : data_[0];
 		currentData = data;
 
@@ -120,10 +120,10 @@ namespace Unique
 
 		UpdateOffsets();
 
-		desc_.ElementByteStride = GetVertexSize(elements_);
-		desc_.uiSizeInBytes = (uint)data.size();
-		desc_.Usage = usage;
-		desc_.CPUAccessFlags |= (usage == Diligent::USAGE_DYNAMIC ? Diligent::CPU_ACCESS_WRITE : 0);
+		stride_ = GetVertexSize(elements_);
+		sizeInBytes_ = (uint)data.size();
+		usage_ = usage;
+		cpuAccessFlags_ |= (usage == USAGE_DYNAMIC ? Diligent::CPU_ACCESS_WRITE : 0);
 		auto& currentData = IsDynamic() ? MainContext(data_) : data_[0];
 		currentData = data;
 
@@ -136,15 +136,15 @@ namespace Unique
 
 		UpdateOffsets();
 
-		desc_.ElementByteStride = GetVertexSize(elements_);
-		desc_.uiSizeInBytes = vertexCount * desc_.ElementByteStride;
-		desc_.Usage = dynamic ? Diligent::USAGE_DYNAMIC : Diligent::USAGE_STATIC;
-		desc_.CPUAccessFlags |= (dynamic ? Diligent::CPU_ACCESS_WRITE : 0);
-		data_[0].resize(desc_.uiSizeInBytes);
+		stride_ = GetVertexSize(elements_);
+		sizeInBytes_ = vertexCount * stride_;
+		usage_ = dynamic ? USAGE_DYNAMIC : USAGE_STATIC;
+		cpuAccessFlags_ |= (dynamic ? Diligent::CPU_ACCESS_WRITE : 0);
+		data_[0].resize(sizeInBytes_);
 
 		if (IsDynamic())
 		{
-			data_[1].resize(desc_.uiSizeInBytes);
+			data_[1].resize(sizeInBytes_);
 		}
 
 		return GPUObject::Create();
@@ -156,15 +156,15 @@ namespace Unique
 
 		UpdateOffsets();
 
-		desc_.ElementByteStride = GetVertexSize(elements_);
-		desc_.uiSizeInBytes = vertexCount * desc_.ElementByteStride;
-		desc_.Usage = dynamic ? Diligent::USAGE_DYNAMIC : Diligent::USAGE_STATIC;
-		desc_.CPUAccessFlags |= (dynamic ? Diligent::CPU_ACCESS_WRITE : 0);
-		data_[0].resize(desc_.uiSizeInBytes);
+		stride_ = GetVertexSize(elements_);
+		sizeInBytes_ = vertexCount * stride_;
+		usage_ = dynamic ? USAGE_DYNAMIC : USAGE_STATIC;
+		cpuAccessFlags_ |= (dynamic ? Diligent::CPU_ACCESS_WRITE : 0);
+		data_[0].resize(sizeInBytes_);
 
 		if (IsDynamic())
 		{
-			data_[1].resize(desc_.uiSizeInBytes);
+			data_[1].resize(sizeInBytes_);
 		}
 
 		return GPUObject::Create();
@@ -191,7 +191,7 @@ namespace Unique
 			}
 		}
 
-		desc_.ElementByteStride = elementOffset;
+		stride_ = elementOffset;
 	}
 
 	const VertexElement* VertexBuffer::GetElement(VertexElementSemantic semantic, unsigned char index) const

@@ -6,6 +6,9 @@ namespace Unique
 {
 	using DepthStencilStateDesc = Diligent::DepthStencilStateDesc;
 	using IShaderVariable = Diligent::IShaderVariable;
+	using IPipelineState = Diligent::IPipelineState;
+	using IShaderResourceBinding = Diligent::IShaderResourceBinding;
+	using IResourceMapping = Diligent::IResourceMapping;
 
 	class ShaderVariation;
 	class Shader;

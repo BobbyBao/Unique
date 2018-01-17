@@ -19,6 +19,7 @@ namespace Unique.Engine
         public static OS OS => os_;
         private static OS os_;
 
+        protected DeviceType deviceType { get; set; } = DeviceType.D3D11;
         public Application() : this(new string[0])
         {
         }
@@ -56,7 +57,7 @@ namespace Unique.Engine
         
         public void Start()
         {
-            Unique_Start(native_, DeviceType.D3D11, IntPtr.Zero);
+            Unique_Start(native_, deviceType, IntPtr.Zero);
 
         }
 

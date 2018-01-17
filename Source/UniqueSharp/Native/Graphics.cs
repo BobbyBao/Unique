@@ -6,7 +6,7 @@ using System.Text;
 namespace Unique.Engine
 {
     /// Device type
-    enum DeviceType : Int32
+    public enum DeviceType : Int32
     {
         Undefined = 0,  ///< Undefined device
         D3D11,      ///< D3D11 device
@@ -16,7 +16,7 @@ namespace Unique.Engine
     }
 
     [SuppressUnmanagedCodeSecurity]
-    internal unsafe static partial class Native
+    public partial class Graphics
     {
 
     }

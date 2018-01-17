@@ -100,7 +100,7 @@ namespace Unique
 			reinterpret_cast<const byte*>(data.data()),
 			data.size(),
 			0, // maxSize
-			TexLoadInfo.Usage,
+			(Diligent::USAGE)TexLoadInfo.Usage,
 			TexLoadInfo.Name,
 			TexLoadInfo.BindFlags,
 			TexLoadInfo.CPUAccessFlags,

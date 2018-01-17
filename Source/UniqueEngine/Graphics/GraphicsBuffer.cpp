@@ -17,16 +17,16 @@ namespace Unique
 	)
 
 	uObject(GraphicsBuffer)
-	{
-		uAttribute("SizeInBytes", desc_.uiSizeInBytes)
-		uAttribute("Usage", desc_.Usage)
-		uAttribute("CPUAccessFlags", desc_.CPUAccessFlags)
+	{	
+		uAttribute("Usage", usage_)
+		uAttribute("SizeInBytes", sizeInBytes_)
+		uAttribute("CPUAccessFlags", cpuAccessFlags_)
 	}
 	
 	uObject(IndexBuffer)
 	{
 		uFactory("Graphics")
-		uAttribute("ElementByteStride", desc_.ElementByteStride)
+		uAttribute("ElementByteStride", stride_)
 		uAttribute("Data", data_[0])
 	}
 
@@ -38,7 +38,7 @@ namespace Unique
 
 	GraphicsBuffer::GraphicsBuffer(uint flags)
 	{
-		desc_.BindFlags = flags;
+		bindFlags_ = flags;
 	}
 
 	GraphicsBuffer::~GraphicsBuffer()
@@ -47,22 +47,22 @@ namespace Unique
 
 	bool GraphicsBuffer::Create(uint elementCount, uint elementSize, Usage usage, uint flags, void* data)
 	{
-		desc_.ElementByteStride = elementSize;
-		desc_.uiSizeInBytes = elementCount*elementSize;
-		desc_.Usage = usage;
-		desc_.CPUAccessFlags = flags;
+		stride_ = elementSize;
+		sizeInBytes_ = elementCount*elementSize;
+		usage_ = usage;
+		cpuAccessFlags_ = flags;
 
-		data_[0].resize(desc_.uiSizeInBytes);
+		data_[0].resize(sizeInBytes_);
 
 		if (IsDynamic())
 		{
-			data_[1].resize(desc_.uiSizeInBytes);
+			data_[1].resize(sizeInBytes_);
 		}
 		
 		if (data)
 		{
 			auto& currentData = IsDynamic() ? MainContext(data_) : data_[0];
-			std::memcpy(currentData.data(), data, desc_.uiSizeInBytes);
+			std::memcpy(currentData.data(), data, sizeInBytes_);
 		}
 
 		return GPUObject::Create();
@@ -70,10 +70,10 @@ namespace Unique
 
 	bool GraphicsBuffer::Create(ByteArray&& data, uint elementSize, Usage usage, uint flags)
 	{
-		desc_.ElementByteStride = elementSize;
-		desc_.uiSizeInBytes = (uint)data.size();
-		desc_.Usage = usage;
-		desc_.CPUAccessFlags = flags;
+		stride_ = elementSize;
+		sizeInBytes_ = (uint)data.size();
+		usage_ = usage;
+		cpuAccessFlags_ = flags;
 
 		auto& currentData = IsDynamic() ? MainContext(data_) : data_[0];
 		currentData = data;
@@ -88,16 +88,24 @@ namespace Unique
 		
 		auto& graphics = GetSubsystem<Graphics>();
 		auto& currentData = IsDynamic() ? RenderContext(data_) : data_[0];
+		
+		BufferDesc desc;
+		desc.BindFlags = bindFlags_;
+		desc.Usage = (Diligent::USAGE)usage_;
+		desc.ElementByteStride = stride_;
+		desc.uiSizeInBytes = sizeInBytes_;
+		desc.CPUAccessFlags = cpuAccessFlags_;
+
 		BufferData BuffData;
 		BuffData.pData = currentData.data();
-		BuffData.DataSize = desc_.uiSizeInBytes;
-		graphics.CreateBuffer(desc_, BuffData, *this);
+		BuffData.DataSize = desc.uiSizeInBytes;
+		graphics.CreateBuffer(desc, BuffData, *this);
 		return deviceObject_ != nullptr;
 	}
 
 	bool GraphicsBuffer::SetData(const void* data)
 	{
-		if (desc_.Usage == USAGE_STATIC)
+		if (usage_ == USAGE_STATIC)
 		{
 			UNIQUE_LOGERROR("Set data for static buffer");
 			return false;
@@ -143,7 +151,7 @@ namespace Unique
 
 	bool GraphicsBuffer::SetDataRange(const void* data, unsigned start, unsigned count, bool discard)
 	{
-		if (desc_.Usage == USAGE_STATIC)
+		if (usage_ == USAGE_STATIC)
 		{
 			UNIQUE_LOGERROR("Set data for static buffer");
 			return false;
@@ -265,7 +273,7 @@ namespace Unique
 
 	bool IndexBuffer::SetSize(unsigned indexCount, bool largeIndices, bool dynamic)
 	{
-		Usage usage = dynamic ? Diligent::USAGE_DYNAMIC : Diligent::USAGE_STATIC;
+		Usage usage = dynamic ? USAGE_DYNAMIC : USAGE_STATIC;
 		uint flags = (dynamic ? Diligent::CPU_ACCESS_WRITE : 0);
 		return GraphicsBuffer::Create(indexCount, largeIndices ? 4 : 2, usage, flags, nullptr);
 	}

@@ -8,9 +8,12 @@
 
 namespace Unique
 {
+	using ComponentType = Diligent::COMPONENT_TYPE;
+	using TextureFormat = Diligent::TEXTURE_FORMAT;
 	using TextureDesc = Diligent::TextureDesc;
 	using TextureData = Diligent::TextureData;
 	using SamplerDesc = Diligent::SamplerDesc;
+
 	using ISampler = Diligent::ISampler;
 	using TextureSubResData = Diligent::TextureSubResData;
 	using ITextureView = Diligent::ITextureView;
@@ -31,7 +34,7 @@ namespace Unique
 
 		TextureLoadInfo() :
 			Name(""),
-			Usage(Diligent::USAGE_STATIC),
+			Usage(USAGE_STATIC),
 			BindFlags(Diligent::BIND_SHADER_RESOURCE),
 			MipLevels(0),
 			CPUAccessFlags(0),

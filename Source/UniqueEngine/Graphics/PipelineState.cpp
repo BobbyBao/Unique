@@ -45,8 +45,8 @@ namespace Unique
 	{
 		auto& graphics = GetSubsystem<Graphics>();
 
-		psoDesc_.GraphicsPipeline.DepthStencilDesc = shaderProgram_->shaderPass_.depthState_;
-		psoDesc_.GraphicsPipeline.RasterizerDesc = shaderProgram_->shaderPass_.rasterizerState_;
+		psoDesc_.GraphicsPipeline.DepthStencilDesc = (Diligent::DepthStencilStateDesc&)shaderProgram_->shaderPass_.depthState_;
+		psoDesc_.GraphicsPipeline.RasterizerDesc = (Diligent::RasterizerStateDesc&)shaderProgram_->shaderPass_.rasterizerState_;
 		psoDesc_.GraphicsPipeline.BlendDesc = shaderProgram_->shaderPass_.blendState_;
 		psoDesc_.GraphicsPipeline.InputLayout.LayoutElements = (Diligent::LayoutElement*)shaderProgram_->shaderPass_.inputLayout_.layoutElements_.data();
 		psoDesc_.GraphicsPipeline.InputLayout.NumElements = (uint)shaderProgram_->shaderPass_.inputLayout_.layoutElements_.size();
@@ -115,8 +115,8 @@ namespace Unique
 		}
 
 		auto& graphics = GetSubsystem<Graphics>();
-		graphics.CreatePipelineState(psoDesc_, *this);
-		graphics.BindShaderResources(*this, BIND_SHADER_RESOURCES_ALL_RESOLVED);
+		graphics.CreatePipelineState(psoDesc_, this);
+		graphics.BindShaderResources(this, BIND_SHADER_RESOURCES_ALL_RESOLVED);
 		((IPipelineState*)deviceObject_)->CreateShaderResourceBinding(&shaderResourceBinding_);
 		dirty_ = false;
 		return true;
@@ -158,7 +158,7 @@ namespace Unique
 
 	void PipelineState::SetCullMode(CullMode cull)
 	{
-		psoDesc_.GraphicsPipeline.RasterizerDesc.CullMode = cull;
+		psoDesc_.GraphicsPipeline.RasterizerDesc.CullMode = (Diligent::CULL_MODE)cull;
 	}
 
 	void PipelineState::SetLineAntialiased(bool val)

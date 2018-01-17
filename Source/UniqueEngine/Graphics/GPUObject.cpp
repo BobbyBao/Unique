@@ -46,7 +46,8 @@ namespace Unique
 	{
 		if (deviceObject_ != nullptr)
 		{
-			deviceObject_->Release();
+			GetSubsystem<Graphics>().ReleaseDeviceObject(deviceObject_);
+		//	deviceObject_->Release();
 			deviceObject_ = nullptr;
 		}
 	}

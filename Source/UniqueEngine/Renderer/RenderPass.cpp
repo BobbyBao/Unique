@@ -57,8 +57,9 @@ namespace Unique
 
 	void ClearPass::Render(View* view)
 	{
-		deviceContext->ClearRenderTarget(nullptr, clearColor_);
-		deviceContext->ClearDepthStencil(nullptr, clearFlags_, clearDepth_, clearStencil_);
+		auto& graphics = GetSubsystem<Graphics>();
+		graphics.ClearRenderTarget(nullptr, clearColor_);
+		graphics.ClearDepthStencil(nullptr, clearFlags_, clearDepth_, clearStencil_);
 	}
 
 }

@@ -60,6 +60,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Renderer\RenderPass.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Renderer\RenderPath.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Renderer\ScenePass.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\RenderState.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Scene\Component.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Scene\LogicComponent.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Scene\Node.h" />
@@ -83,6 +84,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Export\InputExport.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Export\RendererExport.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Export\SceneExport.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\RenderState.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Input\Controls.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Input\Input.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Importers\DDSLoader.cpp" />

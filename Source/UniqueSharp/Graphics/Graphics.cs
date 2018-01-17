@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Unique.Engine
 {
-    public class Graphics : Object
+    public partial class Graphics : Object
     {
     }
 }

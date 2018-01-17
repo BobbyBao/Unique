@@ -81,6 +81,12 @@ namespace Unique
 			return s_typeName;
 		}
 
+		template<class T>
+		static TypeInfo* Get()
+		{
+			return GetTypeInfo(GetTypeID<T>());
+		}
+
 		static void RegisterTypeInfo();
 		static int GetAllTypeInfo(TypeInfo** typeInfos);
 		static TypeInfo* GetTypeInfo(const StringID& type);

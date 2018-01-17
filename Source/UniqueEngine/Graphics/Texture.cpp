@@ -56,7 +56,7 @@ namespace Unique
 		desc_.MipLevels = ComputeMipLevelsCount(desc_.Width, desc_.Height);
 		//if (TexLoadInfo.MipLevels > 0)
 		//	desc_.MipLevels = std::min(desc_.MipLevels, TexLoadInfo.MipLevels);
-		desc_.Usage = TexLoadInfo.Usage;
+		desc_.Usage = (Diligent::USAGE)TexLoadInfo.Usage;
 		desc_.BindFlags = TexLoadInfo.BindFlags;
 		desc_.Format = TexLoadInfo.Format;
 		desc_.CPUAccessFlags = TexLoadInfo.CPUAccessFlags;

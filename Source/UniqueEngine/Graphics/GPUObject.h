@@ -24,7 +24,7 @@ namespace Unique
 		void MarkDirty();
 
 		static void UpdateBuffers();
-		IDeviceObject* deviceObject_ = nullptr;
+		void* deviceObject_ = nullptr;
 		static Vector<GPUObject*> updateQueue_[2];
 		friend class Graphics;
 	};

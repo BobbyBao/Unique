@@ -30,32 +30,163 @@ namespace Unique
 		VT_NUM_TYPES      ///< Helper value storing total number of types in the enumeration
 	};
 
-	using BindFlags = Diligent::BIND_FLAGS;
-	using Usage = Diligent::USAGE;
-	using CPUAccessFlag = Diligent::CPU_ACCESS_FLAG;
-	using MapType = Diligent::MAP_TYPE;
-	using MapFlags = Diligent::MAP_FLAGS;
+	enum BindFlags : int
+	{
+		BIND_NONE = 0x0L, ///< Undefined binding
+		BIND_VERTEX_BUFFER = 0x1L, ///< A buffer can be bound as a vertex buffer
+		BIND_INDEX_BUFFER = 0x2L, ///< A buffer can be bound as an index buffer
+		BIND_UNIFORM_BUFFER = 0x4L, ///< A buffer can be bound as a uniform buffer
+		///  \warning This flag may not be combined with any other bind flag
+		BIND_SHADER_RESOURCE = 0x8L, ///< A buffer or a texture can be bound as a shader resource
+		///  \warning This flag cannot be used with MAP_WRITE_NO_OVERWRITE flag 
+		BIND_STREAM_OUTPUT = 0x10L,///< A buffer can be bound as a target for stream output stage
+		BIND_RENDER_TARGET = 0x20L,///< A texture can be bound as a render target
+		BIND_DEPTH_STENCIL = 0x40L,///< A texture can be bound as a depth-stencil target
+		BIND_UNORDERED_ACCESS = 0x80L,///< A buffer or a texture can be bound as an unordered access view
+		BIND_INDIRECT_DRAW_ARGS = 0x100L///< A buffer can be bound as the source buffer for indirect draw commands
+	};
 
-	using TextureFormat = Diligent::TEXTURE_FORMAT;
-	using FilterType = Diligent::FILTER_TYPE;
-	using TextureAddressMode = Diligent::TEXTURE_ADDRESS_MODE;
-	using ComponentType = Diligent::COMPONENT_TYPE;
+	enum Usage : int
+	{
+		/// A resource that can only be read by the GPU. It cannot be written by the GPU, 
+		/// and cannot be accessed at all by the CPU. This type of resource must be initialized 
+		/// when it is created, since it cannot be changed after creation. \n
+		/// D3D11 Counterpart: D3D11_USAGE_IMMUTABLE. OpenGL counterpart: GL_STATIC_DRAW
+		USAGE_STATIC = 0,
 
-	using StencilOp = Diligent::STENCIL_OP;
-	using ComparisonFunction = Diligent::COMPARISON_FUNCTION;
-	using FillMode = Diligent::FILL_MODE;
-	using CullMode = Diligent::CULL_MODE;
+		/// A resource that requires read and write access by the GPU and can also be occasionally
+		/// written by the CPU.  \n
+		/// D3D11 Counterpart: D3D11_USAGE_DEFAULT. OpenGL counterpart: GL_DYNAMIC_DRAW
+		USAGE_DEFAULT,
+
+		/// A resource that can be read by the GPU and written at least once per frame by the CPU.  \n
+		/// D3D11 Counterpart: D3D11_USAGE_DYNAMIC. OpenGL counterpart: GL_STREAM_DRAW
+		USAGE_DYNAMIC,
+
+		/// A resource that facilitates transferring data from GPU to CPU. \n
+		/// D3D11 Counterpart: D3D11_USAGE_STAGING. OpenGL counterpart: GL_DYNAMIC_READ
+		USAGE_CPU_ACCESSIBLE
+	};
+  
+	enum CPUAccessFlag : int
+	{
+		CPU_ACCESS_READ = 0x01, ///< A resource can be mapped for reading
+		CPU_ACCESS_WRITE = 0x02 ///< A resource can be mapped for writing
+	};
+
+	enum FilterType : int
+	{
+		FILTER_TYPE_UNKNOWN = 0,           ///< Unknown filter type
+		FILTER_TYPE_POINT,                  ///< Point filtering
+		FILTER_TYPE_LINEAR,                 ///< Linear filtering
+		FILTER_TYPE_ANISOTROPIC,            ///< Anisotropic filtering
+		FILTER_TYPE_COMPARISON_POINT,       ///< Comparison-point filtering
+		FILTER_TYPE_COMPARISON_LINEAR,      ///< Comparison-linear filtering
+		FILTER_TYPE_COMPARISON_ANISOTROPIC, ///< Comparison-anisotropic filtering
+		FILTER_TYPE_MINIMUM_POINT,          ///< Minimum-point filtering (DX12 only)
+		FILTER_TYPE_MINIMUM_LINEAR,         ///< Minimum-linear filtering (DX12 only)
+		FILTER_TYPE_MINIMUM_ANISOTROPIC,    ///< Minimum-anisotropic filtering (DX12 only)
+		FILTER_TYPE_MAXIMUM_POINT,          ///< Maximum-point filtering (DX12 only)
+		FILTER_TYPE_MAXIMUM_LINEAR,         ///< Maximum-linear filtering (DX12 only)
+		FILTER_TYPE_MAXIMUM_ANISOTROPIC,    ///< Maximum-anisotropic filtering (DX12 only)
+		FILTER_TYPE_NUM_FILTERS             ///< Helper value that stores the total number of filter types in the enumeration
+	};
+
+	enum class TextureAddressMode : int
+	{
+		UNKNOWN = 0,
+		WRAP = 1,
+		MIRROR = 2,
+		CLAMP = 3,
+		BORDER = 4,
+		MIRROR_ONCE = 5,
+		/// Helper value that stores the total number of texture address modes in the enumeration
+		TEXTURE_ADDRESS_NUM_MODES
+	};
+
+	enum ComparisonFunc : int
+	{
+		/// Unknown comparison function
+		COMPARISON_FUNC_UNKNOWN = 0,
+		COMPARISON_FUNC_NEVER,
+		COMPARISON_FUNC_LESS,
+		COMPARISON_FUNC_EQUAL,
+		COMPARISON_FUNC_LESS_EQUAL,
+		COMPARISON_FUNC_GREATER,
+		COMPARISON_FUNC_NOT_EQUAL,
+		COMPARISON_FUNC_GREATER_EQUAL,
+		COMPARISON_FUNC_ALWAYS,
+		/// Helper value that stores the total number of comparison functions in the enumeration
+		COMPARISON_FUNC_NUM_FUNCTIONS
+	};
+
+	enum StencilOp : int
+	{
+		/// Undefined operation.
+		STENCIL_OP_UNDEFINED = 0,
+
+		/// Keep the existing stencil data.\n
+		/// Direct3D counterpart: D3D11_STENCIL_OP_KEEP/D3D12_STENCIL_OP_KEEP. OpenGL counterpart: GL_KEEP.
+		STENCIL_OP_KEEP = 1,
+
+		/// Set the stencil data to 0.\n
+		/// Direct3D counterpart: D3D11_STENCIL_OP_ZERO/D3D12_STENCIL_OP_ZERO. OpenGL counterpart: GL_ZERO.
+		STENCIL_OP_ZERO = 2,
+
+		/// Set the stencil data to the reference value set by calling IDeviceContext::SetStencilRef().\n
+		/// Direct3D counterpart: D3D11_STENCIL_OP_REPLACE/D3D12_STENCIL_OP_REPLACE. OpenGL counterpart: GL_REPLACE.
+		STENCIL_OP_REPLACE = 3,
+
+		/// Increment the current stencil value, and clamp to the maximum representable unsigned value.\n
+		/// Direct3D counterpart: D3D11_STENCIL_OP_INCR_SAT/D3D12_STENCIL_OP_INCR_SAT. OpenGL counterpart: GL_INCR.
+		STENCIL_OP_INCR_SAT = 4,
+
+		/// Decrement the current stencil value, and clamp to 0.\n
+		/// Direct3D counterpart: D3D11_STENCIL_OP_DECR_SAT/D3D12_STENCIL_OP_DECR_SAT. OpenGL counterpart: GL_DECR.
+		STENCIL_OP_DECR_SAT = 5,
+
+		/// Bitwise invert the current stencil buffer value.\n
+		/// Direct3D counterpart: D3D11_STENCIL_OP_INVERT/D3D12_STENCIL_OP_INVERT. OpenGL counterpart: GL_INVERT.
+		STENCIL_OP_INVERT = 6,
+
+		/// Increment the current stencil value, and wrap the value to zero when incrementing 
+		/// the maximum representable unsigned value. \n
+		/// Direct3D counterpart: D3D11_STENCIL_OP_INCR/D3D12_STENCIL_OP_INCR. OpenGL counterpart: GL_INCR_WRAP.
+		STENCIL_OP_INCR_WRAP = 7,
+
+		/// Decrement the current stencil value, and wrap the value to the maximum representable 
+		/// unsigned value when decrementing a value of zero.\n
+		/// Direct3D counterpart: D3D11_STENCIL_OP_DECR/D3D12_STENCIL_OP_DECR. OpenGL counterpart: GL_DECR_WRAP.
+		STENCIL_OP_DECR_WRAP = 8,
+
+		/// Helper value that stores the total number of stencil operations in the enumeration.
+		STENCIL_OP_NUM_OPS
+	};
+	//using StencilOp = Diligent::STENCIL_OP;
+	//using ComparisonFunction = Diligent::COMPARISON_FUNCTION;
+
+	enum FillMode : int
+	{
+		FILL_MODE_UNDEFINED = 0,
+		FILL_MODE_WIREFRAME,
+		FILL_MODE_SOLID,
+		FILL_MODE_NUM_MODES
+	};
+
+	enum CullMode : int
+	{
+		CULL_MODE_UNDEFINED = 0,
+		CULL_MODE_NONE,
+		CULL_MODE_FRONT,
+		CULL_MODE_BACK,
+		CULL_MODE_NUM_MODES
+	};
 
 	using BlendFactor = Diligent::BLEND_FACTOR;
 	using BlendOperation = Diligent::BLEND_OPERATION;
 	using LogicOperation = Diligent::LOGIC_OPERATION;
 	using ColorMask = Diligent::COLOR_MASK;
 	
-	using IDeviceObject = Diligent::IDeviceObject;
-	using IPipelineState = Diligent::IPipelineState;
-	using IShaderResourceBinding = Diligent::IShaderResourceBinding;
-	using IResourceMapping = Diligent::IResourceMapping;
-
 	enum class PrimitiveTopology : byte
 	{
 		/// Undefined topology
@@ -141,7 +272,7 @@ namespace Unique
 	uEnum(StencilOp, "UNDEFINED", "KEEP", "ZERO", "REPLACE", 
 		"INCR_SAT", "DECR_SAT", "INVERT", "INCR_WRAP", "DECR_WRAP")
 
-	uEnum(ComparisonFunction, "UNKNOWN", "NEVER", "LESS", "EQUAL", 
+	uEnum(ComparisonFunc, "UNKNOWN", "NEVER", "LESS", "EQUAL", 
 		"LESS_EQUAL", "GREATER", "NOT_EQUAL", "GREATER_EQUAL", "ALWAYS")
 
 	uEnum(FillMode, "UNDEFINED", "WIREFRAME", "SOLID")

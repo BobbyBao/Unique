@@ -1,6 +1,6 @@
 #include "Precompiled.h"
 #include "ShaderImporter.h"
-#include "../Shader.h"
+#include "../ShaderEffect.h"
 #include "Serialize/DslDeserializer.h"
 
 namespace Unique

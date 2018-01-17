@@ -1,11 +1,8 @@
 #pragma once
 #include "Resource/Resource.h"
-#include "GraphicsDefs.h"
 #include "ShaderVariation.h"
 #include "ShaderVariable.h"
-#include <DepthStencilState.h>
-#include <BlendState.h>
-#include <RasterizerState.h>
+#include "RenderState.h"
 
 namespace Unique
 {
@@ -19,7 +16,7 @@ namespace Unique
 	struct LayoutElement
 	{
 		/// Input index of the element, which is specified in the vertex shader.
-		uint InputIndex;
+		uint inputIndex_;
 
 		/// Buffer slot index that this element is read from.
 		uint BufferSlot;
@@ -72,7 +69,7 @@ namespace Unique
 			uint _RelativeOffset = 0,
 			FREQUENCY _Frequency = FREQUENCY_PER_VERTEX,
 			uint _InstanceDataStepRate = 1) :
-			InputIndex(_InputIndex),
+			inputIndex_(_InputIndex),
 			BufferSlot(_BufferSlot),
 			NumComponents(_NumComponents),
 			valueType(_ValueType),
@@ -108,8 +105,8 @@ namespace Unique
 		String					name_;
 		uint					passIndex_ = 0;
 		Diligent::BlendStateDesc		blendState_;
-		Diligent::DepthStencilStateDesc	depthState_;
-		Diligent::RasterizerStateDesc	rasterizerState_;
+		DepthStencilState		depthState_;
+		RasterizerState			rasterizerState_;
 		InputLayout				inputLayout_;
 		ShaderStage				shaderStage_[6];
 

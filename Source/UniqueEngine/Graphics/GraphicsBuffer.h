@@ -6,6 +6,8 @@
 namespace Unique
 {
 	using BufferDesc = Diligent::BufferDesc;
+	using MapType = Diligent::MAP_TYPE;
+	using MapFlags = Diligent::MAP_FLAGS;
 
 	class UNIQUE_API GraphicsBuffer : public Object, public GPUObject
 	{
@@ -29,19 +31,19 @@ namespace Unique
 		/// Set size, vertex elements and dynamic mode. Previous data will be lost.
 		bool Create(uint elementCount, uint elementSize, Usage usage, uint flags, void* data);
 		
-		bool Create(ByteArray&& data, uint elementSize, Usage usage = Diligent::USAGE_STATIC, uint flags = 0);
+		bool Create(ByteArray&& data, uint elementSize, Usage usage = USAGE_STATIC, uint flags = 0);
 
 		bool SetData(const void* data);
 		/// Set a data range in the buffer. Optionally discard data outside the range.
 		bool SetDataRange(const void* data, unsigned start, unsigned count, bool discard = false);
 
-		inline bool IsDynamic() const { return desc_.Usage == Diligent::USAGE_DYNAMIC; }
+		inline bool IsDynamic() const { return usage_ == USAGE_DYNAMIC; }
 		
-		inline uint GetSizeInBytes() const { return desc_.uiSizeInBytes; }
+		inline uint GetSizeInBytes() const { return sizeInBytes_; }
 		
-		inline uint GetCount() const { return desc_.uiSizeInBytes == 0 ? 0 : desc_.uiSizeInBytes / desc_.ElementByteStride; }
+		inline uint GetCount() const { return sizeInBytes_ == 0 ? 0 : sizeInBytes_ / stride_; }
 		
-		inline uint GetStride() const { return desc_.ElementByteStride; }
+		inline uint GetStride() const { return stride_; }
 
 		virtual void UpdateBuffer();
 
@@ -55,8 +57,11 @@ namespace Unique
 	protected:
 		/// Create buffer.
 		virtual bool CreateImpl();
-
-		BufferDesc desc_;
+		uint bindFlags_;
+		Usage usage_;
+		uint stride_;
+		uint sizeInBytes_;
+		uint cpuAccessFlags_;
 		ByteArray data_[2];
 		uint lockStart_[2];
 		uint lockCount_[2];
@@ -69,13 +74,13 @@ namespace Unique
 	public:
 		IndexBuffer() : GraphicsBuffer(Diligent::BIND_INDEX_BUFFER) {}
 
-		IndexBuffer(Vector<uint>&& data, Usage usage = Diligent::USAGE_STATIC, uint flags = 0) 
+		IndexBuffer(Vector<uint>&& data, Usage usage = USAGE_STATIC, uint flags = 0) 
 			: GraphicsBuffer(Diligent::BIND_INDEX_BUFFER)
 		{
 			Create(std::move(data), usage, flags);
 		}
 
-		IndexBuffer(Vector<ushort>&& data, Usage usage = Diligent::USAGE_STATIC, uint flags = 0) 
+		IndexBuffer(Vector<ushort>&& data, Usage usage = USAGE_STATIC, uint flags = 0) 
 			: GraphicsBuffer(Diligent::BIND_INDEX_BUFFER)
 		{
 			Create(std::move(data), usage, flags);
@@ -96,7 +101,7 @@ namespace Unique
 		UniformBuffer() : GraphicsBuffer(Diligent::BIND_UNIFORM_BUFFER) {}
 
 		template<class T>
-		UniformBuffer(const T& data, Usage usage = Diligent::USAGE_DYNAMIC, uint flags = Diligent::CPU_ACCESS_WRITE)
+		UniformBuffer(const T& data, Usage usage = USAGE_DYNAMIC, uint flags = Diligent::CPU_ACCESS_WRITE)
 			: GraphicsBuffer(Diligent::BIND_UNIFORM_BUFFER)
 		{
 			Create(data, usage, flags);
