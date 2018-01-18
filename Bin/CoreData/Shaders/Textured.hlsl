@@ -10,11 +10,10 @@ void VS(
 		float4 iPos : ATTRIB0, 
         float3 iNormal : ATTRIB1,
         float2 iTexCoord : ATTRIB2,
-		float4x3 iModelInstance : ATTRIB3,
-        //float4 iData1 : ATTRIB3,
-        //float4 iData2 : ATTRIB4,
-        //float4 iData3 : ATTRIB5,
+        float4 iTangent : ATTRIB3,
+		float4x3 iModelInstance : ATTRIB4,
         out float2 oTexCoord : TEXCOORD0,
+        out float4 oColor :TEXCOORD1,
 		out float4 oPos : OUTPOSITION
     ) 
 {
@@ -27,7 +26,7 @@ void VS(
 float4 PS(float2 iTexCoord : TEXCOORD0) : SV_TARGET
 { 
     float4 diffColor = float4(1,1,1,1);//cMatDiffColor;
-
+    
     //#ifdef DIFFMAP
         float4 diffInput = DiffMap.Sample(DiffMap_sampler, iTexCoord);
         #ifdef ALPHAMASK

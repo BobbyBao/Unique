@@ -702,11 +702,13 @@ namespace Unique
 				// Create a new group based on the batch
 				// In case the group remains below the instancing limit, do not enable instancing shaders yet
 				BatchGroup newGroup(batch);
-				newGroup.geometryType_ = GEOM_STATIC;
+				newGroup.geometryType_ = minInstances_ <= 1 ? GEOM_INSTANCED : GEOM_STATIC;
 				renderer_.SetBatchShaders(newGroup, shader, allowShadows, queue);
 				newGroup.CalculateSortKey();
 				newGroup.AddTransforms(batch);
+
 				queue.batchGroups_.insert(std::make_pair(key, newGroup));
+
 			}
 			else
 			{

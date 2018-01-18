@@ -170,9 +170,15 @@ namespace Unique
 		Attrs.Desc.NumVariables = (uint)shaderVariableDesc_.size();
 		BasicShaderSourceStreamFactory BasicSSSFactory("CoreData\\Shaders;CoreData\\Shaders\\HLSL;");
 		Attrs.pShaderSourceStreamFactory = &BasicSSSFactory;
-
+		try
+		{
 		auto& graphics = GetSubsystem<Graphics>();
 		graphics.CreateShader(Attrs, *this);
+		}
+		catch(...)
+		{
+			return false;
+		}
 		return deviceObject_ != nullptr;
 	}
 

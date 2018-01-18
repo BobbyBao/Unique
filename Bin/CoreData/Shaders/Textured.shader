@@ -46,7 +46,7 @@ Shader "Textured"
 				ValueType FLOAT32
 				NumComponents 2
 			}
-			
+
 			LayoutElement
 			{
 				ValueType FLOAT32
@@ -57,12 +57,24 @@ Shader "Textured"
 			{
 				ValueType FLOAT32
 				NumComponents 4
+				BufferSlot 1
+				Frequency PER_INSTANCE
 			}
 			
 			LayoutElement
 			{
 				ValueType FLOAT32
 				NumComponents 4
+				BufferSlot 1
+				Frequency PER_INSTANCE
+			}
+			
+			LayoutElement
+			{
+				ValueType FLOAT32
+				NumComponents 4
+				BufferSlot 1
+				Frequency PER_INSTANCE
 			}
 		}
 	

@@ -707,8 +707,11 @@ namespace Unique
 				Vector<SPtr<VertexBuffer> >& vertexBuffers = const_cast<Vector<SPtr<VertexBuffer> >&>(
 					geometry_->GetVertexBuffers());
 				vertexBuffers.push_back(SPtr<VertexBuffer>(instanceBuffer));
-				//to do check
-				graphics.DrawInstanced(geometry_, pipelineState_, 0, (uint)instances_.size());
+				
+				//Matrix3x4* t = (Matrix3x4*)instanceBuffer->Map();
+				//instanceBuffer->UnMap();
+
+				graphics.DrawInstanced(geometry_, pipelineState_, startIndex_, (uint)instances_.size());
 				// Remove the instancing buffer & element mask now
 				vertexBuffers.pop_back();
 			}
@@ -794,6 +797,11 @@ namespace Unique
 		for (auto i = batchGroups_.begin(); i != batchGroups_.end(); ++i)
 		{
 			auto& batch = i->second;
+			if (batch.geometryType_ == GEOM_STATIC)
+			{
+				continue;
+			}
+
 			batch.SetInstancingData(lockedData, stride, freeIndex);
 		}
 	}
