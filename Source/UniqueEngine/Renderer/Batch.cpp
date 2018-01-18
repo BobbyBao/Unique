@@ -654,8 +654,8 @@ namespace Unique
 	void BatchGroup::SetInstancingData(void* lockedData, unsigned stride, unsigned& freeIndex)
 	{
 		// Do not use up buffer space if not going to draw as instanced
-		if (geometryType_ != GEOM_INSTANCED)
-			return;
+		//if (geometryType_ != GEOM_INSTANCED)
+		//	return;
 
 		startIndex_ = freeIndex;
 		unsigned char* buffer = static_cast<unsigned char*>(lockedData) + startIndex_ * stride;

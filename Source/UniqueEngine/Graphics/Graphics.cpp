@@ -330,7 +330,7 @@ namespace Unique
 		deviceContext_->SetPipelineState(pipeline->GetPipeline());
 
 		auto& graphics = GetSubsystem<Graphics>();
-
+		
 		pipeline->GetShaderResourceBinding()->BindResources(SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL,
 			resourceMapping_, BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED | BIND_SHADER_RESOURCES_ALL_RESOLVED);
 		deviceContext_->CommitShaderResources(pipeline->GetShaderResourceBinding(), COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);

@@ -9,6 +9,12 @@ namespace Unique.Editor
     {
         Scene scene;
         Camera camera;
+        protected override void Setup()
+        {
+            base.Setup();
+
+           // deviceType = DeviceType.OpenGL;
+        }
 
         protected override void Initialize()
         {
