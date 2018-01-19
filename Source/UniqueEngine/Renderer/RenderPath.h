@@ -10,13 +10,11 @@ namespace Unique
 		RenderPath();
 		~RenderPath();
 
-		void AddPass(RenderPass* pass);
-		void Update(View* view);
-		void Render(View* view);
+		void AddPass(const RenderPass& pass);
 
-		inline Vector<SPtr<RenderPass>>& GetRenderPasses() { return renderPass_; }
+		inline Vector<RenderPass>& GetRenderPasses() { return renderPass_; }
 	protected:
-		Vector<SPtr<RenderPass>> renderPass_;
+		Vector<RenderPass> renderPass_;
 	};
 
 

@@ -23,7 +23,7 @@ namespace Unique
 		"BACKTOFRONT"
 	);
 
-	uObject(RenderPass)
+	uStruct(RenderPass)
 	{
 		uAttribute("Type", type_);
 		uAttribute("SortMode", sortMode_);
@@ -38,19 +38,6 @@ namespace Unique
 	{
 	}
 	
-	void RenderPass::Update(View* view)
-	{
-	}
-
-	void RenderPass::Render(View* view)
-	{
-	}
-
-	uObject(ClearPass)
-	{
-		uFactory()
-	}
-
 	ClearPass::ClearPass() : RenderPass(RenderPassType::CLEAR)
 	{
 	}

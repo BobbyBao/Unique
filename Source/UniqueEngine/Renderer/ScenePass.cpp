@@ -3,11 +3,6 @@
 
 namespace Unique
 {
-	uObject(ScenePass)
-	{
-		uFactory()
-	}
-
 	ScenePass::ScenePass() : RenderPass(RenderPassType::SCENEPASS)
 	{
 	}

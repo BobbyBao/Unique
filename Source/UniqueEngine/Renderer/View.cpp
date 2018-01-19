@@ -258,14 +258,14 @@ namespace Unique
 		auto& renderPasses = renderPath_->GetRenderPasses();
 		for (auto& pass : renderPasses)
 		{
-			if (pass->type_ == RenderPassType::SCENEPASS)
+			if (pass.type_ == RenderPassType::SCENEPASS)
 			{
 				hasScenePasses_ = true;
 
 				ScenePassInfo info;
-				info.passIndex_ = pass->passIndex_ = Shader::GetPassIndex(pass->pass_);
-				info.allowInstancing_ = pass->sortMode_ != RenderPassSortMode::BACKTOFRONT;
-				info.sortMode_ = pass->sortMode_;
+				info.passIndex_ = pass.passIndex_ = Shader::GetPassIndex(pass.pass_);
+				info.allowInstancing_ = pass.sortMode_ != RenderPassSortMode::BACKTOFRONT;
+				info.sortMode_ = pass.sortMode_;
 
 				auto j = batchQueues.find(info.passIndex_);
 				if (j == batchQueues.end())
@@ -876,7 +876,7 @@ namespace Unique
 		}
 
 
-		renderPath_->Update(this);
+		//renderPath_->Update(this);
 
 		// Update geometries. Split into threaded and non-threaded updates.
 		{

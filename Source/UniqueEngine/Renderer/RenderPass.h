@@ -28,16 +28,12 @@ namespace Unique
 		CLEAR_STENCIL_FLAG = 0x02   ///< Clear stencil part of the buffer
 	};
 
-	class RenderPass : public Object
+	class RenderPass
 	{
-		uRTTI(RenderPass, Object)
 	public:
 		RenderPass(RenderPassType type);
 		~RenderPass();
-
-		virtual void Update(View* view);
-		virtual void Render(View* view);
-
+		
 		/// Command type.
 		RenderPassType type_;
 		/// Sorting mode.
@@ -61,7 +57,6 @@ namespace Unique
 	
 	class ClearPass : public RenderPass
 	{
-		uRTTI(ClearPass, RenderPass)
 	public:
 		ClearPass();
 

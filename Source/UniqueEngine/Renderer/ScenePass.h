@@ -6,7 +6,6 @@ namespace Unique
 {
 	class ScenePass : public RenderPass
 	{
-		uRTTI(ScenePass, RenderPass)
 	public:
 		ScenePass();
 		~ScenePass();

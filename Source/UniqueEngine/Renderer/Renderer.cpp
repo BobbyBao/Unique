@@ -44,8 +44,8 @@ namespace Unique
 	void Renderer::Initialize()
 	{
 		defaultRenderPath_ = new RenderPath();
-		defaultRenderPath_->AddPass(new ClearPass());
-		defaultRenderPath_->AddPass(new ScenePass());
+		defaultRenderPath_->AddPass(RenderPass(RenderPassType::CLEAR));
+		defaultRenderPath_->AddPass(RenderPass(RenderPassType::SCENEPASS));
 		
 		Subscribe(&Renderer::HandleStartup);
 		Subscribe(&Renderer::HandleRenderUpdate);
