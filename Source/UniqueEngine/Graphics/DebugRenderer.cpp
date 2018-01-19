@@ -16,8 +16,8 @@
 #include "Resource/ResourceCache.h"
 #include "Graphics/PipelineState.h"
 #include "Scene/Node.h"
-#include "../Renderer/Batch.h"
-#include "../Renderer/View.h"
+#include "../Graphics/Batch.h"
+#include "../Graphics/View.h"
 #include "DebugNew.h"
 
 namespace Unique

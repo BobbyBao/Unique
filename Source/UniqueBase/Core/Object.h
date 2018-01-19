@@ -44,7 +44,7 @@ public:
 	template<class E>
 	void SendEvent(const E& eventData)
 	{
-		SendEvent(E::Type(), eventData);
+		SendEvent(TypeInfo::GetTypeID<E>(), eventData);
 	}
 
 	/// Send event to all subscribers.
@@ -61,7 +61,7 @@ public:
 	template<class T, class E>
 	void Subscribe(void(T::*f)(const E&))
 	{
-		Subscribe(E::Type(), new TEventHandler<T, E>((T*)this, f));
+		Subscribe(TypeInfo::GetTypeID<E>(), new TEventHandler<T, E>((T*)this, f));
 	}
 
 	template<class T, class E>
@@ -73,7 +73,7 @@ public:
 	template<class T, class E>
 	void SubscribeTo(Object* sender, void(T::*f)(const E&))
 	{
-		SubscribeTo(sender, E::Type(), new TEventHandler<T, E>((T*)this, f));
+		SubscribeTo(sender, TypeInfo::GetTypeID<E>(), new TEventHandler<T, E>((T*)this, f));
 	}
 
 	template<class T, class E>
@@ -92,13 +92,13 @@ protected:
 	template<class E>
 	void Unsubscribe()
 	{
-		Unsubscribe(E::Type());
+		Unsubscribe(TypeInfo::GetTypeID<E>());
 	}
 
 	template<class E>
 	void UnsubscribeFrom(Object* sender)
 	{
-		UnsubscribeFrom(sender, E::Type());
+		UnsubscribeFrom(sender, TypeInfo::GetTypeID<E>());
 	}
 
 	/// Unsubscribe from an event.

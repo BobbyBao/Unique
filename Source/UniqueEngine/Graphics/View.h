@@ -1,8 +1,8 @@
 #pragma once
 #include "Core/Object.h"
 #include "Batch.h"
+#include "RenderPath.h"
 #include "../Graphics/Light.h"
-#include "RenderPass.h"
 
 namespace Unique
 {
@@ -117,7 +117,7 @@ namespace Unique
 		/// Mark to stencil flag.
 		bool markToStencil_;
 
-		RenderPassSortMode sortMode_;
+		RenderCommandSortMode sortMode_;
 		/// Batch queue.
 		BatchQueue* batchQueue_;
 	};

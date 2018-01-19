@@ -24,9 +24,9 @@
 #include "Resource/ResourceCache.h"
 #include "../Scene/Scene.h"
 #include "../Graphics/Camera.h"
-#include "../Renderer/Viewport.h"
-#include "../Renderer/RenderPath.h"
-#include "../Renderer/View.h"
+#include "../Graphics/Viewport.h"
+#include "../Graphics/RenderPath.h"
+#include "../Graphics/View.h"
 
 
 #include "DebugNew.h"

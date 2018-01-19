@@ -122,7 +122,7 @@ namespace Unique
 
 	/// Describe an event's hash ID and begin a namespace in which to define its parameters.
 #define uEvent(eventName)\
- struct eventName : public TEvent<eventName>\
+ struct eventName : public Event
 
 
 }

@@ -11,7 +11,6 @@
 #include "View.h"
 #include "Batch.h"
 #include "RenderPath.h"
-#include "ScenePass.h"
 #include <Errors.h>
 
 namespace Unique
@@ -255,17 +254,22 @@ namespace Unique
 		geometriesUpdated_ = false;
 		
 		auto& batchQueues = MainContext(batchQueues_);
-		auto& renderPasses = renderPath_->GetRenderPasses();
-		for (auto& pass : renderPasses)
+
+		// Make sure that all necessary batch queues exist
+		for (size_t i = 0; i < renderPath_->commands_.size(); ++i)
 		{
-			if (pass.type_ == RenderPassType::SCENEPASS)
+			RenderPathCommand& command = renderPath_->commands_[i];
+			if (!command.enabled_)
+				continue;
+
+			if (command.type_ == CMD_SCENEPASS)
 			{
 				hasScenePasses_ = true;
 
 				ScenePassInfo info;
-				info.passIndex_ = pass.passIndex_ = Shader::GetPassIndex(pass.pass_);
-				info.allowInstancing_ = pass.sortMode_ != RenderPassSortMode::BACKTOFRONT;
-				info.sortMode_ = pass.sortMode_;
+				info.passIndex_ = command.passIndex_ = Shader::GetPassIndex(command.pass_);
+				info.allowInstancing_ = command.sortMode_ != SORT_BACKTOFRONT;
+				info.sortMode_ = command.sortMode_;
 
 				auto j = batchQueues.find(info.passIndex_);
 				if (j == batchQueues.end())
@@ -849,7 +853,7 @@ namespace Unique
 				SPtr<WorkItem> item = queue.GetFreeItem();
 				item->priority_ = M_MAX_UNSIGNED;
 				item->workFunction_ =
-					command.sortMode_ == RenderPassSortMode::FRONTTOBACK ? SortBatchQueueFrontToBackWork : SortBatchQueueBackToFrontWork;
+					command.sortMode_ == SORT_FRONTTOBACK ? SortBatchQueueFrontToBackWork : SortBatchQueueBackToFrontWork;
 				item->start_ = command.batchQueue_;
 				queue.AddWorkItem(item);
 				

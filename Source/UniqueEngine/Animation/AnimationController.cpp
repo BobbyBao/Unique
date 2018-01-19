@@ -88,7 +88,7 @@ void AnimationController::OnSetEnabled()
         if (IsEnabledEffective())
             SubscribeTo(scene, &AnimationController::HandleScenePostUpdate);
         else
-            UnsubscribeFrom(scene, ScenePostUpdate::Type());
+            UnsubscribeFrom<ScenePostUpdate>(scene);
     }
 }
 
@@ -781,7 +781,7 @@ void AnimationController::OnSceneSet(Scene* scene)
     if (scene && IsEnabledEffective())
         SubscribeTo(scene, &AnimationController::HandleScenePostUpdate);
     else if (!scene)
-        Unsubscribe(ScenePostUpdate::Type());
+        Unsubscribe<ScenePostUpdate>();
 }
 
 AnimationState* AnimationController::AddAnimationState(Animation* animation)

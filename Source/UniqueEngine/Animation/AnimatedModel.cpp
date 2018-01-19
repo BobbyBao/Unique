@@ -27,7 +27,7 @@
 #include "../Animation/AnimatedModel.h"
 #include "../Animation/Animation.h"
 #include "../Animation/AnimationState.h"
-#include "Renderer/Batch.h"
+#include "Graphics/Batch.h"
 #include "Graphics/Camera.h"
 #include "Graphics/DebugRenderer.h"
 #include "Graphics/DrawableEvents.h"
@@ -313,7 +313,7 @@ void AnimatedModel::SetModel(Model* model, bool createBones)
 
     // Unsubscribe from the reload event of previous model (if any), then subscribe to the new
     if (model_)
-        UnsubscribeFrom(model_, ReloadFinished::Type());
+        UnsubscribeFrom(model_, TypeInfo::GetTypeID<ReloadFinished>());
 
     model_ = model;
 

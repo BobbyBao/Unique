@@ -16,7 +16,7 @@
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Export.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)IO\MemoryStream.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\Variant.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Variant.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\DslDeserializer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\DSL\ASTParser.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\MathTypeTraits.h" />
@@ -105,7 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)IO\MemoryStream.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\Variant.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\Variant.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\BinaryDeserializer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\BinarySerializer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\DslDeserializer.cpp" />

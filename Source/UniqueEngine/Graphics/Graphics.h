@@ -6,6 +6,7 @@
 #include "GraphicsBuffer.h"
 #include <RefCntAutoPtr.h>
 #include <RenderDevice.h>
+#include <DeviceContext.h>
 #include <SwapChain.h>
 
 struct SDL_Window;
@@ -26,6 +27,13 @@ namespace Unique
 	class PipelineState;
 	
 	using CommandQueue = Vector<std::function<void()> > ;
+	
+	enum ClearFlags : int
+	{
+		CLEAR_COLOR_FLAG = 0x01,
+		CLEAR_DEPTH_FLAG = 0x02,    ///< Clear depth part of the buffer
+		CLEAR_STENCIL_FLAG = 0x04   ///< Clear stencil part of the buffer
+	};
 
 	class Graphics : public Object
 	{
@@ -86,8 +94,7 @@ namespace Unique
 		
 		void BeginRender();
 		void EndRender();    
-		void ClearDepthStencil(TextureView *pView, uint ClearFlags, float fDepth, byte Stencil);
-		void ClearRenderTarget(TextureView *pView, const float *RGBA);
+		void Clear(TextureView *pView, const Color& color, uint ClearFlags = CLEAR_COLOR_FLAG, float fDepth = 1.0f, byte Stencil = 0xff);
 		void SetScissorRects(uint NumRects, const IntRect *pRects, uint RTWidth = 0, uint RTHeight = 0);
 		void Draw(Geometry* geometry, PipelineState* pipeline);
 		void Draw(Geometry* geometry, PipelineState* pipeline, PrimitiveTopology primitiveType, 

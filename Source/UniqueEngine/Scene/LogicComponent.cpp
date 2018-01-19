@@ -94,8 +94,8 @@ void LogicComponent::OnSceneSet(Scene* scene)
         UpdateEventSubscription();
     else
     {
-        Unsubscribe(SceneUpdate::Type());
-        Unsubscribe(ScenePostUpdate::Type());
+        Unsubscribe<SceneUpdate>();
+        Unsubscribe<ScenePostUpdate>();
 #if defined(UNIQUE_PHYSICS)
         Unsubscribe(E_PHYSICSPRESTEP);
         Unsubscribe(E_PHYSICSPOSTSTEP);
@@ -120,7 +120,7 @@ void LogicComponent::UpdateEventSubscription()
     }
     else if (!needUpdate && (currentEventMask_ & USE_UPDATE))
     {
-        UnsubscribeFrom(scene, SceneUpdate::Type());
+        UnsubscribeFrom<SceneUpdate>(scene);
         currentEventMask_ &= ~USE_UPDATE;
     }
 
@@ -132,7 +132,7 @@ void LogicComponent::UpdateEventSubscription()
     }
     else if (!needPostUpdate && (currentEventMask_ & USE_POSTUPDATE))
     {
-        UnsubscribeFrom(scene, ScenePostUpdate::Type());
+        UnsubscribeFrom<ScenePostUpdate>(scene);
         currentEventMask_ &= ~USE_POSTUPDATE;
     }
 
@@ -148,7 +148,7 @@ void LogicComponent::UpdateEventSubscription()
     }
     else if (!needFixedUpdate && (currentEventMask_ & USE_FIXEDUPDATE))
     {
-        UnsubscribeFrom(world, PhysicsPreStep::Type());
+        UnsubscribeFrom<PhysicsPreStep>(world);
         currentEventMask_ &= ~USE_FIXEDUPDATE;
     }
 
@@ -160,7 +160,7 @@ void LogicComponent::UpdateEventSubscription()
     }
     else if (!needFixedPostUpdate && (currentEventMask_ & USE_FIXEDPOSTUPDATE))
     {
-        UnsubscribeFrom(world, PhysicsPostStep::Type());
+        UnsubscribeFrom<PhysicsPostStep>(world);
         currentEventMask_ &= ~USE_FIXEDPOSTUPDATE;
     }
 
@@ -177,7 +177,7 @@ void LogicComponent::HandleSceneUpdate(const SceneUpdate& eventData)
         // If did not need actual update events, unsubscribe now
         if (!(updateEventMask_ & USE_UPDATE))
         {
-            UnsubscribeFrom(GetScene(), SceneUpdate::Type());
+            UnsubscribeFrom<SceneUpdate>(GetScene());
             currentEventMask_ &= ~USE_UPDATE;
             return;
         }

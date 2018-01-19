@@ -40,18 +40,6 @@ static const unsigned VO_LOW_MATERIAL_QUALITY = 0x1;
 static const unsigned VO_DISABLE_SHADOWS = 0x2;
 static const unsigned VO_DISABLE_OCCLUSION = 0x4;
 
-/// Billboard camera facing modes.
-enum FaceCameraMode
-{
-	FC_NONE = 0,
-	FC_ROTATE_XYZ,
-	FC_ROTATE_Y,
-	FC_LOOKAT_XYZ,
-	FC_LOOKAT_Y,
-	FC_LOOKAT_MIXED,
-	FC_DIRECTION,
-};
-
 /// %Camera component.
 class UNIQUE_API Camera : public Component
 {

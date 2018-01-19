@@ -266,7 +266,66 @@ namespace Unique
 		SEM_OBJECTINDEX,
 		MAX_VERTEX_ELEMENT_SEMANTICS
 	};
+	
+	/// Cube map faces.
+	enum CubeMapFace
+	{
+		FACE_POSITIVE_X = 0,
+		FACE_NEGATIVE_X,
+		FACE_POSITIVE_Y,
+		FACE_NEGATIVE_Y,
+		FACE_POSITIVE_Z,
+		FACE_NEGATIVE_Z,
+		MAX_CUBEMAP_FACES
+	};
 
+	/// Cubemap single image layout modes.
+	enum CubeMapLayout
+	{
+		CML_HORIZONTAL = 0,
+		CML_HORIZONTALNVIDIA,
+		CML_HORIZONTALCROSS,
+		CML_VERTICALCROSS,
+		CML_BLENDER
+	};
+
+	
+	/// Texture units.
+	enum TextureUnit
+	{
+		TU_DIFFUSE = 0,
+		TU_ALBEDOBUFFER = 0,
+		TU_NORMAL = 1,
+		TU_NORMALBUFFER = 1,
+		TU_SPECULAR = 2,
+		TU_EMISSIVE = 3,
+		TU_ENVIRONMENT = 4,
+		TU_VOLUMEMAP = 5,
+		TU_CUSTOM1 = 6,
+		TU_CUSTOM2 = 7,
+		TU_LIGHTRAMP = 8,
+		TU_LIGHTSHAPE = 9,
+		TU_SHADOWMAP = 10,
+		TU_FACESELECT = 11,
+		TU_INDIRECTION = 12,
+		TU_DEPTHBUFFER = 13,
+		TU_LIGHTBUFFER = 14,
+		TU_ZONE = 15,
+		MAX_MATERIAL_TEXTURE_UNITS = 8,
+		MAX_TEXTURE_UNITS = 16
+	};
+
+	/// Billboard camera facing modes.
+	enum FaceCameraMode
+	{
+		FC_NONE = 0,
+		FC_ROTATE_XYZ,
+		FC_ROTATE_Y,
+		FC_LOOKAT_XYZ,
+		FC_LOOKAT_Y,
+		FC_LOOKAT_MIXED,
+		FC_DIRECTION,
+	};
 
 	uEnum(ValueType,
 				"UNDEFINED", "INT8", "INT16", "INT32", "UINT8", "UINT16", "UINT32", "FLOAT16", "FLOAT32")
@@ -347,5 +406,6 @@ namespace Unique
 	};
 
 	static const Vector3 DOT_SCALE(1 / 3.0f, 1 / 3.0f, 1 / 3.0f);
-
+	static const int MAX_RENDERTARGETS = 4;
+	static const int MAX_VERTEX_STREAMS = 4;
 }

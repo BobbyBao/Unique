@@ -266,31 +266,28 @@ namespace Unique
 			RenderSemPost();
 		}
 	}
+
+	void Graphics::Clear(TextureView *pView, const Color& color, uint ClearFlags, float fDepth, byte Stencil)
+	{	
+		uint flags = ClearFlags >> 1;
+		if(pView)
+		{
+			if(ClearFlags & CLEAR_COLOR_FLAG)
+				deviceContext_->ClearRenderTarget(*pView, color);
+
+			if(flags)
+				deviceContext_->ClearDepthStencil(*pView, flags, fDepth, Stencil);
+		}
+		else
+		{
+			if(ClearFlags & CLEAR_COLOR_FLAG)
+				deviceContext_->ClearRenderTarget(nullptr, color);
+
+			if(flags)
+				deviceContext_->ClearDepthStencil(nullptr, flags, fDepth, Stencil);
+		}
+	}
 	
-	void Graphics::ClearDepthStencil(TextureView *pView, uint ClearFlags, float fDepth, byte Stencil)
-	{
-		if(pView)
-		{
-			deviceContext_->ClearDepthStencil(*pView, ClearFlags, fDepth, Stencil);
-		}
-		else
-		{
-			deviceContext_->ClearDepthStencil(nullptr, ClearFlags, fDepth, Stencil);
-		}
-	}
-
-	void Graphics::ClearRenderTarget(TextureView *pView, const float *RGBA)
-	{
-		if(pView)
-		{
-			deviceContext_->ClearRenderTarget(*pView, RGBA);
-		}
-		else
-		{
-			deviceContext_->ClearRenderTarget(nullptr, RGBA);
-		}
-	}
-
 	void Graphics::SetScissorRects(uint NumRects, const IntRect *pRects, uint RTWidth, uint RTHeight)
 	{
 		deviceContext_->SetScissorRects(NumRects, (Diligent::Rect*)pRects, RTWidth, RTHeight);

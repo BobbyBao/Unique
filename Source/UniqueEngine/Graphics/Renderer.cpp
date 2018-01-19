@@ -7,10 +7,20 @@
 #include "../Graphics/DebugRenderer.h"
 #include "../Scene/Scene.h"
 #include "RenderPath.h"
-#include "ScenePass.h"
 
 namespace Unique
 {
+	static const char* geometryVSVariations[] =
+	{
+		"",
+		"SKINNED ",
+		"INSTANCED ",
+		"BILLBOARD ",
+		"DIRBILLBOARD ",
+		"TRAILFACECAM ",
+		"TRAILBONE "
+	};
+
 	static const int MAX_EXTRA_INSTANCING_BUFFER_ELEMENTS = 4;
 
 	inline PODVector<VertexElement> CreateInstancingBufferElements(unsigned numExtraElements)
@@ -44,8 +54,8 @@ namespace Unique
 	void Renderer::Initialize()
 	{
 		defaultRenderPath_ = new RenderPath();
-		defaultRenderPath_->AddPass(RenderPass(RenderPassType::CLEAR));
-		defaultRenderPath_->AddPass(RenderPass(RenderPassType::SCENEPASS));
+		defaultRenderPath_->AddCommand(RenderPathCommand(CMD_CLEAR));
+		defaultRenderPath_->AddCommand(RenderPathCommand(CMD_SCENEPASS));
 		
 		Subscribe(&Renderer::HandleStartup);
 		Subscribe(&Renderer::HandleRenderUpdate);
@@ -204,8 +214,7 @@ namespace Unique
 		
 		//if (views.empty())
 		{		
-			graphics_.ClearRenderTarget(nullptr, Color::GRAY);
-			graphics_.ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.0f, 0xff);
+			graphics_.Clear(nullptr, Color::GRAY, CLEAR_COLOR_FLAG|CLEAR_DEPTH_FLAG, 1.0f, 0xff);
 		}
 		
 		//for (auto view : views)
@@ -363,7 +372,8 @@ namespace Unique
 
 	void Renderer::SetBatchShaders(Batch& batch, Shader* tech, bool allowShadows, const BatchQueue& queue)
 	{
-		batch.pipelineState_ = batch.pass_->GetPipeline(tech, "");
+		const char* geoDef = geometryVSVariations[batch.geometryType_];
+		batch.pipelineState_ = batch.pass_->GetPipeline(tech, geoDef);
 	}
 
 	void Renderer::CreateInstancingBuffer()

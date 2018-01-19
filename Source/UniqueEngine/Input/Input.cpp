@@ -1750,7 +1750,7 @@ void Input::SetMouseButton(int button, bool newState)
     eventData.button_ = button;
     eventData.buttons_ = mouseButtonDown_;
     eventData.qualifiers_ = GetQualifiers();
-    SendEvent(newState ? MouseButtonDown::Type() : MouseButtonUp::Type(), eventData);
+    SendEvent(newState ? TypeInfo::GetTypeID<MouseButtonDown>() : TypeInfo::GetTypeID<MouseButtonUp>(), eventData);
 }
 
 void Input::SetKey(int key, int scancode, bool newState)
@@ -1786,7 +1786,7 @@ void Input::SetKey(int key, int scancode, bool newState)
     if (newState)
         eventData.repeat_ = repeat;
 
-    SendEvent(newState ? KeyDown::Type() : KeyUp::Type(), eventData);
+    SendEvent(newState ? TypeInfo::GetTypeID<KeyDown>() : TypeInfo::GetTypeID<KeyUp>(), eventData);
 
 }
 
