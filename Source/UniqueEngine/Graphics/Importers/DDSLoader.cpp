@@ -116,8 +116,8 @@ enum D3D11_RESOURCE_MISC_FLAG
 //--------------------------------------------------------------------------------------
 #ifndef MAKEFOURCC
     #define MAKEFOURCC(ch0, ch1, ch2, ch3)                                      \
-                ((Uint32)(Uint8)(ch0)        | ((Uint32)(Uint8)(ch1) << 8) |    \
-                ((Uint32)(Uint8)(ch2) << 16) | ((Uint32)(Uint8)(ch3) << 24))
+                ((Uint32)(byte)(ch0)        | ((Uint32)(byte)(ch1) << 8) |    \
+                ((Uint32)(byte)(ch2) << 16) | ((Uint32)(byte)(ch3) << 24))
 #endif /* defined(MAKEFOURCC) */
 
 //--------------------------------------------------------------------------------------
@@ -833,7 +833,7 @@ static void FillInitData(
     _In_ DXGI_FORMAT format,
     _In_ size_t maxsize,
     _In_ size_t bitSize,
-    _In_ const Uint8* bitData,
+    _In_ const byte* bitData,
     _Out_ size_t& twidth,
     _Out_ size_t& theight,
     _Out_ size_t& tdepth,
@@ -854,8 +854,8 @@ static void FillInitData(
     size_t NumBytes = 0;
     size_t RowBytes = 0;
     size_t NumRows = 0;
-    const Uint8* pSrcBits = bitData;
-    const Uint8* pEndBits = bitData + bitSize;
+    const byte* pSrcBits = bitData;
+    const byte* pEndBits = bitData + bitSize;
 
     size_t index = 0;
     for (size_t j = 0; j < arraySize; j++)
@@ -929,7 +929,7 @@ static void CreateTexture(
     _In_ size_t mipCount,
     _In_ size_t arraySize,
     _In_ DXGI_FORMAT format,
-    _In_ USAGE usage,
+    _In_ Unique::Usage usage,
     _In_ const char *name,
     _In_ unsigned int bindFlags,
     _In_ unsigned int cpuAccessFlags,
@@ -951,7 +951,7 @@ static void CreateTexture(
     desc.MipLevels = static_cast<Uint32>(mipCount);
     desc.ArraySize = static_cast<Uint32>(arraySize);
     desc.Format = DXGIFormatToTexFormat(format);
-    desc.Usage = usage;
+    desc.Usage = (USAGE)usage;
     desc.BindFlags = bindFlags;
     desc.CPUAccessFlags = cpuAccessFlags;
     //desc.MiscFlags = miscFlags & ~D3D11_RESOURCE_MISC_TEXTURECUBE;
@@ -1142,10 +1142,10 @@ static void CreateTexture(
 //--------------------------------------------------------------------------------------
 static void CreateTextureFromDDS(
     _In_ const DDS_HEADER* header,
-    _In_ const Uint8* bitData,
+    _In_ const byte* bitData,
     _In_ size_t bitSize,
     _In_ size_t maxsize,
-    _In_ USAGE usage,
+    _In_ Unique::Usage usage,
     _In_ const char *name,
     _In_ unsigned int bindFlags,
     _In_ unsigned int cpuAccessFlags,
@@ -1396,23 +1396,23 @@ static D2D1_ALPHA_MODE GetAlphaMode(_In_ const DDS_HEADER* header)
 
 //--------------------------------------------------------------------------------------
 void CreateDDSTextureFromMemory(
-    const Uint8* ddsData,
+    const byte* ddsData,
     size_t ddsDataSize,
     Unique::Texture* texture,
     size_t maxsize,
     /*D2D1_ALPHA_MODE* alphaMode,*/
     const char* name)
 {
-    return CreateDDSTextureFromMemoryEx(ddsData, ddsDataSize, maxsize, USAGE_DEFAULT, name, BIND_SHADER_RESOURCE, 0, 0, false, texture/*, alphaMode*/);
+    return CreateDDSTextureFromMemoryEx(ddsData, ddsDataSize, maxsize, Unique::USAGE_DEFAULT, name, BIND_SHADER_RESOURCE, 0, 0, false, texture/*, alphaMode*/);
 }
 
 
 //--------------------------------------------------------------------------------------
 void CreateDDSTextureFromMemoryEx(
-    const Uint8* ddsData,
+    const byte* ddsData,
     size_t ddsDataSize,
     size_t maxsize,
-    USAGE usage,
+	Unique::Usage usage,
     const char *name,
     unsigned int bindFlags,
     unsigned int cpuAccessFlags,

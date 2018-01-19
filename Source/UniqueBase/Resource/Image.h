@@ -117,4 +117,24 @@ namespace Unique
 				reinterpret_cast<ChannelType*>((reinterpret_cast<Uint8*>(pRGBAData) + RGBAStride * row))[col * 4 + 3] = std::numeric_limits<ChannelType>::max();
 			}
 	}
+
+
+	inline uint ComputeMipLevelsCount(uint Width)
+	{
+		uint MipLevels = 0;
+		while ((Width >> MipLevels) > 0)
+			++MipLevels;
+		assert(Width >= (1U << (MipLevels - 1)) && Width < (1U << MipLevels));
+		return MipLevels;
+	}
+
+	inline uint ComputeMipLevelsCount(uint Width, uint Height)
+	{
+		return ComputeMipLevelsCount(std::max(Width, Height));
+	}
+
+	inline uint ComputeMipLevelsCount(uint Width, uint Height, uint Depth)
+	{
+		return ComputeMipLevelsCount(std::max(std::max(Width, Height), Depth));
+	}
 }

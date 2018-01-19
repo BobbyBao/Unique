@@ -43,23 +43,20 @@
 
 #pragma once
 
-#include <RenderDevice.h>
-#include <Texture.h>
-
 void CreateDDSTextureFromMemory(
-    const Diligent::Uint8* ddsData,
+    const byte* ddsData,
     size_t ddsDataSize,
-    Diligent::ITexture** texture,
+	Unique::Texture* texture,
     size_t maxsize,
     /*D2D1_ALPHA_MODE* alphaMode,*/
     const char* name
     );
 
 void CreateDDSTextureFromMemoryEx(
-    const Diligent::Uint8* ddsData,
+    const byte* ddsData,
     size_t ddsDataSize,
     size_t maxsize,
-    Diligent::USAGE usage,
+	Unique::Usage usage,
     const char* name,
     unsigned int bindFlags,
     unsigned int cpuAccessFlags,

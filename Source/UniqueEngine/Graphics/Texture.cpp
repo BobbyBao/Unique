@@ -1,7 +1,7 @@
 #include "UniquePCH.h"
 #include "Texture.h"
 #include "Resource/Image.h"
-#include <GraphicsUtilities.h>
+//#include <GraphicsUtilities.h>
 #include <GraphicsAccessories.h>
 
 using namespace Diligent;
