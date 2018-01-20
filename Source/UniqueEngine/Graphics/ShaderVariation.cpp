@@ -101,7 +101,7 @@ namespace Unique
 		}
 
 		const String& defines = defines_;
-		String binaryShaderName = Shader::GetShaderPath(graphics.GetDeviceType()) + name;
+		String binaryShaderName = ShaderUtil::GetShaderPath(graphics.GetDeviceType()) + name;
 
 		if (!defines.Empty())
 		{
@@ -114,7 +114,7 @@ namespace Unique
 		{
 			if (!Convert(binaryShaderName))
 			{
-				if (LoadConvertedCode(Shader::GetShaderPath(graphics.GetDeviceType()) + name + extension))
+				if (LoadConvertedCode(ShaderUtil::GetShaderPath(graphics.GetDeviceType()) + name + extension))
 				{
 					UNIQUE_LOGWARNING("==============================Load shader failed, name : " + binaryShaderName);
 				}
@@ -211,7 +211,7 @@ namespace Unique
 
 		FileSystem& fileSystem = GetSubsystem<FileSystem>();
 	
-		String inputFile = "Cache/" + Shader::GetShaderPath(DeviceType::D3D11) 
+		String inputFile = "Cache/" + ShaderUtil::GetShaderPath(DeviceType::D3D11)
 			+ ReplaceExtension( owner_.GetName(), ".hlsl");
 
 		{	

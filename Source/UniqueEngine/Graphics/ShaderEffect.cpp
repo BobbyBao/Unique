@@ -3,6 +3,7 @@
 #include "Graphics/Graphics.h"
 #include "PipelineState.h"
 
+
 using namespace Diligent;
 
 namespace Unique
@@ -117,21 +118,21 @@ namespace Unique
 	{
 		defMask &= allMask_;
 
-		auto it = cachedPass_.find(defMask);;
-		if (it != cachedPass_.end())
+		auto it = cachedPipeline_.find(defMask);;
+		if (it != cachedPipeline_.end())
 		{
 			return it->second;
 		}
 
 		SPtr<PipelineState> inst(new PipelineState(*shader, *this, defMask));
-		cachedPass_[defMask] = inst;
+		cachedPipeline_[defMask] = inst;
 		return inst;
 		
 	}
 
 	bool Pass::Prepare()
 	{
-		passIndex_ = Shader::GetPassIndex(name_);
+		passIndex_ = ShaderUtil::GetPassIndex(name_);
 
 		for (size_t i = 0; i < inputLayout_.layoutElements_.size(); i++)
 		{
@@ -141,7 +142,7 @@ namespace Unique
 		auto& computeShader = shaderStage_[5];
 		if (computeShader)
 		{
-			allDefs_ = Shader::SplitDef(computeShader.defines_);
+			allDefs_ = ShaderUtil::SplitDef(computeShader.defines_);
 
 			if (allDefs_.size() > 0)
 			{
@@ -154,8 +155,8 @@ namespace Unique
 		{
 			auto& vertexShader = shaderStage_[0];
 			auto& pixelShader = shaderStage_[1];
-			Vector<String> psDefs = Shader::SplitDef(pixelShader.defines_);
-			Vector<String> vsDefs = Shader::SplitDef(vertexShader.defines_);
+			Vector<String> psDefs = ShaderUtil::SplitDef(pixelShader.defines_);
+			Vector<String> vsDefs = ShaderUtil::SplitDef(vertexShader.defines_);
 			allDefs_ = psDefs;
 
 			for (auto& s : vsDefs)
@@ -193,27 +194,17 @@ namespace Unique
 
 	SPtr<ShaderVariation> Pass::GetShaderVariation(Shader& shader, const ShaderStage& shaderStage, uint defs)
 	{
-		uint64_t key = ((uint64_t)shaderStage.shaderType_ << 32) | defs;
-		auto it = cachedShaders_.find(key);
-		if (it != cachedShaders_.end())
+		auto& shaderCache = cachedShaders_[shaderStage.shaderType_ - 1];
+		auto it = shaderCache.find(defs);
+		if (it != shaderCache.end())
 		{
 			return it->second;
 		}
 
 		SPtr<ShaderVariation> shaderVariation(new ShaderVariation(shader, shaderStage, *this, defs));
-		cachedShaders_[key] = shaderVariation;
+		shaderCache[defs] = shaderVariation;
 		return shaderVariation;
 	}
-
-	unsigned Shader::basePassIndex = 0;
-	unsigned Shader::alphaPassIndex = 0;
-	unsigned Shader::materialPassIndex = 0;
-	unsigned Shader::deferredPassIndex = 0;
-	unsigned Shader::lightPassIndex = 0;
-	unsigned Shader::litBasePassIndex = 0;
-	unsigned Shader::litAlphaPassIndex = 0;
-	unsigned Shader::shadowPassIndex = 0;
-	HashMap<String, unsigned> Shader::passIndices;
 
 	Shader::Shader()
 	{
@@ -246,7 +237,7 @@ namespace Unique
 
 	Pass* Shader::GetPass(const String& passName)
 	{
-		unsigned index = GetPassIndex(passName);
+		unsigned index = ShaderUtil::GetPassIndex(passName);
 		return GetPass(index);
 	}
 
@@ -274,64 +265,6 @@ namespace Unique
 		return pass->GetPipeline(this, defs);
 	}
 
-	unsigned Shader::GetPassIndex(const String& passName)
-	{
-		// Initialize built-in pass indices on first call
-		if (passIndices.empty())
-		{
-			basePassIndex = passIndices["base"] = 0;
-			alphaPassIndex = passIndices["alpha"] = 1;
-			materialPassIndex = passIndices["material"] = 2;
-			deferredPassIndex = passIndices["deferred"] = 3;
-			lightPassIndex = passIndices["light"] = 4;
-			litBasePassIndex = passIndices["litbase"] = 5;
-			litAlphaPassIndex = passIndices["litalpha"] = 6;
-			shadowPassIndex = passIndices["shadow"] = 7;
-		}
-
-		if (passName.Empty())
-		{
-			return 0;
-		}
-
-		String nameLower = passName.ToLower();
-		auto i = passIndices.find(nameLower);
-		if (i != passIndices.end())
-			return i->second;
-		else
-		{
-			unsigned newPassIndex = (uint)passIndices.size();
-			passIndices[nameLower] = newPassIndex;
-			return newPassIndex;
-		}
-	}
-
-	String Shader::GetShaderPath(DeviceType deviceType)
-	{
-		switch (deviceType)
-		{
-		case Diligent::DeviceType::D3D11:
-		case Diligent::DeviceType::D3D12:
-			return "Shaders/HLSL/";
-
-		case Diligent::DeviceType::OpenGL:
-		case Diligent::DeviceType::OpenGLES:
-			return "Shaders/GLSL/";
-		default:
-			return "";
-		}
-	}
-
-	Vector<String> Shader::SplitDef(const String& defs)
-	{
-		if (defs.Empty())
-		{
-			return Vector<String>();
-		}
-
-		return defs.Split(' ');
-	}
-	
 
 
 }

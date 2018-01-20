@@ -10,16 +10,6 @@
 
 namespace Unique
 {
-	static const char* geometryVSVariations[] =
-	{
-		"",
-		"SKINNED ",
-		"INSTANCED ",
-		"BILLBOARD ",
-		"DIRBILLBOARD ",
-		"TRAILFACECAM ",
-		"TRAILBONE "
-	};
 
 	static const int MAX_EXTRA_INSTANCING_BUFFER_ELEMENTS = 4;
 
@@ -372,7 +362,7 @@ namespace Unique
 
 	void Renderer::SetBatchShaders(Batch& batch, Shader* tech, bool allowShadows, const BatchQueue& queue)
 	{
-		const char* geoDef = geometryVSVariations[batch.geometryType_];
+		const char* geoDef = ShaderUtil::geometryVSVariations[batch.geometryType_];
 		batch.pipelineState_ = batch.pass_->GetPipeline(tech, geoDef);
 	}
 

@@ -168,7 +168,7 @@ namespace Unique
 	{
 		if (material)
 		{
-			pass_ = material->GetPass(Shader::basePassIndex);
+			pass_ = material->GetPass(ShaderUtil::basePassIndex);
 		}
 
 	}

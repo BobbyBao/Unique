@@ -267,7 +267,7 @@ namespace Unique
 				hasScenePasses_ = true;
 
 				ScenePassInfo info;
-				info.passIndex_ = command.passIndex_ = Shader::GetPassIndex(command.pass_);
+				info.passIndex_ = command.passIndex_ = ShaderUtil::GetPassIndex(command.pass_);
 				info.allowInstancing_ = command.sortMode_ != SORT_BACKTOFRONT;
 				info.sortMode_ = command.sortMode_;
 

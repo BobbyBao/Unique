@@ -3,6 +3,7 @@
 #include "ShaderVariation.h"
 #include "ShaderVariable.h"
 #include "RenderState.h"
+#include "ShaderUtil.h"
 
 namespace Unique
 {
@@ -111,8 +112,8 @@ namespace Unique
 		SPtr<ShaderVariation>	GetShaderVariation(Shader& shader, const ShaderStage& shaderStage, uint defs);
 		Vector<String>			allDefs_;
 		uint					allMask_ = 0;
-		HashMap<uint, SPtr<PipelineState>> cachedPass_;
-		HashMap<uint64_t, SPtr<ShaderVariation>> cachedShaders_;
+		HashMap<uint, SPtr<PipelineState>> cachedPipeline_;
+		HashMap<uint, SPtr<ShaderVariation>> cachedShaders_[6];
 
 		friend class Shader;
 		friend class ShaderVariation;
@@ -146,35 +147,12 @@ namespace Unique
 		inline const auto& GetUniforms() const { return shaderProperties_.uniforms_; }
 		inline const auto& GetTextureSlots() const { return shaderProperties_.textureSlots_; }
 
-		static unsigned GetPassIndex(const String& passName);
-		static String GetShaderPath(DeviceType deviceType);
-		static Vector<String> SplitDef(const String& defs);
-
-		/// Index for base pass. Initialized once GetPassIndex() has been called for the first time.
-		static unsigned basePassIndex;
-		/// Index for alpha pass. Initialized once GetPassIndex() has been called for the first time.
-		static unsigned alphaPassIndex;
-		/// Index for prepass material pass. Initialized once GetPassIndex() has been called for the first time.
-		static unsigned materialPassIndex;
-		/// Index for deferred G-buffer pass. Initialized once GetPassIndex() has been called for the first time.
-		static unsigned deferredPassIndex;
-		/// Index for per-pixel light pass. Initialized once GetPassIndex() has been called for the first time.
-		static unsigned lightPassIndex;
-		/// Index for lit base pass. Initialized once GetPassIndex() has been called for the first time.
-		static unsigned litBasePassIndex;
-		/// Index for lit alpha pass. Initialized once GetPassIndex() has been called for the first time.
-		static unsigned litAlphaPassIndex;
-		/// Index for shadow pass. Initialized once GetPassIndex() has been called for the first time.
-		static unsigned shadowPassIndex;
-
 		const ShaderProperties& GetProperties() const { return shaderProperties_; }
 	private:
 		String				shaderName_;
 		ShaderProperties	shaderProperties_;
 		Vector<SPtr<Pass>>	passes_;
 
-		/// Pass index assignments.
-		static HashMap<String, unsigned> passIndices;
 	};
 
 }

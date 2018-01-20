@@ -66,6 +66,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Scene\SceneResolver.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Scene\SmoothedTransform.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\ShaderVariable.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\ShaderUtil.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)UniquePCH.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\VertexBuffer.h" />
   </ItemGroup>
@@ -82,6 +83,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Export\RendererExport.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Export\SceneExport.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\RenderState.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\ShaderUtil.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Input\Controls.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Input\Input.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Importers\DDSLoader.cpp" />
