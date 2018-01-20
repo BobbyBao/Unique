@@ -12,6 +12,7 @@ namespace Unique
 	unsigned ShaderUtil::litBasePassIndex = 0;
 	unsigned ShaderUtil::litAlphaPassIndex = 0;
 	unsigned ShaderUtil::shadowPassIndex = 0;
+
 	HashMap<String, unsigned> ShaderUtil::passIndices;
 
 	unsigned ShaderUtil::GetPassIndex(const String& passName)
@@ -72,15 +73,14 @@ namespace Unique
 		return defs.Split(' ');
 	}
 
-	const char* ShaderUtil::geometryVSVariations[] =
+	const Vector<String> ShaderUtil::interDefs =
 	{
-		"",
-		"SKINNED ",
-		"INSTANCED ",
-		"BILLBOARD ",
-		"DIRBILLBOARD ",
-		"TRAILFACECAM ",
-		"TRAILBONE "
+		"SKINNED",
+		"INSTANCED",
+		"BILLBOARD",
+		"DIRBILLBOARD",
+		"TRAILFACECAM",
+		"TRAILBONE"
 	};
 
 }

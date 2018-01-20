@@ -166,7 +166,7 @@ namespace Unique
 			start->shadowSplits_[i].shadowBatches_.SortFrontToBack();
 	}
 
-	View::View() 
+	View::View()
 		: graphics_(GetSubsystem<Graphics>()),
 		renderer_(GetSubsystem<Renderer>()), 
 		geometriesUpdated_(false), minInstances_(2)

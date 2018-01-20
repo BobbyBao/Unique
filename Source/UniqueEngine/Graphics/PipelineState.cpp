@@ -8,7 +8,7 @@ using namespace Diligent;
 namespace Unique
 {
 
-	PipelineState::PipelineState(Shader& shader, Pass& shaderPass, unsigned defs)
+	PipelineState::PipelineState(Shader& shader, Pass& shaderPass, uint64 defs)
 	{
 		shaderProgram_ = new ShaderProgram(shaderPass);
 

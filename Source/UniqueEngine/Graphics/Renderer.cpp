@@ -362,8 +362,9 @@ namespace Unique
 
 	void Renderer::SetBatchShaders(Batch& batch, Shader* tech, bool allowShadows, const BatchQueue& queue)
 	{
-		const char* geoDef = ShaderUtil::geometryVSVariations[batch.geometryType_];
-		batch.pipelineState_ = batch.pass_->GetPipeline(tech, geoDef);
+		const String& geoDef = batch.geometryType_ ?
+			ShaderUtil::interDefs[batch.geometryType_ - 1] : "";
+		batch.pipelineState_ = batch.pass_->GetPipeline(tech, geoDef, "");
 	}
 
 	void Renderer::CreateInstancingBuffer()

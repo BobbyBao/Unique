@@ -33,8 +33,10 @@
 
 #pragma warning(disable: 4251)
 
-typedef unsigned uint;
-typedef unsigned short ushort;
 typedef unsigned char byte;
+typedef unsigned short ushort;
+typedef unsigned uint;
+typedef long long int64;
+typedef unsigned long long uint64;
 
 #define UNIQUE_LOGGING 1

@@ -32,7 +32,8 @@ namespace Unique.Editor
                 .Component<Camera>( cam => cam
                     .Store(ref camera)
                 )
-            )
+            )  
+            
             .Child("Floor", c => c
                 .Position(Vector3.Zero)
                 .Scaling(new Vector3(30.0f, 30.0f, 30.0f))
@@ -40,8 +41,7 @@ namespace Unique.Editor
                     .Model(new ResourceRef(TypeOf<Model>(), "Models/Plane.mdl"))
                     .Material(new ResourceRefList(TypeOf<Material>(), "Models/Stone.material"))
                 )
-            )
-            
+            )          
             .Child("Mushroom", c => c
                 .Position(new Vector3(10, 0, 0))
                 .Component<StaticModel>(sm => sm

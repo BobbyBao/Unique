@@ -25,7 +25,8 @@ namespace Unique
 		static unsigned litAlphaPassIndex;
 		static unsigned shadowPassIndex;
 
-		static const char* geometryVSVariations[];
+		static const Vector<String> interDefs;
+		inline static uint64 InterMask() { return (uint64)((1 << (interDefs.size() + 1)) - 1) << 32; }
 	private:
 		/// Pass index assignments.
 		static HashMap<String, unsigned> passIndices;

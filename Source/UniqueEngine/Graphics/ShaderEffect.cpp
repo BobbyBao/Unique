@@ -51,7 +51,7 @@ namespace Unique
 		"RelativeOffset", self.RelativeOffset,
 		"Frequency", self.Frequency,
 		"InstanceDataStepRate", self.InstanceDataStepRate
-	)
+	) 
 
 	uObject(Pass)
 	{
@@ -78,7 +78,7 @@ namespace Unique
 	}
 
 
-	uExport(Pass, PipelineState*, GetPipeline, Shader*, shader, const String&, defs)
+//	uExport(Pass, PipelineState*, GetPipeline, Shader*, shader, const String&, defs)
 
 
 	Pass::Pass(const String& name) : name_(name)
@@ -93,9 +93,9 @@ namespace Unique
 	{
 	}
 
-	uint Pass::GetMask(Shader* shader, const String& defs)
+	uint64 Pass::GetMask(Shader* shader, const String& interDefs, const String& defs)
 	{
-		unsigned mask = 0;
+		uint64 mask = 0;
 		for (uint i = 0; i < allDefs_.size(); i++)
 		{
 			if (defs.Find(allDefs_[i]) != String::NPOS)
@@ -104,19 +104,29 @@ namespace Unique
 			}
 		}
 
-		return mask;
+		uint64 interMask = 0;
+		for (uint i = 0; i < ShaderUtil::interDefs.size(); i++)
+		{
+			if (interDefs.Find(ShaderUtil::interDefs[i]) != String::NPOS)
+			{
+				interMask |= (unsigned)(1 << i);
+			}
+		}
+
+		return mask | (interMask << 32);
 	}
 
-	PipelineState* Pass::GetPipeline(Shader* shader, const String& defs)
+	PipelineState* Pass::GetPipeline(Shader* shader, const String& interDefs, const String& defs)
 	{
-		unsigned defMask = GetMask(shader, defs);
+		uint64 defMask = GetMask(shader, interDefs, defs);
 
 		return GetPipeline(shader, defMask);
 	}
 
-	PipelineState* Pass::GetPipeline(Shader* shader, unsigned defMask)
+	PipelineState* Pass::GetPipeline(Shader* shader, uint64 defMask)
 	{
-		defMask &= allMask_;
+		uint64 interMask = ShaderUtil::InterMask();
+		defMask &= (allMask_ | interMask);
 
 		auto it = cachedPipeline_.find(defMask);;
 		if (it != cachedPipeline_.end())
@@ -148,7 +158,7 @@ namespace Unique
 			{
 				std::sort(allDefs_.begin(), allDefs_.end());
 				allMask_ = (unsigned)(1 << (allDefs_.size() + 1)) - 1;
-				computeShader.mask_ = allMask_;
+			//	computeShader.mask_ = allMask_;
 			}
 		}
 		else
@@ -170,20 +180,20 @@ namespace Unique
 			if (allDefs_.size() > 0)
 			{
 				std::sort(allDefs_.begin(), allDefs_.end());
-				allMask_ = (unsigned)(1 << (allDefs_.size() + 1)) - 1;
+				allMask_ = (ShaderUtil::InterMask())|((1 << (allDefs_.size() + 1)) - 1);
 
-				for (uint i = 0; i < allDefs_.size(); i++)
-				{
-					if (Find(vsDefs, allDefs_[i]) != vsDefs.end())
-					{
-						pixelShader.mask_ |= (unsigned)(1 << i);
-					}
-
-					if (Find(psDefs, allDefs_[i]) != psDefs.end())
-					{
-						pixelShader.mask_ |= (unsigned)(1 << i);
-					}
-				}
+// 				for (uint i = 0; i < allDefs_.size(); i++)
+// 				{
+// 					if (Find(vsDefs, allDefs_[i]) != vsDefs.end())
+// 					{
+// 						vertexShader.mask_ |= (unsigned)(1 << i);
+// 					}
+// 
+// 					if (Find(psDefs, allDefs_[i]) != psDefs.end())
+// 					{
+// 						pixelShader.mask_ |= (unsigned)(1 << i);
+// 					}
+// 				}
 			}
 
 		}
@@ -192,7 +202,7 @@ namespace Unique
 	}
 
 
-	SPtr<ShaderVariation> Pass::GetShaderVariation(Shader& shader, const ShaderStage& shaderStage, uint defs)
+	SPtr<ShaderVariation> Pass::GetShaderVariation(Shader& shader, const ShaderStage& shaderStage, uint64 defs)
 	{
 		auto& shaderCache = cachedShaders_[shaderStage.shaderType_ - 1];
 		auto it = shaderCache.find(defs);
@@ -254,7 +264,7 @@ namespace Unique
 		return nullptr;
 	}
 		
-	PipelineState* Shader::GetPipeline(const String& passName, const String& defs)
+	PipelineState* Shader::GetPipeline(const String& passName, const String& interDefs, const String& defs)
 	{
 		Pass* pass = GetPass(passName);
 		if (pass == nullptr)
@@ -262,7 +272,7 @@ namespace Unique
 			return nullptr;
 		}
 
-		return pass->GetPipeline(this, defs);
+		return pass->GetPipeline(this, interDefs, defs);
 	}
 
 

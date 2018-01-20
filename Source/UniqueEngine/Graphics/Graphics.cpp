@@ -396,7 +396,8 @@ namespace Unique
 		deviceContext_->SetVertexBuffers(0, (uint)geometry->vertexBuffers_.size(), buffer, strides, offsets, SET_VERTEX_BUFFERS_FLAG_RESET);
 
 		if (geometry->indexBuffer_ && geometry->indexCount_ > 0)
-		{	
+		{
+			drawAttribs.FirstIndexLocation = geometry->indexStart_;
 			drawAttribs.NumIndices = geometry->indexCount_;
 			drawAttribs.IndexType = geometry->indexBuffer_->GetStride() == 4 ? (VALUE_TYPE)ValueType::VT_UINT32 : (VALUE_TYPE)ValueType::VT_UINT16;
 			deviceContext_->SetIndexBuffer(*geometry->indexBuffer_, 0);

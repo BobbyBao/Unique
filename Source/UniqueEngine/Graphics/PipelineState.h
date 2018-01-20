@@ -25,7 +25,7 @@ namespace Unique
 	class PipelineState : public RefCounted, public GPUObject
 	{
 	public:
-		PipelineState(Shader& shader, Pass& shaderPass, unsigned defs);
+		PipelineState(Shader& shader, Pass& shaderPass, uint64 defs);
 		PipelineState(ShaderProgram* shaderProgram);
 
 		bool CreateImpl();

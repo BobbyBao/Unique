@@ -11,11 +11,11 @@ using namespace Diligent;
 namespace Unique
 {
 
-	ShaderVariation::ShaderVariation(Shader& shader, const ShaderStage& type, Pass& shaderPass, uint defs)
+	ShaderVariation::ShaderVariation(Shader& shader, const ShaderStage& type, Pass& shaderPass, uint64 defs)
 		: owner_(shader), shaderPass_(shaderPass)
 	{
 		shaderStage_ = type;
-		mask_ = defs;
+		//mask_ = defs;
 
 		defines_.Clear();
 
@@ -32,9 +32,9 @@ namespace Unique
 			macros_.AddShaderMacro("COMPILEPS", "");
 		}
 
-		for (uint i = 0; i < shaderPass_.allDefs_.size(); i++)
+		for (uint64 i = 0; i < shaderPass_.allDefs_.size(); i++)
 		{
-			if (((1 << i) & defs) != 0)
+			if ((((uint64)1 << i) & defs) != 0)
 			{
 				if (defines_.Length() > 0)
 				{
@@ -52,6 +52,30 @@ namespace Unique
 				{
 					defines_.Append(def);
 					macros_.AddShaderMacro(def.CString(), "");
+				}
+			}
+		}
+
+		for (uint64 i = 0; i < ShaderUtil::interDefs.size(); i++)
+		{
+			if ((((uint64)1 << (i + 32)) & defs) != 0)
+			{
+				if (defines_.Length() > 0)
+				{
+					defines_.Append("_");
+				}
+
+				const String& def = ShaderUtil::interDefs[i];
+				Vector<String> m = def.Split('=', false);
+				if (m.size() > 1)
+				{
+					defines_.Append(m[0]);
+					macros_.AddShaderMacro(def.CString(), m[1].CString());
+				}
+				else
+				{
+					defines_.Append(def);
+					macros_.AddShaderMacro(def.CString(), "1");
 				}
 			}
 		}

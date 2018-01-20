@@ -52,13 +52,13 @@ namespace Unique
 		ShaderProfile	shaderProfile_ = Diligent::SHADER_PROFILE_DEFAULT;
 		String			defines_;
 		String			source_;
-		uint			mask_ = 0;
+		//uint			mask_ = 0;
 	};
 
 	class ShaderVariation : public RefCounted, public GPUObject
 	{
 	public:
-		ShaderVariation(Shader& shader, const ShaderStage& type, Pass& shaderPass, uint defs);
+		ShaderVariation(Shader& shader, const ShaderStage& type, Pass& shaderPass, uint64 defs);
 
 		bool CreateImpl();
 		void Reload();
@@ -73,7 +73,7 @@ namespace Unique
 		String source_;
 		/// Defines to use in compiling.
 		String defines_;
-		unsigned mask_ = 0;
+		//uint64 mask_ = 0;
 		bool dirty_ = false;
 		Diligent::ShaderMacroHelper macros_;
 		Vector<Diligent::ShaderVariableDesc> shaderVariableDesc_;

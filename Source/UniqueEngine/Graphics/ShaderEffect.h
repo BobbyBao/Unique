@@ -92,11 +92,11 @@ namespace Unique
 		Pass(const String& name = "");
 		~Pass();
 
-		uint GetMask(Shader* shader, const String& defs);
+		uint64 GetMask(Shader* shader, const String& interDefs, const String& defs);
 
-		PipelineState* GetPipeline(Shader* shader, const String & defs);
+		PipelineState* GetPipeline(Shader* shader, const String& interDefs, const String & defs);
 
-		PipelineState* GetPipeline(Shader* shader, unsigned defMask);
+		PipelineState* GetPipeline(Shader* shader, uint64 defMask);
 
 		bool Prepare();
 
@@ -109,11 +109,11 @@ namespace Unique
 		ShaderStage				shaderStage_[6];
 
 	private:
-		SPtr<ShaderVariation>	GetShaderVariation(Shader& shader, const ShaderStage& shaderStage, uint defs);
+		SPtr<ShaderVariation>	GetShaderVariation(Shader& shader, const ShaderStage& shaderStage, uint64 defs);
 		Vector<String>			allDefs_;
-		uint					allMask_ = 0;
-		HashMap<uint, SPtr<PipelineState>> cachedPipeline_;
-		HashMap<uint, SPtr<ShaderVariation>> cachedShaders_[6];
+		uint64					allMask_ = 0;
+		HashMap<uint64, SPtr<PipelineState>> cachedPipeline_;
+		HashMap<uint64, SPtr<ShaderVariation>> cachedShaders_[6];
 
 		friend class Shader;
 		friend class ShaderVariation;
@@ -142,7 +142,7 @@ namespace Unique
 		Pass* AddPass(const String& name);
 		Pass* GetPass(const String & pass);
 		Pass* GetPass(unsigned passIndex);
-		PipelineState* GetPipeline(const String& passName, const String & defs);
+		PipelineState* GetPipeline(const String& passName, const String& interDefs, const String & defs);
 
 		inline const auto& GetUniforms() const { return shaderProperties_.uniforms_; }
 		inline const auto& GetTextureSlots() const { return shaderProperties_.textureSlots_; }

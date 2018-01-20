@@ -68,7 +68,7 @@ namespace Unique
 		// Create vertex and index buffers
 		geometry_ = BuildSponge(spongeLevel_, spongeAO_);
 		shader_ = cache.GetResource<Shader>("Shaders/Test.shader");
-		pipeline_ = shader_->GetPipeline("base", "");
+		pipeline_ = shader_->GetPipeline("base", "", "");
 		graphics.AddResource("Constants", constBuffer_);
 		
 	}
