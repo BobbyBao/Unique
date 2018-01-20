@@ -69,12 +69,12 @@ namespace Unique.Engine
             GC.KeepAlive(action);
             GC.KeepAlive(cb);
         }
-        
+
         public void SendEvent<T>(ref T eventData) where T : struct
         {
             Object_SendEvent(native_, ref TypeOf<T>(), Utilities.As(ref eventData));
         }
-   
+
         public void SendEvent<T>(ref StringID eventType, ref T eventData) where T : struct
         {
             Object_SendEvent(native_, ref eventType, Utilities.As(ref eventData));
@@ -105,12 +105,12 @@ namespace Unique.Engine
         public static Object CreateObject(StringID typeID, IntPtr nativePtr)
         {
             Type type = Type.GetType("Unique.Engine." + typeID);
-            if(type == null)
+            if (type == null)
             {
                 return null;
             }
             Object obj = Activator.CreateInstance(type) as Object;
-            if(!obj)
+            if (!obj)
             {
                 return null;
             }
@@ -131,9 +131,9 @@ namespace Unique.Engine
 
         public static RefCounted PtrToObject(IntPtr nativePtr)
         {
-            if(ptrToObject_.TryGetValue(nativePtr, out var weakRef))
+            if (ptrToObject_.TryGetValue(nativePtr, out var weakRef))
             {
-                if(weakRef.TryGetTarget(out var obj))
+                if (weakRef.TryGetTarget(out var obj))
                     return obj;
             }
 
@@ -144,9 +144,9 @@ namespace Unique.Engine
 
         public static T LookUpObject<T>(IntPtr nativePtr) where T : RefCounted, new()
         {
-            if(ptrToObject_.TryGetValue(nativePtr, out var weakRef))
+            if (ptrToObject_.TryGetValue(nativePtr, out var weakRef))
             {
-                if(weakRef.TryGetTarget(out var obj))
+                if (weakRef.TryGetTarget(out var obj))
                     return obj as T;
             }
 
@@ -155,9 +155,9 @@ namespace Unique.Engine
 
         public static T PtrToObject<T>(IntPtr nativePtr) where T : RefCounted, new()
         {
-            if(ptrToObject_.TryGetValue(nativePtr, out var weakRef))
+            if (ptrToObject_.TryGetValue(nativePtr, out var weakRef))
             {
-                if(weakRef.TryGetTarget(out var obj))
+                if (weakRef.TryGetTarget(out var obj))
                     return obj as T;
             }
 
@@ -167,7 +167,7 @@ namespace Unique.Engine
             return ret;
         }
 
-        public static T Subsystem<T>() where T : Object
+        public static T GetSubsystem<T>() where T : Object
         {
             return Context.Get(TypeOf<T>()) as T;
         }
@@ -184,9 +184,26 @@ namespace Unique.Engine
         {
             base.Destroy();
 
-            if(native_ != IntPtr.Zero)
+            if (native_ != IntPtr.Zero)
                 Object_ReleaseRef(native_);
         }
     }
 
+    public class Subsystem<T> : Object where T : Object
+    {
+        static T instance_;
+        public static T instance
+        {
+            get
+            {
+                if (instance_ == null)
+                {
+                    instance_ = GetSubsystem<T>();
+                }
+
+                return instance_;
+            }
+        }
+
+    }
 }

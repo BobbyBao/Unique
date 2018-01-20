@@ -324,5 +324,37 @@ namespace Unique.Engine
 		{
 			return lhs * (1.0f - t) + rhs * t;
 		}
-	}
+
+        /// Return a random float between 0.0 (inclusive) and 1.0 (exclusive.)
+        public static float Random() { return Rand() / 32768.0f; }
+        /// Return a random float between 0.0 and range, inclusive from both ends.
+        public static float Random(float range) { return Rand() * range / 32767.0f; }
+        /// Return a random float between min and max, inclusive from both ends.
+        public static float Random(float min, float max) { return Rand() * (max - min) / 32767.0f + min; }
+        /// Return a random integer between 0 and range - 1.
+        public static int Random(int range) { return (int)(Random() * range); }
+        /// Return a random integer between min and max - 1.
+        public static int Random(int min, int max) { float range = (float)(max - min); return (int)(Random() * range) + min; }
+        /// Return a random normal distributed number with the given mean value and variance.
+        public static float RandomNormal(float meanValue, float variance) { return RandStandardNormal() * (float)Math.Sqrt(variance) + meanValue; }
+
+        public static int randomSeed { get; set; } = 1;
+
+        public static int Rand()
+        {
+            randomSeed = randomSeed * 214013 + 2531011;
+            return (randomSeed >> 16) & 32767;
+        }
+
+        public static float RandStandardNormal()
+        {
+            float val = 0.0f;
+            for (int i = 0; i < 12; i++)
+                val += Rand() / 32768.0f;
+            val -= 6.0f;
+
+            // Now val is approximatly standard normal distributed
+            return val;
+        }
+    }
 }

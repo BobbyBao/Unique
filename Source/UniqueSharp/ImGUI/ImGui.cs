@@ -98,6 +98,15 @@ namespace Unique.Engine
         public static nk_rect nk_layout_space_rect_to_local(IntPtr ctx, nk_rect rect);
 #endif
 
+        public static void Text(string text, nk_text_alignment flag) => nk_text(ctx, text, text.Length, (uint)flag);
+        public static void Text(string text, nk_text_alignment flag, nk_color c) => nk_text_colored(ctx, text, text.Length, (uint)flag, c);
+        public static void TextWrap(string text) => nk_text_wrap(ctx, text, text.Length);
+        public static void TextWrap(string text, nk_color c) => nk_text_wrap_colored(ctx, text, text.Length, c);
+        public static void Label(string label, uint align) => nk_label(ctx, label, align);
+        public static void Label(string label, uint align, nk_color c) => nk_label_colored(ctx, label, align, c);
+        public static void LabelWrap(string label, uint flag) => nk_label_wrap(ctx, label);
+        public static void LabelWrap(string label, uint flag, nk_color c) => nk_label_colored_wrap(ctx, label, c);
+        
         public static bool ButtonLabel(string label) => nk_button_label(ctx, label) != 0;
         public static bool ButtonText(string text) => nk_button_text(ctx, text, text.Length) != 0;
         public static bool ButtonText(char c) => ButtonText(c.ToString());
@@ -110,7 +119,7 @@ namespace Unique.Engine
 
         public static void MenubarBegin() => nk_menubar_begin(ctx);
         public static void MenubarEnd() => nk_menubar_end(ctx);
-        public static bool MenuBeginText(string title, int title_len, nk_text_alignment align, nk_vec2 size) => nk_menu_begin_text(ctx, title, title_len, (uint)align, size) != 0;
+        public static bool MenuBeginText(string title, nk_text_alignment align, nk_vec2 size) => nk_menu_begin_text(ctx, title, title.Length, (uint)align, size) != 0;
         public static bool MenuBeginLabel(string label, nk_text_alignment align, nk_vec2 size) => nk_menu_begin_label(ctx, label, (uint)align, size) != 0;
         public static bool MenuBeginImage(string label, nk_image image, nk_vec2 size) => nk_menu_begin_image(ctx, label, image, size) != 0;
         public static bool MenuBeginImageText(string label, int p, nk_text_alignment align, nk_image image, nk_vec2 size) => nk_menu_begin_image_text(ctx, label, p, (uint)align, image, size) != 0;

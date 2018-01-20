@@ -12,6 +12,11 @@
 
 namespace Unique
 {
+	uObject(Engine)
+	{
+		uFactory()
+	}
+
 	SPtr<Context> Engine::context_;
 	Vector<String> Engine::argv_;
 	bool Engine::quit_ = false;

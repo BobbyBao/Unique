@@ -15,27 +15,13 @@ namespace Unique
 	{
 		/// Input index of the element, which is specified in the vertex shader.
 		uint inputIndex_;
-
 		/// Buffer slot index that this element is read from.
 		uint BufferSlot;
-
 		/// Number of components in the element. Allowed values are 1, 2, 3, and 4.
 		uint NumComponents;
-
 		/// Type of the element components, see Diligent::VALUE_TYPE for details.
 		ValueType valueType;
-
-		/// For signed and unsigned integer value types 
-		/// (VT_INT8, VT_INT16, VT_INT32, VT_UINT8, VT_UINT16, VT_UINT32)
-		/// indicates if the value should be normalized to [-1,+1] or 
-		/// [0, 1] range respectively. For floating point types
-		/// (VT_FLOAT16 and VT_FLOAT32), this member is ignored.
 		bool IsNormalized;
-
-		/// Relative offset, in bytes, to the element bits.
-		/// If this value is zero, the offset will be computed automatically
-		/// assuming that all previous elements in the same buffer slot a tightly packed.
-		/// Overlapping elements are not allowed.
 		uint RelativeOffset;
 
 		/// Input frequency

@@ -41,6 +41,11 @@ namespace Unique.Engine
             return this;
         }
 
+        public Node Scaling(float s)
+        {
+            return Scaling(new Vector3(s, s, s));
+        }
+
         public Node Translate(Vector3 t, TransformSpace ts = TransformSpace.LOCAL)
         {
             Node_Translate(native_, ref t, ts);

@@ -15,5 +15,6 @@ namespace Unique.Engine
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern void Unique_Shutdown();
+
     }
 }

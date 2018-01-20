@@ -8,7 +8,7 @@ namespace Unique.Engine
     public class Renderer : Object
     {
         static Viewport[] viewports_ = new Viewport[0];
-        public Viewport Viewport(int index)
+        public Viewport CreateViewport(int index)
         {
             if(index >= viewports_.Length)
             {

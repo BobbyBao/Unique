@@ -15,6 +15,9 @@ namespace Unique
 		void SetResolution(const IntVector2& res);
 		void Initialize();
 		void Start();
+		
+		/// Get timestep of the next frame. Updated by ApplyFrameLimit().
+		float GetNextTimeStep() const { return timeStep_; }
 
 		static SPtr<Context> context_;
 		static Vector<String> argv_;
