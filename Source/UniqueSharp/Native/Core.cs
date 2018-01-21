@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
 
-namespace Unique.Engine
+namespace UniqueEngine
 {
     [SuppressUnmanagedCodeSecurity]
     internal unsafe static partial class Native

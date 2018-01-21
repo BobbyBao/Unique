@@ -139,22 +139,6 @@ namespace Unique
 			resourceMapping_->AddResource(Name, *pObject, bIsUnique);
 		);
 	}
-	/*
-	void Graphics::AddResource(const char *Name, IDeviceObject *pObject, bool bIsUnique)
-	{
-		uCall
-		(
-			resourceMapping_->AddResource(Name, pObject, bIsUnique);
-		);
-	}
-
-	void Graphics::AddResourceArray(const char *Name, uint StartIndex, IDeviceObject* const* ppObjects, uint NumElements, bool bIsUnique)
-	{
-		uCall
-		(
-			resourceMapping_->AddResourceArray(Name, StartIndex, ppObjects, NumElements, bIsUnique);
-		);
-	}*/
 
 	void Graphics::RemoveResourceByName(const char *Name, uint ArrayIndex)
 	{

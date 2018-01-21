@@ -25,7 +25,7 @@ SOFTWARE.
 using System;
 using System.Runtime.InteropServices;
 
-namespace Unique.Engine
+namespace UniqueEngine
 {
 	// Todo: Remove this warning when the code goes public.
 	#pragma warning disable 3019

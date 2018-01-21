@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Unique.Engine
+namespace UniqueEngine
 {
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
@@ -132,7 +132,7 @@ namespace Unique.Engine
 
         public static Object CreateObject(StringID typeID, IntPtr nativePtr)
         {
-            Type type = Type.GetType("Unique.Engine." + typeID);
+            Type type = Type.GetType("UniqueEngine." + typeID);
             if (type == null)
             {
                 return null;

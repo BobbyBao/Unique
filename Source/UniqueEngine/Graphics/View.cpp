@@ -405,8 +405,6 @@ namespace Unique
 					}
 				}
 
-				//debug->SetView(camera_);
-				//debug->Render(this);
 			}
 		}
 
@@ -414,9 +412,7 @@ namespace Unique
 
 	int lastRenderFrame = 0;
 	void View::Render()
-	{
-	//	renderPath_->Render(this);
-		
+	{		
 		auto& passes = RenderContext(scenePasses_);
 		for(int i = 0; i < passes.size(); i++)
 		{

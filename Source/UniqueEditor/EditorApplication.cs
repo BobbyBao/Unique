@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using Unique.Engine;
+﻿using UniqueEngine;
 
-namespace Unique.Editor
+namespace UniqueEditor
 {
     public class EditorApplication : Application
     {
@@ -20,6 +17,8 @@ namespace Unique.Editor
         {
             base.Initialize();
 
+            Engine.instance.maxFps = 1000;
+            
             New(ref scene)
             .Component<Octree>()
             .Component<DebugRenderer>()
@@ -125,11 +124,15 @@ namespace Unique.Editor
             ImGUI.End();
 
 
-            if (ImGUI.Begin("Debug", new nk_rect(graphics.width - 200, 40, 200, 100), nk_panel_flags.NK_WINDOW_MINIMIZABLE | nk_panel_flags.NK_WINDOW_TITLE))
+            if (ImGUI.Begin("Debug", new nk_rect(graphics.width - 200, 40, 200, 120), nk_panel_flags.NK_WINDOW_MINIMIZABLE | nk_panel_flags.NK_WINDOW_TITLE))
             {
-                ImGUI.LayoutRowDynamic(25);
-
-                ImGUI.Text(Unique.Engine.Engine.instance.timeStep.ToString(), nk_text_alignment.NK_TEXT_LEFT);
+                ImGUI.LayoutRowDynamic(20, 2);
+                ImGUI.Label("FPS:");
+                ImGUI.Text(Engine.instance.fps.ToString(), nk_text_alignment.NK_TEXT_LEFT);
+                ImGUI.Label("RenderWait:");
+                ImGUI.Text(Graphics.renderWait.ToString(), nk_text_alignment.NK_TEXT_LEFT);
+                ImGUI.Label("UpdateWait:");
+                ImGUI.Text(Graphics.updateWait.ToString(), nk_text_alignment.NK_TEXT_LEFT);
 
             }
             ImGUI.End();

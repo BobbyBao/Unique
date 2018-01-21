@@ -27,7 +27,7 @@ using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Xml.Serialization;
 
-namespace Unique.Engine
+namespace UniqueEngine
 {
 	/// <summary>
 	/// Represents a Quaternion.

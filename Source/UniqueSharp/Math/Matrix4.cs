@@ -25,7 +25,7 @@ SOFTWARE.
 using System;
 using System.Runtime.InteropServices;
 
-namespace Unique.Engine
+namespace UniqueEngine
 {
 	/// <summary>
 	/// Represents a 4x4 Matrix

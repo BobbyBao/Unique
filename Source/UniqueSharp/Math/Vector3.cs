@@ -25,7 +25,7 @@ SOFTWARE.
 using System;
 using System.Runtime.InteropServices;
 using System.Xml.Serialization;
-namespace Unique.Engine
+namespace UniqueEngine
 {
 	/// <summary>
 	/// Represents a 3D vector using three single-precision floating-point numbers.

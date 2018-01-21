@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Unique.Engine
+namespace UniqueEngine
 {
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct VectorBase

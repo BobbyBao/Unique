@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Runtime.CompilerServices;
 
-namespace Unique.Engine
+namespace UniqueEngine
 {
     public static unsafe class Utilities
     {

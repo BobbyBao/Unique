@@ -72,6 +72,16 @@ namespace Unique
 	{
 		resolution_ = res;
 	}
+	
+	void Engine::SetMinFps(int fps)
+	{
+		minFps_ = (unsigned)Max(fps, 0);
+	}
+
+	void Engine::SetMaxFps(int fps)
+	{
+		maxFps_ = (unsigned)Max(fps, 0);
+	}
 
 	void Engine::Initialize()
 	{

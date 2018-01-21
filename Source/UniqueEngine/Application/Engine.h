@@ -16,17 +16,25 @@ namespace Unique
 		void Initialize();
 		void Start();
 		
+		/// Set minimum frames per second. If FPS goes lower than this, time will appear to slow down.
+		void SetMinFps(int fps);
+		/// Set maximum frames per second. The engine will sleep if FPS is higher than this.
+		void SetMaxFps(int fps);
+
 		/// Get timestep of the next frame. Updated by ApplyFrameLimit().
 		float GetNextTimeStep() const { return timeStep_; }
+		/// Return the minimum frames per second.
+		int GetMinFps() const { return minFps_; }
+		/// Return the maximum frames per second.
+		int GetMaxFps() const { return maxFps_; }
+
+		static void Setup(int argc, char* argv[]);
 
 		static SPtr<Context> context_;
 		static Vector<String> argv_;
-
 		static bool	quit_;
-		static void Setup(int argc, char* argv[]);
 
 	private:
-
 		virtual void ThreadFunction();
 
 		void ApplyFrameLimit();
@@ -51,6 +59,7 @@ namespace Unique
 		unsigned maxInactiveFps_;
 		/// Pause when minimized flag.
 		bool pauseMinimized_;
+
 	};
 
 

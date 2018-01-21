@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Unique.Engine
+namespace UniqueEngine
 {
     public class Camera : Component
     {

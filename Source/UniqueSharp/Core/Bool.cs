@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Unique
+namespace UniqueEngine
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Bool

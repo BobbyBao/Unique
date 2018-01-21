@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Unique.Engine
+namespace UniqueEngine
 {
     public enum Keycode
     {

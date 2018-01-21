@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Unique.Engine
+namespace UniqueEngine
 {
 	[StructLayout(LayoutKind.Sequential)]
 	public struct Plane

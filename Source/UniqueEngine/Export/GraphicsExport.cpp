@@ -37,5 +37,8 @@ UNIQUE_C_API void StaticModel_SetMaterialsAttr(StaticModel* self, ResourceRefLis
 	self->SetMaterialsAttr(*material);
 }
 
-uExport(Graphics, int, GetWidth)
+uExport(Graphics, float, GetWidth)
 uExport(Graphics, int, GetHeight)
+
+uExportStatic(Graphics, float, GetRenderWait)
+uExportStatic(Graphics, float, GetUpdateWait)

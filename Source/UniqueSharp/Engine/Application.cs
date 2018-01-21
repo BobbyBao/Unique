@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 
-namespace Unique.Engine
+namespace UniqueEngine
 {
     public enum OS
     {

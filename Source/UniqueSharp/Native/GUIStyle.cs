@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Unique.Engine
+namespace UniqueEngine
 {
     public enum nk_style_item_type
     {

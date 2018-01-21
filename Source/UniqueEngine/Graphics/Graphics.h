@@ -73,15 +73,12 @@ namespace Unique
 		}
 
 		void AddResource(const char *Name, GPUObject* pObject, bool bIsUnique = true);
-// 		void AddResource(const char *Name, IDeviceObject *pObject, bool bIsUnique);   
-// 		void AddResourceArray(const char *Name, uint StartIndex, IDeviceObject* const* ppObjects, uint NumElements, bool bIsUnique);
 		void RemoveResourceByName(const char *Name, uint ArrayIndex = 0);
 		void BindShaderResources(PipelineState* pipelineState, uint flags);
 		void Frame();
 		//****************
 
 		//*******Render thread*******
-
 		void CreateBuffer(GraphicsBuffer& buffer, const ByteArray& data);
 		void CreateShader(const Diligent::ShaderCreationAttribs &creationAttribs, Diligent::IShader** shader);
 		void CreateTexture(const Diligent::TextureDesc& texDesc, const Diligent::TextureData &data,	Texture& texture);
@@ -111,6 +108,8 @@ namespace Unique
 		static int currentFrame_;
 		inline static int GetRenderContext() { return 1 - currentContext_; }
 
+		static float GetRenderWait() { return  waitSubmit_/ 1000.0f;}
+		static float GetUpdateWait() { return  waitRender_/ 1000.0f;}
 	protected:
 		static void SetRenderThread();
 		static void ExecuteCommands(CommandQueue& cmds);

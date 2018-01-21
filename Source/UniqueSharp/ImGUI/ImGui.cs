@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
 
-namespace Unique.Engine
+namespace UniqueEngine
 {
     public static partial class ImGUI
     {
@@ -98,14 +98,14 @@ namespace Unique.Engine
         public static nk_rect nk_layout_space_rect_to_local(IntPtr ctx, nk_rect rect);
 #endif
 
-        public static void Text(string text, nk_text_alignment flag) => nk_text(ctx, text, text.Length, (uint)flag);
+        public static void Text(string text, nk_text_alignment flag = nk_text_alignment.NK_TEXT_LEFT) => nk_text(ctx, text, text.Length, (uint)flag);
         public static void Text(string text, nk_text_alignment flag, nk_color c) => nk_text_colored(ctx, text, text.Length, (uint)flag, c);
         public static void TextWrap(string text) => nk_text_wrap(ctx, text, text.Length);
         public static void TextWrap(string text, nk_color c) => nk_text_wrap_colored(ctx, text, text.Length, c);
-        public static void Label(string label, uint align) => nk_label(ctx, label, align);
-        public static void Label(string label, uint align, nk_color c) => nk_label_colored(ctx, label, align, c);
-        public static void LabelWrap(string label, uint flag) => nk_label_wrap(ctx, label);
-        public static void LabelWrap(string label, uint flag, nk_color c) => nk_label_colored_wrap(ctx, label, c);
+        public static void Label(string label, nk_text_alignment align = nk_text_alignment.NK_TEXT_LEFT) => nk_label(ctx, label, (uint)align);
+        public static void Label(string label, nk_text_alignment align, nk_color c) => nk_label_colored(ctx, label, (uint)align, c);
+        public static void LabelWrap(string label) => nk_label_wrap(ctx, label);
+        public static void LabelWrap(string label, nk_color c) => nk_label_colored_wrap(ctx, label, c);
         
         public static bool ButtonLabel(string label) => nk_button_label(ctx, label) != 0;
         public static bool ButtonText(string text) => nk_button_text(ctx, text, text.Length) != 0;

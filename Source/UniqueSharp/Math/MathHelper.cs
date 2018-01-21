@@ -12,7 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Unique.Engine
+namespace UniqueEngine
 {
     /// Intersection test result.
     public enum Intersection

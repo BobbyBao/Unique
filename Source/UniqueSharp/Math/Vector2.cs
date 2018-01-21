@@ -24,7 +24,7 @@ SOFTWARE.
 
 using System;
 using System.Runtime.InteropServices;
-namespace Unique.Engine
+namespace UniqueEngine
 {
 	/// <summary>Represents a 2D vector using two single-precision floating-point numbers.</summary>
 	/// <remarks>

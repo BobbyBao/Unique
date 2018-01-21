@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Unique.Engine
+namespace UniqueEngine
 {
     public class UnmanagedObject<T> : DisposeBase where T : struct, IDisposable
     {
