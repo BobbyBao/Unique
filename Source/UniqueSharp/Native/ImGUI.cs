@@ -635,10 +635,10 @@ namespace UniqueEngine
         }
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_list_view_begin(IntPtr ctx, nk_list_view* outlv, [MarshalAs(UnmanagedType.LPStr)]string id, uint flag, int row_height, int row_count);
+        static extern int nk_list_view_begin(IntPtr ctx, IntPtr outlv, [MarshalAs(UnmanagedType.LPStr)]string id, uint flag, int row_height, int row_count);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern void nk_list_view_end(nk_list_view* lv);
+        static extern void nk_list_view_end(IntPtr lv);
         
         /* =============================================================================
          *

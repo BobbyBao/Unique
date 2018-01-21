@@ -98,6 +98,17 @@ namespace UniqueEngine
         public static nk_rect nk_layout_space_rect_to_local(IntPtr ctx, nk_rect rect);
 #endif
 
+        public static int GroupBegin(string title, uint flag) => nk_group_begin(ctx, title, flag);
+        public static int GroupScrolledOffsetBegin(ref uint x_offset, ref uint y_offset, string title, uint flag) => nk_group_scrolled_offset_begin(ctx, ref x_offset, ref y_offset, title, flag);
+        //public static int GroupScrolledBegin(ref uint x_offset, ref uint y_offset, string title, uint flag) => nk_group_scrolled_begin(ctx, ref nk_scroll scr, title, flag);
+        static void GroupScrolledEnd() => nk_group_scrolled_end(ctx);       
+        static void GroupEnd() => nk_group_end(ctx);
+        
+        static int ListViewBegin(ref nk_list_view outlv, string id, uint flag, int row_height, int row_count)
+            => nk_list_view_begin(ctx, Utilities.As(ref outlv), id, flag, row_height, row_count);        
+        static void ListViewEnd(ref nk_list_view outlv) => nk_list_view_end(Utilities.As(ref outlv));
+
+
         public static void Text(string text, nk_text_alignment flag = nk_text_alignment.NK_TEXT_LEFT) => nk_text(ctx, text, text.Length, (uint)flag);
         public static void Text(string text, nk_text_alignment flag, nk_color c) => nk_text_colored(ctx, text, text.Length, (uint)flag, c);
         public static void TextWrap(string text) => nk_text_wrap(ctx, text, text.Length);
@@ -110,11 +121,9 @@ namespace UniqueEngine
         public static bool ButtonLabel(string label) => nk_button_label(ctx, label) != 0;
         public static bool ButtonText(string text) => nk_button_text(ctx, text, text.Length) != 0;
         public static bool ButtonText(char c) => ButtonText(c.ToString());
+     
 
-        //public static void LayoutRowDynamic(float height = 0, int cols = 1) => nk_layout_row_dynamic(ctx, height, cols);
-        //public static nk_rect WindowGetBounds() => nk_window_get_bounds(ctx);        
         public static int Combo(string[] items, int selected, int item_height, nk_vec2 size) => nk_combo(ctx, items, items.Length, selected, item_height, size);
-
         
 
         public static void MenubarBegin() => nk_menubar_begin(ctx);
