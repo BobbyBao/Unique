@@ -86,7 +86,10 @@ public:
 	void Subscribe(const StringID& eventType, EventHandler* handler);
 	/// Subscribe to a specific sender's event.
 	void SubscribeTo(Object* sender, const StringID& eventType, EventHandler* handler);
-
+	/// Unsubscribe from an event.
+	void Unsubscribe(StringID eventType);
+	/// Unsubscribe from a specific sender's event.
+	void UnsubscribeFrom(Object* sender, StringID eventType);
 protected:
 
 	template<class E>
@@ -101,10 +104,6 @@ protected:
 		UnsubscribeFrom(sender, TypeInfo::GetTypeID<E>());
 	}
 
-	/// Unsubscribe from an event.
-	void Unsubscribe(StringID eventType);
-	/// Unsubscribe from a specific sender's event.
-	void UnsubscribeFrom(Object* sender, StringID eventType);
 	/// Unsubscribe from a specific sender's events.
 	void UnsubscribeFromEvents(Object* sender);
 	/// Unsubscribe from all events.

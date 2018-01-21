@@ -58,3 +58,6 @@ UNIQUE_C_API void Object_SubscribeTo(Object* self, Object* sender, const StringI
 {
 	self->SubscribeTo(sender, eventType, new StaticEventHandler(self, handler));
 }
+
+uExport(Object, void, Unsubscribe, StringID, eventType)
+uExport(Object, void, UnsubscribeFrom, Object*, sender, StringID, eventType )

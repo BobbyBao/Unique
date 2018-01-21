@@ -31,35 +31,30 @@ Shader "Skinned"
 			{
 				NumComponents 3
 				ValueType FLOAT32
-				IsNormalized false
 			}
 			
 			LayoutElement
 			{
 				NumComponents 2
 				ValueType FLOAT32
-				IsNormalized false
 			}
 			
 			LayoutElement
 			{
 				NumComponents 4
 				ValueType FLOAT32
-				IsNormalized false
 			}
 			
 			LayoutElement
 			{
 				NumComponents 4
 				ValueType FLOAT32
-				IsNormalized false
 			}
 			
 			LayoutElement
 			{
 				NumComponents 4
 				ValueType UINT8
-				IsNormalized false
 			}
 		}
 	

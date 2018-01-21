@@ -17,31 +17,27 @@ namespace Unique.Engine
         public Object(IntPtr ptr) : base(ptr)
         {
         }
+        
+        static Dictionary<Object, HashSet<(StringID, Object, EventFn)>> subscribedEvents_ = new Dictionary<Object, HashSet<(StringID, Object, EventFn)>>();
 
         public void Subscribe<T>(Action<T> action)
         {
-            EventFn cb = (receiver, eventData) =>
-            {
-                action(Utilities.As<T>(eventData));
-            };
+            Subscribe(ref TypeOf<T>(), action);
+        }
 
-            Object_Subscribe(native_, ref TypeOf<T>(), cb);
-
-            GC.KeepAlive(action);
-            GC.KeepAlive(cb);
+        public void Unsubscribe<T>()
+        {
+            Object_Unsubscribe(native_, ref TypeOf<T>());
         }
 
         public void SubscribeTo<T>(Object sender, Action<T> action)
         {
-            EventFn cb = (receiver, eventData) =>
-            {
-                action(Utilities.As<T>(eventData));
-            };
+            SubscribeTo(sender, ref TypeOf<T>(), action);
+        }
 
-            Object_SubscribeTo(native_, sender.native_, ref TypeOf<T>(), cb);
-
-            GC.KeepAlive(action);
-            GC.KeepAlive(cb);
+        public void UnsubscribeFrom<T>(Object sender)
+        {
+            Object_UnsubscribeFrom(native_, sender.nativePtr, ref TypeOf<T>());
         }
 
         public void Subscribe<T>(ref StringID eventType, Action<T> action)
@@ -51,10 +47,26 @@ namespace Unique.Engine
                 action(Utilities.As<T>(eventData));
             };
 
-            Object_Subscribe(native_, ref eventType, cb);
+            if (subscribedEvents_.TryGetValue(this, out var subscribedEvents))
+            {
+                if (subscribedEvents.Contains((eventType, null, cb)))
+                {
+                    return;
+                }
+            }
+            else
+            {
+                subscribedEvents = new HashSet<(StringID, Object, EventFn)>();
+                subscribedEvents_[this] = subscribedEvents;
+            }
 
-            GC.KeepAlive(action);
-            GC.KeepAlive(cb);
+            subscribedEvents.Add((eventType, null, cb));
+            Object_Subscribe(native_, ref eventType, cb);
+        }
+
+        public void Unsubscribe(ref StringID eventType)
+        {
+            Object_Unsubscribe(native_, ref eventType);
         }
 
         public void SubscribeTo<T>(Object sender, ref StringID eventType, Action<T> action)
@@ -64,10 +76,26 @@ namespace Unique.Engine
                 action(Utilities.As<T>(eventData));
             };
 
-            Object_SubscribeTo(native_, sender.native_, ref eventType, cb);
+            if (subscribedEvents_.TryGetValue(this, out var subscribedEvents))
+            {
+                if (subscribedEvents.Contains((eventType, sender, cb)))
+                {
+                    return;
+                }
+            }
+            else
+            {
+                subscribedEvents = new HashSet<(StringID, Object, EventFn)>();
+                subscribedEvents_[this] = subscribedEvents;
+            }
 
-            GC.KeepAlive(action);
-            GC.KeepAlive(cb);
+            subscribedEvents.Add((eventType, sender, cb));
+            Object_SubscribeTo(native_, sender.native_, ref eventType, cb);
+        }
+
+        public void UnsubscribeFrom(Object sender, ref StringID eventType)
+        {
+            Object_UnsubscribeFrom(native_, sender.nativePtr, ref eventType);
         }
 
         public void SendEvent<T>(ref T eventData) where T : struct

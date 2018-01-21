@@ -41,6 +41,13 @@ namespace Unique.Engine
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void Object_SubscribeTo(IntPtr self, IntPtr sender, ref StringID eventType, EventFn handler);
+
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void Object_Unsubscribe(IntPtr self, ref StringID eventType);
+
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void Object_UnsubscribeFrom(IntPtr self, IntPtr sender, ref StringID eventType);
+
         
     }
 }

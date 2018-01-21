@@ -9,49 +9,49 @@
 #ifdef SKINNED
 float4x3 GetSkinMatrix(float4 blendWeights, int4 blendIndices)
 {
-    return cSkinMatrices[(int)blendIndices.x] * blendWeights.x +
-        cSkinMatrices[(int)blendIndices.y] * blendWeights.y +
-        cSkinMatrices[(int)blendIndices.z] * blendWeights.z +
-        cSkinMatrices[(int)blendIndices.w] * blendWeights.w;
+    return SkinMatrices[(int)blendIndices.x] * blendWeights.x +
+        SkinMatrices[(int)blendIndices.y] * blendWeights.y +
+        SkinMatrices[(int)blendIndices.z] * blendWeights.z +
+        SkinMatrices[(int)blendIndices.w] * blendWeights.w;
 }
 #endif
 
 float2 GetTexCoord(float2 iTexCoord)
 {
-    return float2(dot(iTexCoord, cUOffset.xy) + cUOffset.w, dot(iTexCoord, cVOffset.xy) + cVOffset.w);
+    return float2(dot(iTexCoord, UOffset.xy) + UOffset.w, dot(iTexCoord, VOffset.xy) + VOffset.w);
 };
 
 float4 GetClipPos(float3 worldPos)
 {
-    return mul(float4(worldPos, 1.0), cViewProj);
+    return mul(float4(worldPos, 1.0), ViewProj);
 }
 
 float GetZonePos(float3 worldPos)
 {
-    return saturate(mul(float4(worldPos, 1.0), cZone).z);
+    return saturate(mul(float4(worldPos, 1.0), Zone).z);
 }
 
 float GetDepth(float4 clipPos)
 {
-    return dot(clipPos.zw, cDepthMode.zw);
+    return dot(clipPos.zw, DepthMode.zw);
 }
 
 #ifdef BILLBOARD
 float3 GetBillboardPos(float4 iPos, float2 iSize, float4x3 modelMatrix)
 {
-    return mul(iPos, modelMatrix) + mul(float3(iSize.x, iSize.y, 0.0), cBillboardRot);
+    return mul(iPos, modelMatrix) + mul(float3(iSize.x, iSize.y, 0.0), BillboardRot);
 }
 
 float3 GetBillboardNormal()
 {
-    return float3(-cBillboardRot[2][0], -cBillboardRot[2][1], -cBillboardRot[2][2]);
+    return float3(-BillboardRot[2][0], -BillboardRot[2][1], -BillboardRot[2][2]);
 }
 #endif
 
 #ifdef DIRBILLBOARD
 float3x3 GetFaceCameraRotation(float3 position, float3 direction)
 {
-    float3 cameraDir = normalize(position - cCameraPos);
+    float3 cameraDir = normalize(position - CameraPos);
     float3 front = normalize(direction);
     float3 right = normalize(cross(front, cameraDir));
     float3 up = normalize(cross(front, right));
@@ -79,14 +79,14 @@ float3 GetBillboardNormal(float4 iPos, float3 iDirection, float4x3 modelMatrix)
 #ifdef TRAILFACECAM
 float3 GetTrailPos(float4 iPos, float3 iFront, float iScale, float4x3 modelMatrix)
 {
-    float3 up = normalize(cCameraPos - iPos.xyz);
+    float3 up = normalize(CameraPos - iPos.xyz);
     float3 left = normalize(cross(iFront, up));
     return (mul(float4((iPos.xyz + left * iScale), 1.0), modelMatrix)).xyz;
 }
 
 float3 GetTrailNormal(float4 iPos)
 {
-    return normalize(cCameraPos - iPos.xyz);
+    return normalize(CameraPos - iPos.xyz);
 }
 #endif
 
@@ -110,7 +110,7 @@ float3 GetTrailNormal(float4 iPos, float3 iParentPos, float3 iForward)
 #elif defined(INSTANCED)
     #define iModelMatrix iModelInstance
 #else
-    #define iModelMatrix cModel
+    #define iModelMatrix Model
 #endif
 
 #if defined(BILLBOARD)
@@ -138,7 +138,7 @@ float3 GetTrailNormal(float4 iPos, float3 iParentPos, float3 iForward)
 #endif
 
 #if defined(BILLBOARD)
-    #define GetWorldTangent(modelMatrix) float4(normalize(mul(float3(1.0, 0.0, 0.0), cBillboardRot)), 1.0)
+    #define GetWorldTangent(modelMatrix) float4(normalize(mul(float3(1.0, 0.0, 0.0), BillboardRot)), 1.0)
 #elif defined(DIRBILLBOARD)
     #define GetWorldTangent(modelMatrix) float4(normalize(mul(float3(1.0, 0.0, 0.0), (float3x3)modelMatrix)), 1.0)
 #else

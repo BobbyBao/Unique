@@ -21,14 +21,12 @@ Shader "Default"
 			{
 				NumComponents 3
 				ValueType FLOAT32
-				IsNormalized false
 			}
 			
 			LayoutElement
 			{
 				NumComponents 3
 				ValueType FLOAT32
-				IsNormalized false
 			}
 			
 			LayoutElement

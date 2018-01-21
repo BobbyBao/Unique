@@ -4,54 +4,54 @@
 // Vertex shader uniforms
 cbuffer FrameVS
 {
-    float cDeltaTime;
-    float cElapsedTime;
+    float DeltaTime;
+    float ElapsedTime;
 }
 
 cbuffer CameraVS
 {  
-	float4x3 cView;
-    float4x3 cViewInv;
-    float4x4 cViewProj;
-    float3 cCameraPos;
-    float cNearClip;
-    float cFarClip;
-    float3 cFrustumSize;
-    float4 cDepthMode;
-    float4 cGBufferOffsets;
-    float4 cClipPlane;
+	float4x3 View;
+    float4x3 ViewInv;
+    float4x4 ViewProj;
+    float3 CameraPos;
+    float NearClip;
+    float FarClip;
+    float3 FrustumSize;
+    float4 DepthMode;
+    float4 GBufferOffsets;
+    float4 ClipPlane;
 }
 
 cbuffer ZoneVS
 {
-    float3 cAmbientStartColor;
-    float3 cAmbientEndColor;
-    float4x3 cZone;
+    float3 AmbientStartColor;
+    float3 AmbientEndColor;
+    float4x3 Zone;
 }
 
 cbuffer LightVS
 {
-    float4 cLightPos;
-    float3 cLightDir;
-    float4 cNormalOffsetScale;
+    float4 LightPos;
+    float3 LightDir;
+    float4 NormalOffsetScale;
 #ifdef NUMVERTEXLIGHTS
-    float4 cVertexLights[4 * 3];
+    float4 VertexLights[4 * 3];
 #else
-    float4x4 cLightMatrices[4];
+    float4x4 LightMatrices[4];
 #endif
 }
 
 #ifndef CUSTOM_MATERIAL_CBUFFER
 cbuffer MaterialVS
 {
-    float4 cUOffset;
-    float4 cVOffset;
+    float4 UOffset;
+    float4 VOffset;
 }
 #endif
 
 cbuffer ObjectVS
 {
-    float4x3 cModel;
+    float4x3 Model;
 }
 
 #ifndef MAXBONES
@@ -60,13 +60,13 @@ cbuffer ObjectVS
 
 cbuffer SkinnedVS
 {
-    uniform float4x3 cSkinMatrices[MAXBONES];
+    uniform float4x3 SkinMatrices[MAXBONES];
 }
 
 cbuffer BillboardVS
 {
-	float4x3 world_;
-	float3x3 billboardRot;
+	float4x3 World;
+	float3x3 BillboardRot;
 }
 
 #endif
@@ -76,56 +76,56 @@ cbuffer BillboardVS
 // Pixel shader uniforms
 cbuffer FramePS
 {
-    float cDeltaTimePS;
-    float cElapsedTimePS;
+    float DeltaTimePS;
+    float ElapsedTimePS;
 }
 
 cbuffer CameraPS
 {
-    float3 cCameraPosPS;
-    float4 cDepthReconstruct;
-    float2 cGBufferInvSize;
-    float cNearClipPS;
-    float cFarClipPS;
+    float3 CameraPosPS;
+    float4 DepthReconstruct;
+    float2 GBufferInvSize;
+    float NearClipPS;
+    float FarClipPS;
 }
 
 cbuffer ZonePS
 {
-    float4 cAmbientColor;
-    float4 cFogParams;
-    float3 cFogColor;
-    float3 cZoneMin;
-    float3 cZoneMax;
+    float4 AmbientColor;
+    float4 FogParams;
+    float3 FogColor;
+    float3 ZoneMin;
+    float3 ZoneMax;
 }
 
 cbuffer LightPS
 {
-    float4 cLightColor;
-    float4 cLightPosPS;
-    float3 cLightDirPS;
-    float4 cNormalOffsetScalePS;
-    float4 cShadowCubeAdjust;
-    float4 cShadowDepthFade;
-    float2 cShadowIntensity;
-    float2 cShadowMapInvSize;
-    float4 cShadowSplits;
-    float2 cVSMShadowParams;
-    float4x4 cLightMatricesPS[4];
+    float4 LightColor;
+    float4 LightPosPS;
+    float3 LightDirPS;
+    float4 NormalOffsetScalePS;
+    float4 ShadowCubeAdjust;
+    float4 ShadowDepthFade;
+    float2 ShadowIntensity;
+    float2 ShadowMapInvSize;
+    float4 ShadowSplits;
+    float2 VSMShadowParams;
+    float4x4 LightMatricesPS[4];
     #ifdef PBR
-        float cLightRad;
-        float cLightLength;
+        float LightRad;
+        float LightLength;
     #endif
 }
 
 #ifndef CUSTOM_MATERIAL_CBUFFER
 cbuffer MaterialPS
 {
-    float4 cMatDiffColor;
-    float3 cMatEmissiveColor;
-    float3 cMatEnvMapColor;
-    float4 cMatSpecColor;
-	float cRoughness;
-	float cMetallic;
+    float4 MatDiffColor;
+    float3 MatEmissiveColor;
+    float3 MatEnvMapColor;
+    float4 MatSpecColor;
+	float Roughness;
+	float Metallic;
 }
 #endif
 

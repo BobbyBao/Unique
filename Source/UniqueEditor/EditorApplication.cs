@@ -36,34 +36,35 @@ namespace Unique.Editor
             
             .Child("Floor", c => c
                 .Position(Vector3.Zero)
-                .Scaling(new Vector3(30.0f, 30.0f, 30.0f))
+                .Scaling(new Vector3(100.0f, 100.0f, 100.0f))
                 .Component<StaticModel>(sm => sm
                     .Model(new ResourceRef(TypeOf<Model>(), "Models/Plane.mdl"))
                     .Material(new ResourceRefList(TypeOf<Material>(), "Models/Stone.material"))
                 )
-            )          
-            .Child("Mushroom", c => c
-                .Position(new Vector3(10, 0, 0))
-                .Component<StaticModel>(sm => sm
-                    .Model(new ResourceRef(TypeOf<Model>(), "Models/Mushroom.mdl"))
-                    .Material(new ResourceRefList(TypeOf<Material>(), "Models/Mushroom.material"))
-                )
-            )
-            .Child("Mushroom", c => c
-                .Position(Vector3.One)
-                .Component<StaticModel>(sm => sm
-                    .Model(new ResourceRef(TypeOf<Model>(), "Models/Mushroom.mdl"))
-                    .Material(new ResourceRefList(TypeOf<Material>(), "Models/Mushroom.material"))
-                )
-            )
-            ;
+            );
 
-            Subsystem<Renderer>()
-            .Viewport(0)
-            .Rect(new IntRect(0, 0, 1280, 720))               
+            const int NUM_OBJECTS = 200;
+            for (int i = 0; i < NUM_OBJECTS; ++i)
+            {
+                scene.Child("Mushroom", c => c
+                    .Position(new Vector3(MathHelper.Random(90.0f) - 45.0f, 0.0f, MathHelper.Random(90.0f) - 45.0f))
+                    .Rotation(new Quaternion(0.0f, MathHelper.Random(360.0f), 0.0f))
+                    .Scaling(0.5f + MathHelper.Random(2.0f))
+                    .Component<StaticModel>(sm => sm
+                        .Model(new ResourceRef(TypeOf<Model>(), "Models/Mushroom.mdl"))
+                        .Material(new ResourceRefList(TypeOf<Material>(), "Models/Mushroom.material"))
+                    )
+                );
+                
+            }
+
+            var renderer = GetSubsystem<Renderer>();
+            var graphics = GetSubsystem<Graphics>();
+
+            renderer.CreateViewport(0)
+            .Scene(scene)            
             .Camera(camera)
-            .Debug(false)
-            .Scene(scene);
+            .Debug(false);
 
         }
         
@@ -75,14 +76,13 @@ namespace Unique.Editor
         int selected = 0;
         protected override void OnGUI()
         {
+            var graphics = GetSubsystem<Graphics>();
 
-            if(ImGUI.Begin("Demo", new nk_rect(50, 50, 230, 250), 
-                nk_panel_flags.NK_WINDOW_BORDER | nk_panel_flags.NK_WINDOW_MOVABLE | nk_panel_flags.NK_WINDOW_SCALABLE |
-                nk_panel_flags.NK_WINDOW_MINIMIZABLE | nk_panel_flags.NK_WINDOW_TITLE))
+            if (ImGUI.Begin("Demo", new nk_rect(0, 0, graphics.width, 35), 0))
             {
                 ImGUI.MenubarBegin();
-                ImGUI.LayoutRowStatic(20, 40, 2);
-                if(ImGUI.MenuBeginText("Sample", 4, nk_text_alignment.NK_TEXT_LEFT,  new nk_vec2(100, 100)))
+                ImGUI.LayoutRowStatic(20, 60, 2);
+                if(ImGUI.MenuBeginText("Demo", nk_text_alignment.NK_TEXT_LEFT,  new nk_vec2(100, 100)))
                 {
                     ImGUI.LayoutRowDynamic(25);
                     if (ImGUI.MenuItemText("Scene", nk_text_alignment.NK_TEXT_LEFT))
@@ -93,7 +93,7 @@ namespace Unique.Editor
                     ImGUI.MenuEnd();
                 }
 
-                if (ImGUI.MenuBeginText("Skin", 4, nk_text_alignment.NK_TEXT_LEFT, new nk_vec2(100, 160)))
+                if (ImGUI.MenuBeginText("Skin", nk_text_alignment.NK_TEXT_LEFT, new nk_vec2(100, 160)))
                 {
                     ImGUI.LayoutRowDynamic(25);
                     string[] names = typeof(Theme).GetEnumNames();
@@ -106,9 +106,9 @@ namespace Unique.Editor
                         }
                     }
           
-
                     ImGUI.MenuEnd();
                 }
+
                 ImGUI.MenubarEnd();
 
                 /*
@@ -122,7 +122,18 @@ namespace Unique.Editor
                 }*/
             }
 
-            ImGUI.End();            
+            ImGUI.End();
+
+
+            if (ImGUI.Begin("Debug", new nk_rect(graphics.width - 200, 40, 200, 100), nk_panel_flags.NK_WINDOW_MINIMIZABLE | nk_panel_flags.NK_WINDOW_TITLE))
+            {
+                ImGUI.LayoutRowDynamic(25);
+
+                ImGUI.Text(Unique.Engine.Engine.instance.timeStep.ToString(), nk_text_alignment.NK_TEXT_LEFT);
+
+            }
+            ImGUI.End();
+
         }
 
         protected override void UpdateFrame(float timeStep)
@@ -136,7 +147,7 @@ namespace Unique.Editor
         float pitch_;
         void UpdateCamera(float timeStep)
         {
-            var input = Subsystem<Input>();
+            var input = GetSubsystem<Input>();
             Vector3 offset = Vector3.Zero;
 
             // Movement speed as world units per second
