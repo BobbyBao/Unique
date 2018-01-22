@@ -113,7 +113,13 @@ namespace Unique
 	PipelineState* Material::GetPipeline(const String& passName, const String & defs)
 	{
 		auto shader = GetShader();
-		return shader ? shader->GetPipeline(passName, defs, shaderDefines_) : nullptr;
+		return shader ? shader->GetPipeline(passName, defs, passName == "base" ? shaderDefines_ : "") : nullptr;
+	}
+	
+	PipelineState* Material::GetPipeline(uint passIndex, const String & defs)
+	{
+		auto shader = GetShader();
+		return shader ? shader->GetPipeline(passIndex, defs, passIndex == ShaderUtil::basePassIndex ? shaderDefines_ : "") : nullptr;
 	}
 
 	void Material::Apply(PipelineState* pipeline)

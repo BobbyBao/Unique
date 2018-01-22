@@ -10,7 +10,7 @@ namespace UniqueEditor
         {
             base.Setup();
 
-           // deviceType = DeviceType.OpenGL;
+         //   deviceType = DeviceType.OpenGL;
         }
 
         protected override void Initialize()

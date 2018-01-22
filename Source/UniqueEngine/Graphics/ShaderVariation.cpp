@@ -15,8 +15,6 @@ namespace Unique
 		: owner_(shader), shaderPass_(shaderPass)
 	{
 		shaderStage_ = type;
-		//mask_ = defs;
-
 		defines_.Clear();
 
 		auto& graphics = GetSubsystem<Graphics>();
@@ -171,7 +169,7 @@ namespace Unique
 		auto& cache = GetSubsystem<ResourceCache>();
 		if (!cache.Exists(binaryShaderName))
 			return false;
-
+		/*
 		SPtr<File> file = cache.GetFile(binaryShaderName);
 		if (!file->IsOpen())
 		{
@@ -179,30 +177,32 @@ namespace Unique
 			return false;
 		}
 		
-		source_ = file->ReadAllText();
+		source_ = file->ReadAllText();*/
 
 		ShaderCreationAttribs Attrs;
 		Attrs.Desc.Name = shaderStage_.source_.CString();// owner_.GetName().CString();
 		Attrs.Macros = macros_;
-		//Attrs.FilePath = shaderStage_.source_;
+		Attrs.FilePath = shaderStage_.source_;
 		Attrs.EntryPoint = shaderStage_.entryPoint_;
 		Attrs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-		Attrs.Source = source_.CString();
+		//Attrs.Source = source_.CString();
 		Attrs.Desc.ShaderType = shaderStage_.shaderType_;
 		Attrs.Desc.TargetProfile = SHADER_PROFILE_DX_4_0;
 		Attrs.Desc.VariableDesc = shaderVariableDesc_.data();
 		Attrs.Desc.NumVariables = (uint)shaderVariableDesc_.size();
 		BasicShaderSourceStreamFactory BasicSSSFactory("CoreData\\Shaders;CoreData\\Shaders\\HLSL;");
 		Attrs.pShaderSourceStreamFactory = &BasicSSSFactory;
+
 		try
 		{
-		auto& graphics = GetSubsystem<Graphics>();
-		graphics.CreateShader(Attrs, *this);
+			auto& graphics = GetSubsystem<Graphics>();
+			graphics.CreateShader(Attrs, *this);
 		}
 		catch(...)
 		{
 			return false;
 		}
+
 		return deviceObject_ != nullptr;
 	}
 

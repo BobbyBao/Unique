@@ -49,9 +49,9 @@ void Quaternion::FromAngleAxis(float angle, const Vector3& axis)
 void Quaternion::FromEulerAngles(float x, float y, float z)
 {
     // Order of rotations: Z first, then X, then Y (mimics typical FPS camera with gimbal lock at top/bottom)
-//     x *= M_DEGTORAD_2;
-//     y *= M_DEGTORAD_2;
-//     z *= M_DEGTORAD_2;
+	x *= M_DEGTORAD_2;
+	y *= M_DEGTORAD_2;
+	z *= M_DEGTORAD_2;
     float sinX = sinf(x);
     float cosX = cosf(x);
     float sinY = sinf(y);

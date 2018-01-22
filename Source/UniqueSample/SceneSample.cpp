@@ -44,6 +44,7 @@ namespace Unique
 		camera_ = scene_->CreateChild("Camera")->CreateComponent<Camera>();
 
 		node_ = scene_->CreateChild("Model");
+		node_->SetRotation(Quaternion(0, 180, 0));
 
 		//StaticModel* model = node_->CreateComponent<StaticModel>();
 		AnimatedModel* model = node_->CreateComponent<AnimatedModel>();
@@ -125,7 +126,7 @@ namespace Unique
 			pitch_ = Clamp(pitch_, -90.0f, 90.0f);
 
 			// Construct new orientation for the camera scene node from yaw and pitch. Roll is fixed to zero
-			camera_->GetNode()->SetRotation(Quaternion(pitch_*M_DEGTORAD, yaw_*M_DEGTORAD, 0.0f));
+			camera_->GetNode()->SetRotation(Quaternion(pitch_, yaw_, 0.0f));
 		}
 
 		// Read WASD keys and move the camera scene node to the corresponding direction if they are pressed

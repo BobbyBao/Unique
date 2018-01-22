@@ -391,17 +391,17 @@ namespace Unique
 						//if (info.passIndex_ == basePassIndex_ && j < 32 && drawable->HasBasePass(j))
 						//	continue;
 
-						Pass* pass = shader->GetPass(info.passIndex_);
+						Pass* pass = srcBatch.material_->GetPass(info.passIndex_);
 						if (!pass)
 							continue;
 
 						Batch destBatch(srcBatch);
-						destBatch.pass_ = pass;
+						//destBatch.pass_ = pass;
 						destBatch.isBase_ = true;
 						//destBatch.lightMask_ = (unsigned char)GetLightMask(drawable);
 						//destBatch.lightQueue_ = 0;
 
-						AddBatchToQueue(*info.batchQueue_, destBatch, shader, info.allowInstancing_);
+						AddBatchToQueue(*info.batchQueue_, destBatch, info.passIndex_, info.allowInstancing_);
 					}
 				}
 
@@ -671,19 +671,19 @@ namespace Unique
 						continue;
 
 					Batch destBatch(srcBatch);
-					destBatch.pass_ = pass;
+					//destBatch.pass_ = pass;
 					destBatch.isBase_ = true;
 					//destBatch.lightMask_ = (unsigned char)GetLightMask(drawable);
 					//destBatch.lightQueue_ = 0;
 
-					AddBatchToQueue(*info.batchQueue_, destBatch, shader, info.allowInstancing_);
+					AddBatchToQueue(*info.batchQueue_, destBatch, info.passIndex_, info.allowInstancing_);
 				}
 			}
 		}
 
 	}
 	
-	void View::AddBatchToQueue(BatchQueue& queue, Batch& batch, Shader* shader, bool allowInstancing, bool allowShadows)
+	void View::AddBatchToQueue(BatchQueue& queue, Batch& batch, uint passIndex, bool allowInstancing, bool allowShadows)
 	{
 		if (!batch.material_)
 			batch.material_ = renderer_.GetDefaultMaterial();
@@ -703,7 +703,7 @@ namespace Unique
 				// In case the group remains below the instancing limit, do not enable instancing shaders yet
 				BatchGroup newGroup(batch);
 				newGroup.geometryType_ = minInstances_ <= 1 ? GEOM_INSTANCED : GEOM_STATIC;
-				renderer_.SetBatchShaders(newGroup, shader, allowShadows, queue);
+				renderer_.SetBatchShaders(newGroup, passIndex, allowShadows, queue);
 				newGroup.CalculateSortKey();
 				newGroup.AddTransforms(batch);
 
@@ -718,14 +718,14 @@ namespace Unique
 				if (oldSize < minInstances_ && (int)i->second.instances_.size() >= minInstances_)
 				{
 					i->second.geometryType_ = GEOM_INSTANCED;
-					renderer_.SetBatchShaders(i->second, shader, allowShadows, queue);
+					renderer_.SetBatchShaders(i->second, passIndex, allowShadows, queue);
 					i->second.CalculateSortKey();
 				}
 			}
 		}
 		else
 		{
-			renderer_.SetBatchShaders(batch, shader, allowShadows, queue);
+			renderer_.SetBatchShaders(batch, passIndex, allowShadows, queue);
 			batch.CalculateSortKey();
 
 			// If batch is static with multiple world transforms and cannot instance, we must push copies of the batch individually

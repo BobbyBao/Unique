@@ -205,7 +205,7 @@ namespace Unique
 
 		void GetBaseBatches();
 
-		void AddBatchToQueue(BatchQueue& queue, Batch& batch, Shader* tech, bool allowInstancing = true, bool allowShadows = true);
+		void AddBatchToQueue(BatchQueue& queue, Batch& batch, uint passIndex, bool allowInstancing = true, bool allowShadows = true);
 		
 		size_t GetMatrics(const Matrix3x4* transform, uint num);
 

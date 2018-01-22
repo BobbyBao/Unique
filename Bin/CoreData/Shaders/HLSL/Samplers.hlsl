@@ -72,7 +72,7 @@ float3 DecodeNormal(float4 normalInput)
 
 float ReconstructDepth(float hwDepth)
 {
-    return dot(float2(hwDepth, cDepthReconstruct.y / (hwDepth - cDepthReconstruct.x)), cDepthReconstruct.zw);
+    return dot(float2(hwDepth, DepthReconstruct.y / (hwDepth - DepthReconstruct.x)), DepthReconstruct.zw);
 }
 #endif
 

@@ -607,10 +607,10 @@ namespace UniqueEngine
         static extern int nk_group_begin(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string title, uint flag);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_group_scrolled_offset_begin(IntPtr ctx, ref uint x_offset, ref uint y_offset, [MarshalAs(UnmanagedType.LPStr)]string p1, uint p2);
+        static extern int nk_group_scrolled_offset_begin(IntPtr ctx, ref uint x_offset, ref uint y_offset, [MarshalAs(UnmanagedType.LPStr)]string title, uint flag);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_group_scrolled_begin(IntPtr ctx, ref nk_scroll scr, uint title, uint flag);
+        static extern int nk_group_scrolled_begin(IntPtr ctx, ref nk_scroll scr, [MarshalAs(UnmanagedType.LPStr)]string title, uint flag);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern void nk_group_scrolled_end(IntPtr ctx);

@@ -360,11 +360,11 @@ namespace Unique
 		graphics_.Close();
 	}
 
-	void Renderer::SetBatchShaders(Batch& batch, Shader* tech, bool allowShadows, const BatchQueue& queue)
+	void Renderer::SetBatchShaders(Batch& batch, uint passIndex, bool allowShadows, const BatchQueue& queue)
 	{
-		const String& geoDef = batch.geometryType_ ?
-			ShaderUtil::interDefs[batch.geometryType_ - 1] : "";
-		batch.pipelineState_ = batch.pass_->GetPipeline(tech, geoDef, "");
+		const String& geoDef = batch.geometryType_ ? ShaderUtil::interDefs[batch.geometryType_ - 1] : "";
+		batch.pipelineState_ = batch.material_->GetPipeline(passIndex, geoDef);
+		//batch.pipelineState_ = batch.pass_->GetPipeline(tech, geoDef, "");
 	}
 
 	void Renderer::CreateInstancingBuffer()

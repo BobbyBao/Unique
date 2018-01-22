@@ -23,7 +23,7 @@ PSInput VS(float3 pos : ATTRIB0, float3 norm : ATTRIB1, float4 color : ATTRIB2)
     return ps;
 }
 
-float4 PS(PSInput input) : SV_TARGET
+float4 PS(PSInput ps_in) : SV_TARGET
 {
-    return input.Color; 
+    return ps_in.Color; 
 }

@@ -1,4 +1,3 @@
-#define SKINNED
 #include "Uniforms.hlsl"
 #include "Samplers.hlsl"
 #include "Transform.hlsl"

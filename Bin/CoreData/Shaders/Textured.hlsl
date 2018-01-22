@@ -1,4 +1,3 @@
-//#define INSTANCED
 #include "Uniforms.hlsl"
 //#include "Samplers.hlsl"
 #include "Transform.hlsl"
@@ -25,16 +24,15 @@ void VS(
 
 float4 PS(float2 iTexCoord : TEXCOORD0) : SV_TARGET
 { 
-    float4 diffColor = float4(1,1,1,1);//cMatDiffColor;
+    float4 diffColor = float4(1,1,1,1);//MatDiffColor;
     
-    //#ifdef DIFFMAP
-        float4 diffInput = DiffMap.Sample(DiffMap_sampler, iTexCoord);
-        #ifdef ALPHAMASK
-            if (diffInput.a < 0.5)
-                discard;
-        #endif
-        return diffColor * diffInput;
-   // #endif
+    float4 diffInput = DiffMap.Sample(DiffMap_sampler, iTexCoord);
+    #ifdef ALPHAMASK
+        if (diffInput.a < 0.5)
+            discard;
+    #endif
+    return diffColor * diffInput;
+ 
     #ifdef ALPHAMAP
         float alphaInput = Sample2D(DiffMap, iTexCoord).a;
         return float4(diffColor.rgb, diffColor.a * alphaInput);

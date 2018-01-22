@@ -168,7 +168,7 @@ namespace Unique
 	{
 		if (material)
 		{
-			pass_ = material->GetPass(ShaderUtil::basePassIndex);
+			pipelineState_ = material->GetPipeline(ShaderUtil::basePassIndex, "");
 		}
 
 	}
@@ -720,7 +720,7 @@ namespace Unique
 
 	unsigned BatchGroupKey::ToHash() const
 	{
-		return (unsigned)((size_t)lightQueue_ / sizeof(LightBatchQueue) + (size_t)pass_ / sizeof(Pass) +
+		return (unsigned)((size_t)lightQueue_ / sizeof(LightBatchQueue) + (size_t)pipelineState_ / sizeof(PipelineState) +
 			(size_t)material_ / sizeof(Material) + (size_t)geometry_ / sizeof(Geometry)) + renderOrder_;
 	}
 

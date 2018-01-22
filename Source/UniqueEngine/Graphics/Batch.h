@@ -85,10 +85,12 @@ namespace Unique
 		unsigned numWorldTransforms_;
 		/// Per-instance data. If not null, must contain enough data to fill instancing buffer.
 		void* instancingData_;
+
+		PipelineState*  pipelineState_;
+	private:
 		/// Material pass.
 		Pass* pass_;
 
-		PipelineState*  pipelineState_;
 	};
 
 
@@ -174,7 +176,7 @@ namespace Unique
 		BatchGroupKey(const Batch& batch) :
 			//zone_(batch.zone_),
 			//lightQueue_(batch.lightQueue_),
-			pass_(batch.pass_),
+			pipelineState_(batch.pipelineState_),
 			material_(batch.material_),
 			geometry_(batch.geometry_),
 			renderOrder_(batch.renderOrder_)
@@ -185,8 +187,8 @@ namespace Unique
 		//Zone* zone_;
 		/// Light properties.
 		LightBatchQueue* lightQueue_ = nullptr;
-		/// Material pass.
-		Pass* pass_;
+		/// Pipeline State.
+		PipelineState* pipelineState_;
 		/// Material.
 		Material* material_;
 		/// Geometry.
@@ -197,14 +199,14 @@ namespace Unique
 		/// Test for equality with another batch group key.
 		bool operator ==(const BatchGroupKey& rhs) const
 		{
-			return /*zone_ == rhs.zone_ &&*/ lightQueue_ == rhs.lightQueue_ && pass_ == rhs.pass_ && material_ == rhs.material_ &&
+			return /*zone_ == rhs.zone_ &&*/ lightQueue_ == rhs.lightQueue_ && pipelineState_ == rhs.pipelineState_ && material_ == rhs.material_ &&
 				geometry_ == rhs.geometry_ && renderOrder_ == rhs.renderOrder_;
 		}
 
 		/// Test for inequality with another batch group key.
 		bool operator !=(const BatchGroupKey& rhs) const
 		{
-			return /*zone_ != rhs.zone_ ||*/ lightQueue_ != rhs.lightQueue_ || pass_ != rhs.pass_ || material_ != rhs.material_ ||
+			return /*zone_ != rhs.zone_ ||*/ lightQueue_ != rhs.lightQueue_ || pipelineState_ != rhs.pipelineState_ || material_ != rhs.material_ ||
 				geometry_ != rhs.geometry_ || renderOrder_ != rhs.renderOrder_;
 		}
 

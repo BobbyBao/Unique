@@ -274,7 +274,16 @@ namespace Unique
 
 		return pass->GetPipeline(this, interDefs, defs);
 	}
+			
+	PipelineState* Shader::GetPipeline(uint passIndex, const String& interDefs, const String& defs)
+	{
+		Pass* pass = GetPass(passIndex);
+		if (pass == nullptr)
+		{
+			return nullptr;
+		}
 
-
+		return pass->GetPipeline(this, interDefs, defs);
+	}
 
 }

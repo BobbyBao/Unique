@@ -73,7 +73,6 @@ namespace Unique
 		String source_;
 		/// Defines to use in compiling.
 		String defines_;
-		//uint64 mask_ = 0;
 		bool dirty_ = false;
 		Diligent::ShaderMacroHelper macros_;
 		Vector<Diligent::ShaderVariableDesc> shaderVariableDesc_;

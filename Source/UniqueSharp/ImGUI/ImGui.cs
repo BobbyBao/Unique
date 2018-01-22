@@ -78,36 +78,33 @@ namespace UniqueEngine
         public static float LayoutRatioFromPixel(float pixel_width) => nk_layout_ratio_from_pixel(ctx, pixel_width);
         public static void LayoutRowDynamic(float height, int cols = 1) => nk_layout_row_dynamic(ctx, height, cols);
         public static void LayoutRowStatic(float height, int itemWidth, int cols) => nk_layout_row_static(ctx, height, itemWidth, cols);
-#if false
-        public static void nk_layout_row_begin(IntPtr ctx, nk_layout_format fmt, float row_height, int cols);
-        public static void nk_layout_row_push(IntPtr ctx, float value);
-        public static void nk_layout_row_end(IntPtr ctx);
-        public static void nk_layout_row(IntPtr ctx, nk_layout_format fmt, float height, int cols, IntPtr ratio);
-        public static void nk_layout_row_template_begin(IntPtr ctx, float row_height);
-        public static void nk_layout_row_template_push_dynamic(IntPtr ctx);
-        public static void nk_layout_row_template_push_variable(IntPtr ctx, float min_width);
-        public static void nk_layout_row_template_push_static(IntPtr ctx, float width);
-        public static void nk_layout_row_template_end(IntPtr ctx);
-        public static void nk_layout_space_begin(IntPtr ctx, nk_layout_format fmt, float height, int widget_count);
-        public static void nk_layout_space_push(IntPtr ctx, nk_rect rect);
-        public static void nk_layout_space_end(IntPtr ctx);
-        public static nk_rect nk_layout_space_bounds(IntPtr ctx);
-        public static nk_vec2 nk_layout_space_to_screen(IntPtr ctx, nk_vec2 pos);
-        public static nk_vec2 nk_layout_space_to_local(IntPtr ctx, nk_vec2 pos);
-        public static nk_rect nk_layout_space_rect_to_screen(IntPtr ctx, nk_rect rect);
-        public static nk_rect nk_layout_space_rect_to_local(IntPtr ctx, nk_rect rect);
-#endif
+        public static void LayoutRowBegin(nk_layout_format fmt, float row_height, int cols) => nk_layout_row_begin(ctx, fmt, row_height, cols);
+        public static void LayoutRowPush(float value) => nk_layout_row_push(ctx, value);
+        public static void LayoutRowEnd() => nk_layout_row_end(ctx);
+        public static void LayoutRow(nk_layout_format fmt, float height, int cols, IntPtr ratio) => nk_layout_row(ctx, fmt, height, cols, ratio);
+        public static void LayoutRow_template_begin(float row_height) => nk_layout_row_template_begin(ctx, row_height);
+        public static void LayoutRowTemplate_push_dynamic() => nk_layout_row_template_push_dynamic(ctx);
+        public static void LayoutRow_template_push_variable(float min_width) => nk_layout_row_template_push_variable(ctx, min_width);
+        public static void LayoutRow_template_push_static(float width) => nk_layout_row_template_push_static(ctx, width);
+        public static void LayoutRow_template_end() => nk_layout_row_template_end(ctx);
+        public static void LayoutSpaceBegin(nk_layout_format fmt, float height, int widget_count) => nk_layout_space_begin(ctx, fmt, height, widget_count);
+        public static void LayoutSpacePush(nk_rect rect) => nk_layout_space_push(ctx, rect);
+        public static void LayoutSpaceEnd() => nk_layout_space_end(ctx);
+        public static nk_rect LayoutSpaceBounds() => nk_layout_space_bounds(ctx);
+        public static nk_vec2 LayoutSpaceToScreen(nk_vec2 pos) => nk_layout_space_to_screen(ctx, pos);
+        public static nk_vec2 LayoutSpaceToLocal(nk_vec2 pos) => nk_layout_space_to_local(ctx, pos);
+        public static nk_rect LayoutSpaceRectToScreen(nk_rect rect) => nk_layout_space_rect_to_screen(ctx, rect);
+        public static nk_rect LayoutSpaceRectToLocal(nk_rect rect) => nk_layout_space_rect_to_local(ctx, rect);
 
         public static int GroupBegin(string title, uint flag) => nk_group_begin(ctx, title, flag);
         public static int GroupScrolledOffsetBegin(ref uint x_offset, ref uint y_offset, string title, uint flag) => nk_group_scrolled_offset_begin(ctx, ref x_offset, ref y_offset, title, flag);
-        //public static int GroupScrolledBegin(ref uint x_offset, ref uint y_offset, string title, uint flag) => nk_group_scrolled_begin(ctx, ref nk_scroll scr, title, flag);
+        public static int GroupScrolledBegin(ref nk_scroll scr, string title, uint flag) => nk_group_scrolled_begin(ctx,  ref scr, title, flag);
         static void GroupScrolledEnd() => nk_group_scrolled_end(ctx);       
         static void GroupEnd() => nk_group_end(ctx);
         
         static int ListViewBegin(ref nk_list_view outlv, string id, uint flag, int row_height, int row_count)
             => nk_list_view_begin(ctx, Utilities.As(ref outlv), id, flag, row_height, row_count);        
         static void ListViewEnd(ref nk_list_view outlv) => nk_list_view_end(Utilities.As(ref outlv));
-
 
         public static void Text(string text, nk_text_alignment flag = nk_text_alignment.NK_TEXT_LEFT) => nk_text(ctx, text, text.Length, (uint)flag);
         public static void Text(string text, nk_text_alignment flag, nk_color c) => nk_text_colored(ctx, text, text.Length, (uint)flag, c);
@@ -133,19 +130,19 @@ namespace UniqueEngine
         public static bool MenuBeginImage(string label, nk_image image, nk_vec2 size) => nk_menu_begin_image(ctx, label, image, size) != 0;
         public static bool MenuBeginImageText(string label, int p, nk_text_alignment align, nk_image image, nk_vec2 size) => nk_menu_begin_image_text(ctx, label, p, (uint)align, image, size) != 0;
         /*
-        public static int nk_menu_begin_image_label(IntPtr ctx, string label, uint align, nk_image image, nk_vec2 size);
-        public static int nk_menu_begin_symbol(IntPtr ctx, string label, nk_symbol_type symbol, nk_vec2 size);
-        public static int nk_menu_begin_symbol_text(IntPtr ctx, string text, int p1, uint align, nk_symbol_type symbol, nk_vec2 size);
-        public static int nk_menu_begin_symbol_label(IntPtr ctx, string label, uint align, nk_symbol_type symbol, nk_vec2 size);
+        public static int nk_menu_begin_image_label( string label, uint align, nk_image image, nk_vec2 size);
+        public static int nk_menu_begin_symbol( string label, nk_symbol_type symbol, nk_vec2 size);
+        public static int nk_menu_begin_symbol_text( string text, int p1, uint align, nk_symbol_type symbol, nk_vec2 size);
+        public static int nk_menu_begin_symbol_label( string label, uint align, nk_symbol_type symbol, nk_vec2 size);
         */
 
 
         public static bool MenuItemText(string text, nk_text_alignment align) => nk_menu_item_text(ctx, text, text.Length, (uint)align) != 0;
         /*
-        public static int nk_menu_item_text(IntPtr ctx, string text, int p1, uint align);
-        public static int nk_menu_item_label(IntPtr ctx, string label, uint alignment);
-        public static int nk_menu_item_image_label(IntPtr ctx, nk_image image, string label, uint alignment);
-        public static int nk_menu_item_image_text(IntPtr ctx, nk_image image, string text, int len, uint alignment);
+        public static int nk_menu_item_text( string text, int p1, uint align);
+        public static int nk_menu_item_label( string label, uint alignment);
+        public static int nk_menu_item_image_label( nk_image image, string label, uint alignment);
+        public static int nk_menu_item_image_text( nk_image image, string text, int len, uint alignment);
         */
 
         public static bool MenuItemSymbolText(nk_symbol_type symol, string text, nk_text_alignment align) => nk_menu_item_symbol_text(ctx, symol, text, text.Length, (uint)align) != 0;

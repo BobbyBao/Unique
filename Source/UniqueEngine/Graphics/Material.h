@@ -23,6 +23,7 @@ namespace Unique
 		Pass* GetPass(const String & pass);
 		Pass* GetPass(unsigned passIndex);
 		PipelineState* GetPipeline(const String& passName, const String & defs);
+		PipelineState* GetPipeline(uint passIndex, const String & defs);
 
 		void Apply(PipelineState* pipeline);
 	protected:

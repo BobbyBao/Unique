@@ -45,11 +45,10 @@ enum GeometryType : byte
 	GEOM_DIRBILLBOARD = 4,
 	GEOM_TRAIL_FACE_CAMERA = 5,
 	GEOM_TRAIL_BONE = 6,
-	GEOM_STATIC_INSTANCED = 7,
-	GEOM_TRANSIENT = 8,
-	MAX_GEOMETRYTYPES = 9,
+	GEOM_TRANSIENT = 7,
+	MAX_GEOMETRYTYPES = 8,
 	// This is not a real geometry type for VS, but used to mark objects that do not desire to be instanced
-	GEOM_STATIC_NOINSTANCING = 9,
+	GEOM_STATIC_NOINSTANCING = 8,
 };
 
 /// Geometry update type.

@@ -35,23 +35,24 @@ namespace Unique
 	void FillSpongeBuffers(int level, int levelMax, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices,
 		const Vector3& center, bool aoEnabled, const bool aoEdges[12], const unsigned int faceColors[6]);
 
-	CubeSample::CubeSample()
-		: backgroundColor_(0.0f, 0.0f, 0.5f, 1.0f)
+	CubeSample::CubeSample(int argc, char* argv[])
+		: Application(argc, argv), backgroundColor_(0.0f, 0.0f, 0.5f, 1.0f), yaw_(0.0f)
 	{
 		spongeRotation_ = Quaternion::IDENTITY;
-
 		spongeLevel_ = 2;                      // number of recursions
 		spongeAO_ = true;                      // apply ambient occlusion
 		lightDir_.x_ = -0.5f;
 		lightDir_.y_ = -0.2f;
 		lightDir_.z_ = 1;
 		camDistance_ = 0.7f;                  // camera distance
-		animationSpeed_ = 0.02f;               // animation speed
+		animationSpeed_ = 2.0f;               // animation speed
 
 		Subscribe(&CubeSample::HandleStartup);
 		Subscribe(&CubeSample::HandleShutdown);
 		Subscribe(&CubeSample::HandleUpdate);
 		Subscribe(&CubeSample::HandleRenderUpdate);
+
+		SetDeviceType(DeviceType::OpenGL);
 	}
 
 	CubeSample::~CubeSample()

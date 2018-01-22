@@ -16,7 +16,7 @@ namespace Unique
 	class CubeSample : public Application
 	{
 	public:
-		CubeSample();
+		CubeSample(int argc = 0, char* argv[] = nullptr);
 		~CubeSample();
 
 	protected:
@@ -33,7 +33,7 @@ namespace Unique
 		Color backgroundColor_;	// background color
 		bool animate_ = true;              // enable animation
 		float animationSpeed_;      // animation speed
-		float yaw_ = 0.0f;
+		float yaw_;
 
 		SPtr<UniformBuffer> constBuffer_;
 		SPtr<Geometry> geometry_;

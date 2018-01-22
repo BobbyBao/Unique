@@ -128,7 +128,9 @@ namespace Unique
 		Pass* AddPass(const String& name);
 		Pass* GetPass(const String & pass);
 		Pass* GetPass(unsigned passIndex);
+
 		PipelineState* GetPipeline(const String& passName, const String& interDefs, const String & defs);
+		PipelineState * GetPipeline(uint passIndex, const String & interDefs, const String & defs);
 
 		inline const auto& GetUniforms() const { return shaderProperties_.uniforms_; }
 		inline const auto& GetTextureSlots() const { return shaderProperties_.textureSlots_; }

@@ -36,7 +36,7 @@ namespace Unique
 		uAttribute("Data", data_[0])
 	}
 
-	GraphicsBuffer::GraphicsBuffer(uint flags)
+	GraphicsBuffer::GraphicsBuffer(uint flags) : cpuAccessFlags_(0)
 	{
 		bindFlags_ = flags;
 	}

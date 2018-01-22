@@ -80,7 +80,8 @@ namespace Unique
 		"BILLBOARD",
 		"DIRBILLBOARD",
 		"TRAILFACECAM",
-		"TRAILBONE"
+		"TRAILBONE",
+		"",
 	};
 
 }

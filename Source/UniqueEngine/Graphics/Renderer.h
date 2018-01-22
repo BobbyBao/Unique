@@ -66,7 +66,7 @@ namespace Unique
 		void Render();
 		void End();
 		void Stop();
-		void SetBatchShaders(Batch& batch, Shader* tech, bool allowShadows, const BatchQueue& queue);
+		void SetBatchShaders(Batch& batch, uint passIndex, bool allowShadows, const BatchQueue& queue);
 		bool ResizeInstancingBuffer(unsigned numInstances);
 
 		ushort CacheScissor(int left, int top, int right, int bottom);
