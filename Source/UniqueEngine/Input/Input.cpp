@@ -1731,6 +1731,8 @@ void Input::SendInputFocusEvent()
 
 void Input::SetMouseButton(int button, bool newState)
 {
+	//UNIQUE_LOGINFO("SetMouseButton ", (int)newState);
+
     if (newState)
     {
         if (!(mouseButtonDown_ & button))

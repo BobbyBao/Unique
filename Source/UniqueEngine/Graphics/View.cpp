@@ -673,7 +673,6 @@ namespace Unique
 						continue;
 
 					Batch destBatch(srcBatch);
-					//destBatch.pass_ = pass;
 					destBatch.isBase_ = true;
 					//destBatch.lightMask_ = (unsigned char)GetLightMask(drawable);
 					//destBatch.lightQueue_ = 0;

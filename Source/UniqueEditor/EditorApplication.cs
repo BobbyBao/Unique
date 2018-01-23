@@ -160,6 +160,7 @@ namespace UniqueEditor
 
             if (input.GetMouseButtonDown(MouseButton.Right))
             {
+                //System.Console.WriteLine("mouse down");
                 // Use this frame's mouse motion to adjust camera node yaw and pitch. Clamp the pitch between -90 and 90 degrees
                 IntVector2 mouseMove = input.GetMouseMove();
                 yaw_ += MOUSE_SENSITIVITY * mouseMove.x * timeStep;

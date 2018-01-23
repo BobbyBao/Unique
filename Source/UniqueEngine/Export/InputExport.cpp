@@ -6,8 +6,13 @@ using namespace Unique;
 uExport(Input, bool, GetKeyDown, int, key)
 uExport(Input, bool, GetKeyPress, int, key)
 
-uExport(Input, bool, GetMouseButtonDown, int, button)
+//uExport(Input, bool, GetMouseButtonDown, int, button)
 uExport(Input, bool, GetMouseButtonPress, int, button)
+
+UNIQUE_C_API bool Input_GetMouseButtonDown(Input* self, int button)
+{
+	return self->GetMouseButtonDown(button);
+}
 
 // uExport(Input, IntVector2, GetMousePosition)
 // uExport(Input, IntVector2, GetMouseMove)
