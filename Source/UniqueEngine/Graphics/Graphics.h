@@ -86,8 +86,8 @@ namespace Unique
 		void CreatePipelineState(const Diligent::PipelineStateDesc &pipelineDesc, PipelineState* pipelineState);
 		void ReleaseDeviceObject(void* deviceObject);
 
-		void* Map(GraphicsBuffer* buffer, uint mapFlags = MAP_FLAG_DISCARD);
-		void Unmap(GraphicsBuffer* buffer, uint mapFlags = MAP_FLAG_DISCARD);
+		void* Map(GraphicsBuffer* buffer, MapFlags mapFlags = MapFlags::DISCARD);
+		void Unmap(GraphicsBuffer* buffer, MapFlags mapFlags = MapFlags::DISCARD);
 		
 		void BeginRender();
 		void EndRender();    

@@ -5,11 +5,11 @@
 namespace Unique
 {    
 
-	enum MapFlags : int
+	enum class MapFlags : int
     {
-        MAP_FLAG_DO_NOT_WAIT = 0x001,
-	    MAP_FLAG_DISCARD = 0x002,
-	    MAP_FLAG_DO_NOT_SYNCHRONIZE = 0x004
+        DO_NOT_WAIT = 0x001,
+	    DISCARD = 0x002,
+	    DO_NOT_SYNCHRONIZE = 0x004
     };
 
 	class UNIQUE_API GraphicsBuffer : public Object, public GPUObject
@@ -53,7 +53,7 @@ namespace Unique
 		void* Lock(uint lockStart = 0, uint lockCount = -1);
 		void Unlock();
 
-		void* Map(uint mapFlags = MAP_FLAG_DISCARD);
+		void* Map(MapFlags mapFlags = MapFlags::DISCARD);
 		void UnMap();
 
 		inline char* GetShadowData() { return data_[0].data(); }
@@ -68,7 +68,7 @@ namespace Unique
 		ByteArray data_[2];
 		uint lockStart_[2];
 		uint lockCount_[2];
-		uint mapFlags_;
+		MapFlags mapFlags_;
 
 		friend class Graphics;
 	};

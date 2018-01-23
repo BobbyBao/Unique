@@ -232,7 +232,7 @@ namespace Unique
 	}
 
 
-	void* GraphicsBuffer::Map(uint mapFlags)
+	void* GraphicsBuffer::Map(MapFlags mapFlags)
 	{
 		auto& graphics = GetSubsystem<Graphics>();
 		void* bufferData = graphics.Map(this, mapFlags);

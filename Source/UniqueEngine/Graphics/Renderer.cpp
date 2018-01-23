@@ -263,8 +263,6 @@ namespace Unique
 
 			// Process geometries / lights only once
 			const PODVector<Drawable*>& geometries = view->GetGeometries();
-			const PODVector<Light*>& lights = view->GetLights();
-
 			for (size_t i = 0; i < geometries.size(); ++i)
 			{
 				if (!processedGeometries.count(geometries[i]))
@@ -273,13 +271,40 @@ namespace Unique
 					processedGeometries.insert(geometries[i]);
 				}
 			}
-
-			for (size_t i = 0; i < lights.size(); ++i)
+				
 			{
-				if (!processedLights.count(lights[i]))
+				const PODVector<Light*>& lights = view->dirLights_;
+				for (size_t i = 0; i < lights.size(); ++i)
 				{
-					lights[i]->DrawDebugGeometry(debug, depthTest);
-					processedLights.insert(lights[i]);
+					if (!processedLights.count(lights[i]))
+					{
+						lights[i]->DrawDebugGeometry(debug, depthTest);
+						processedLights.insert(lights[i]);
+					}
+				}	
+			}
+
+			{
+				const PODVector<Light*>& lights = view->pointLights_;
+				for (size_t i = 0; i < lights.size(); ++i)
+				{
+					if (!processedLights.count(lights[i]))
+					{
+						lights[i]->DrawDebugGeometry(debug, depthTest);
+						processedLights.insert(lights[i]);
+					}
+				}
+			}
+	
+			{
+				const PODVector<Light*>& lights = view->spotLights_;
+				for (size_t i = 0; i < lights.size(); ++i)
+				{
+					if (!processedLights.count(lights[i]))
+					{
+						lights[i]->DrawDebugGeometry(debug, depthTest);
+						processedLights.insert(lights[i]);
+					}
 				}
 			}
 		}
@@ -364,7 +389,6 @@ namespace Unique
 	{
 		const String& geoDef = batch.geometryType_ ? ShaderUtil::interDefs[batch.geometryType_ - 1] : "";
 		batch.pipelineState_ = batch.material_->GetPipeline(passIndex, geoDef);
-		//batch.pipelineState_ = batch.pass_->GetPipeline(tech, geoDef, "");
 	}
 
 	void Renderer::CreateInstancingBuffer()

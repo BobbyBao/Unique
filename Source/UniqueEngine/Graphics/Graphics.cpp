@@ -213,18 +213,18 @@ namespace Unique
 		((IDeviceObject*)deviceObject)->Release();
 	}
 	
-	void* Graphics::Map(GraphicsBuffer* buffer, uint mapFlags)
+	void* Graphics::Map(GraphicsBuffer* buffer, MapFlags mapFlags)
 	{
 		IBuffer* pBuffer = *buffer;
 		void* bufferData = nullptr;
-		pBuffer->Map(deviceContext_, MAP_WRITE, mapFlags, bufferData);
+		pBuffer->Map(deviceContext_, MAP_WRITE, (uint)mapFlags, bufferData);
 		return bufferData;
 	}
 
-	void Graphics::Unmap(GraphicsBuffer* buffer, uint mapFlags)
+	void Graphics::Unmap(GraphicsBuffer* buffer, MapFlags mapFlags)
 	{
 		IBuffer* pBuffer = *buffer;
-		pBuffer->Unmap(deviceContext_, MAP_WRITE, mapFlags);
+		pBuffer->Unmap(deviceContext_, MAP_WRITE, (uint)mapFlags);
 	}
 	
 	void Graphics::BeginRender()

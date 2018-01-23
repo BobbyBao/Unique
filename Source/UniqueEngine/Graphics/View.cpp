@@ -109,7 +109,14 @@ namespace Unique
 					Light* light = static_cast<Light*>(drawable);
 					// Skip lights with zero brightness or black color
 					if (!light->GetEffectiveColor().Equals(Color::BLACK))
-						result.lights_.push_back(light);
+					{
+						if(light->GetLightType() == LIGHT_DIRECTIONAL)
+							result.dirLights_.push_back(light);
+						if(light->GetLightType() == LIGHT_POINT)
+							result.pointLights_.push_back(light);
+						if(light->GetLightType() == LIGHT_SPOT)
+							result.spotLights_.push_back(light);
+					}
 				}
 			}
 		}
@@ -316,7 +323,7 @@ namespace Unique
 
 	//	renderTargets_.Clear();
 		geometries_.clear();
-		lights_.clear();
+		dirLights_.clear();
 		
 		auto& batchQueues = MainContext(batchQueues_);
 
@@ -335,16 +342,7 @@ namespace Unique
 		GetDrawables();
 
 		GetBatches();
-// 
-// 		if (lastUpdateFrame != 0)
-// 		{
-// 			if (lastUpdateFrame == Graphics::currentFrame_)
-// 			{
-// 				assert(false);
-// 			}
-// 		}
-// 		lastUpdateFrame = Graphics::currentFrame_;
-// 		
+
  		//LOG_INFO_MESSAGE("Update : ", Graphics::currentContext_);
 
 	}
@@ -396,11 +394,7 @@ namespace Unique
 							continue;
 
 						Batch destBatch(srcBatch);
-						//destBatch.pass_ = pass;
 						destBatch.isBase_ = true;
-						//destBatch.lightMask_ = (unsigned char)GetLightMask(drawable);
-						//destBatch.lightQueue_ = 0;
-
 						AddBatchToQueue(*info.batchQueue_, destBatch, info.passIndex_, info.allowInstancing_);
 					}
 				}
@@ -410,7 +404,6 @@ namespace Unique
 
 	}
 
-	int lastRenderFrame = 0;
 	void View::Render()
 	{		
 		auto& passes = RenderContext(scenePasses_);
@@ -419,17 +412,7 @@ namespace Unique
 			auto& scenePassInfo = passes[i];
 			scenePassInfo.batchQueue_->Draw(this, camera_);
 		}
-
-		if (lastRenderFrame != 0)
-		{
-			if (lastRenderFrame == Graphics::currentFrame_)
-			{
-				assert(false);
-			}
-		}
-
-		lastRenderFrame = Graphics::currentFrame_;
-
+		
 		//LOG_INFO_MESSAGE("Render : ", Graphics::GetRenderContext());
 	}
 
@@ -550,9 +533,10 @@ namespace Unique
 			for (unsigned i = 0; i < sceneResults_.size(); ++i)
 			{
 				PerThreadSceneResult& result = sceneResults_[i];
-
 				result.geometries_.clear();
-				result.lights_.clear();
+				result.dirLights_.clear();
+				result.pointLights_.clear();
+				result.spotLights_.clear();
 				result.minZ_ = M_INFINITY;
 				result.maxZ_ = 0.0f;
 			}
@@ -585,7 +569,9 @@ namespace Unique
 
 		// Combine lights, geometries & scene Z range from the threads
 		geometries_.clear();
-		lights_.clear();
+		dirLights_.clear();
+		pointLights_.clear();
+		spotLights_.clear();
 		minZ_ = M_INFINITY;
 		maxZ_ = 0.0f;
 
@@ -596,7 +582,15 @@ namespace Unique
 				PerThreadSceneResult& result = sceneResults_[i];
 				
 				geometries_.insert(geometries_.end(), result.geometries_.begin(), result.geometries_.end());
-				lights_.insert(lights_.end(), result.lights_.begin(), result.lights_.end());
+				
+				if(!result.dirLights_.empty())
+					dirLights_.insert(dirLights_.end(), result.dirLights_.begin(), result.dirLights_.end());
+				
+				if(!result.pointLights_.empty())
+					pointLights_.insert(pointLights_.end(), result.pointLights_.begin(), result.pointLights_.end());
+				
+				if(!result.spotLights_.empty())
+					spotLights_.insert(spotLights_.end(), result.spotLights_.begin(), result.spotLights_.end());
 
 				minZ_ = Min(minZ_, result.minZ_);
 				maxZ_ = Max(maxZ_, result.maxZ_);
@@ -609,7 +603,15 @@ namespace Unique
 			minZ_ = result.minZ_;
 			maxZ_ = result.maxZ_;
 			Swap(geometries_, result.geometries_);
-			Swap(lights_, result.lights_);
+			
+			if(!result.dirLights_.empty())
+				Swap(dirLights_, result.dirLights_);
+
+			if(!result.pointLights_.empty())
+				Swap(pointLights_, result.pointLights_);
+
+			if(!result.spotLights_.empty())
+				Swap(spotLights_, result.spotLights_);
 		}
 
 		if (minZ_ == M_INFINITY)
@@ -771,7 +773,7 @@ namespace Unique
 	{
 		auto& batchMatrics = RenderContext(batchMatrics_);
 		const Matrix3x4* mat  = &batchMatrics[offset];
-		void* data = objectVS_->Map(Diligent::MAP_FLAG_DISCARD);
+		void* data = objectVS_->Map(MapFlags::DISCARD);
 		std::memcpy(data, mat, sizeof(Matrix3x4));
 		objectVS_->UnMap();
 	}
@@ -780,7 +782,7 @@ namespace Unique
 	{
 		auto& batchMatrics = RenderContext(batchMatrics_);
 		const Matrix3x4* mat = &batchMatrics[offset];
-		void* data = skinnedVS_->Map(Diligent::MAP_FLAG_DISCARD);
+		void* data = skinnedVS_->Map(MapFlags::DISCARD);
 		std::memcpy(data, mat, sizeof(Matrix3x4) * count);
 		skinnedVS_->UnMap();
 	}

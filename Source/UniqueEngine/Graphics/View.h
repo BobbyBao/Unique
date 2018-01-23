@@ -128,7 +128,11 @@ namespace Unique
 		/// Geometry objects.
 		PODVector<Drawable*> geometries_;
 		/// Lights.
-		PODVector<Light*> lights_;
+		PODVector<Light*> dirLights_;
+		/// Lights.
+		PODVector<Light*> pointLights_;
+		/// Lights.
+		PODVector<Light*> spotLights_;
 		/// Scene minimum Z value.
 		float minZ_;
 		/// Scene maximum Z value.
@@ -186,8 +190,12 @@ namespace Unique
 		/// Return occluder objects.
 		const PODVector<Drawable*>& GetOccluders() const { return occluders_; }
 
-		/// Return lights.
-		const PODVector<Light*>& GetLights() const { return lights_; }
+		/// Lights.
+		PODVector<Light*> dirLights_;
+		/// Lights.
+		PODVector<Light*> pointLights_;
+		/// Lights.
+		PODVector<Light*> spotLights_;
 
 		/// Return light batch queues.
 //		const Vector<LightBatchQueue>& GetLightQueues() const { return lightQueues_; }
@@ -282,8 +290,7 @@ namespace Unique
 		PODVector<Drawable*> threadedGeometries_;
 		/// Occluder objects.
 		PODVector<Drawable*> occluders_;
-		/// Lights.
-		PODVector<Light*> lights_;
+
 		/// Number of active occluders.
 		unsigned activeOccluders_;
 		/// Info for scene render passes defined by the renderpath.
@@ -293,9 +300,7 @@ namespace Unique
 		/// Batch queues by pass index.
 		HashMap<byte, BatchQueue> batchQueues_[2];
 		
-		
 		SPtr<UniformBuffer> frameUniform_;
-
 		SPtr<UniformBuffer> cameraVS_;
 		SPtr<UniformBuffer> objectVS_;
 		SPtr<UniformBuffer> skinnedVS_;
