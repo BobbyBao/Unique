@@ -13,7 +13,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <OutputPath>..\..\bin\Release\netstandard2.0\</OutputPath>
+    <OutputPath>..\..\bin</OutputPath>
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 
