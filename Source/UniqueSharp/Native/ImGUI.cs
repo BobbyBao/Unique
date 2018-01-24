@@ -29,9 +29,14 @@ namespace UniqueEngine
         NK_WINDOW_SCALE_LEFT = (1 << 9), /* Puts window scaler in the left-ottom corner instead right-bottom*/
         NK_WINDOW_NO_INPUT = (1 << 10) /* Prevents window of scaling, moving or getting focus */
     }
-    
+
+    [StructLayout(LayoutKind.Sequential)]
     public struct nk_color { public byte r, g, b, a; }
+
+    [StructLayout(LayoutKind.Sequential)]
     public struct nk_colorf { public float r, g, b, a; }
+
+    [StructLayout(LayoutKind.Sequential)]
     public struct nk_vec2
     {
         public nk_vec2(float x, float y)
@@ -41,7 +46,11 @@ namespace UniqueEngine
         }
         public float x, y;
     }
+
+    [StructLayout(LayoutKind.Sequential)]
     public struct nk_vec2i { public short x, y; }
+
+    [StructLayout(LayoutKind.Sequential)]
     public struct nk_rect
     {
         public float x, y, w, h;
@@ -54,11 +63,14 @@ namespace UniqueEngine
         }
     }
 
-    public struct nk_recti { public short x, y, w, h; }       
+    [StructLayout(LayoutKind.Sequential)]
+    public struct nk_recti { public short x, y, w, h; }
 
     //typedef char nk_glyph[NK_UTF_SIZE];
     // typedef union {void *ptr; int id; }
     // nk_handle;
+
+    [StructLayout(LayoutKind.Sequential)]
     public unsafe struct nk_image
     {
         public IntPtr handle;
@@ -66,12 +78,14 @@ namespace UniqueEngine
         public fixed ushort region[4];
     };
 
+    [StructLayout(LayoutKind.Sequential)]
     public struct nk_cursor
     {
         public nk_image img;
         public nk_vec2 size, offset;
     };
 
+    [StructLayout(LayoutKind.Sequential)]
     public struct nk_scroll { public uint x, y; };
 
     public enum nk_heading { NK_UP, NK_RIGHT, NK_DOWN, NK_LEFT };

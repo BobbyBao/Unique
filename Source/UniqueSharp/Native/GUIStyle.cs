@@ -20,18 +20,21 @@ namespace UniqueEngine
         public nk_color color;        
     }
 
+    [StructLayout(LayoutKind.Sequential)]
     public struct nk_style_item
     {
         public nk_style_item_type type;
         public nk_style_item_data data;
     }
 
+    [StructLayout(LayoutKind.Sequential)]
     public struct nk_style_text
     {
         public nk_color color;
         public nk_vec2 padding;
     }
 
+    [StructLayout(LayoutKind.Sequential)]
     public struct nk_style_button
     {
         /* background */
@@ -62,6 +65,7 @@ namespace UniqueEngine
         //void (* draw_end) (struct nk_command_buffer*, IntPtr userdata);
     };
 
+    [StructLayout(LayoutKind.Sequential)]
     public struct nk_style_toggle
     {
         /* background */
@@ -95,6 +99,7 @@ namespace UniqueEngine
         //void (* draw_end) (struct nk_command_buffer*, nk_handle);
     }
 
+    [StructLayout(LayoutKind.Sequential)]
     public struct nk_style_selectable
     {
         /* background (inactive) */
@@ -133,6 +138,7 @@ namespace UniqueEngine
         //void (* draw_end) (struct nk_command_buffer*, nk_handle);
     }
 
+    [StructLayout(LayoutKind.Sequential)]
     public struct nk_style_slider
     {
         /* background */
@@ -175,6 +181,7 @@ namespace UniqueEngine
         // void (* draw_end) (struct nk_command_buffer*, nk_handle);
     }
 
+    [StructLayout(LayoutKind.Sequential)]
     public struct nk_style_progress
     {
         /* background */
@@ -204,6 +211,7 @@ namespace UniqueEngine
         //void (* draw_end) (struct nk_command_buffer*, nk_handle);
     }
 
+    [StructLayout(LayoutKind.Sequential)]
     public struct nk_style_scrollbar
     {
         /* background */
@@ -240,6 +248,7 @@ namespace UniqueEngine
         //void (* draw_end) (struct nk_command_buffer*, nk_handle);
     }
 
+    [StructLayout(LayoutKind.Sequential)]
     public struct nk_style_edit
     {
         /* background */
@@ -275,6 +284,7 @@ namespace UniqueEngine
         public float row_padding;
     }
 
+    [StructLayout(LayoutKind.Sequential)]
     public struct nk_style_property
     {
         /* background */
@@ -309,6 +319,7 @@ namespace UniqueEngine
         // void (* draw_end) (struct nk_command_buffer*, nk_handle);
     }
 
+    [StructLayout(LayoutKind.Sequential)]
     public struct nk_style_chart
     {
         /* colors */
@@ -323,6 +334,7 @@ namespace UniqueEngine
         public nk_vec2 padding;
     }
 
+    [StructLayout(LayoutKind.Sequential)]
     public struct nk_style_combo
     {
         /* background */
@@ -355,6 +367,7 @@ namespace UniqueEngine
         public nk_vec2 spacing;
     }
 
+    [StructLayout(LayoutKind.Sequential)]
     public struct nk_style_tab
     {
         /* background */
@@ -384,6 +397,7 @@ namespace UniqueEngine
         NK_HEADER_RIGHT
     }
 
+    [StructLayout(LayoutKind.Sequential)]
     public struct nk_style_window_header
     {
         /* background */
@@ -410,6 +424,7 @@ namespace UniqueEngine
         public nk_vec2 spacing;
     }
 
+    [StructLayout(LayoutKind.Sequential)]
     public struct nk_style_window
     {
         public nk_style_window_header header;
@@ -448,6 +463,7 @@ namespace UniqueEngine
         public nk_vec2 tooltip_padding;
     }
 
+    [StructLayout(LayoutKind.Sequential)]
     public unsafe struct nk_style
     {
         //nk_user_font *font;

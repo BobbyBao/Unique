@@ -10,16 +10,16 @@ namespace UniqueEngine
     public partial class Input
     {
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern bool Input_GetKeyDown(IntPtr self, int key);
+        static extern Bool Input_GetKeyDown(IntPtr self, int key);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern bool Input_GetKeyPress(IntPtr self, int key);
+        static extern Bool Input_GetKeyPress(IntPtr self, int key);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern bool Input_GetMouseButtonDown(IntPtr self, int button);
+        static extern Bool Input_GetMouseButtonDown(IntPtr self, int button);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern bool Input_GetMouseButtonPress(IntPtr self, int button);
+        static extern Bool Input_GetMouseButtonPress(IntPtr self, int button);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern IntVector2 Input_GetMousePosition(IntPtr self);
