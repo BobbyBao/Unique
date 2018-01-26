@@ -6,6 +6,12 @@ namespace UniqueEditor
     {
         Scene scene;
         Camera camera;
+
+        /// Camera yaw angle.
+        float yaw_;
+        /// Camera pitch angle.
+        float pitch_;
+
         protected override void Setup()
         {
             base.Setup();
@@ -110,15 +116,6 @@ namespace UniqueEditor
 
                 ImGUI.MenubarEnd();
 
-                /*
-                ImGUI.LayoutRowDynamic(35);
-                
-                int sel =  ImGUI.Combo(typeof(Theme).GetEnumNames(), selected, 20, new nk_vec2(100, 200));
-                if (sel != selected)
-                {
-                    selected = sel;
-                    ImGUI.SetStyle((Theme)selected);
-                }*/
             }
 
             ImGUI.End();
@@ -144,10 +141,6 @@ namespace UniqueEditor
             UpdateCamera(timeStep);
         }
         
-        /// Camera yaw angle.
-        float yaw_;
-        /// Camera pitch angle.
-        float pitch_;
         void UpdateCamera(float timeStep)
         {
             var input = GetSubsystem<Input>();

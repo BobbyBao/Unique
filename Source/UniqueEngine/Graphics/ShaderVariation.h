@@ -13,8 +13,6 @@ namespace Unique
 	using ShaderType = Diligent::SHADER_TYPE;
 	using ShaderProfile = Diligent::SHADER_PROFILE;
 
-	using IShaderVariable = Diligent::IShaderVariable;
-
 	class Shader;
 	class Pass;
 
@@ -52,7 +50,6 @@ namespace Unique
 		ShaderProfile	shaderProfile_ = Diligent::SHADER_PROFILE_DEFAULT;
 		String			defines_;
 		String			source_;
-		//uint			mask_ = 0;
 	};
 
 	class ShaderVariation : public RefCounted, public GPUObject
@@ -76,6 +73,8 @@ namespace Unique
 		bool dirty_ = false;
 		Diligent::ShaderMacroHelper macros_;
 		Vector<Diligent::ShaderVariableDesc> shaderVariableDesc_;
+
+		friend class Graphics;
 	};
 
 }

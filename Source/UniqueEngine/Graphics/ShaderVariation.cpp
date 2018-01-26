@@ -2,9 +2,8 @@
 #include "ShaderVariation.h"
 #include "IO/FileSystem.h"
 #include "Resource/ResourceCache.h"
-#include "Shader.h"
+
 #include "Graphics.h"
-#include <BasicShaderSourceStreamFactory.h>
 
 using namespace Diligent;
 
@@ -73,14 +72,14 @@ namespace Unique
 				else
 				{
 					defines_.Append(def);
-					macros_.AddShaderMacro(def.CString(), "1");
+					macros_.AddShaderMacro(def.CString(), "");
 				}
 			}
 		}
 
 		macros_.Finalize();
 
-		for (const auto& desc : shader.GetProperties().textureSlots_)
+		for (const auto& desc : shaderPass.GetProperties().textureSlots_)
 		{
 			shaderVariableDesc_.push_back(
 				ShaderVariableDesc(desc.name_.c_str(), SHADER_VARIABLE_TYPE_DYNAMIC));
@@ -169,39 +168,8 @@ namespace Unique
 		auto& cache = GetSubsystem<ResourceCache>();
 		if (!cache.Exists(binaryShaderName))
 			return false;
-		/*
-		SPtr<File> file = cache.GetFile(binaryShaderName);
-		if (!file->IsOpen())
-		{
-			UNIQUE_LOGERROR(binaryShaderName + " is not a valid shader bytecode file");
-			return false;
-		}
-		
-		source_ = file->ReadAllText();*/
 
-		ShaderCreationAttribs Attrs;
-		Attrs.Desc.Name = shaderStage_.source_.CString();// owner_.GetName().CString();
-		Attrs.Macros = macros_;
-		Attrs.FilePath = shaderStage_.source_;
-		Attrs.EntryPoint = shaderStage_.entryPoint_;
-		Attrs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-		//Attrs.Source = source_.CString();
-		Attrs.Desc.ShaderType = shaderStage_.shaderType_;
-		Attrs.Desc.TargetProfile = SHADER_PROFILE_DX_4_0;
-		Attrs.Desc.VariableDesc = shaderVariableDesc_.data();
-		Attrs.Desc.NumVariables = (uint)shaderVariableDesc_.size();
-		BasicShaderSourceStreamFactory BasicSSSFactory("CoreData\\Shaders;CoreData\\Shaders\\HLSL;");
-		Attrs.pShaderSourceStreamFactory = &BasicSSSFactory;
-
-		try
-		{
-			auto& graphics = GetSubsystem<Graphics>();
-			graphics.CreateShader(Attrs, *this);
-		}
-		catch(...)
-		{
-			return false;
-		}
+		GetSubsystem<Graphics>().CreateShader(*this);
 
 		return deviceObject_ != nullptr;
 	}

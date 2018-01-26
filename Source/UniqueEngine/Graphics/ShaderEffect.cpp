@@ -57,6 +57,7 @@ namespace Unique
 	{
 		uFactory("Graphics");
 		uAttribute("Name", name_);
+		uAttribute("Properties", shaderProperties_)
 		uAttribute("DepthState", depthState_);
 		uAttribute("RasterizerState", rasterizerState_);
 		uAttribute("BlendState", blendState_);
@@ -73,7 +74,6 @@ namespace Unique
 	{
 		uFactory("Graphics")
 		uAttribute("Name", shaderName_)
-		uAttribute("Properties", shaderProperties_)
 		uAttribute("Pass", passes_)	
 	}
 
@@ -158,7 +158,6 @@ namespace Unique
 			{
 				std::sort(allDefs_.begin(), allDefs_.end());
 				allMask_ = (unsigned)(1 << (allDefs_.size() + 1)) - 1;
-			//	computeShader.mask_ = allMask_;
 			}
 		}
 		else
@@ -181,19 +180,6 @@ namespace Unique
 			{
 				std::sort(allDefs_.begin(), allDefs_.end());
 				allMask_ = (ShaderUtil::InterMask())|((1 << (allDefs_.size() + 1)) - 1);
-
-// 				for (uint i = 0; i < allDefs_.size(); i++)
-// 				{
-// 					if (Find(vsDefs, allDefs_[i]) != vsDefs.end())
-// 					{
-// 						vertexShader.mask_ |= (unsigned)(1 << i);
-// 					}
-// 
-// 					if (Find(psDefs, allDefs_[i]) != psDefs.end())
-// 					{
-// 						pixelShader.mask_ |= (unsigned)(1 << i);
-// 					}
-// 				}
 			}
 
 		}

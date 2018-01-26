@@ -80,7 +80,8 @@ namespace Unique
 
 		//*******Render thread*******
 		void CreateBuffer(GraphicsBuffer& buffer, const ByteArray& data);
-		void CreateShader(const Diligent::ShaderCreationAttribs &creationAttribs, Diligent::IShader** shader);
+		void CreateShader(ShaderVariation& shader);
+
 		void CreateTexture(const Diligent::TextureDesc& texDesc, const Diligent::TextureData &data,	Texture& texture);
 		void CreateSampler(const Diligent::SamplerDesc& samDesc, Diligent::ISampler **ppSampler);
 		void CreatePipelineState(const Diligent::PipelineStateDesc &pipelineDesc, PipelineState* pipelineState);

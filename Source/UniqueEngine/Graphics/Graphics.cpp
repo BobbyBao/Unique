@@ -10,6 +10,8 @@
 #include <GraphicsTypes.h>
 #include <DeviceContext.h>
 #include <Buffer.h>
+#include <BasicShaderSourceStreamFactory.h>
+#include <Shader.h>
 
 using namespace Diligent;
 
@@ -188,9 +190,110 @@ namespace Unique
 		renderDevice_->CreateBuffer(buffDesc, buffData, buffer);
 	}
 
-	void Graphics::CreateShader(const ShaderCreationAttribs &creationAttribs, Diligent::IShader** shader)
+	void Graphics::CreateShader(ShaderVariation& shader)
 	{
-		renderDevice_->CreateShader(creationAttribs, shader);
+		ShaderCreationAttribs Attrs;
+		Attrs.Desc.Name = shader.shaderStage_.source_.CString();// owner_.GetName().CString();
+		Attrs.Macros = shader.macros_;
+		Attrs.FilePath = shader.shaderStage_.source_;
+		Attrs.EntryPoint = shader.shaderStage_.entryPoint_;
+		Attrs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+		//Attrs.Source = source_.CString();
+		Attrs.Desc.ShaderType = shader.shaderStage_.shaderType_;
+		Attrs.Desc.TargetProfile = SHADER_PROFILE_DX_4_0;
+		Attrs.Desc.VariableDesc = shader.shaderVariableDesc_.data();
+		Attrs.Desc.NumVariables = (uint)shader.shaderVariableDesc_.size();
+
+		class ShaderSourceStream : public Diligent::ObjectBase<IFileStream>
+		{
+		public:
+			ShaderSourceStream(IReferenceCounters *pRefCounters, const char* Name)
+				: Diligent::ObjectBase<IFileStream>(pRefCounters)
+			{
+				file_ = GetSubsystem<ResourceCache>().GetFile(Name);
+			}
+			
+			virtual void QueryInterface( const INTERFACE_ID &IID, IObject **ppInterface )override
+			{
+				*ppInterface = this;
+				this->AddRef();
+			}
+
+			/// Reads data from the stream
+			virtual bool Read( void *Data, size_t BufferSize )
+			{
+				return file_->Read(Data, BufferSize) == BufferSize;
+			}
+
+			virtual void Read( IDataBlob *pData )
+			{    
+				auto FileSize = GetSize();
+				pData->Resize(FileSize);
+				Read(pData->GetDataPtr(), pData->GetSize());
+			}
+
+			/// Writes data to the stream
+			virtual bool Write( const void *Data, size_t Size )
+			{
+				return file_->Write(Data, Size) == Size;
+			}
+
+			virtual size_t GetSize()
+			{
+				return file_->GetSize();
+			}
+
+			virtual bool IsValid()
+			{
+				return file_->IsOpen();
+			}
+		private:
+			SPtr<File> file_;
+		};
+
+		class ShaderSourceStreamFactory : public IShaderSourceInputStreamFactory
+		{
+		public:
+			ShaderSourceStreamFactory()
+			{
+				GetSubsystem<ResourceCache>().AddResourceDir("CoreData\\Shaders");
+				GetSubsystem<ResourceCache>().AddResourceDir("CoreData\\Shaders\\HLSL");
+			}
+
+			~ShaderSourceStreamFactory()
+			{
+			}
+
+			virtual void CreateInputStream( const Char *Name, IFileStream **ppStream )override
+			{
+				Diligent::RefCntAutoPtr<ShaderSourceStream> pBasicFileStream;
+				pBasicFileStream = MakeNewRCObj<ShaderSourceStream>()(Name);
+				if( pBasicFileStream->IsValid() )
+				{
+					pBasicFileStream->QueryInterface( IID_FileStream, reinterpret_cast<IObject**>(ppStream) );
+				}
+				else
+				{
+					pBasicFileStream.Release();
+					*ppStream = nullptr;
+				}
+			}
+
+		private:
+		};
+
+		//BasicShaderSourceStreamFactory BasicSSSFactory("CoreData\\Shaders;CoreData\\Shaders\\HLSL;");
+		ShaderSourceStreamFactory BasicSSSFactory;
+		Attrs.pShaderSourceStreamFactory = &BasicSSSFactory;
+
+		try
+		{
+			renderDevice_->CreateShader(Attrs, shader);
+		}
+		catch(...)
+		{
+		}
+
 	}
 	
 	void Graphics::CreateTexture(const TextureDesc& texDesc, const TextureData &data, Texture& texture)
