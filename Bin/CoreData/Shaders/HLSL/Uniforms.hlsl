@@ -29,18 +29,6 @@ cbuffer ZoneVS
     float4x3 Zone;
 }
 
-cbuffer LightVS
-{
-    float4 LightPos;
-    float3 LightDir;
-    float4 NormalOffsetScale;
-#ifdef NUMVERTEXLIGHTS
-    float4 VertexLights[4 * 3];
-#else
-    float4x4 LightMatrices[4];
-#endif
-}
-
 #ifndef CUSTOM_MATERIAL_CBUFFER
 cbuffer MaterialVS
 {

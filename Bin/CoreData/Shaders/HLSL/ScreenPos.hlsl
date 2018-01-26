@@ -1,16 +1,16 @@
 #ifdef COMPILEVS
 float3x3 GetCameraRot()
 {
-    return float3x3(cViewInv[0][0], cViewInv[0][1], cViewInv[0][2],
-        cViewInv[1][0], cViewInv[1][1], cViewInv[1][2],
-        cViewInv[2][0], cViewInv[2][1], cViewInv[2][2]);
+    return float3x3(ViewInv[0][0], ViewInv[0][1], ViewInv[0][2],
+        ViewInv[1][0], ViewInv[1][1], ViewInv[1][2],
+        ViewInv[2][0], ViewInv[2][1], ViewInv[2][2]);
 }
 
 float4 GetScreenPos(float4 clipPos)
 {
     return float4(
-        clipPos.x * cGBufferOffsets.z + cGBufferOffsets.x * clipPos.w,
-        -clipPos.y * cGBufferOffsets.w + cGBufferOffsets.y * clipPos.w,
+        clipPos.x * GBufferOffsets.z + GBufferOffsets.x * clipPos.w,
+        -clipPos.y * GBufferOffsets.w + GBufferOffsets.y * clipPos.w,
         0.0,
         clipPos.w);
 }
@@ -18,8 +18,8 @@ float4 GetScreenPos(float4 clipPos)
 float2 GetScreenPosPreDiv(float4 clipPos)
 {
     return float2(
-        clipPos.x / clipPos.w * cGBufferOffsets.z + cGBufferOffsets.x,
-        -clipPos.y / clipPos.w * cGBufferOffsets.w + cGBufferOffsets.y);
+        clipPos.x / clipPos.w * GBufferOffsets.z + GBufferOffsets.x,
+        -clipPos.y / clipPos.w * GBufferOffsets.w + GBufferOffsets.y);
 }
 
 float2 GetQuadTexCoord(float4 clipPos)
@@ -39,9 +39,9 @@ float2 GetQuadTexCoordNoFlip(float3 worldPos)
 float3 GetFarRay(float4 clipPos)
 {
     float3 viewRay = float3(
-        clipPos.x / clipPos.w * cFrustumSize.x,
-        clipPos.y / clipPos.w * cFrustumSize.y,
-        cFrustumSize.z);
+        clipPos.x / clipPos.w * FrustumSize.x,
+        clipPos.y / clipPos.w * FrustumSize.y,
+        FrustumSize.z);
 
     return mul(viewRay, GetCameraRot());
 }
@@ -49,10 +49,10 @@ float3 GetFarRay(float4 clipPos)
 float3 GetNearRay(float4 clipPos)
 {
     float3 viewRay = float3(
-        clipPos.x / clipPos.w * cFrustumSize.x,
-        clipPos.y / clipPos.w * cFrustumSize.y,
+        clipPos.x / clipPos.w * FrustumSize.x,
+        clipPos.y / clipPos.w * FrustumSize.y,
         0.0);
 
-    return mul(viewRay, GetCameraRot()) * cDepthMode.z;
+    return mul(viewRay, GetCameraRot()) * DepthMode.z;
 }
 #endif

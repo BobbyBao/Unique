@@ -2,19 +2,19 @@
 
 Shader "Textured"
 {
-	Properties
-	{
-
-		TextureSlot DiffMap
-		{
-			Texture ""
-		}
-	
-	}
-
 
 	Pass base
 	{
+		Properties
+		{
+
+			TextureSlot DiffMap
+			{
+				Texture ""
+			}
+		
+		}
+
 		DepthState
 		{
 			DepthEnable true

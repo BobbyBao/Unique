@@ -2,7 +2,7 @@
     "Type": "Material",
     "Shader": {
         "Type": "Shader",
-        "Name": "Shaders/Textured.shader"
+        "Name": "Shaders/Default.shader"
     },
     "ShaderDefines": "",
     "Uniforms": [],

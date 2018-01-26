@@ -12,7 +12,6 @@ void VS(
         float4 iTangent : ATTRIB3,
 		float4x3 iModelInstance : ATTRIB4,
         out float2 oTexCoord : TEXCOORD0,
-        out float4 oColor :TEXCOORD1,
 		out float4 oPos : OUTPOSITION
     ) 
 {
