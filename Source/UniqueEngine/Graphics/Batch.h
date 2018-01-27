@@ -25,7 +25,7 @@ namespace Unique
 	struct Batch
 	{
 		/// Construct with defaults.
-		Batch() : isBase_(false)
+		Batch() : pass_(0)
 		{
 		}
 
@@ -60,7 +60,7 @@ namespace Unique
 		/// 8-bit light mask for stencil marking in deferred rendering.
 		unsigned char lightMask_;
 		/// Base batch flag. This tells to draw the object fully without light optimizations.
-		bool isBase_;
+		byte pass_;
 
 		PrimitiveTopology primitiveTopology_;
 
@@ -87,9 +87,6 @@ namespace Unique
 		void* instancingData_;
 
 		PipelineState*  pipelineState_;
-	private:
-		/// Material pass.
-		Pass* pass_;
 
 	};
 

@@ -183,18 +183,18 @@ namespace Unique
 		sceneResults_.resize(numThreads);
 		frame_.camera_ = nullptr;
 		
-		frameUniform_ = graphics_.AddUniformBuffer<FrameParameter>();
-		cameraVS_ = graphics_.AddUniformBuffer<CameraVS>();
-		objectVS_ = graphics_.AddUniformBuffer<ObjectVS>();
-		skinnedVS_ = graphics_.AddUniformBuffer<SkinnedVS>();
-		billboardVS_ = graphics_.AddUniformBuffer<BillboardVS>();
-		materialVS_ = graphics_.AddUniformBuffer<MaterialVS>();
+		frameUniform_ = graphics_.AddUniform<FrameParameter>();
+		cameraVS_ = graphics_.AddUniform<CameraVS>();
+		objectVS_ = graphics_.AddUniform<ObjectVS>();
+		skinnedVS_ = graphics_.AddUniform<SkinnedVS>();
+		billboardVS_ = graphics_.AddUniform<BillboardVS>();
+		materialVS_ = graphics_.AddUniform<MaterialVS>();
 
 
-		cameraPS_ = graphics_.AddUniformBuffer<CameraPS>();
-		zonePS_ = graphics_.AddUniformBuffer<ZonePS>();
-		lightPS_ = graphics_.AddUniformBuffer<LightPS>();
-		materialPS_ = graphics_.AddUniformBuffer<MaterialPS>();
+		cameraPS_ = graphics_.AddUniform<CameraPS>();
+		zonePS_ = graphics_.AddUniform<ZonePS>();
+		lightPS_ = graphics_.AddUniform<LightPS>();
+		materialPS_ = graphics_.AddUniform<MaterialPS>();
 
 		tempDrawables_.resize(1);
 
@@ -390,7 +390,7 @@ namespace Unique
 							continue;
 
 						Batch destBatch(srcBatch);
-						destBatch.isBase_ = true;
+						destBatch.pass_ = info.passIndex_;
 						AddBatchToQueue(*info.batchQueue_, destBatch, info.passIndex_, info.allowInstancing_);
 					}
 				}
@@ -669,7 +669,7 @@ namespace Unique
 						continue;
 
 					Batch destBatch(srcBatch);
-					destBatch.isBase_ = true;
+					destBatch.pass_ = info.passIndex_;
 					//destBatch.lightMask_ = (unsigned char)GetLightMask(drawable);
 					//destBatch.lightQueue_ = 0;
 

@@ -140,7 +140,7 @@ namespace Unique
 	/// Construct from a drawable's source batch.
 	Batch::Batch(const SourceBatch& rhs) :
 		distance_(rhs.distance_),
-		isBase_(false),
+		pass_(0),
 		geometry_(rhs.geometry_),
 		material_(rhs.material_),
 		worldTransform_(rhs.worldTransform_),
@@ -158,7 +158,7 @@ namespace Unique
 
 	/// Construct from transient buffer.
 	Batch::Batch(Geometry* geometry, Material* material, const Matrix3x4* worldTransform) :
-		isBase_(true),
+		pass_(0),
 		geometry_(geometry),
 		material_(material),
 		worldTransform_(worldTransform),
@@ -196,7 +196,7 @@ namespace Unique
 	void Batch::CalculateSortKey()
 	{
 		unsigned shaderID = *((unsigned*)&pipelineState_) / sizeof(PipelineState);
-		if (!isBase_)
+		if (!pass_ > 0)
 			shaderID |= 0x8000;
 
 //		unsigned lightQueueID = (unsigned)((*((unsigned*)&lightQueue_) / sizeof(LightBatchQueue)) & 0xffff);
@@ -596,8 +596,8 @@ namespace Unique
 			auto& graphics = GetSubsystem<Graphics>();
 
 			Prepare(view, camera, true);
-			
-			if (isBase_)
+
+			if (material_)
 			{
 				material_->Apply(pipelineState_);
 			}
@@ -627,7 +627,7 @@ namespace Unique
 		{
 			auto& graphics = GetSubsystem<Graphics>();
 
-			if (isBase_ && material_)
+			if (material_)
 			{
 				material_->Apply(pipelineState_);
 			}
@@ -681,10 +681,11 @@ namespace Unique
 
 		if (instances_.size() && !geometry_->IsEmpty())
 		{
-			if (isBase_ && material_)
+			if (material_)
 			{
 				material_->Apply(pipelineState_);
 			}
+
 			// Draw as individual objects if instancing not supported or could not fill the instancing buffer
 			VertexBuffer* instanceBuffer = renderer.GetInstancingBuffer();
 			if (!instanceBuffer || geometryType_ != GEOM_INSTANCED || startIndex_ == M_MAX_UNSIGNED)
@@ -708,9 +709,6 @@ namespace Unique
 					geometry_->GetVertexBuffers());
 				vertexBuffers.push_back(SPtr<VertexBuffer>(instanceBuffer));
 				
-				//Matrix3x4* t = (Matrix3x4*)instanceBuffer->Map();
-				//instanceBuffer->UnMap();
-
 				graphics.DrawInstanced(geometry_, pipelineState_, startIndex_, (uint)instances_.size());
 				// Remove the instancing buffer & element mask now
 				vertexBuffers.pop_back();

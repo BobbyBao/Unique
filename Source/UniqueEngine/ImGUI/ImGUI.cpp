@@ -247,7 +247,7 @@ namespace Unique
 		geometry_->SetIndexBuffer(indexBuffer_);
 		geometry_->SetDrawRange(PrimitiveTopology::TRIANGLE_LIST, 0, indexBuffer_->GetIndexCount(), 0, vertexBuffer_->GetVertexCount());
 
-		uiConstants_ = graphics.AddUniformBuffer<UIVS>();
+		uiConstants_ = graphics.AddUniform<UIVS>();
 
 		material_ = new Material();
 		material_->SetShaderAttr(ResourceRef::Create<Shader>("shaders/UI.shader"));

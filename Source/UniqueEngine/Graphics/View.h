@@ -44,7 +44,7 @@ namespace Unique
 
 	struct SkinnedVS
 	{
-		Matrix3x4 cSkinMatrices[MAXBONES];
+		Matrix3x4 skinMatrices_[MAXBONES];
 	};
 
 	struct BillboardVS

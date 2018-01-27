@@ -66,7 +66,7 @@ namespace Unique
 
 		//***MainThread***
 		template<class T>
-		SPtr<UniformBuffer> AddUniformBuffer()
+		SPtr<UniformBuffer> AddUniform()
 		{
 			SPtr<UniformBuffer> uniformBuffer(new UniformBuffer(T()));
 			AddResource(TypeInfo::GetTypeName<T>(), uniformBuffer);
