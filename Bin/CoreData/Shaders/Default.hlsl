@@ -47,7 +47,7 @@ void PS(
         out float4 oColor : OUTCOLOR0)
 { 
     // Get material diffuse albedo
-    float4 diffInput = DiffMap.Sample(DiffMap_sampler, iTexCoord);
+    float4 diffInput = Sample2D(DiffMap, iTexCoord);
     #ifdef ALPHAMASK
         if (diffInput.a < 0.5)
             discard;
@@ -57,7 +57,7 @@ void PS(
 
     // Get material specular albedo
     #ifdef SPECMAP
-        float3 specColor = MatSpecColor.rgb * SpecMap.Sample(SpecMap_sampler, iTexCoord.xy).rgb;
+        float3 specColor = MatSpecColor.rgb * Sample2D(SpecMap, iTexCoord.xy).rgb;
     #else
         float3 specColor = MatSpecColor.rgb;
     #endif

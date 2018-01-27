@@ -1,10 +1,15 @@
 // Make sampling macros also available for VS on D3D11
+#ifdef D3D11
 #define Sample2D(tex, uv) tex.Sample(tex##_sampler, uv)
 #define Sample2DProj(tex, uv) tex.Sample(tex##_sampler, uv.xy / uv.w)
 #define Sample2DLod0(tex, uv) tex.SampleLevel(tex##_sampler, uv, 0.0)
 #define SampleCube(tex, uv) tex.Sample(tex##_sampler, uv)
 #define SampleCubeLOD(tex, uv) tex.SampleLevel(tex##_sampler, uv.xyz, uv.w)
 #define SampleShadow(tex, uv) tex.SampleCmpLevelZero(tex##_sampler, uv.xy, uv.z)
+#else
+#define Sample2D(tex, uv) texture(tex, uv)
+#define Sample2DProj(tex, uv) textureProj(tex, uv)
+#endif
 
 // D3D11 textures and samplers
 

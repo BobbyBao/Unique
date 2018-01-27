@@ -1,6 +1,5 @@
-Texture2D DiffMap;
-SamplerState DiffMap_sampler;
-
+#include "Uniforms.hlsl"
+#include "Samplers.hlsl"
 
 cbuffer UIVS
 {  
@@ -32,5 +31,5 @@ PS_INPUT VS(VS_INPUT input)
 
 float4 PS(PS_INPUT input) : SV_Target
 {
-  return input.col * DiffMap.Sample(DiffMap_sampler, input.uv);
+  return input.col * Sample2D(DiffMap, input.uv);
 }
