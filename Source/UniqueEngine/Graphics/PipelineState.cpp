@@ -115,11 +115,9 @@ namespace Unique
 		}
 
 		auto& graphics = GetSubsystem<Graphics>();
-		graphics.CreatePipelineState(psoDesc_, this);
-		graphics.BindShaderResources(this, BIND_SHADER_RESOURCES_ALL_RESOLVED);
-		((IPipelineState*)deviceObject_)->CreateShaderResourceBinding(&shaderResourceBinding_);
+		graphics.CreatePipelineState(*this);
 		dirty_ = false;
-		return true;
+		return deviceObject_ != nullptr;
 	}
 
 	IShaderVariable* PipelineState::GetShaderVariable(const StringID& name)

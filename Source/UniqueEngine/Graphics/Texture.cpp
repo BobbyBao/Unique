@@ -38,13 +38,6 @@ namespace Unique
 		return GPUObject::Create();
 	}
 
-	bool Texture::Create(const TextureDesc& desc, const TextureData& texData)
-	{
-		desc_ = desc;
-		texData_ = texData;
-		return GPUObject::Create();
-	}
-
 	bool Texture::Create(Image& img, const TextureLoadInfo& TexLoadInfo)
 	{
 		const auto& ImgDesc = img.GetDesc();
@@ -161,55 +154,21 @@ namespace Unique
 
 		return GPUObject::Create();
 	}
-	
+
+	bool Texture::Create(const TextureDesc& desc, const TextureData& texData)
+	{
+		desc_ = desc;
+		texData_ = texData;
+		return CreateImpl();
+	}
+
 	bool Texture::CreateImpl()
 	{
 		auto& graphics = GetSubsystem<Graphics>();
-		graphics.CreateTexture(desc_, texData_, *this);
-		CreateTextureView();
+		graphics.CreateTexture(*this);
 		return deviceObject_ != nullptr;
 	}
-
 	
-	bool Texture::CreateTextureView()
-	{
-		auto& graphics = GetSubsystem<Graphics>();
-		if (!deviceObject_)
-		{
-			return false;
-		}
-
-		graphics.CreateSampler(samplerDesc_, &sampler_);
-
-		ITexture* textureObject = (ITexture*)deviceObject_;
-
-		if (desc_.BindFlags & BIND_SHADER_RESOURCE)
-		{
-			shaderResourceView_ = new TextureView(*this, textureObject->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE));
-			shaderResourceView_->SetSampler(sampler_);
-		}
-
-		if (desc_.BindFlags & BIND_RENDER_TARGET)
-		{
-			renderTargetView_ = new TextureView(*this, textureObject->GetDefaultView(TEXTURE_VIEW_RENDER_TARGET));
-			shaderResourceView_->SetSampler(sampler_);
-		}
-
-		if (desc_.BindFlags & BIND_DEPTH_STENCIL)
-		{
-			depthStencilView_ = new TextureView(*this, textureObject->GetDefaultView(TEXTURE_VIEW_DEPTH_STENCIL));
-			shaderResourceView_->SetSampler(sampler_);
-		}
-
-		if (desc_.BindFlags & BIND_UNORDERED_ACCESS)
-		{
-			unorderedAccessView_ = new TextureView(*this, textureObject->GetDefaultView(TEXTURE_VIEW_UNORDERED_ACCESS));
-			shaderResourceView_->SetSampler(sampler_);
-		}
-
-		return true;
-	}
-
 	void Texture::ReleaseImpl()
 	{
 		GPUObject::ReleaseImpl();

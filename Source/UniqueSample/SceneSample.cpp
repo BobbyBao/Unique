@@ -15,7 +15,7 @@
 #include "Serialize/JsonSerializer.h"
 #include "Input/Input.h"
 
-//UNIQUE_IMPLEMENT_MAIN(Unique::SceneSample)
+UNIQUE_IMPLEMENT_MAIN(Unique::SceneSample)
 
 namespace Unique
 {
@@ -27,6 +27,8 @@ namespace Unique
 		Subscribe(&SceneSample::HandleStartup);
 		Subscribe(&SceneSample::HandleShutdown);
 		Subscribe(&SceneSample::HandleUpdate);
+
+		SetDeviceType(DeviceType::OpenGL);
 	}
 
 	SceneSample::~SceneSample()

@@ -4,7 +4,6 @@
 #include "../Graphics/GPUObject.h"
 #include <RefCntAutoPtr.h>
 #include <Texture.h>
-#include <TextureView.h>
 #include <Sampler.h>
 
 
@@ -16,9 +15,7 @@ namespace Unique
 	using TextureData = Diligent::TextureData;
 	using SamplerDesc = Diligent::SamplerDesc;
 
-	using ISampler = Diligent::ISampler;
 	using TextureSubResData = Diligent::TextureSubResData;
-	using ITextureView = Diligent::ITextureView;
 
 	class Image;
 	class TextureView;
@@ -46,6 +43,12 @@ namespace Unique
 		{}
 	};
 
+	class Sampler : public GPUObject
+	{
+	public:
+		SamplerDesc samplerDesc_;
+	};
+
 	class Texture : public Resource, public GPUObject
 	{
 		uRTTI(Texture, Resource)
@@ -53,28 +56,27 @@ namespace Unique
 		Texture();
 		~Texture();
 
-		bool Create(const TextureDesc& desc, const TextureData& texData);
 		bool Create(const TextureDesc& desc, Vector< Vector<byte> >&& texData);
 		bool Create(Image& img, const TextureLoadInfo& TexLoadInfo = TextureLoadInfo());
-		
-		uint GetWidth() const { return desc_.Width; }
+		bool Create(const TextureDesc& desc, const TextureData& texData);
 
+		uint GetWidth() const { return desc_.Width; }
 		uint GetHeight() const { return desc_.Height; }
 
 		TextureView* GetShaderResourceView() { return shaderResourceView_; }
 		TextureView* GetRenderTargetView() { return renderTargetView_; }
 		TextureView* GetDepthStencilView() { return depthStencilView_; }
 		TextureView* GetUnorderedAccessView() { return unorderedAccessView_; }
-		ISampler*	GetSampler() { return sampler_; }
-	protected:
+		Sampler&	GetSampler() { return sampler_; }
+		
+	protected:	
 		bool CreateImpl();
-		bool CreateTextureView();
 		void ReleaseImpl();
 
 		TextureDesc desc_;
 		TextureData texData_;
-		SamplerDesc samplerDesc_;
-		ISampler*	sampler_ = nullptr;
+		Sampler sampler_;
+
 		SPtr<TextureView> shaderResourceView_;
 		SPtr<TextureView> renderTargetView_;
 		SPtr<TextureView> depthStencilView_;
@@ -83,13 +85,13 @@ namespace Unique
 		Vector<TextureSubResData> pSubResources;
 		Vector< Vector<byte> > Mips;
 
-		friend class TextureImporter;
+		friend class Graphics;
 	};
 
 	class TextureView : public RefCounted
 	{
 	public:
-		TextureView(Texture& texture, ITextureView* textureView) 
+		TextureView(Texture& texture, void* textureView) 
 			: texture_(texture), textureView_(textureView)
 		{
 		}
@@ -97,15 +99,14 @@ namespace Unique
 		uint GetWidth() const { return texture_.GetWidth(); }
 		uint GetHeight() const { return texture_.GetHeight(); }	
 		
-		operator ITextureView*() {
-			return textureView_;
+		template<class T>
+		operator T*() {
+			return (T*)textureView_;
 		}
 
-		void SetSampler(ISampler* sampler) { textureView_->SetSampler(sampler); }
-		ISampler* GetSampler() { return textureView_->GetSampler(); }
 	private:
 		Texture& texture_;
-		ITextureView* textureView_;
+		void* textureView_;
 	};
 
 }

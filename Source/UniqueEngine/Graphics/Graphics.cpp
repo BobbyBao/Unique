@@ -12,6 +12,7 @@
 #include <Buffer.h>
 #include <BasicShaderSourceStreamFactory.h>
 #include <Shader.h>
+#include <TextureView.h>
 
 using namespace Diligent;
 
@@ -150,12 +151,6 @@ namespace Unique
 		);
 	}
 
-	void Graphics::BindShaderResources(PipelineState* pipelineState, uint flags)
-	{
-		IPipelineState* pIPipelineState = *pipelineState;
-		pIPipelineState->BindShaderResources(resourceMapping_, flags);
-	}
-	
 	void Graphics::Frame()
 	{
 		RenderSemWait();
@@ -282,7 +277,6 @@ namespace Unique
 		private:
 		};
 
-		//BasicShaderSourceStreamFactory BasicSSSFactory("CoreData\\Shaders;CoreData\\Shaders\\HLSL;");
 		ShaderSourceStreamFactory BasicSSSFactory;
 		Attrs.pShaderSourceStreamFactory = &BasicSSSFactory;
 
@@ -295,20 +289,53 @@ namespace Unique
 		}
 
 	}
-	
-	void Graphics::CreateTexture(const TextureDesc& texDesc, const TextureData &data, Texture& texture)
+
+	void Graphics::CreateSampler(Sampler& sampler)
 	{
-		renderDevice_->CreateTexture(texDesc, data, texture);
+		renderDevice_->CreateSampler(sampler.samplerDesc_, sampler);
 	}
 	
-	void Graphics::CreateSampler(const SamplerDesc& samDesc, ISampler **ppSampler)
+	void Graphics::CreateTexture(Texture& texture)
 	{
-		renderDevice_->CreateSampler(samDesc, ppSampler);
+		renderDevice_->CreateTexture(texture.desc_, texture.texData_, texture);
+		
+		CreateSampler(texture.sampler_);
+
+		ITexture* textureObject = texture;
+
+		if (texture.desc_.BindFlags & BIND_SHADER_RESOURCE)
+		{
+			ITextureView* tv = textureObject->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
+			tv->SetSampler(texture.sampler_);
+			texture.shaderResourceView_ = new TextureView(texture, tv);
+			
+		}
+
+		if (texture.desc_.BindFlags & BIND_RENDER_TARGET)
+		{
+			texture.renderTargetView_ = new TextureView(texture, textureObject->GetDefaultView(TEXTURE_VIEW_RENDER_TARGET));
+			
+		}
+
+		if (texture.desc_.BindFlags & BIND_DEPTH_STENCIL)
+		{
+			texture.depthStencilView_ = new TextureView(texture, textureObject->GetDefaultView(TEXTURE_VIEW_DEPTH_STENCIL));
+			
+		}
+
+		if (texture.desc_.BindFlags & BIND_UNORDERED_ACCESS)
+		{
+			texture.unorderedAccessView_ = new TextureView(texture, textureObject->GetDefaultView(TEXTURE_VIEW_UNORDERED_ACCESS));
+			
+		}
 	}
 	
-	void Graphics::CreatePipelineState(const PipelineStateDesc &pipelineDesc, PipelineState* pipelineState)
+	void Graphics::CreatePipelineState(PipelineState& pipelineState)
 	{
-		renderDevice_->CreatePipelineState(pipelineDesc, *pipelineState);
+		renderDevice_->CreatePipelineState(pipelineState.psoDesc_, pipelineState);
+		IPipelineState* pIPipelineState = pipelineState;
+		pIPipelineState->BindShaderResources(resourceMapping_, BIND_SHADER_RESOURCES_ALL_RESOLVED);
+		pIPipelineState->CreateShaderResourceBinding(&pipelineState.shaderResourceBinding_);
 	}
 
 	void Graphics::ReleaseDeviceObject(void* deviceObject)

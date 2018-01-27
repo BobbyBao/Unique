@@ -24,6 +24,7 @@ namespace Unique
 	class TextureView;
 	class GPUObject;
 	class ShaderVariation;
+	class Sampler;
 	class PipelineState;
 	
 	using CommandQueue = Vector<std::function<void()> > ;
@@ -74,17 +75,15 @@ namespace Unique
 
 		void AddResource(const char *Name, GPUObject* pObject, bool bIsUnique = true);
 		void RemoveResourceByName(const char *Name, uint ArrayIndex = 0);
-		void BindShaderResources(PipelineState* pipelineState, uint flags);
 		void Frame();
 		//****************
 
 		//*******Render thread*******
 		void CreateBuffer(GraphicsBuffer& buffer, const ByteArray& data);
 		void CreateShader(ShaderVariation& shader);
-
-		void CreateTexture(const Diligent::TextureDesc& texDesc, const Diligent::TextureData &data,	Texture& texture);
-		void CreateSampler(const Diligent::SamplerDesc& samDesc, Diligent::ISampler **ppSampler);
-		void CreatePipelineState(const Diligent::PipelineStateDesc &pipelineDesc, PipelineState* pipelineState);
+		void CreateSampler(Sampler& sampler);
+		void CreateTexture(Texture& texture);
+		void CreatePipelineState(PipelineState& pipelineState);
 		void ReleaseDeviceObject(void* deviceObject);
 
 		void* Map(GraphicsBuffer* buffer, MapFlags mapFlags = MapFlags::DISCARD);

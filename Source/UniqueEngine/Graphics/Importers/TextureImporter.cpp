@@ -56,9 +56,6 @@ namespace Unique
 			TexLoadInfo.IsSRGB, // forceSRGB
 			texture);
 		
-		Diligent::ITexture* pTex = (*texture);
-		texture->desc_ = pTex->GetDesc();
-		texture->CreateTextureView();
 		return texture;
 	}
 

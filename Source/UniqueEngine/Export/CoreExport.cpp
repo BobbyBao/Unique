@@ -9,7 +9,6 @@ UNIQUE_C_API void* StringID_new(const char* name)
 
 uExport(Context, void, RegisterSubsystem, Object*, obj)
 uExport(Context, void, RemoveSubsystem, StringID, objectType)
-//uExport(Context, const Vector<Object*>&, GetSubsystems)
 
 typedef void(__stdcall *SubsystemFn)(Object* subsystem);
 

@@ -42,12 +42,15 @@ namespace Unique
 
 	private:
 		void Init();
+
 		SPtr<ShaderProgram> shaderProgram_;
 		Diligent::RefCntAutoPtr<IShaderResourceBinding> shaderResourceBinding_;
 		IResourceMapping* resourceMapping_;
 		Diligent::PipelineStateDesc psoDesc_;
 		bool shaderDirty_ = true;
 		bool dirty_ = true;
+
+		friend class Graphics;
 	};
 
 }
