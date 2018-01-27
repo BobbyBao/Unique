@@ -2,10 +2,9 @@
 #include "Resource/Resource.h"
 #include "../Graphics/GraphicsDefs.h"
 #include "../Graphics/GPUObject.h"
-#include <RefCntAutoPtr.h>
 #include <Texture.h>
-#include <Sampler.h>
 
+#include <Sampler.h>
 
 namespace Unique
 {

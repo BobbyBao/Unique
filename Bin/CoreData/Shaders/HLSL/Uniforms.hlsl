@@ -1,12 +1,13 @@
 
 #ifdef COMPILEVS
 
-// Vertex shader uniforms
-cbuffer FrameVS
+cbuffer FrameParameter
 {
     float DeltaTime;
     float ElapsedTime;
 }
+
+// Vertex shader uniforms
 
 cbuffer CameraVS
 {  
@@ -22,12 +23,12 @@ cbuffer CameraVS
     float4 ClipPlane;
 }
 
-cbuffer ZoneVS
-{
-    float3 AmbientStartColor;
-    float3 AmbientEndColor;
-    float4x3 Zone;
-}
+//cbuffer ZoneVS
+//{
+//    float3 AmbientStartColor;
+//    float3 AmbientEndColor;
+//    float4x3 Zone;
+//}
 
 #ifndef CUSTOM_MATERIAL_CBUFFER
 cbuffer MaterialVS
@@ -62,11 +63,11 @@ cbuffer BillboardVS
 #ifdef COMPILEPS
 
 // Pixel shader uniforms
-cbuffer FramePS
-{
-    float DeltaTimePS;
-    float ElapsedTimePS;
-}
+//cbuffer FramePS
+//{
+//    float DeltaTimePS;
+//    float ElapsedTimePS;
+//}
 
 cbuffer CameraPS
 {

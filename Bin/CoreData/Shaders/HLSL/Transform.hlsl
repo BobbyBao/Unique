@@ -26,10 +26,10 @@ float4 GetClipPos(float3 worldPos)
     return mul(float4(worldPos, 1.0), ViewProj);
 }
 
-float GetZonePos(float3 worldPos)
-{
-    return saturate(mul(float4(worldPos, 1.0), Zone).z);
-}
+//float GetZonePos(float3 worldPos)
+//{
+//    return saturate(mul(float4(worldPos, 1.0), Zone).z);
+//}
 
 float GetDepth(float4 clipPos)
 {

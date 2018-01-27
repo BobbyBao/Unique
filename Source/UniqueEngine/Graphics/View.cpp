@@ -183,27 +183,23 @@ namespace Unique
 		sceneResults_.resize(numThreads);
 		frame_.camera_ = nullptr;
 		
-		frameUniform_ = new UniformBuffer(FrameParameter());
-		cameraVS_ = new UniformBuffer(CameraVS());
-		objectVS_ = new UniformBuffer(ObjectVS());
-		skinnedVS_ = new UniformBuffer(SkinnedVS());
-		billboardVS_ = new UniformBuffer(BillboardVS());
-		cameraPS_ = new UniformBuffer(CameraPS());
-		materialPS_ = new UniformBuffer(MaterialPS());
+		frameUniform_ = graphics_.AddUniformBuffer<FrameParameter>();
+		cameraVS_ = graphics_.AddUniformBuffer<CameraVS>();
+		objectVS_ = graphics_.AddUniformBuffer<ObjectVS>();
+		skinnedVS_ = graphics_.AddUniformBuffer<SkinnedVS>();
+		billboardVS_ = graphics_.AddUniformBuffer<BillboardVS>();
+		materialVS_ = graphics_.AddUniformBuffer<MaterialVS>();
+
+
+		cameraPS_ = graphics_.AddUniformBuffer<CameraPS>();
+		zonePS_ = graphics_.AddUniformBuffer<ZonePS>();
+		lightPS_ = graphics_.AddUniformBuffer<LightPS>();
+		materialPS_ = graphics_.AddUniformBuffer<MaterialPS>();
 
 		tempDrawables_.resize(1);
 
 		batchMatrics_[0].reserve(2048);
 		batchMatrics_[1].reserve(2048);
-
-		graphics_.AddResource("FrameVS", frameUniform_);
-		graphics_.AddResource("CameraVS", cameraVS_);
-		graphics_.AddResource("ObjectVS", objectVS_);
-		graphics_.AddResource("SkinnedVS", skinnedVS_);
-		graphics_.AddResource("BillboardVS", billboardVS_);
-
-		graphics_.AddResource("CameraPS", cameraPS_);
-		graphics_.AddResource("MaterialPS", materialPS_);
 	}
 
 	View::~View()

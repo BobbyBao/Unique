@@ -13,6 +13,7 @@
 #include <BasicShaderSourceStreamFactory.h>
 #include <Shader.h>
 #include <TextureView.h>
+#include <Sampler.h>
 
 using namespace Diligent;
 

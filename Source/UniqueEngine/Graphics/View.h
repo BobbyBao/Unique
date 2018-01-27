@@ -34,7 +34,32 @@ namespace Unique
 		Vector4 gBufferOffsets_;
 		Vector4 clipPlane_;
 	};
+	
+	struct ObjectVS
+	{
+		Matrix3x4 world_;
+	};
 
+#define MAXBONES 64
+
+	struct SkinnedVS
+	{
+		Matrix3x4 cSkinMatrices[MAXBONES];
+	};
+
+	struct BillboardVS
+	{
+		Matrix3x4 world_;
+		Matrix3 billboardRot;
+	};
+
+	struct MaterialVS
+	{
+		float4 UOffset;
+		float4 VOffset;
+	};
+
+	//==================================================
 	struct CameraPS
 	{
 		Vector3 cameraPosPS_;
@@ -54,22 +79,23 @@ namespace Unique
 		Vector3 zoneMax;
 	};
 
-	struct ObjectVS
+	struct LightPS
 	{
-		Matrix3x4 world_;
-	};
-
-#define MAXBONES 64
-
-	struct SkinnedVS
-	{
-		Matrix3x4 cSkinMatrices[MAXBONES];
-	};
-
-	struct BillboardVS
-	{
-		Matrix3x4 world_;
-		Matrix3 billboardRot;
+		float4 LightColor;
+		float4 LightPosPS;
+		float3 LightDirPS;
+		float4 NormalOffsetScalePS;
+		float4 ShadowCubeAdjust;
+		float4 ShadowDepthFade;
+		float2 ShadowIntensity;
+		float2 ShadowMapInvSize;
+		float4 ShadowSplits;
+		float2 VSMShadowParams;
+		Matrix4 LightMatricesPS[4];
+#ifdef PBR
+	float LightRad;
+	float LightLength;
+#endif
 	};
 
 	struct MaterialPS
@@ -305,8 +331,11 @@ namespace Unique
 		SPtr<UniformBuffer> objectVS_;
 		SPtr<UniformBuffer> skinnedVS_;
 		SPtr<UniformBuffer> billboardVS_;
-
-		SPtr<UniformBuffer> cameraPS_;
+		SPtr<UniformBuffer> materialVS_;
+		
+		SPtr<UniformBuffer> cameraPS_; 
+		SPtr<UniformBuffer> zonePS_;
+		SPtr<UniformBuffer> lightPS_;
 		SPtr<UniformBuffer> materialPS_;
 
 		Vector<Matrix3x4>	batchMatrics_[2];
