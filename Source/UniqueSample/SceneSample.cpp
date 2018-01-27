@@ -15,7 +15,7 @@
 #include "Serialize/JsonSerializer.h"
 #include "Input/Input.h"
 
-UNIQUE_IMPLEMENT_MAIN(Unique::SceneSample)
+//UNIQUE_IMPLEMENT_MAIN(Unique::SceneSample)
 
 namespace Unique
 {
@@ -87,7 +87,7 @@ namespace Unique
 		auto& renderer = GetSubsystem<Renderer>();
 		Viewport* viewport = new Viewport(scene_, camera_);
 		renderer.SetViewport(0, viewport);
-
+		viewport->SetDrawDebug(true);
 		camera_->GetNode()->SetPosition(Vector3(0, 1, -5));
 	}
 

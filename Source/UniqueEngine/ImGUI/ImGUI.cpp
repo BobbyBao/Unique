@@ -252,7 +252,7 @@ namespace Unique
 		material_ = new Material();
 		material_->SetShaderAttr(ResourceRef::Create<Shader>("shaders/UI.shader"));
 		pipeline_ = material_->GetPipeline("base", "");
-		pipeline_->SetLineAntialiased(NK_ANTI_ALIASING_ON);
+		pipeline_->SetLineAntialiased(graphics.IsDirect3D());
 
 		ctx = &impl_.ctx;
 		nk_init_default(&impl_.ctx, 0);

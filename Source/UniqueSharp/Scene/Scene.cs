@@ -13,5 +13,11 @@ namespace UniqueEngine
         public Scene(IntPtr nativePtr) : base(nativePtr)
         {
         }
+
+        protected override void Destroy()
+        {
+            Native.RefCounted_ReleaseRef(native_);
+            base.Destroy();
+        }
     }
 }

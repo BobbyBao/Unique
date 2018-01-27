@@ -196,7 +196,7 @@ namespace Unique
 	void Batch::CalculateSortKey()
 	{
 		unsigned shaderID = *((unsigned*)&pipelineState_) / sizeof(PipelineState);
-		if (!pass_ > 0)
+		if (pass_ == 0)
 			shaderID |= 0x8000;
 
 //		unsigned lightQueueID = (unsigned)((*((unsigned*)&lightQueue_) / sizeof(LightBatchQueue)) & 0xffff);

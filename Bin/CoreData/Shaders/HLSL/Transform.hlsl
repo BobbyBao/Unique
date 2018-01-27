@@ -7,6 +7,7 @@
 #endif
 
 #ifdef SKINNED
+
 float4x3 GetSkinMatrix(float4 blendWeights, int4 blendIndices)
 {
     return SkinMatrices[blendIndices.x] * blendWeights.x +
@@ -14,6 +15,7 @@ float4x3 GetSkinMatrix(float4 blendWeights, int4 blendIndices)
         SkinMatrices[blendIndices.z] * blendWeights.z +
         SkinMatrices[blendIndices.w] * blendWeights.w;
 }
+
 #endif
 
 float2 GetTexCoord(float2 iTexCoord)

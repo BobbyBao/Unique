@@ -20,16 +20,16 @@ struct PS_INPUT
   float2 uv  : TEXCOORD0;
 };
 
-PS_INPUT VS(VS_INPUT input)
+PS_INPUT VS(VS_INPUT vs_input)
 {
-  PS_INPUT output;
-  output.pos = mul(float4(input.pos.xy, 0.f, 1.f), UIProj);
-  output.col = input.col;
-  output.uv  = input.uv;
-  return output;
+  PS_INPUT o;
+  o.pos = mul(float4(vs_input.pos.xy, 0.f, 1.f), UIProj);
+  o.col = vs_input.col;
+  o.uv  = vs_input.uv;
+  return o;
 }
 
-float4 PS(PS_INPUT input) : SV_Target
+float4 PS(PS_INPUT ps_input) : SV_Target
 {
-  return input.col * Sample2D(DiffMap, input.uv);
+  return ps_input.col * Sample2D(DiffMap, ps_input.uv);
 }

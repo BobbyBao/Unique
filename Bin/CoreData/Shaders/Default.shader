@@ -1,6 +1,6 @@
 
 
-Shader "Textured"
+Shader "Default"
 {
 
 	Pass base

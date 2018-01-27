@@ -9,6 +9,11 @@
 #else
 #define Sample2D(tex, uv) texture(tex, uv)
 #define Sample2DProj(tex, uv) textureProj(tex, uv)
+#define Sample2DLod0(tex, uv) textureLod(tex, uv, 0.0)
+#define Sample3D(tex, uv) texture(tex, uv)
+#define SampleCube(tex, uv) texture(tex, uv)
+#define SampleCubeLOD(tex, uv) textureLod(tex, uv) 
+#define SampleShadow(tex, uv) textureProj(tex, uv) 
 #endif
 
 // D3D11 textures and samplers

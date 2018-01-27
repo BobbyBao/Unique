@@ -213,7 +213,7 @@ namespace UniqueEngine
             base.Destroy();
 
             if (native_ != IntPtr.Zero)
-                Object_ReleaseRef(native_);
+                RefCounted_ReleaseRef(native_);
         }
     }
 

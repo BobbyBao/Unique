@@ -6,10 +6,16 @@ namespace Unique
 	enum VariantType : uint
 	{
 		VAR_NONE = 0,
-		VAR_INT,
 		VAR_BOOL,
-		VAR_FLOAT,
+		VAR_CHAR,
+		VAR_UCHAR,
+		VAR_SHORT,
+		VAR_USHORT,
+		VAR_INT,
+		VAR_UINT,
 		VAR_INT64,
+		VAR_UINT64,
+		VAR_FLOAT,
 		VAR_DOUBLE,
 		VAR_VECTOR2,
 		VAR_VECTOR3,
@@ -22,6 +28,8 @@ namespace Unique
 		VAR_CUSTOM,
 		MAX_VAR_TYPES
 	};
+
+	template<class T> struct Type2Id { const uint Id = VAR_CUSTOM;};
 	
 	class UNIQUE_API Variant 
 	{
@@ -158,7 +166,7 @@ namespace Unique
 		friend ValueType * any_cast(Variant *);
 
 		template<typename ValueType>
-		ValueType operator()() const
+		operator ValueType()
 		{
 			if (isEmpty())
 			{
@@ -183,4 +191,25 @@ namespace Unique
 
 	};
 
+	template<> struct Type2Id<bool> { const uint Id = VAR_BOOL; };
+	template<> struct Type2Id<char> { const uint Id = VAR_CHAR; };
+	template<> struct Type2Id<byte> { const uint Id = VAR_UCHAR; };
+	template<> struct Type2Id<short> { const uint Id = VAR_SHORT; };
+	template<> struct Type2Id<ushort> { const uint Id = VAR_USHORT; };
+	template<> struct Type2Id<int> { const uint Id = VAR_INT; };
+	template<> struct Type2Id<uint> { const uint Id = VAR_UINT; };
+	template<> struct Type2Id<long> { const uint Id = VAR_INT; };
+	template<> struct Type2Id<unsigned long> { const uint Id = VAR_UINT; };
+	template<> struct Type2Id<int64> { const uint Id = VAR_INT64; };
+	template<> struct Type2Id<uint64> { const uint Id = VAR_UINT64; };
+	template<> struct Type2Id<float> { const uint Id = VAR_FLOAT; };
+	template<> struct Type2Id<double> { const uint Id = VAR_DOUBLE; };
+	template<> struct Type2Id<Vector2> { const uint Id = VAR_VECTOR2; };
+	template<> struct Type2Id<Vector3> { const uint Id = VAR_VECTOR3; };
+	template<> struct Type2Id<Vector4> { const uint Id = VAR_VECTOR4; };
+	template<> struct Type2Id<Quaternion> { const uint Id = VAR_QUATERNION; };
+	template<> struct Type2Id<Color> { const uint Id = VAR_COLOR; };
+	template<> struct Type2Id<String> { const uint Id = VAR_STRING; };
+	template<> struct Type2Id<ByteArray> { const uint Id = VAR_BUFFER; };
+	template<> struct Type2Id<void*> { const uint Id = VAR_PTR; };
 }

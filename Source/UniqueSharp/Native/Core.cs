@@ -16,19 +16,19 @@ namespace UniqueEngine
         public static extern IntPtr Context_CreateObject(IntPtr conext, ref StringID type);
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void Object_AddRef(IntPtr intPtr);
+        public static extern void RefCounted_AddRef(IntPtr intPtr);
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void Object_ReleaseRef(IntPtr intPtr);
+        public static extern void RefCounted_ReleaseRef(IntPtr intPtr);
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int Object_Refs(IntPtr intPtr);
+        public static extern int RefCounted_Refs(IntPtr intPtr);
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int Object_WeakRefs(IntPtr intPtr);
+        public static extern int RefCounted_WeakRefs(IntPtr intPtr);
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void Object_Delete(IntPtr refCount);
+        public static extern void RefCounted_Delete(IntPtr refCount);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr Object_GetType(IntPtr obj);

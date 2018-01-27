@@ -21,9 +21,9 @@ namespace Unique
 		{
 		}
 
-		bool IsReading() const { return state_ == Unique::TransferState::Reading; }
+		bool IsReading() const { return state_ == TransferState::Reading; }
 
-		bool IsWriting() const { return state_ == Unique::TransferState::Writing; }
+		bool IsWriting() const { return state_ == TransferState::Writing; }
 
 		template<class T>
 		bool Save(const char* fileName, T& data)

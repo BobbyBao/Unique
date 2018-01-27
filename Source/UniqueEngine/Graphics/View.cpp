@@ -244,6 +244,11 @@ namespace Unique
 		}
 
 		scene_ = viewport->GetScene();
+		if(!scene_)
+		{
+			return false;
+		}
+
 		octree_ = scene_->GetComponent<Octree>();
 
 		cullCamera_ = viewport->GetCullCamera();

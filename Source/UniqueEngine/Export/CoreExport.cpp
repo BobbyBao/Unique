@@ -33,7 +33,7 @@ uExport(RefCounted, void, ReleaseRef)
 uExport(RefCounted, int, WeakRefs)
 uExport(RefCounted, int, Refs)
 
-uExportDelete(RefCount)
+uExportDelete(RefCounted)
 
 UNIQUE_C_API const void* Object_GetType(Object* obj)
 {

@@ -55,7 +55,7 @@ namespace UniqueEngine
 
             if(expired && 0 == refCount.weakRefs_)
             {
-                Native.Object_Delete(refCount_);
+                Native.RefCounted_Delete(refCount_);
                 refCount_ = IntPtr.Zero;
             }
 

@@ -35,6 +35,18 @@ namespace Unique
 			{
 				delete mContent;
 			}
+			else
+			{
+				switch (mType)
+				{
+				case VAR_STRING:
+					break;
+				case VAR_BUFFER:
+					break;
+				default:
+					break;
+				}
+			}
 
 		}
 
