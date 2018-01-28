@@ -31,4 +31,23 @@ namespace UniqueEngine
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)]
         static extern float Graphics_GetUpdateWait();
     }
+
+    [SuppressUnmanagedCodeSecurity]
+    public partial class Material
+    {
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)]
+        static extern void Material_SetShader(IntPtr self, IntPtr shader);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)]
+        static extern IntPtr Material_GetShader(IntPtr self);
+
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)]
+        static extern IntPtr Material_GetShaderAttr(IntPtr self);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)]
+        static extern void Material_SetShaderAttr(IntPtr self, IntPtr shader);
+
+}
+
 }

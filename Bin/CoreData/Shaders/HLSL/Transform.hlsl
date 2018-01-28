@@ -79,27 +79,27 @@ float3 GetBillboardNormal(float4 iPos, float3 iDirection, float4x3 modelMatrix)
 #endif
 
 #ifdef TRAILFACECAM
-float3 GetTrailPos(float4 iPos, float3 iFront, float iScale, float4x3 modelMatrix)
+float3 GetTrailPos(float3 iPos, float3 iFront, float iScale, float4x3 modelMatrix)
 {
     float3 up = normalize(CameraPos - iPos.xyz);
     float3 left = normalize(cross(iFront, up));
     return (mul(float4((iPos.xyz + left * iScale), 1.0), modelMatrix)).xyz;
 }
 
-float3 GetTrailNormal(float4 iPos)
+float3 GetTrailNormal(float3 iPos)
 {
     return normalize(CameraPos - iPos.xyz);
 }
 #endif
 
 #ifdef TRAILBONE
-float3 GetTrailPos(float4 iPos, float3 iParentPos, float iScale, float4x3 modelMatrix)
+float3 GetTrailPos(float3 iPos, float3 iParentPos, float iScale, float4x3 modelMatrix)
 {
     float3 right = iParentPos - iPos.xyz;
     return (mul(float4((iPos.xyz + right * iScale), 1.0), modelMatrix)).xyz;
 }
 
-float3 GetTrailNormal(float4 iPos, float3 iParentPos, float3 iForward)
+float3 GetTrailNormal(float3 iPos, float3 iParentPos, float3 iForward)
 {
     float3 left = normalize(iPos.xyz - iParentPos);
     float3 up = -normalize(cross(normalize(iForward), left));
@@ -116,15 +116,15 @@ float3 GetTrailNormal(float4 iPos, float3 iParentPos, float3 iForward)
 #endif
 
 #if defined(BILLBOARD)
-    #define GetWorldPos(modelMatrix) GetBillboardPos(iPos, iSize, modelMatrix)
+    #define GetWorldPos(modelMatrix) GetBillboardPos(float4(iPos, 1), iSize, modelMatrix)
 #elif defined(DIRBILLBOARD)
-    #define GetWorldPos(modelMatrix) GetBillboardPos(iPos, iSize, iNormal, modelMatrix)
+    #define GetWorldPos(modelMatrix) GetBillboardPos(float4(iPos, 1), iSize, iNormal, modelMatrix)
 #elif defined(TRAILFACECAM)
     #define GetWorldPos(modelMatrix) GetTrailPos(iPos, iTangent.xyz, iTangent.w, modelMatrix)
 #elif defined(TRAILBONE)
     #define GetWorldPos(modelMatrix) GetTrailPos(iPos, iTangent.xyz, iTangent.w, modelMatrix)
 #else
-    #define GetWorldPos(modelMatrix) mul(iPos, modelMatrix)
+    #define GetWorldPos(modelMatrix) mul(float4(iPos, 1), modelMatrix)
 #endif
 
 #if defined(BILLBOARD)
@@ -134,7 +134,7 @@ float3 GetTrailNormal(float4 iPos, float3 iParentPos, float3 iForward)
 #elif defined(TRAILFACECAM)
     #define GetWorldNormal(modelMatrix) GetTrailNormal(iPos)
 #elif defined(TRAILBONE)
-    #define GetWorldNormal(modelMatrix) GetTrailNormal(iPos, iTangent.xyz, iNormal)
+    #define GetWorldNormal(modelMatrix) GetTrailNormal(float4(iPos, 1), iTangent.xyz, iNormal)
 #else
     #define GetWorldNormal(modelMatrix) normalize(mul(iNormal, (float3x3)modelMatrix))
 #endif

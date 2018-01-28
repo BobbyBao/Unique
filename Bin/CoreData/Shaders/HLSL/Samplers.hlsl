@@ -78,11 +78,5 @@ float3 DecodeNormal(float4 normalInput)
 #endif
 }
 
-#ifdef COMPILEPS
 
-float ReconstructDepth(float hwDepth)
-{
-    return dot(float2(hwDepth, DepthReconstruct.y / (hwDepth - DepthReconstruct.x)), DepthReconstruct.zw);
-}
-#endif
 

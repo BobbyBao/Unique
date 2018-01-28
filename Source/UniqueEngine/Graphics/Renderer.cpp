@@ -7,6 +7,7 @@
 #include "../Graphics/DebugRenderer.h"
 #include "../Scene/Scene.h"
 #include "RenderPath.h"
+#include "Model.h"
 
 namespace Unique
 {
@@ -53,44 +54,6 @@ namespace Unique
 		Subscribe(&Renderer::HandleEndFrame);
 	}
 
-	void Renderer::LoadShaders()
-	{
-		auto& cache = GetSubsystem<ResourceCache>();
-
-		defaultMaterial_ = new Material();
-		defaultMaterial_->SetName("DefaultMaterial");
-		defaultMaterial_->SetShaderAttr(ResourceRef::Create<Shader>("Shaders/Textured.shader"));
-		
-		SPtr<Texture> defaultTexture(new Texture());
-		int w = 1;
-		int h = 1;
-
-		Vector<Vector<byte>> mip(1);	
-		Vector<byte>& subData = mip.back();
-		subData.resize(w * h * 4, 255);
-		subData[1] = 0;
-
-		TextureDesc desc;
-		desc.Type = Diligent::RESOURCE_DIM_TEX_2D;
-		desc.Width = (uint)w;
-		desc.Height = (uint)h;
-		desc.MipLevels = 1;
-		desc.ArraySize = 1;
-		desc.Format = Diligent::TEX_FORMAT_RGBA8_UNORM;
-		desc.SampleCount = 1;
-		desc.Usage = Diligent::USAGE_STATIC;
-		desc.BindFlags = Diligent::BIND_SHADER_RESOURCE;
-		desc.CPUAccessFlags = 0;
-		
-		defaultTexture->SetName("Magenta");
-		defaultTexture->Create(desc, std::move(mip));
-
-		cache.RegisterResource(defaultTexture);
-
-		defaultMaterial_->SetTexture("DiffMap", defaultTexture);
-
-	}
-
 	void Renderer::SetNumExtraInstancingBufferElements(int elements)
 	{
 		if (numExtraInstancingBufferElements_ != elements)
@@ -134,8 +97,95 @@ namespace Unique
 	void Renderer::HandleStartup(const Startup& eventData)
 	{
 		LoadShaders();
+		
+		auto& cache = GetSubsystem<ResourceCache>();
+
+		Model* m = new Model();
+		m->SetName("Cube");
+		m->SetNumGeometries(1);
+		m->SetNumGeometryLodLevels(0, 1);
+
+		// Layout of this structure matches the one we defined in pipeline state
+        struct Vertex
+        {
+            float3 pos;
+            uint color;
+        };
+
+        Vector<Vertex> CubeVerts =
+        {
+            {float3(-1,-1,-1), Color(1,0,0,1).ToUInt()},
+            {float3(-1,+1,-1), Color(0,1,0,1).ToUInt()},
+            {float3(+1,+1,-1), Color(0,0,1,1).ToUInt()},
+            {float3(+1,-1,-1), Color(1,1,1,1).ToUInt()},
+
+            {float3(-1,-1,+1), Color(1,1,0,1).ToUInt()},
+            {float3(-1,+1,+1), Color(0,1,1,1).ToUInt()},
+            {float3(+1,+1,+1), Color(1,0,1,1).ToUInt()},
+            {float3(+1,-1,+1), Color(0.2f,0.2f,0.2f,1).ToUInt()},
+        };
+		  
+		Vector<ushort> Indices =
+        {
+            2,0,1, 2,3,0,
+            4,6,5, 4,7,6,
+            0,7,4, 0,3,7,
+            1,0,4, 1,4,5,
+            1,5,2, 5,6,2,
+            3,6,7, 3,2,6
+        };
+
+		SPtr<VertexBuffer> pVertexBuffer(new VertexBuffer());
+		pVertexBuffer->Create(std::move(CubeVerts));
+		SPtr<IndexBuffer> pIndexBuffer(new IndexBuffer(std::move(Indices)));
+
+		SPtr<Geometry> geo(new Geometry());
+		geo->SetVertexBuffer(0, pVertexBuffer);
+		geo->SetIndexBuffer(pIndexBuffer);
+		geo->SetDrawRange(PrimitiveTopology::TRIANGLE_LIST, 0, pIndexBuffer->GetIndexCount());
+		m->SetGeometry(0, 0, geo);
+		m->SetBoundingBox(BoundingBox(-1, 1));
+		cache.RegisterResource(m);
 
 		CreateInstancingBuffer();
+	}
+	
+	void Renderer::LoadShaders()
+	{
+		auto& cache = GetSubsystem<ResourceCache>();
+
+		defaultMaterial_ = new Material();
+		defaultMaterial_->SetName("DefaultMaterial");
+		defaultMaterial_->SetShaderAttr(ResourceRef::Create<Shader>("Shaders/Textured.shader"));
+		
+		SPtr<Texture> defaultTexture(new Texture());
+		int w = 1;
+		int h = 1;
+
+		Vector<Vector<byte>> mip(1);	
+		Vector<byte>& subData = mip.back();
+		subData.resize(w * h * 4, 255);
+		subData[1] = 0;
+
+		TextureDesc desc;
+		desc.Type = Diligent::RESOURCE_DIM_TEX_2D;
+		desc.Width = (uint)w;
+		desc.Height = (uint)h;
+		desc.MipLevels = 1;
+		desc.ArraySize = 1;
+		desc.Format = Diligent::TEX_FORMAT_RGBA8_UNORM;
+		desc.SampleCount = 1;
+		desc.Usage = Diligent::USAGE_STATIC;
+		desc.BindFlags = Diligent::BIND_SHADER_RESOURCE;
+		desc.CPUAccessFlags = 0;
+		
+		defaultTexture->SetName("Magenta");
+		defaultTexture->Create(desc, std::move(mip));
+
+		cache.RegisterResource(defaultTexture);
+
+		defaultMaterial_->SetTexture("DiffMap", defaultTexture);
+
 	}
 
 	void Renderer::HandleRenderUpdate(const RenderUpdate& eventData)

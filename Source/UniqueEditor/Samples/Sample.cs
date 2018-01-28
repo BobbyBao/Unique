@@ -9,7 +9,7 @@ namespace UniqueEditor.Samples
     {
         protected Scene scene;
         protected Camera camera;
-
+        protected Viewport viewport;
         /// Camera yaw angle.
         protected float yaw_;
         /// Camera pitch angle.
@@ -17,6 +17,9 @@ namespace UniqueEditor.Samples
 
         public virtual void Enter()
         {
+            var renderer = GetSubsystem<Renderer>();
+            viewport = renderer.CreateViewport(0)                
+            .Debug(false);
         }
 
         public virtual void Update(float timeStep)
@@ -26,6 +29,8 @@ namespace UniqueEditor.Samples
 
         public virtual void Exit()
         {
+            scene?.Dispose();
+
 
         }
 

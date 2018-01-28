@@ -33,7 +33,7 @@ namespace UniqueEditor.Samples
                     .Material(new ResourceRefList(TypeOf<Material>(), "Models/Stone.material"))
                 )
             );
-
+            
             const int NUM_OBJECTS = 200;
             for (int i = 0; i < NUM_OBJECTS; ++i)
             {
@@ -49,13 +49,9 @@ namespace UniqueEditor.Samples
 
             }
 
-            var renderer = GetSubsystem<Renderer>();
-            var graphics = GetSubsystem<Graphics>();
-
-            renderer.CreateViewport(0)
-            .Scene(scene)
-            .Camera(camera)
-            .Debug(false);
+            viewport
+                .Scene(scene)
+                .Camera(camera);
         }
 
         public override void Update(float timeStep)
@@ -65,8 +61,6 @@ namespace UniqueEditor.Samples
 
         public override void Exit()
         {
-            scene.Dispose();
-
             base.Exit();
         }
     }

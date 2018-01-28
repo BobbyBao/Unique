@@ -4,7 +4,7 @@
 
 
 void VS(
-		float4 iPos : ATTRIB0, 
+		float3 iPos : ATTRIB0, 
         float3 iNormal : ATTRIB1,
         float2 iTexCoord : ATTRIB2,
         float4 iTangent : ATTRIB3,
@@ -16,8 +16,7 @@ void VS(
     ) 
 {
     float4x3 modelMatrix =  iModelMatrix;
-   // float4x4 modelMatrix = /*transpose*/(float4x4(float4(1,0,0,0), float4(0,1,0,0), float4(0,0,1,0), float4(0,0,0,1)));
-    float3 worldPos = GetWorldPos(modelMatrix).xyz;
+    float3 worldPos = iPos;// GetWorldPos(modelMatrix).xyz;
     oPos = GetClipPos(worldPos);
     oTexCoord = iTexCoord;
 }

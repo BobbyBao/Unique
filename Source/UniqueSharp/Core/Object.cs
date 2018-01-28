@@ -159,6 +159,8 @@ namespace UniqueEngine
 
         public static RefCounted PtrToObject(IntPtr nativePtr)
         {
+            System.Diagnostics.Debug.Assert(nativePtr != IntPtr.Zero);
+            
             if (ptrToObject_.TryGetValue(nativePtr, out var weakRef))
             {
                 if (weakRef.TryGetTarget(out var obj))

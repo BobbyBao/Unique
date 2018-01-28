@@ -15,7 +15,7 @@
 #include "Serialize/JsonSerializer.h"
 #include "Input/Input.h"
 
-//UNIQUE_IMPLEMENT_MAIN(Unique::SceneSample)
+UNIQUE_IMPLEMENT_MAIN(Unique::SceneSample)
 
 namespace Unique
 {
@@ -53,25 +53,6 @@ namespace Unique
 		model->SetModelAttr(ResourceRef::Create<Model>("Models/Kachujin/Kachujin.mdl"));
   		model->SetMaterialsAttr(ResourceRefList::Create<Material>(
   		{ "Models/Kachujin/Materials/Kachujin.material" }));
-		
-		/*
-		Model* m = new Model();
-		m->SetNumGeometries(1);
-		m->SetNumGeometryLodLevels(0, 1);
-		SPtr<Geometry> geo = BuildSponge(2, true);
-		m->SetGeometry(0, 0, geo);
-		m->SetBoundingBox(BoundingBox(-10, 10));
-		model->SetModel(m);*/
-		
-// 		SPtr<Material> mat(new Material());
-// 		mat->SetShaderAttr(ResourceRef::Create<Shader>("Shaders/Skinned.shader"));
-// 		mat->SetTexture("DiffMap", ResourceRef::Create<Texture>("Models/Kachujin/Textures/Kachujin_diffuse.png"));
-// 		model->SetMaterial(mat);
-
-// 		{
-// 			JsonSerializer jsonSer;
-// 			jsonSer.Save("test_material.json", mat);
-// 		}
 
 		Animation* walkAnimation = cache.GetResource<Animation>("Models/Kachujin/Kachujin_Walk.ani");
 		AnimationState* state = model->AddAnimationState(walkAnimation);

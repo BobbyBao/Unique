@@ -1,4 +1,4 @@
-#include "Uniforms.hlsl"
+//#include "Uniforms.hlsl"
 #include "Samplers.hlsl"
 
 cbuffer UIVS

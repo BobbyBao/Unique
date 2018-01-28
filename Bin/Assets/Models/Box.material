@@ -1,0 +1,10 @@
+{
+    "Type": "Material",
+    "Shader": {
+        "Type": "Shader",
+        "Name": "Shaders/Basic.shader"
+    },
+    "ShaderDefines": "",
+    "Uniforms": [],
+    "TextureSlots": []
+}

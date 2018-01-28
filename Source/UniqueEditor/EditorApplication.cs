@@ -11,7 +11,7 @@ namespace UniqueEditor
         {
             base.Setup();
 
-         //   deviceType = DeviceType.OpenGL;
+        //    deviceType = DeviceType.OpenGL;
         }
 
         protected override void Initialize()
@@ -19,8 +19,8 @@ namespace UniqueEditor
             base.Initialize();
 
             Engine.instance.maxFps = 1000;
-            
 
+            SetSample(new CubeSample());
         }
         
         protected override void Shutdown()
@@ -42,7 +42,7 @@ namespace UniqueEditor
             {
                 ImGUI.MenubarBegin();
                 ImGUI.LayoutRowStatic(20, 60, 2);
-                if(ImGUI.MenuBeginText("Demo", nk_text_alignment.NK_TEXT_LEFT,  new nk_vec2(100, 100)))
+                if(ImGUI.MenuBeginText("Demo", nk_text_alignment.NK_TEXT_LEFT,  new nk_vec2(160, 100)))
                 {
                     ImGUI.LayoutRowDynamic(25);
 
@@ -51,7 +51,8 @@ namespace UniqueEditor
                     {
                         if(t.IsSubclassOf(typeof(Sample)))
                         {
-                            if (ImGUI.MenuItemText(t.Name, nk_text_alignment.NK_TEXT_LEFT))
+                            var currentType = current?.GetType();
+                            if (ImGUI.MenuItemSymbolText( t == currentType ? nk_symbol_type.NK_SYMBOL_CIRCLE_SOLID : nk_symbol_type.NK_SYMBOL_NONE, t.Name, nk_text_alignment.NK_TEXT_RIGHT))
                             {
                                 SetSample(System.Activator.CreateInstance(t) as Sample);
                             }
@@ -62,7 +63,7 @@ namespace UniqueEditor
                     ImGUI.MenuEnd();
                 }
 
-                if (ImGUI.MenuBeginText("Skin", nk_text_alignment.NK_TEXT_LEFT, new nk_vec2(100, 160)))
+                if (ImGUI.MenuBeginText("Skin", nk_text_alignment.NK_TEXT_LEFT, new nk_vec2(120, 160)))
                 {
                     ImGUI.LayoutRowDynamic(25);
                     string[] names = typeof(Theme).GetEnumNames();

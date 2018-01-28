@@ -138,8 +138,7 @@ namespace UniqueEngine
 
 
         public static bool MenuItemText(string text, nk_text_alignment align) => nk_menu_item_text(ctx, text, text.Length, (uint)align) != 0;
-        /*
-        public static int nk_menu_item_text( string text, int p1, uint align);
+        /*s
         public static int nk_menu_item_label( string label, uint alignment);
         public static int nk_menu_item_image_label( nk_image image, string label, uint alignment);
         public static int nk_menu_item_image_text( nk_image image, string text, int len, uint alignment);

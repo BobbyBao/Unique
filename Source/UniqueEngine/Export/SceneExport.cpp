@@ -46,7 +46,9 @@ UNIQUE_C_API Component* Node_CreateComponent(Node* self, const StringID& type)
 
 UNIQUE_C_API Component* Node_GetOrCreateComponent(Node* self, const StringID& type)
 {
-	return self->GetOrCreateComponent(type);
+	Component* c = self->GetOrCreateComponent(type);
+	assert(c);
+	return c;
 }
 
 UNIQUE_C_API Component* Node_GetComponent(Node* self, const StringID& type, bool recursive)

@@ -1,11 +1,11 @@
-#include "Precompiled.h"
+#include "UniquePCH.h"
 
 #include "Core/Context.h"
 #include "../Graphics/Camera.h"
 #include "../Graphics/DebugRenderer.h"
 #include "../Graphics/Drawable.h"
 #include "../Scene/Node.h"
-//#include "../DebugNew.h"
+#include "DebugNew.h"
 
 namespace Unique
 {
@@ -392,19 +392,19 @@ Matrix4 Camera::GetProjection() const
 
 Matrix4 Camera::GetGPUProjection() const
 {
-#ifndef UNIQUE_OPENGL
-    return GetProjection(); // Already matches API-specific format
-#else
     // See formulation for depth range conversion at http://www.ogre3d.org/forums/viewtopic.php?f=4&t=13357
     Matrix4 ret = GetProjection();
 
-    ret.m20_ = 2.0f * ret.m20_ - ret.m30_;
-    ret.m21_ = 2.0f * ret.m21_ - ret.m31_;
-    ret.m22_ = 2.0f * ret.m22_ - ret.m32_;
-    ret.m23_ = 2.0f * ret.m23_ - ret.m33_;
+	if(GetSubsystem<Graphics>().IsOpenGL())
+	{
+		ret.m20_ = 2.0f * ret.m20_ - ret.m30_;
+		ret.m21_ = 2.0f * ret.m21_ - ret.m31_;
+		ret.m22_ = 2.0f * ret.m22_ - ret.m32_;
+		ret.m23_ = 2.0f * ret.m23_ - ret.m33_;
+	}
 
     return ret;
-#endif
+
 }
 
 void Camera::GetFrustumSize(Vector3& near, Vector3& far) const

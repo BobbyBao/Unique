@@ -57,7 +57,7 @@ namespace Unique
 	void Material::SetShaderAttr(const ResourceRef& shader)
 	{
 		shaderAttr_ = shader;
-		shader_ = GetSubsystem<ResourceCache>().GetResource<Shader>(shaderAttr_.name_);
+		shader_ = GetSubsystem<ResourceCache>().GetResource<Shader>(shader.name_);
 	}
 
 

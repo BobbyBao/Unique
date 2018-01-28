@@ -4,10 +4,10 @@
 
 
 void VS(
-		float4 iPos : ATTRIB0, 
+		float3 iPos : ATTRIB0, 
 		float4 iColor : ATTRIB1,
         out float4 oColor : COLOR0,
-		out float4 oPos : OUTPOSITION
+		out float4 oPos : SV_POSITION
     ) 
 {
     float4x3 modelMatrix = iModelMatrix;

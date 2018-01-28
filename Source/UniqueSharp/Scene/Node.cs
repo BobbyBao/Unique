@@ -122,10 +122,7 @@ namespace UniqueEngine
         public Node Component(StringID type, Action<Component> action = null)
         {
             Component c = PtrToObject(Node_GetOrCreateComponent(native_, ref type)) as Component;
-            if(action != null)
-            {
-                action(c);
-            }
+            action?.Invoke(c);
             return this;
         }
 
@@ -133,8 +130,10 @@ namespace UniqueEngine
         {
             return Component(TypeOf<T>(), (c)=> 
             {
-                if(action != null)
-                    action(c as T);
+                if(c != null)
+                {
+                    action?.Invoke(c as T);
+                }
             });
         }
 

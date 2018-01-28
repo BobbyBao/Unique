@@ -4,6 +4,12 @@
 
 using namespace Unique;
 
+uExport(Graphics, int, GetWidth)
+uExport(Graphics, int, GetHeight)
+
+uExportStatic(Graphics, float, GetRenderWait)
+uExportStatic(Graphics, float, GetUpdateWait)
+
 uExport(Camera, void, SetNearClip, float, nearClip)
 uExport(Camera, void, SetFarClip, float, farClip)
 uExport(Camera, void, SetFov, float, fov)
@@ -37,8 +43,15 @@ UNIQUE_C_API void StaticModel_SetMaterialsAttr(StaticModel* self, ResourceRefLis
 	self->SetMaterialsAttr(*material);
 }
 
-uExport(Graphics, int, GetWidth)
-uExport(Graphics, int, GetHeight)
+uExport(Material, void, SetShader, Shader*, shader)
+uExport(Material, Shader*, GetShader)
 
-uExportStatic(Graphics, float, GetRenderWait)
-uExportStatic(Graphics, float, GetUpdateWait)
+UNIQUE_C_API const ResourceRef* Material_GetShaderAttr(Material* self)
+{
+	return &self->GetShaderAttr();
+}
+
+UNIQUE_C_API void Material_SetShaderAttr(Material* self, ResourceRef* shader)
+{
+	self->SetShaderAttr(*shader);
+}

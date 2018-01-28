@@ -385,10 +385,13 @@ void Input::Update()
 	auto& events = MainContext(events_);
 	if (!events.empty())
 	{
-		for (auto& evt : events)
+		for (size_t i = 0; i < events.size(); i++)
 		{
+			auto& evt = events[i];
 			HandleSDLEvent(&evt);
 		}
+
+		events.clear();
 	}
 
     if (suppressNextMouseMove_ && (mouseMove_ != IntVector2::ZERO || mouseMoved))

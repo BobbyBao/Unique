@@ -55,10 +55,7 @@ namespace UniqueEngine
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern void Camera_SetAspectRatio(IntPtr self, float p1);
-
-        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern void Camera_SetFillMode(IntPtr self, FillMode p1);
-
+        
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern void Camera_SetZoom(IntPtr self, float p1);
 
