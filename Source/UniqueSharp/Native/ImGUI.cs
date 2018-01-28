@@ -8,30 +8,40 @@ namespace UniqueEngine
 {
     public enum nk_buttons
     {
-        NK_BUTTON_LEFT,
-        NK_BUTTON_MIDDLE,
-        NK_BUTTON_RIGHT,
-        NK_BUTTON_DOUBLE,
-        NK_BUTTON_MAX
+        LEFT,
+        MIDDLE,
+        RIGHT,
+        DOUBLE,
+        MAX
     };
 
-    public enum nk_panel_flags
+    public enum nkPanelFlags
     {
-        NK_WINDOW_BORDER = (1 << 0), /* Draws a border around the window to visually separate window from the background */
-        NK_WINDOW_MOVABLE = (1 << 1), /* The movable flag indicates that a window can be moved by user input or by dragging the window header */
-        NK_WINDOW_SCALABLE = (1 << 2), /* The scalable flag indicates that a window can be scaled by user input by dragging a scaler icon at the button of the window */
-        NK_WINDOW_CLOSABLE = (1 << 3), /* adds a closable icon into the header */
-        NK_WINDOW_MINIMIZABLE = (1 << 4), /* adds a minimize icon into the header */
-        NK_WINDOW_NO_SCROLLBAR = (1 << 5), /* Removes the scrollbar from the window */
-        NK_WINDOW_TITLE = (1 << 6), /* Forces a header at the top at the window showing the title */
-        NK_WINDOW_SCROLL_AUTO_HIDE = (1 << 7), /* Automatically hides the window scrollbar if no user interaction: also requires delta time in `nk_context` to be set each frame */
-        NK_WINDOW_BACKGROUND = (1 << 8), /* Always keep window in the background */
-        NK_WINDOW_SCALE_LEFT = (1 << 9), /* Puts window scaler in the left-ottom corner instead right-bottom*/
-        NK_WINDOW_NO_INPUT = (1 << 10) /* Prevents window of scaling, moving or getting focus */
+        BORDER = (1 << 0), /* Draws a border around the window to visually separate window from the background */
+        MOVABLE = (1 << 1), /* The movable flag indicates that a window can be moved by user input or by dragging the window header */
+        SCALABLE = (1 << 2), /* The scalable flag indicates that a window can be scaled by user input by dragging a scaler icon at the button of the window */
+        CLOSABLE = (1 << 3), /* adds a closable icon into the header */
+        MINIMIZABLE = (1 << 4), /* adds a minimize icon into the header */
+        NO_SCROLLBAR = (1 << 5), /* Removes the scrollbar from the window */
+        TITLE = (1 << 6), /* Forces a header at the top at the window showing the title */
+        SCROLL_AUTO_HIDE = (1 << 7), /* Automatically hides the window scrollbar if no user interaction: also requires delta time in `nk_context` to be set each frame */
+        BACKGROUND = (1 << 8), /* Always keep window in the background */
+        SCALE_LEFT = (1 << 9), /* Puts window scaler in the left-ottom corner instead right-bottom*/
+        NO_INPUT = (1 << 10) /* Prevents window of scaling, moving or getting focus */
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct nk_color { public byte r, g, b, a; }
+    public struct nk_color
+    {
+        public byte r, g, b, a;
+        public nk_color(byte r, byte g, byte b, byte a = 255)
+        {
+            this.r = r;
+            this.g = g;
+            this.b = b;
+            this.a = a;
+        }
+    }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct nk_colorf { public float r, g, b, a; }
@@ -71,7 +81,7 @@ namespace UniqueEngine
     // nk_handle;
 
     [StructLayout(LayoutKind.Sequential)]
-    public unsafe struct nk_image
+    public unsafe struct nkImage
     {
         public IntPtr handle;
         public ushort w, h;
@@ -79,9 +89,9 @@ namespace UniqueEngine
     };
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct nk_cursor
+    public struct nkCursor
     {
-        public nk_image img;
+        public nkImage img;
         public nk_vec2 size, offset;
     };
 
@@ -668,7 +678,7 @@ namespace UniqueEngine
         //#define nk_tree_image_push_id(ctx, type, img, title, state, id) nk_tree_image_push_hashed(ctx, type, img, title, state, NK_FILE_LINE,nk_strlen(NK_FILE_LINE),id)
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_tree_image_push_hashed(IntPtr ctx, nk_tree_type type, nk_image image, [MarshalAs(UnmanagedType.LPStr)]string title, nk_collapse_states initial_state, [MarshalAs(UnmanagedType.LPStr)]string hash, int len,int seed);
+        static extern int nk_tree_image_push_hashed(IntPtr ctx, nk_tree_type type, nkImage image, [MarshalAs(UnmanagedType.LPStr)]string title, nk_collapse_states initial_state, [MarshalAs(UnmanagedType.LPStr)]string hash, int len,int seed);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern void nk_tree_pop(IntPtr ctx);
@@ -677,7 +687,7 @@ namespace UniqueEngine
         static extern int nk_tree_state_push(IntPtr ctx, nk_tree_type type, [MarshalAs(UnmanagedType.LPStr)]string title, nk_collapse_states *state);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_tree_state_image_push(IntPtr ctx, nk_tree_type type, nk_image image, [MarshalAs(UnmanagedType.LPStr)]string title, nk_collapse_states *state);
+        static extern int nk_tree_state_image_push(IntPtr ctx, nk_tree_type type, nkImage image, [MarshalAs(UnmanagedType.LPStr)]string title, nk_collapse_states *state);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern void nk_tree_state_pop(IntPtr ctx);
@@ -687,14 +697,14 @@ namespace UniqueEngine
          *                                  WIDGET
          *
          * ============================================================================= */
-        enum nk_widget_layout_states
+        public enum nk_widget_layout_states
         {
             NK_WIDGET_INVALID, /* The widget cannot be seen and is completely out of view */
             NK_WIDGET_VALID, /* The widget is completely inside the window and can be updated and drawn */
             NK_WIDGET_ROM /* The widget is partially visible and cannot be updated */
         };
 
-        enum nk_widget_states
+        public enum nk_widget_states
         {
             NK_WIDGET_STATE_MODIFIED = (1 << 1),
             NK_WIDGET_STATE_INACTIVE = (1 << 2), /* widget is neither active nor hovered */
@@ -770,8 +780,8 @@ namespace UniqueEngine
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern void nk_label_colored_wrap(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string label, nk_color c);
 
-        //[DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        //static extern void nk_image(IntPtr ctx, nk_image image);
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern void nk_image(IntPtr ctx, nkImage image);
 
 #if NK_INCLUDE_STANDARD_VARARGS
 NK_API void nk_labelf(IntPtr ctx, uint, [MarshalAs(UnmanagedType.LPStr)]string, ...);
@@ -820,7 +830,7 @@ NK_API void nk_labelf(IntPtr ctx, uint, [MarshalAs(UnmanagedType.LPStr)]string, 
         static extern int nk_button_symbol(IntPtr ctx, nk_symbol_type t);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_button_image(IntPtr ctx, nk_image img);
+        static extern int nk_button_image(IntPtr ctx, nkImage img);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern int nk_button_symbol_label(IntPtr ctx, nk_symbol_type t, [MarshalAs(UnmanagedType.LPStr)]string text, uint text_alignment);
@@ -829,10 +839,10 @@ NK_API void nk_labelf(IntPtr ctx, uint, [MarshalAs(UnmanagedType.LPStr)]string, 
         static extern int nk_button_symbol_text(IntPtr ctx, nk_symbol_type t, [MarshalAs(UnmanagedType.LPStr)]string text, int p, uint alignment);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_button_image_label(IntPtr ctx, nk_image img, [MarshalAs(UnmanagedType.LPStr)]string text, uint text_alignment);
+        static extern int nk_button_image_label(IntPtr ctx, nkImage img, [MarshalAs(UnmanagedType.LPStr)]string text, uint text_alignment);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_button_image_text(IntPtr ctx, nk_image img, [MarshalAs(UnmanagedType.LPStr)]string text, int p, uint alignment);
+        static extern int nk_button_image_text(IntPtr ctx, nkImage img, [MarshalAs(UnmanagedType.LPStr)]string text, int p, uint alignment);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern int nk_button_text_styled(IntPtr ctx, nk_style_button* btn, [MarshalAs(UnmanagedType.LPStr)]string title, int len);
@@ -844,7 +854,7 @@ NK_API void nk_labelf(IntPtr ctx, uint, [MarshalAs(UnmanagedType.LPStr)]string, 
         static extern int nk_button_symbol_styled(IntPtr ctx, nk_style_button* btn, nk_symbol_type t);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_button_image_styled(IntPtr ctx, nk_style_button* btn, nk_image img);
+        static extern int nk_button_image_styled(IntPtr ctx, nk_style_button* btn, nkImage img);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern int nk_button_symbol_text_styled(IntPtr ctx, nk_style_button* btn, nk_symbol_type t, [MarshalAs(UnmanagedType.LPStr)]string text, int p, uint alignment);
@@ -853,10 +863,10 @@ NK_API void nk_labelf(IntPtr ctx, uint, [MarshalAs(UnmanagedType.LPStr)]string, 
         static extern int nk_button_symbol_label_styled(IntPtr ctx, nk_style_button *style, nk_symbol_type symbol, [MarshalAs(UnmanagedType.LPStr)]string title, uint align);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_button_image_label_styled(IntPtr ctx, nk_style_button* style, nk_image img, [MarshalAs(UnmanagedType.LPStr)]string title, uint text_alignment);
+        static extern int nk_button_image_label_styled(IntPtr ctx, nk_style_button* style, nkImage img, [MarshalAs(UnmanagedType.LPStr)]string title, uint text_alignment);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_button_image_text_styled(IntPtr ctx, nk_style_button* style, nk_image img, [MarshalAs(UnmanagedType.LPStr)]string title, int p1, uint alignment);
+        static extern int nk_button_image_text_styled(IntPtr ctx, nk_style_button* style, nkImage img, [MarshalAs(UnmanagedType.LPStr)]string title, int p1, uint alignment);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern void nk_button_set_behavior(IntPtr ctx, nk_button_behavior b);
@@ -925,10 +935,10 @@ NK_API void nk_labelf(IntPtr ctx, uint, [MarshalAs(UnmanagedType.LPStr)]string, 
         static extern int nk_selectable_text(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string label, int p1, uint align, int* value);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_selectable_image_label(IntPtr ctx, nk_image img,  [MarshalAs(UnmanagedType.LPStr)]string label, uint align, int* value);
+        static extern int nk_selectable_image_label(IntPtr ctx, nkImage img,  [MarshalAs(UnmanagedType.LPStr)]string label, uint align, int* value);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_selectable_image_text(IntPtr ctx, nk_image img, [MarshalAs(UnmanagedType.LPStr)]string label, int p1, uint align, int* value);
+        static extern int nk_selectable_image_text(IntPtr ctx, nkImage img, [MarshalAs(UnmanagedType.LPStr)]string label, int p1, uint align, int* value);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern int nk_select_label(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string label, uint align, int value);
@@ -937,10 +947,10 @@ NK_API void nk_labelf(IntPtr ctx, uint, [MarshalAs(UnmanagedType.LPStr)]string, 
         static extern int nk_select_text(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string label, int p1, uint align, int value);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_select_image_label(IntPtr ctx, nk_image img,[MarshalAs(UnmanagedType.LPStr)]string label, uint align, int value);
+        static extern int nk_select_image_label(IntPtr ctx, nkImage img,[MarshalAs(UnmanagedType.LPStr)]string label, uint align, int value);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_select_image_text(IntPtr ctx, nk_image img,[MarshalAs(UnmanagedType.LPStr)]string label, int p1, uint align, int value);
+        static extern int nk_select_image_text(IntPtr ctx, nkImage img,[MarshalAs(UnmanagedType.LPStr)]string label, int p1, uint align, int value);
         /* =============================================================================
          *
          *                                  SLIDER
@@ -965,10 +975,10 @@ NK_API void nk_labelf(IntPtr ctx, uint, [MarshalAs(UnmanagedType.LPStr)]string, 
          * ============================================================================= */
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_progress(IntPtr ctx, long* cur, long max, int modifyable);
+        static extern int nk_progress(IntPtr ctx, int* cur, int max, int modifyable);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern long nk_prog(IntPtr ctx, long cur, long max, int modifyable);
+        static extern int nk_prog(IntPtr ctx, int cur, int max, int modifyable);
 
         /* =============================================================================
          *
@@ -1162,13 +1172,13 @@ NK_API void nk_labelf(IntPtr ctx, uint, [MarshalAs(UnmanagedType.LPStr)]string, 
         static extern int nk_combo_begin_symbol_text(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string selected, int p1, nk_symbol_type symbol, nk_vec2 size);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_combo_begin_image(IntPtr ctx, nk_image img,  nk_vec2 size);
+        static extern int nk_combo_begin_image(IntPtr ctx, nkImage img,  nk_vec2 size);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_combo_begin_image_label(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string selected, nk_image image, nk_vec2 size);
+        static extern int nk_combo_begin_image_label(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string selected, nkImage image, nk_vec2 size);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_combo_begin_image_text(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string selected, int p1, nk_image image, nk_vec2 size);
+        static extern int nk_combo_begin_image_text(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string selected, int p1, nkImage image, nk_vec2 size);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern int nk_combo_item_label(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string text, uint alignment);
@@ -1177,10 +1187,10 @@ NK_API void nk_labelf(IntPtr ctx, uint, [MarshalAs(UnmanagedType.LPStr)]string, 
         static extern int nk_combo_item_text(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string text, int p1, uint alignment);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_combo_item_image_label(IntPtr ctx, nk_image image, [MarshalAs(UnmanagedType.LPStr)]string label, uint alignment);
+        static extern int nk_combo_item_image_label(IntPtr ctx, nkImage image, [MarshalAs(UnmanagedType.LPStr)]string label, uint alignment);
   
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_combo_item_image_text(IntPtr ctx, nk_image image, [MarshalAs(UnmanagedType.LPStr)]string label, int p1, uint alignment);
+        static extern int nk_combo_item_image_text(IntPtr ctx, nkImage image, [MarshalAs(UnmanagedType.LPStr)]string label, int p1, uint alignment);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern int nk_combo_item_symbol_label(IntPtr ctx, nk_symbol_type symbol, [MarshalAs(UnmanagedType.LPStr)]string label, uint alignment);
@@ -1210,10 +1220,10 @@ NK_API void nk_labelf(IntPtr ctx, uint, [MarshalAs(UnmanagedType.LPStr)]string, 
         static extern int nk_contextual_item_label(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string label, uint align);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_contextual_item_image_label(IntPtr ctx, nk_image image, [MarshalAs(UnmanagedType.LPStr)]string label, uint alignment);
+        static extern int nk_contextual_item_image_label(IntPtr ctx, nkImage image, [MarshalAs(UnmanagedType.LPStr)]string label, uint alignment);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_contextual_item_image_text(IntPtr ctx, nk_image image, [MarshalAs(UnmanagedType.LPStr)]string text, int len, uint alignment);
+        static extern int nk_contextual_item_image_text(IntPtr ctx, nkImage image, [MarshalAs(UnmanagedType.LPStr)]string text, int len, uint alignment);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern int nk_contextual_item_symbol_label(IntPtr ctx, nk_symbol_type symbol, [MarshalAs(UnmanagedType.LPStr)]string label, uint alignment);
@@ -1266,13 +1276,13 @@ NK_API void nk_labelf(IntPtr ctx, uint, [MarshalAs(UnmanagedType.LPStr)]string, 
         static extern int nk_menu_begin_label(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string label, uint align, nk_vec2 size);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_menu_begin_image(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string label, nk_image image, nk_vec2 size);
+        static extern int nk_menu_begin_image(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string label, nkImage image, nk_vec2 size);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_menu_begin_image_text(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string label, int p, uint align, nk_image image, nk_vec2 size);
+        static extern int nk_menu_begin_image_text(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string label, int p, uint align, nkImage image, nk_vec2 size);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_menu_begin_image_label(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string label, uint align, nk_image image, nk_vec2 size);
+        static extern int nk_menu_begin_image_label(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string label, uint align, nkImage image, nk_vec2 size);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern int nk_menu_begin_symbol(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string label, nk_symbol_type symbol, nk_vec2 size);
@@ -1290,10 +1300,10 @@ NK_API void nk_labelf(IntPtr ctx, uint, [MarshalAs(UnmanagedType.LPStr)]string, 
         static extern int nk_menu_item_label(IntPtr ctx, [MarshalAs(UnmanagedType.LPStr)]string label, uint alignment);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_menu_item_image_label(IntPtr ctx, nk_image image, [MarshalAs(UnmanagedType.LPStr)]string label, uint alignment);
+        static extern int nk_menu_item_image_label(IntPtr ctx, nkImage image, [MarshalAs(UnmanagedType.LPStr)]string label, uint alignment);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_menu_item_image_text(IntPtr ctx, nk_image image, [MarshalAs(UnmanagedType.LPStr)]string text, int len, uint alignment);
+        static extern int nk_menu_item_image_text(IntPtr ctx, nkImage image, [MarshalAs(UnmanagedType.LPStr)]string text, int len, uint alignment);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern int nk_menu_item_symbol_text(IntPtr ctx, nk_symbol_type symol, [MarshalAs(UnmanagedType.LPStr)]string text, int p1, uint alignment);

@@ -86,7 +86,7 @@ namespace UniqueEditor
             ImGUI.End();
 
 
-            if (ImGUI.Begin("Debug", new nk_rect(graphics.width - 200, 40, 200, 120), nk_panel_flags.NK_WINDOW_MINIMIZABLE | nk_panel_flags.NK_WINDOW_TITLE))
+            if (ImGUI.Begin("Debug", new nk_rect(graphics.width - 200, 40, 200, 120), nkPanelFlags.MINIMIZABLE | nkPanelFlags.TITLE))
             {
                 ImGUI.LayoutRowDynamic(20, 2);
                 ImGUI.Label("FPS:");
@@ -99,7 +99,13 @@ namespace UniqueEditor
             }
             ImGUI.End();
 
+            if (current)
+            {
+                current.OnGUI();
+            }
+
         }
+
 
         void SetSample(Sample sample)
         {

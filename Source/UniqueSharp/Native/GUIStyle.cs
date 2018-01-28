@@ -15,7 +15,7 @@ namespace UniqueEngine
     public struct nk_style_item_data
     {
         [FieldOffset(0)]
-        public nk_image image;
+        public nkImage image;
         [FieldOffset(0)]
         public nk_color color;        
     }
@@ -469,8 +469,8 @@ namespace UniqueEngine
         //nk_user_font *font;
         public IntPtr font;
         public fixed /*nk_cursor**/long cursors[(int)nk_style_cursor.NK_CURSOR_COUNT];
-        public nk_cursor* cursor_active;
-        public nk_cursor* cursor_last;
+        public nkCursor* cursor_active;
+        public nkCursor* cursor_last;
         public int cursor_visible;
 
         public nk_style_text text;
@@ -545,7 +545,7 @@ namespace UniqueEngine
     public unsafe class GUIStyle
     {
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern nk_style_item nk_style_item_image(nk_image img);
+        static extern nk_style_item nk_style_item_image(nkImage img);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern nk_style_item nk_style_item_color(nk_color c);
@@ -560,10 +560,10 @@ namespace UniqueEngine
         static extern void nk_style_from_table(IntPtr ctx, nk_color* c);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern void nk_style_load_cursor(IntPtr ctx, nk_style_cursor style, nk_cursor* cursor);
+        static extern void nk_style_load_cursor(IntPtr ctx, nk_style_cursor style, nkCursor* cursor);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern void nk_style_load_all_cursors(IntPtr ctx, nk_cursor* cursor);
+        static extern void nk_style_load_all_cursors(IntPtr ctx, nkCursor* cursor);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         [return: MarshalAs(UnmanagedType.LPStr)] 

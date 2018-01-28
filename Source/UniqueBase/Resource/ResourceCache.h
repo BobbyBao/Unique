@@ -212,6 +212,12 @@ public:
     String PrintMemoryUsage() const;
 
 	template<class T>
+	void RegisterResource(T* resource)
+	{
+		RegisterResource(T::GetTypeStatic(), resource);
+	}
+	
+	template<class T>
 	void RegisterResource(const SPtr<T>& resource)
 	{
 		RegisterResource(T::GetTypeStatic(), resource);

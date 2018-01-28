@@ -445,12 +445,8 @@ namespace Unique
 	}
 
 	nk_color background = nk_rgb(28, 48, 62);
-	void GUI::HandleBeginFrame(const BeginFrame& eventData)
+	void GUITest()
 	{
-		SendEvent(GUIEvent());
-		/*
-		nk_context *ctx = &impl_.ctx;
-
 		if (nk_begin(ctx, "Demo", nk_rect(50, 50, 230, 250),
 			NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE |
 			NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE))
@@ -483,7 +479,13 @@ namespace Unique
 			}
 		}
 		nk_end(ctx);
-		*/
+	}
+
+	void GUI::HandleBeginFrame(const BeginFrame& eventData)
+	{
+		SendEvent(GUIEvent());
+		
+		
 	}
 
 	static void nk_get_projection_matrix(int width, int height, float *result)

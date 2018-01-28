@@ -6,7 +6,7 @@ using System.Text;
 
 namespace UniqueEngine
 {
-    public static partial class ImGUI
+    public unsafe static partial class ImGUI
     {
         static IntPtr ctx_;
         static IntPtr ctx
@@ -24,11 +24,11 @@ namespace UniqueEngine
         }
 
         public static void SetStyle(Theme theme) => nk_set_style(ctx, theme);
-        public static bool Begin(string title, nk_rect bounds, nk_panel_flags flags) => nk_begin(ctx, title, bounds, (uint)flags) != 0;
-        public static int BeginTitled(string name, string title, nk_rect bounds, nk_panel_flags flags) => nk_begin_titled(ctx, name, title, bounds, (uint)flags);
+        public static bool Begin(string title, nk_rect bounds, nkPanelFlags flags) => nk_begin(ctx, title, bounds, (uint)flags) != 0;
+        public static int BeginTitled(string name, string title, nk_rect bounds, nkPanelFlags flags) => nk_begin_titled(ctx, name, title, bounds, (uint)flags);
         public static void End() => nk_end(ctx);
 
-        public static bool Window(string name, string title, float x, float y, float w, float h, nk_panel_flags flags, Action a)
+        public static bool Window(string name, string title, float x, float y, float w, float h, nkPanelFlags flags, Action a)
         {
             bool res = true;
 
@@ -41,7 +41,7 @@ namespace UniqueEngine
             return res;
         }
 
-        public static bool Window(string title, float x, float y, float w, float h, nk_panel_flags flags, Action a) => Window(title, title, x, y, w, h, flags, a);
+        public static bool Window(string title, float x, float y, float w, float h, nkPanelFlags flags, Action a) => Window(title, title, x, y, w, h, flags, a);
         public static IntPtr WindowFind(string name) => nk_window_find(ctx, name);
         public static nk_rect WindowGetBounds() => nk_window_get_bounds(ctx);        
         public static nk_vec2 WindowGetPosition() => nk_window_get_position(ctx);
@@ -99,12 +99,46 @@ namespace UniqueEngine
         public static int GroupBegin(string title, uint flag) => nk_group_begin(ctx, title, flag);
         public static int GroupScrolledOffsetBegin(ref uint x_offset, ref uint y_offset, string title, uint flag) => nk_group_scrolled_offset_begin(ctx, ref x_offset, ref y_offset, title, flag);
         public static int GroupScrolledBegin(ref nk_scroll scr, string title, uint flag) => nk_group_scrolled_begin(ctx,  ref scr, title, flag);
-        static void GroupScrolledEnd() => nk_group_scrolled_end(ctx);       
-        static void GroupEnd() => nk_group_end(ctx);
-        
-        static int ListViewBegin(ref nk_list_view outlv, string id, uint flag, int row_height, int row_count)
-            => nk_list_view_begin(ctx, Utilities.As(ref outlv), id, flag, row_height, row_count);        
-        static void ListViewEnd(ref nk_list_view outlv) => nk_list_view_end(Utilities.As(ref outlv));
+        public static void GroupScrolledEnd() => nk_group_scrolled_end(ctx);
+        public static void GroupEnd() => nk_group_end(ctx);
+
+        public static int ListViewBegin(ref nk_list_view outlv, string id, uint flag, int row_height, int row_count)
+            => nk_list_view_begin(ctx, Utilities.As(ref outlv), id, flag, row_height, row_count);
+        public static void ListViewEnd(ref nk_list_view outlv) => nk_list_view_end(Utilities.As(ref outlv));
+
+        public static int TreePushHashed(nk_tree_type type, string title, nk_collapse_states initial_state, string hash, int len, int seed) 
+            => nk_tree_push_hashed(ctx, type, title, initial_state, hash, len, seed);
+
+        //#define nk_tree_image_push(ctx, type, img, title, state) nk_tree_image_push_hashed(ctx, type, img, title, state, NK_FILE_LINE,nk_strlen(NK_FILE_LINE),__LINE__)
+        //#define nk_tree_image_push_id(ctx, type, img, title, state, id) nk_tree_image_push_hashed(ctx, type, img, title, state, NK_FILE_LINE,nk_strlen(NK_FILE_LINE),id)
+
+        public static int TreeImagePushHashed(nk_tree_type type, nkImage image, string title, nk_collapse_states initial_state, string hash, int len, int seed)
+            => nk_tree_image_push_hashed(ctx, type, image, title, initial_state, hash, len, seed);
+
+        public static void TreePop() => nk_tree_pop(ctx);
+
+        public static int TreeStatePush(nk_tree_type type, string title, ref nk_collapse_states state)
+            => nk_tree_state_push(ctx, type, title, (nk_collapse_states*)Utilities.As(ref state));
+
+        public static unsafe int TreeStateImagePush(nk_tree_type type, nkImage image, string title, ref nk_collapse_states state)
+            =>nk_tree_state_image_push(ctx, type, image, title, (nk_collapse_states*)Utilities.As(ref state));
+
+        public static void TreeStatePop() => nk_tree_state_pop(ctx);
+
+        public static nk_widget_layout_states Widget(ref nk_rect rc)
+            => nk_widget(ref rc, ctx);
+        public static nk_widget_layout_states WidgetFitting(ref nk_rect rc, nk_vec2 p)
+            => nk_widget_fitting(ref rc, ctx, p);
+        public static nk_rect WidgetBounds()=> nk_widget_bounds(ctx);
+        public static nk_vec2 WidgetPosition() => nk_widget_position(ctx);
+        public static nk_vec2 WidgetSize() => nk_widget_size(ctx);
+        public static float WidgetWidth() => nk_widget_width(ctx);
+        public static float WidgetHeight() => nk_widget_height(ctx);
+        public static bool WidgetIsHovered() => nk_widget_is_hovered(ctx) != 0;
+        public static bool WidgetIsMouseClicked(nk_buttons btn) => nk_widget_is_mouse_clicked(ctx, btn) != 0;
+        public static bool WidgetHasMouseClickDown(nk_buttons btn, int down)
+            => nk_widget_has_mouse_click_down(ctx, btn, down) != 0;
+        public static void Spacing(int cols) => nk_spacing(ctx, cols);
 
         public static void Text(string text, nk_text_alignment flag = nk_text_alignment.NK_TEXT_LEFT) => nk_text(ctx, text, text.Length, (uint)flag);
         public static void Text(string text, nk_text_alignment flag, nk_color c) => nk_text_colored(ctx, text, text.Length, (uint)flag, c);
@@ -114,21 +148,119 @@ namespace UniqueEngine
         public static void Label(string label, nk_text_alignment align, nk_color c) => nk_label_colored(ctx, label, (uint)align, c);
         public static void LabelWrap(string label) => nk_label_wrap(ctx, label);
         public static void LabelWrap(string label, nk_color c) => nk_label_colored_wrap(ctx, label, c);
-        
-        public static bool ButtonLabel(string label) => nk_button_label(ctx, label) != 0;
-        public static bool ButtonText(string text) => nk_button_text(ctx, text, text.Length) != 0;
-        public static bool ButtonText(char c) => ButtonText(c.ToString());
-     
+
+        public static void Image(nkImage image) => nk_image(ctx, image);
+
+        public static void Value_bool(string prefix, bool v) => nk_value_bool(ctx, prefix, v ? 1 : 0);
+        public static void Value_int(string prefix, int v) => nk_value_int(ctx, prefix, v);
+        public static void Value_uint(string prefix, uint v) => nk_value_uint(ctx, prefix, v);
+        public static void Value_float(string prefix, float v) => nk_value_float(ctx, prefix, v);
+        public static void Value_color_byte(string prefix, nk_color c)=> nk_value_color_byte(ctx, prefix, c);
+        public static void Value_color_float(string prefix, nk_color c) => nk_value_color_float(ctx, prefix, c);
+        public static void Value_color_hex(string prefix, nk_color c) => nk_value_color_hex(ctx, prefix, c);
+
+        public static bool Button(string text) => nk_button_text(ctx, text, text.Length) != 0;
+        //public static bool ButtonLabel(string label) => nk_button_label(ctx, label) != 0;
+        public static bool Button(char c) => Button(c.ToString());      
+        public static bool Button(nk_color c)=> nk_button_color(ctx, c) != 0;
+        public static bool Button(nk_symbol_type t) => nk_button_symbol(ctx, t) != 0;
+        public static bool Button(nkImage img) => nk_button_image(ctx, img) != 0;
+        public static bool Button(nk_symbol_type t, string text, uint alignment) =>
+            nk_button_symbol_text(ctx, t, text, text.Length, alignment) != 0;        
+        //public static bool Button(nkImage img, string text, uint text_alignment) =>
+        //    nk_button_image_label(ctx, img, text, text_alignment) != 0;
+        public static bool Button(nkImage img, string text, uint alignment) =>
+            nk_button_image_text(ctx, img, text, text.Length, alignment) != 0;
+        public static bool ButtonTextStyled(nk_style_button* btn, string title, int len)
+            => nk_button_text_styled(ctx, btn, title, len) != 0;
+        public static bool ButtonLabelStyled(nk_style_button* btn, string title) =>
+            nk_button_label_styled(ctx, btn, title) != 0;        
+        public static bool ButtonSymbolStyled(nk_style_button* btn, nk_symbol_type t)
+            => nk_button_symbol_styled(ctx, btn, t) != 0;        
+        public static bool ButtonImageStyled(nk_style_button* btn, nkImage img)
+            => nk_button_image_styled(ctx, btn, img) != 0;
+        public static bool ButtonSymbolTextStyled(ref nk_style_button btn, nk_symbol_type t, string text, uint alignment)
+            => nk_button_symbol_text_styled(ctx, (nk_style_button*)Utilities.As(ref btn), t, text, text.Length, alignment) != 0;
+        public static bool ButtonSymbolLabelStyled(ref nk_style_button style, nk_symbol_type symbol, string title, uint align)
+            => nk_button_symbol_label_styled(ctx, (nk_style_button*)Utilities.As(ref style), symbol, title, align) != 0;
+        public static bool ButtonImageLabelStyled(ref nk_style_button style, nkImage img, string title, uint text_alignment)
+            => nk_button_image_label_styled(ctx, (nk_style_button*)Utilities.As(ref style), img, title, text_alignment) != 0;
+        public static bool ButtonImageTextStyled(ref nk_style_button style, nkImage img, string title, uint alignment)
+            => nk_button_image_text_styled(ctx, (nk_style_button*)Utilities.As(ref style), img, title, title.Length, alignment) != 0;
+        public static void ButtonSetBehavior(nk_button_behavior b) => nk_button_set_behavior(ctx, b);
+        public static bool ButtonPushBehavior(nk_button_behavior b) => nk_button_push_behavior(ctx, b) != 0;
+        public static bool ButtonPopBehavior() => nk_button_pop_behavior(ctx) != 0;
+        public static int CheckLabel(string label, int active) => nk_check_label(ctx, label, active);
+        public static int CheckText(string label, int active) => nk_check_text(ctx, label, label.Length, active);
+        public static uint CheckFlagsLabel(string label, uint flags, uint value) => nk_check_flags_label(ctx, label, flags, value);
+        public static uint CheckFlagsText(string label, int p1, uint flags, uint value) => nk_check_flags_text(ctx, label, p1, flags, value);
+        public static int CheckboxLabel(string label, ref int active) => nk_checkbox_label(ctx, label, (int*)Utilities.As(ref active));
+        public static int CheckboxText(string label, int p1, ref int active) => nk_checkbox_text(ctx, label, p1, (int*)Utilities.As(ref active));
+        public static int CheckboxFlagsLabel(string label, ref uint flags, uint value) => nk_checkbox_flags_label(ctx, label, (uint *)Utilities.As(ref flags), value);
+        public static int CheckboxFlagsText(string label, ref uint flags, uint value) => nk_checkbox_flags_text(ctx, label, label.Length, (uint*) Utilities.As(ref flags), value);
+        public static int Radio(string label, ref int active) => nk_radio_text(ctx, label,  label.Length, (int*)Utilities.As(ref active));
+        //public static int OptionLabel(string label, int active) => nk_option_label(ctx, label, active);
+        public static bool Option(string label, bool active) => nk_option_text(ctx, label, label.Length, active ? 1 :0) != 0;
+        //public static int SelectableLabel(string label, uint align, ref int value) => nk_selectable_label(ctx, label, align, (int*) Utilities.As(ref value));
+        public static int Selectable(string label, uint align, ref int value) => nk_selectable_text(ctx, label, label.Length, align, (int*)Utilities.As(ref value));
+        public static int Selectable(nkImage img, string label, uint align, ref int value) => nk_selectable_image_label(ctx, img, label, align, (int*)Utilities.As(ref value));
+        //public static int Selectable(nkImage img, string label, uint align, ref int value) => nk_selectable_image_text(ctx, img, label, label.Length, align, (int*)Utilities.As(ref value));
+        public static int Select(string label, uint align, int value) => nk_select_label(ctx, label, align, value);
+        //public static int SelectText(string label, uint align, int value) => nk_select_text(ctx, label, p1, align, value);
+        public static int Select(nkImage img, string label, uint align, int value) => nk_select_image_label(ctx, img, label, align, value);
+        //public static int Select(nkImage img, string label, uint align, int value) => nk_select_image_text(ctx, img, label, label.Length, align, value);
+        public static float Slide(float min, float val, float max, float step) => nk_slide_float(ctx, min, val, max, step);
+        public static int Slide(int min, int val, int max, int step) => nk_slide_int(ctx, min, val, max, step);
+        public static int Slider(float min, ref float val, float max, float step) => nk_slider_float(ctx, min, (float*)Utilities.As(ref val), max, step);
+        public static int Slider(int min, ref int val, int max, int step) => nk_slider_int(ctx, min, (int*)Utilities.As(ref val), max, step);
+        public static int Progress(ref int cur, int max, int modifyable) => nk_progress(ctx, (int *)Utilities.As(ref cur), max, modifyable);
+        public static int Prog(int cur, int max, int modifyable) => nk_prog(ctx, cur, max, modifyable);
+        public static nk_color ColorPicker(nk_color c, nk_color_format format) => nk_color_picker(ctx, c, format);
+        public static int ColorPick(ref nk_color c, nk_color_format format) => nk_color_pick(ctx, (nk_color *)Utilities.As(ref c), format);
+        public static void PropertyInt(string name, int min, ref int val, int max, int step, float inc_per_pixel) => nk_property_int(ctx, name, min, (int*)Utilities.As(ref val), max, step, inc_per_pixel);
+        public static void PropertyFloat(string name, float min, ref float val, float max, float step, float inc_per_pixel) => nk_property_float(ctx, name, min, (float*)Utilities.As(ref val), max, step, inc_per_pixel);
+        public static void PropertyDouble(string name, double min, ref double val, double max, double step, float inc_per_pixel) => nk_property_double(ctx, name, min, (double*)Utilities.As(ref val), max, step, inc_per_pixel);
+        public static int Propertyi(string name, int min, int val, int max, int step, float inc_per_pixel) => nk_propertyi(ctx, name, min, val, max, step, inc_per_pixel);
+        public static float Propertyf(string name, float min, float val, float max, float step, float inc_per_pixel) => nk_propertyf(ctx, name, min, val, max, step, inc_per_pixel);
+        public static double Propertyd(string name, double min, double val, double max, double step, float inc_per_pixel) => nk_propertyd(ctx, name, min, val, max, step, inc_per_pixel);
 
         public static int Combo(string[] items, int selected, int item_height, nk_vec2 size) => nk_combo(ctx, items, items.Length, selected, item_height, size);
         
+        public static bool ComboBegin(string selected, nk_vec2 size) => nk_combo_begin_text(ctx, selected, selected.Length, size) != 0;
+        public static bool ComboBegin(nk_color color, nk_vec2 size) => nk_combo_begin_color(ctx, color, size) != 0;
+        /*
+
+        public static int nk_combo_begin_symbol(IntPtr ctx, nk_symbol_type symbol, nk_vec2 size);
+
+        
+        public static int nk_combo_begin_symbol_label(IntPtr ctx, string selected, nk_symbol_type symbol, nk_vec2 size);
+
+        public static int nk_combo_begin_symbol_text(IntPtr ctx, string selected, int p1, nk_symbol_type symbol, nk_vec2 size);
+        
+        public static int nk_combo_begin_image(IntPtr ctx, nkImage img, nk_vec2 size);
+        
+        public static int nk_combo_begin_image_label(IntPtr ctx, string selected, nkImage image, nk_vec2 size);
+        
+        public static int nk_combo_begin_image_text(IntPtr ctx, string selected, int p1, nkImage image, nk_vec2 size);
+                
+        public static int nk_combo_item_label(IntPtr ctx, string text, uint alignment);
+                
+        public static int nk_combo_item_text(IntPtr ctx, string text, int p1, uint alignment);
+        
+        public static int nk_combo_item_image_label(IntPtr ctx, nkImage image, string label, uint alignment);
+        public static int nk_combo_item_image_text(IntPtr ctx, nkImage image, string label, int p1, uint alignment);
+        public static int nk_combo_item_symbol_label(IntPtr ctx, nk_symbol_type symbol, string label, uint alignment);
+        public static int nk_combo_item_symbol_text(IntPtr ctx, nk_symbol_type symbol, string text, int p1, uint alignment);
+        */
+        public static void ComboClose() => nk_combo_close(ctx);
+        public static void ComboEnd() => nk_combo_end(ctx);
 
         public static void MenubarBegin() => nk_menubar_begin(ctx);
         public static void MenubarEnd() => nk_menubar_end(ctx);
         public static bool MenuBeginText(string title, nk_text_alignment align, nk_vec2 size) => nk_menu_begin_text(ctx, title, title.Length, (uint)align, size) != 0;
         public static bool MenuBeginLabel(string label, nk_text_alignment align, nk_vec2 size) => nk_menu_begin_label(ctx, label, (uint)align, size) != 0;
-        public static bool MenuBeginImage(string label, nk_image image, nk_vec2 size) => nk_menu_begin_image(ctx, label, image, size) != 0;
-        public static bool MenuBeginImageText(string label, int p, nk_text_alignment align, nk_image image, nk_vec2 size) => nk_menu_begin_image_text(ctx, label, p, (uint)align, image, size) != 0;
+        public static bool MenuBeginImage(string label, nkImage image, nk_vec2 size) => nk_menu_begin_image(ctx, label, image, size) != 0;
+        public static bool MenuBeginImageText(string label, int p, nk_text_alignment align, nkImage image, nk_vec2 size) => nk_menu_begin_image_text(ctx, label, p, (uint)align, image, size) != 0;
         /*
         public static int nk_menu_begin_image_label( string label, uint align, nk_image image, nk_vec2 size);
         public static int nk_menu_begin_symbol( string label, nk_symbol_type symbol, nk_vec2 size);

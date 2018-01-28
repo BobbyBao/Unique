@@ -5,7 +5,7 @@ using UniqueEngine;
 
 namespace UniqueEditor.Samples
 {
-    public class StaticSceneSample : Sample
+    public class StaticScene : Sample
     {
         public override void Enter()
         {

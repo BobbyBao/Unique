@@ -27,11 +27,13 @@ namespace UniqueEditor.Samples
             UpdateCamera(timeStep);
         }
 
+        public virtual void OnGUI()
+        {
+        }
+
         public virtual void Exit()
         {
             scene?.Dispose();
-
-
         }
 
         protected void UpdateCamera(float timeStep)
