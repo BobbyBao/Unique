@@ -62,7 +62,7 @@ namespace Unique
 		/// Return maximum number of sorted instances per batch group.
 		int GetMaxSortedInstances() const { return maxSortedInstances_; }
 
-		void Begin();
+		bool Begin();
 		void Render();
 		void End();
 		void Stop();

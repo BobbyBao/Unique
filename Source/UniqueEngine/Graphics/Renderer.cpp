@@ -243,9 +243,9 @@ namespace Unique
 		graphics_.Frame();
 	}
 
-	void Renderer::Begin()
+	bool Renderer::Begin()
 	{
-		graphics_.BeginRender();
+		return graphics_.BeginRender();
 	}
 
 	void Renderer::Render()

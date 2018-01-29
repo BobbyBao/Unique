@@ -33,6 +33,7 @@ namespace Unique
 	long long Graphics::waitSubmit_ = 0;
 	long long Graphics::waitRender_ = 0;
 	CommandQueue Graphics::comands_;
+	CommandQueue Graphics::postComands_;
 
 	extern void CreateDevice(SDL_Window* window, DeviceType DevType, const SwapChainDesc& SCDesc, IRenderDevice **ppRenderDevice, IDeviceContext **ppImmediateContext, ISwapChain **ppSwapChain);
 	
@@ -52,7 +53,7 @@ namespace Unique
 		GetContext()->ReleaseSDL();
 	}
 
-	bool Graphics::Initialize(const IntVector2& size, DeviceType deviceType)
+	bool Graphics::CreateWindow(const IntVector2& size, DeviceType deviceType)
 	{
 		resolution_ = size;
 		deviceType_ = deviceType;
@@ -67,16 +68,34 @@ namespace Unique
 			return false;
 		}
 
-		SwapChainDesc SCDesc;
-		SCDesc.SamplesCount = 1/*multiSampling_*/;
-		SCDesc.ColorBufferFormat = srgb_ ? TEX_FORMAT_RGBA8_UNORM_SRGB : TEX_FORMAT_RGBA8_UNORM;
-		SCDesc.DepthBufferFormat = TEX_FORMAT_D32_FLOAT;
-		CreateDevice(window_, deviceType, SCDesc, &renderDevice_, &deviceContext_, &swapChain_);
 		
-		renderDevice_->CreateResourceMapping(ResourceMappingDesc(), &resourceMapping_);
+		return true;
+	}
+
+	bool Graphics::Initialize()
+	{
+
+		uCall
+		(
+			SwapChainDesc SCDesc;
+			SCDesc.SamplesCount = 1/*multiSampling_*/;
+			SCDesc.ColorBufferFormat = srgb_ ? TEX_FORMAT_RGBA8_UNORM_SRGB : TEX_FORMAT_RGBA8_UNORM;
+			SCDesc.DepthBufferFormat = TEX_FORMAT_D32_FLOAT;
+			CreateDevice(window_, deviceType_, SCDesc, &renderDevice_, &deviceContext_, &swapChain_);
+		
+			renderDevice_->CreateResourceMapping(ResourceMappingDesc(), &resourceMapping_);
+			inited_ = true;
+		);
 
 		FrameNoRenderWait();
-		
+
+		Frame();
+
+		if(!inited_)
+		{
+			UNIQUE_LOGERROR("Create render failed.");
+		}
+
 		return true;
 	}
 
@@ -358,25 +377,43 @@ namespace Unique
 		pBuffer->Unmap(deviceContext_, MAP_WRITE, (uint)mapFlags);
 	}
 	
-	void Graphics::BeginRender()
-	{
-		GPUObject::UpdateBuffers();
+	bool Graphics::BeginRender()
+	{/*
+		if(!inited)
+		{
+			return false;
+		}*/
+
+		if(inited_)
+		{
+			swapChain_->Present();
+		}
+
+		if (MainSemWait())
+		{
+			UNIQUE_PROFILE(ExecCommands);
+			ExecuteCommands(comands_);
+
+			GPUObject::UpdateBuffers();
+			return true;
+		}
+
+		return false;
 	}
 
 	void Graphics::EndRender()
 	{
-		swapChain_->Present();
 
-		if (MainSemWait())
+		//if (MainSemWait())
 		{
 			{
 				UNIQUE_PROFILE(ExecCommands);
-				ExecuteCommands(comands_);
+				ExecuteCommands(postComands_);
 			}
 
 			//LOG_INFO_MESSAGE("Render");
 
-			SwapContext();
+			//SwapContext();
 
 			RenderSemPost();
 		}
@@ -548,6 +585,12 @@ namespace Unique
 		assert(Thread::IsMainThread());
 		comands_.push_back(cmd);
 	}
+	
+	void Graphics::PostCommand(const std::function<void()>& cmd)
+	{
+		assert(Thread::IsMainThread());
+		postComands_.push_back(cmd);
+	}
 
 	void Graphics::ExecuteCommands(CommandQueue& cmds)
 	{
@@ -569,12 +612,12 @@ namespace Unique
 	{
 		currentFrame_++;
 		currentContext_ = 1 - currentContext_;
-	//	LOG_INFO_MESSAGE("===============SwapContext : ", currentContext_);
+		LOG_RENDER("===============SwapContext : ", currentContext_);
 	}
 
 	void Graphics::FrameNoRenderWait()
 	{
-		//SwapContext();
+		SwapContext();
 		// release render thread
 		MainSemPost();
 	}

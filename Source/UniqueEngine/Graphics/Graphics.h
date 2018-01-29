@@ -43,7 +43,8 @@ namespace Unique
 		Graphics();
 		~Graphics();
 		
-		bool Initialize(const IntVector2& size, DeviceType deviceType = DeviceType::D3D11);
+		bool CreateWindow(const IntVector2& size, DeviceType deviceType = DeviceType::D3D11);
+		bool Initialize();
 		void Resize(const IntVector2& size);
 		void SetTitle(const String& title);
 		DeviceType GetDeviceType() const;
@@ -89,7 +90,7 @@ namespace Unique
 		void* Map(GraphicsBuffer* buffer, MapFlags mapFlags = MapFlags::DISCARD);
 		void Unmap(GraphicsBuffer* buffer, MapFlags mapFlags = MapFlags::DISCARD);
 		
-		void BeginRender();
+		bool BeginRender();
 		void EndRender();    
 		void Clear(TextureView *pView, const Color& color, uint ClearFlags = CLEAR_COLOR_FLAG, float fDepth = 1.0f, byte Stencil = 0xff);
 		void SetScissorRects(uint NumRects, const IntRect *pRects, uint RTWidth = 0, uint RTHeight = 0);
@@ -102,6 +103,7 @@ namespace Unique
 
 		//**************************
 		static void AddCommand(const std::function<void()>& cmd);
+		static void PostCommand(const std::function<void()>& cmd);
 		static void FrameNoRenderWait();
 		static bool IsRenderThread();
 		static int currentContext_;
@@ -131,7 +133,7 @@ namespace Unique
 		Diligent::RefCntAutoPtr<IDeviceContext> deviceContext_;
 		Diligent::RefCntAutoPtr<ISwapChain> swapChain_;
 		Diligent::RefCntAutoPtr<Diligent::IResourceMapping> resourceMapping_;
-
+		std::atomic<bool> inited_ = false;
 		SDL_Window *window_ = nullptr;
 		static ThreadID renderThreadID;
 		static bool singleThreaded_;
@@ -140,6 +142,7 @@ namespace Unique
 		static long long waitSubmit_;
 		static long long waitRender_;
 		static CommandQueue comands_;
+		static CommandQueue postComands_;
 
 		template<class T>
 		friend T& MainContext(T* data);
@@ -160,7 +163,14 @@ namespace Unique
 		assert(Graphics::IsRenderThread());
 		return data[1 - Graphics::currentContext_];
 	}
-	
+
+#ifdef DEBUG_RENDER
+	#define LOG_RENDER(...)     LOG_DEBUG_MESSAGE(BasicPlatformDebug::DebugMessageSeverity::Info,    ##__VA_ARGS__)
+#else
+	#define LOG_RENDER(...)
+#endif
+
+
 #define uCall(CODE)\
  auto fn = [=]{CODE};\
 	if (Thread::IsMainThread())\
@@ -171,5 +181,16 @@ namespace Unique
 	{\
 		fn();\
 	}
-}
 
+#define uPost(CODE)\
+ auto fn = [=]{CODE};\
+	if (Thread::IsMainThread())\
+	{\
+		Graphics::AddCommand(fn);\
+	}\
+	else\
+	{\
+		fn();\
+	}
+
+}

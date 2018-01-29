@@ -344,7 +344,7 @@ namespace Unique
 
 		GetBatches();
 
- 		//LOG_INFO_MESSAGE("Update : ", Graphics::currentContext_);
+ 		LOG_RENDER("Update : ", Graphics::currentContext_);
 
 	}
 
@@ -414,7 +414,7 @@ namespace Unique
 			scenePassInfo.batchQueue_->Draw(this, camera_);
 		}
 		
-		//LOG_INFO_MESSAGE("Render : ", Graphics::GetRenderContext());
+		LOG_RENDER("Render : ", Graphics::GetRenderContext());
 	}
 
 	void View::SetGlobalShaderParameters()

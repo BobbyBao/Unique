@@ -99,7 +99,7 @@ namespace Unique
 		cache.RegisterImporter(new ModelImporter());
 		cache.RegisterImporter(new AnimationImporter());
 
-		graphics.Initialize(resolution_, deviceType_);
+		graphics.CreateWindow(resolution_, deviceType_);
 
 		loadingDone_ = true;
 	}
@@ -114,9 +114,11 @@ namespace Unique
 
 		while (input.ProcessEvents() && !quit_)
 		{
-			renderer.Begin();
-			renderer.Render();
-			renderer.End();
+			if(renderer.Begin())
+			{
+				renderer.Render();
+				renderer.End();
+			}
 		}
 
 #ifdef __EMSCRIPTEN__
@@ -135,25 +137,18 @@ namespace Unique
 		// Set the main thread ID (assuming the Context is created in it)
 		Thread::SetMainThread();
 
+		auto& graphics = GetSubsystem<Graphics>();
 		auto& timer = GetSubsystem<Time>();
+
+		graphics.Initialize();
+
 
 		SendEvent(Startup());
 		
 		frameTimer_.Reset();
 
-		int lastUpdateFrame = 0;
 		while (shouldRun_)
 		{
-			if (lastUpdateFrame != 0)
-			{
-				if (lastUpdateFrame == Graphics::currentFrame_)
-				{
-					continue;
-				}
-			}
-
-			lastUpdateFrame = Graphics::currentFrame_;
-
 			timer.BeginFrame(timeStep_);
 
 			{
