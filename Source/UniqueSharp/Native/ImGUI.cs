@@ -1058,7 +1058,13 @@ NK_API void nk_labelf(IntPtr ctx, uint, [MarshalAs(UnmanagedType.LPStr)]string, 
         static extern uint nk_edit_string(IntPtr ctx, uint p, char* buffer, int* len, int max, nk_plugin_filter filter);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern uint nk_edit_string(IntPtr ctx, uint p, StringBuilder buffer, int* len, int max, nk_plugin_filter filter);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern uint nk_edit_string_zero_terminated(IntPtr ctx, uint p, char* buffer, int max, nk_plugin_filter filter);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern uint nk_edit_string_zero_terminated(IntPtr ctx, uint p, StringBuilder buffer, int max, nk_plugin_filter filter);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern uint nk_edit_buffer(IntPtr ctx, uint p, IntPtr text_edit/*nk_text_edit**/, nk_plugin_filter filter);

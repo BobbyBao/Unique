@@ -151,13 +151,13 @@ namespace UniqueEngine
 
         public static void Image(nkImage image) => nk_image(ctx, image);
 
-        public static void Value_bool(string prefix, bool v) => nk_value_bool(ctx, prefix, v ? 1 : 0);
-        public static void Value_int(string prefix, int v) => nk_value_int(ctx, prefix, v);
-        public static void Value_uint(string prefix, uint v) => nk_value_uint(ctx, prefix, v);
-        public static void Value_float(string prefix, float v) => nk_value_float(ctx, prefix, v);
-        public static void Value_color_byte(string prefix, nk_color c)=> nk_value_color_byte(ctx, prefix, c);
-        public static void Value_color_float(string prefix, nk_color c) => nk_value_color_float(ctx, prefix, c);
-        public static void Value_color_hex(string prefix, nk_color c) => nk_value_color_hex(ctx, prefix, c);
+        public static void Value(string prefix, bool v) => nk_value_bool(ctx, prefix, v ? 1 : 0);
+        public static void Value(string prefix, int v) => nk_value_int(ctx, prefix, v);
+        public static void Value(string prefix, uint v) => nk_value_uint(ctx, prefix, v);
+        public static void Value(string prefix, float v) => nk_value_float(ctx, prefix, v);
+        public static void ValueColorByte(string prefix, nk_color c)=> nk_value_color_byte(ctx, prefix, c);
+        public static void ValueColorFloat(string prefix, nk_color c) => nk_value_color_float(ctx, prefix, c);
+        public static void ValueColorHex(string prefix, nk_color c) => nk_value_color_hex(ctx, prefix, c);
 
         public static bool Button(string text) => nk_button_text(ctx, text, text.Length) != 0;
         //public static bool ButtonLabel(string label) => nk_button_label(ctx, label) != 0;
@@ -224,10 +224,34 @@ namespace UniqueEngine
         public static float Propertyf(string name, float min, float val, float max, float step, float inc_per_pixel) => nk_propertyf(ctx, name, min, val, max, step, inc_per_pixel);
         public static double Propertyd(string name, double min, double val, double max, double step, float inc_per_pixel) => nk_propertyd(ctx, name, min, val, max, step, inc_per_pixel);
 
+        public static uint Edit(uint p, StringBuilder buffer, ref int len, nk_plugin_filter filter)
+                =>nk_edit_string(ctx, p, buffer, (int*) Utilities.As(ref len), buffer.MaxCapacity, filter);
+        public static uint Edit(uint p, StringBuilder buffer, nk_plugin_filter filter)
+                => nk_edit_string_zero_terminated(ctx, p, buffer, buffer.MaxCapacity, filter);
+        public static uint Edit_buffer(uint p, IntPtr text_edit/*nk_text_edit**/, nk_plugin_filter filter)
+                =>nk_edit_buffer(ctx, p, text_edit, filter);
+        public static void EditFocus(uint flags) => nk_edit_focus(ctx, flags);
+        public static void EditUnfocus() => nk_edit_unfocus(ctx);
+
+#if false
+        public static int nk_chart_begin(IntPtr ctx, nk_chart_type chart_type, int num, float min, float max);
+        public static int nk_chart_begin_colored(IntPtr ctx, nk_chart_type chart_type, nk_color c, nk_color active, int num, float min, float max);
+        public static void nk_chart_add_slot(IntPtr ctx, nk_chart_type chart_type, int count, float min_value, float max_value);
+        public static void nk_chart_add_slot_colored(IntPtr ctx, nk_chart_type chart_type, nk_color c, nk_color active, int count, float min_value, float max_value);
+        public static uint nk_chart_push(IntPtr ctx, float p1);
+        public static uint nk_chart_push_slot(IntPtr ctx, float p1, int p2);
+        public static void nk_chart_end(IntPtr ctx);        
+        public static void nk_plot(IntPtr ctx, nk_chart_type chart_type, IntPtr values, int count, int offset);
+        public static void nk_plot_function(IntPtr ctx, nk_chart_type chart_type, IntPtr userdata, value_getter val_getter, int count, int offset);
+        public static int nk_popup_begin(IntPtr ctx, nk_popup_type type, string text, uint p1, nk_rect bounds);
+        public static void nk_popup_close(IntPtr ctx);
+        public static void nk_popup_end(IntPtr ctx);
+#endif
         public static int Combo(string[] items, int selected, int item_height, nk_vec2 size) => nk_combo(ctx, items, items.Length, selected, item_height, size);
         
         public static bool ComboBegin(string selected, nk_vec2 size) => nk_combo_begin_text(ctx, selected, selected.Length, size) != 0;
         public static bool ComboBegin(nk_color color, nk_vec2 size) => nk_combo_begin_color(ctx, color, size) != 0;
+        
         /*
 
         public static int nk_combo_begin_symbol(IntPtr ctx, nk_symbol_type symbol, nk_vec2 size);
@@ -254,6 +278,21 @@ namespace UniqueEngine
         */
         public static void ComboClose() => nk_combo_close(ctx);
         public static void ComboEnd() => nk_combo_end(ctx);
+
+        /*
+        static extern int nk_contextual_begin(IntPtr ctx, uint p1, nk_vec2 p2, nk_rect trigger_bounds);
+        static extern int nk_contextual_item_text(IntPtr ctx, string label, int p1, uint align);
+        static extern int nk_contextual_item_label(IntPtr ctx, string label, uint align);
+        static extern int nk_contextual_item_image_label(IntPtr ctx, nkImage image, string label, uint alignment);        
+        static extern int nk_contextual_item_image_text(IntPtr ctx, nkImage image, string text, int len, uint alignment);        
+        static extern int nk_contextual_item_symbol_label(IntPtr ctx, nk_symbol_type symbol, string label, uint alignment);      
+        static extern int nk_contextual_item_symbol_text(IntPtr ctx, nk_symbol_type symbol, string text, int p1, uint alignment);        
+        static extern void nk_contextual_close(IntPtr ctx);        
+        static extern void nk_contextual_end(IntPtr ctx);        
+        static extern void nk_tooltip(IntPtr ctx, string tip);                
+        static extern int nk_tooltip_begin(IntPtr ctx, float width);
+        static extern void nk_tooltip_end(IntPtr ctx);
+        */
 
         public static void MenubarBegin() => nk_menubar_begin(ctx);
         public static void MenubarEnd() => nk_menubar_end(ctx);
