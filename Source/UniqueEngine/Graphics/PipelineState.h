@@ -1,11 +1,15 @@
 #pragma once
 #include "GPUObject.h"
-#include "ShaderEffect.h"
+#include "Shader.h"
+#include <Shader.h>
+
+#include <RefCntAutoPtr.h>
+#include <ShaderResourceBinding.h>
+#include <PipelineState.h>
 
 namespace Unique
 {
 	using IShaderVariable = Diligent::IShaderVariable;
-	using IPipelineState = Diligent::IPipelineState;
 	using IShaderResourceBinding = Diligent::IShaderResourceBinding;
 	using IResourceMapping = Diligent::IResourceMapping;
 
@@ -33,7 +37,7 @@ namespace Unique
 
 		ShaderProgram* GetShaderProgram() { return shaderProgram_; }
 		IShaderVariable* GetShaderVariable(const StringID& name);
-		IPipelineState* GetPipeline();
+		void* GetPipeline();
 		IShaderResourceBinding* GetShaderResourceBinding() { return shaderResourceBinding_; }
 
 		void SetDepthStencilState(const DepthStencilState& dss);

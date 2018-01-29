@@ -1,5 +1,5 @@
 #include "UniquePCH.h"
-#include "Graphics/ShaderEffect.h"
+#include "Graphics/Shader.h"
 #include "Serialize/JsonSerializer.h"
 #include "Serialize/JsonDeserializer.h"
 #include "Serialize/HjsonDeserializer.h"
@@ -105,7 +105,7 @@ namespace Unique
 	{
 		SPtr<Shader> shader(new Shader());
 		shader->SetName("test_shader");
-
+#if 0
 		const int COUNT = 100;
 		{
 			PerfBlock("Create");
@@ -117,7 +117,7 @@ namespace Unique
 			}
 
 		}
-
+#endif
 		{
 			PerfBlock("Virtual");
 			JsonSerializer jsonSer;

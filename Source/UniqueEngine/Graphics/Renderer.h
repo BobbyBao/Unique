@@ -61,10 +61,7 @@ namespace Unique
 
 		/// Return maximum number of sorted instances per batch group.
 		int GetMaxSortedInstances() const { return maxSortedInstances_; }
-
-		bool Begin();
 		void Render();
-		void End();
 		void Stop();
 		void SetBatchShaders(Batch& batch, uint passIndex, bool allowShadows, const BatchQueue& queue);
 		bool ResizeInstancingBuffer(unsigned numInstances);

@@ -242,22 +242,21 @@ namespace Unique
 	{
 		graphics_.Frame();
 	}
-
-	bool Renderer::Begin()
-	{
-		return graphics_.BeginRender();
-	}
-
+	
 	void Renderer::Render()
 	{
-		auto& views = RenderContext(views_);
+		if (!graphics_.BeginRender())
+		{
+			return;
+		}
 		
+		auto& views = RenderContext(views_);
+
 		//if (views.empty())
 		{		
 			graphics_.Clear(nullptr, Color::GRAY, CLEAR_COLOR_FLAG|CLEAR_DEPTH_FLAG, 1.0f, 0xff);
 		}
 		
-		//for (auto view : views)
 		for(int i = 0; i < views.size(); i++)
 		{
 			auto& view = views[i];
@@ -280,10 +279,7 @@ namespace Unique
 
 			batchQueue.clear();
 		}
-	}
 
-	void Renderer::End()
-	{
 		RenderContext(scissorRect_).resize(1);
 		graphics_.EndRender();
 	}

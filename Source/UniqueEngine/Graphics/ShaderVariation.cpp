@@ -2,10 +2,8 @@
 #include "ShaderVariation.h"
 #include "IO/FileSystem.h"
 #include "Resource/ResourceCache.h"
-
 #include "Graphics.h"
 
-using namespace Diligent;
 
 namespace Unique
 {

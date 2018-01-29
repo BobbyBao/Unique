@@ -1,6 +1,6 @@
 #include "UniquePCH.h"
 #include "PipelineState.h"
-#include "Shader.h"
+#include <Shader.h>
 #include "../Graphics/ShaderVariation.h"
 
 using namespace Diligent;
@@ -132,10 +132,10 @@ namespace Unique
 			return nullptr;
 		}
 
-		return shaderResourceBinding_->GetVariable(SHADER_TYPE_PIXEL, name.c_str());
+		return shaderResourceBinding_->GetVariable(Diligent::SHADER_TYPE_PIXEL, name.c_str());
 	}
 
-	IPipelineState* PipelineState::GetPipeline()
+	void* PipelineState::GetPipeline()
 	{
 		if (shaderDirty_ || dirty_ || !IsValid())
 		{
@@ -145,7 +145,7 @@ namespace Unique
 			}
 		}
 
-		return (IPipelineState*)deviceObject_;
+		return deviceObject_;
 	}
 
 	void PipelineState::SetDepthStencilState(const DepthStencilState& dss)

@@ -114,11 +114,7 @@ namespace Unique
 
 		while (input.ProcessEvents() && !quit_)
 		{
-			if(renderer.Begin())
-			{
-				renderer.Render();
-				renderer.End();
-			}
+			renderer.Render();		
 		}
 
 #ifdef __EMSCRIPTEN__
@@ -141,7 +137,6 @@ namespace Unique
 		auto& timer = GetSubsystem<Time>();
 
 		graphics.Initialize();
-
 
 		SendEvent(Startup());
 		
@@ -167,6 +162,7 @@ namespace Unique
 			}
 
 			ApplyFrameLimit();
+
 			timer.EndFrame();
 		}
 

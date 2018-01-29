@@ -16,7 +16,7 @@ void VS(
     ) 
 {
     float4x3 modelMatrix =  iModelMatrix;
-    float3 worldPos = iPos;// GetWorldPos(modelMatrix).xyz;
+    float3 worldPos = GetWorldPos(modelMatrix).xyz;
     oPos = GetClipPos(worldPos);
     oTexCoord = iTexCoord;
 }

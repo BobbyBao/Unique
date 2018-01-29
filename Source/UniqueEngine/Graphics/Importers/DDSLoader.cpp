@@ -479,7 +479,7 @@ static TEXTURE_FORMAT DXGIFormatToTexFormat( DXGI_FORMAT TexFormat )
         case DXGI_FORMAT_BC7_UNORM:                     return TEX_FORMAT_BC7_UNORM; 
         case DXGI_FORMAT_BC7_UNORM_SRGB:                return TEX_FORMAT_BC7_UNORM_SRGB; 
 
-        default: UNEXPECTED( "Unsupported DXGI formate" ); return TEX_FORMAT_UNKNOWN;
+        default: return TEX_FORMAT_UNKNOWN;
     }
 }
 
@@ -876,7 +876,7 @@ static void FillInitData(
                     tdepth = d;
                 }
 
-                VERIFY_EXPR(index < mipCount * arraySize);
+                assert(index < mipCount * arraySize);
                 initData[index].pData = (const void*)pSrcBits;
                 initData[index].Stride = static_cast<Uint32>(RowBytes);
                 initData[index].DepthStride = static_cast<Uint32>(NumBytes);
@@ -1126,7 +1126,7 @@ static void CreateTextureFromDDS(
             // Note there's no way for a legacy Direct3D 9 DDS to express a '1D' texture
         }
 
-        VERIFY_EXPR(BitsPerPixel(format) != 0);
+        assert(BitsPerPixel(format) != 0);
     }
 
     // Bound sizes (for security purposes we don't trust DDS file metadata larger than the D3D 11.x hardware requirements)

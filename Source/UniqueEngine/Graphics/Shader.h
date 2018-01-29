@@ -3,7 +3,6 @@
 #include "ShaderVariation.h"
 #include "ShaderVariable.h"
 #include "RenderState.h"
-#include "ShaderUtil.h"
 
 namespace Unique
 {

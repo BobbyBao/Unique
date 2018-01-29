@@ -2,16 +2,64 @@
 #include "resource/Resource.h"
 #include "GraphicsDefs.h"
 #include "GPUObject.h"
-#include <RefCntAutoPtr.h>
-#include <Shader.h>
-#include <PipelineState.h>
-#include <ShaderResourceBinding.h>
-#include <ShaderMacroHelper.h>
+#include "ShaderUtil.h"
 
 namespace Unique
 {
-	using ShaderType = Diligent::SHADER_TYPE;
-	using ShaderProfile = Diligent::SHADER_PROFILE;
+	enum ShaderType : int
+	{
+		SHADER_TYPE_UNKNOWN     = 0x000, ///< Unknown shader type
+		SHADER_TYPE_VERTEX      = 0x001, ///< Vertex shader
+		SHADER_TYPE_PIXEL       = 0x002, ///< Pixel (fragment) shader
+		SHADER_TYPE_GEOMETRY    = 0x004, ///< Geometry shader
+		SHADER_TYPE_HULL        = 0x008, ///< Hull (tessellation control) shader
+		SHADER_TYPE_DOMAIN      = 0x010, ///< Domain (tessellation evaluation) shader
+		SHADER_TYPE_COMPUTE     = 0x020  ///< Compute shader
+	};
+
+	enum ShaderProfile : int
+	{
+		SHADER_PROFILE_DEFAULT = 0,
+		SHADER_PROFILE_DX_4_0,
+		SHADER_PROFILE_DX_5_0,
+		SHADER_PROFILE_DX_5_1,
+		SHADER_PROFILE_GL_4_2
+	};
+	
+	/// Describes shader variable type that is used by ShaderVariableDesc
+	enum ShaderVariableType : int
+	{
+		/// Shader variable is constant across all shader instances.
+		/// It must be set *once* directly through IShader::BindResources() or through 
+		/// the shader variable.
+		SHADER_VARIABLE_TYPE_STATIC = 0, 
+
+		/// Shader variable is constant across shader resource bindings instance (see IShaderResourceBinding).
+		/// It must be set *once* through IShaderResourceBinding::BindResources() or through
+		/// the shader variable. It cannot be set through IShader interface
+		SHADER_VARIABLE_TYPE_MUTABLE,
+
+		/// Shader variable is dynamic. It can be set multiple times for every instance of shader resource 
+		/// bindings (see IShaderResourceBinding). It cannot be set through IShader interface
+		SHADER_VARIABLE_TYPE_DYNAMIC,
+
+		/// Total number of shader variable types
+		SHADER_VARIABLE_TYPE_NUM_TYPES
+	};
+
+	/// Describes shader variable
+	struct ShaderVariableDesc
+	{
+		/// Shader variable name
+		const char *name_;
+
+		/// Shader variable type. See Diligent::SHADER_VARIABLE_TYPE for a list of allowed types
+		ShaderVariableType type_;
+		ShaderVariableDesc(const char *name = nullptr, ShaderVariableType type = SHADER_VARIABLE_TYPE_STATIC) : 
+			name_(name),
+			type_(type)
+		{}
+	};
 
 	class Shader;
 	class Pass;
@@ -47,7 +95,7 @@ namespace Unique
 
 		ShaderType		shaderType_;
 		String			entryPoint_;
-		ShaderProfile	shaderProfile_ = Diligent::SHADER_PROFILE_DEFAULT;
+		ShaderProfile	shaderProfile_ = SHADER_PROFILE_DEFAULT;
 		String			defines_;
 		String			source_;
 	};
@@ -71,8 +119,8 @@ namespace Unique
 		/// Defines to use in compiling.
 		String defines_;
 		bool dirty_ = false;
-		Diligent::ShaderMacroHelper macros_;
-		Vector<Diligent::ShaderVariableDesc> shaderVariableDesc_;
+		ShaderMacroHelper macros_;
+		Vector<ShaderVariableDesc> shaderVariableDesc_;
 
 		friend class Graphics;
 	};

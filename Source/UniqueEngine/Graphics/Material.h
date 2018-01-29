@@ -1,6 +1,6 @@
 #pragma once
 #include "Resource/Resource.h"
-#include "ShaderEffect.h"
+#include "Shader.h"
 
 namespace Unique
 {

@@ -218,14 +218,14 @@ namespace Unique
 	{
 		ShaderCreationAttribs Attrs;
 		Attrs.Desc.Name = shader.shaderStage_.source_.CString();// owner_.GetName().CString();
-		Attrs.Macros = shader.macros_;
+		Attrs.Macros = (const Diligent::ShaderMacro*)(const ShaderMacro*)shader.macros_;
 		Attrs.FilePath = shader.shaderStage_.source_;
 		Attrs.EntryPoint = shader.shaderStage_.entryPoint_;
 		Attrs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
 		//Attrs.Source = source_.CString();
-		Attrs.Desc.ShaderType = shader.shaderStage_.shaderType_;
-		Attrs.Desc.TargetProfile = SHADER_PROFILE_DX_4_0;
-		Attrs.Desc.VariableDesc = shader.shaderVariableDesc_.data();
+		Attrs.Desc.ShaderType = (Diligent::SHADER_TYPE)shader.shaderStage_.shaderType_;
+		Attrs.Desc.TargetProfile = (Diligent::SHADER_PROFILE)SHADER_PROFILE_DX_4_0;
+		Attrs.Desc.VariableDesc = (const Diligent::ShaderVariableDesc *)shader.shaderVariableDesc_.data();
 		Attrs.Desc.NumVariables = (uint)shader.shaderVariableDesc_.size();
 
 		class ShaderSourceStream : public Diligent::ObjectBase<IFileStream>
@@ -470,7 +470,7 @@ namespace Unique
 			drawAttribs.NumVertices = geometry->vertexCount_;
 		}
 
-		impl_.deviceContext_->SetPipelineState(pipeline->GetPipeline());
+		impl_.deviceContext_->SetPipelineState((Diligent::IPipelineState*)pipeline->GetPipeline());
 
 		auto& graphics = GetSubsystem<Graphics>();
 		
@@ -511,7 +511,7 @@ namespace Unique
 			drawAttribs.NumVertices = vertexCount;
 		}
 
-		impl_.deviceContext_->SetPipelineState(pipeline->GetPipeline());
+		impl_.deviceContext_->SetPipelineState((Diligent::IPipelineState*)pipeline->GetPipeline());
 
 		auto& graphics = GetSubsystem<Graphics>();
 
@@ -555,7 +555,7 @@ namespace Unique
 
 		drawAttribs.NumInstances = numInstances;
 		drawAttribs.FirstInstanceLocation = instanceOffset;
-		impl_.deviceContext_->SetPipelineState(pipeline->GetPipeline());
+		impl_.deviceContext_->SetPipelineState((Diligent::IPipelineState*)pipeline->GetPipeline());
 
 		auto& graphics = GetSubsystem<Graphics>();
 
