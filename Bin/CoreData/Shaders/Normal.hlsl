@@ -3,7 +3,7 @@
 #include "Transform.hlsl"
 
 void VS(
-		float4 iPos : ATTRIB0, 
+		float3 iPos : ATTRIB0, 
         float3 iNormal : ATTRIB1,
         float4 iColor : ATTRIB2,
         float2 iTexCoord : ATTRIB3,
