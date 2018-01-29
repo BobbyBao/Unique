@@ -232,92 +232,69 @@ namespace UniqueEngine
                 =>nk_edit_buffer(ctx, p, text_edit, filter);
         public static void EditFocus(uint flags) => nk_edit_focus(ctx, flags);
         public static void EditUnfocus() => nk_edit_unfocus(ctx);
+        
+        public static int ChartBegin(nk_chart_type chart_type, int num, float min, float max)
+            => nk_chart_begin(ctx, chart_type, num, min, max);
+        public static int ChartBegin(nk_chart_type chart_type, nk_color c, nk_color active, int num, float min, float max)
+            => nk_chart_begin_colored(ctx, chart_type, c, active, num, min, max);
+        public static void ChartAddSlot(nk_chart_type chart_type, int count, float min_value, float max_value)
+            => nk_chart_add_slot(ctx, chart_type, count, min_value, max_value);
+        public static void ChartAddSlot(nk_chart_type chart_type, nk_color c, nk_color active, int count, float min_value, float max_value) 
+            => nk_chart_add_slot_colored(ctx, chart_type, c, active, count, min_value, max_value);
+        public static uint ChartPush(float p1) => nk_chart_push(ctx, p1);
+        public static uint ChartPushSlot(float p1, int p2) => nk_chart_push_slot(ctx, p1, p2);
+        public static void ChartEnd() => nk_chart_end(ctx);
+        public static void Plot(nk_chart_type chart_type, IntPtr values, int count, int offset)
+            => nk_plot(ctx, chart_type, values, count, offset);
+        public static void PlotFunction(nk_chart_type chart_type, IntPtr userdata, value_getter val_getter, int count, int offset) =>
+            nk_plot_function(ctx, chart_type, userdata, val_getter, count, offset);
+        public static int PopupBegin(nk_popup_type type, string text, uint p1, nk_rect bounds) =>nk_popup_begin(ctx, type, text, p1, bounds);
+        public static void PopupClose() => nk_popup_close(ctx);
+        public static void PopupEnd() => nk_popup_end(ctx);
 
-#if false
-        public static int nk_chart_begin(IntPtr ctx, nk_chart_type chart_type, int num, float min, float max);
-        public static int nk_chart_begin_colored(IntPtr ctx, nk_chart_type chart_type, nk_color c, nk_color active, int num, float min, float max);
-        public static void nk_chart_add_slot(IntPtr ctx, nk_chart_type chart_type, int count, float min_value, float max_value);
-        public static void nk_chart_add_slot_colored(IntPtr ctx, nk_chart_type chart_type, nk_color c, nk_color active, int count, float min_value, float max_value);
-        public static uint nk_chart_push(IntPtr ctx, float p1);
-        public static uint nk_chart_push_slot(IntPtr ctx, float p1, int p2);
-        public static void nk_chart_end(IntPtr ctx);        
-        public static void nk_plot(IntPtr ctx, nk_chart_type chart_type, IntPtr values, int count, int offset);
-        public static void nk_plot_function(IntPtr ctx, nk_chart_type chart_type, IntPtr userdata, value_getter val_getter, int count, int offset);
-        public static int nk_popup_begin(IntPtr ctx, nk_popup_type type, string text, uint p1, nk_rect bounds);
-        public static void nk_popup_close(IntPtr ctx);
-        public static void nk_popup_end(IntPtr ctx);
-#endif
         public static int Combo(string[] items, int selected, int item_height, nk_vec2 size) => nk_combo(ctx, items, items.Length, selected, item_height, size);
         
         public static bool ComboBegin(string selected, nk_vec2 size) => nk_combo_begin_text(ctx, selected, selected.Length, size) != 0;
         public static bool ComboBegin(nk_color color, nk_vec2 size) => nk_combo_begin_color(ctx, color, size) != 0;
-        
-        /*
-
-        public static int nk_combo_begin_symbol(IntPtr ctx, nk_symbol_type symbol, nk_vec2 size);
-
-        
-        public static int nk_combo_begin_symbol_label(IntPtr ctx, string selected, nk_symbol_type symbol, nk_vec2 size);
-
-        public static int nk_combo_begin_symbol_text(IntPtr ctx, string selected, int p1, nk_symbol_type symbol, nk_vec2 size);
-        
-        public static int nk_combo_begin_image(IntPtr ctx, nkImage img, nk_vec2 size);
-        
-        public static int nk_combo_begin_image_label(IntPtr ctx, string selected, nkImage image, nk_vec2 size);
-        
-        public static int nk_combo_begin_image_text(IntPtr ctx, string selected, int p1, nkImage image, nk_vec2 size);
-                
-        public static int nk_combo_item_label(IntPtr ctx, string text, uint alignment);
-                
-        public static int nk_combo_item_text(IntPtr ctx, string text, int p1, uint alignment);
-        
-        public static int nk_combo_item_image_label(IntPtr ctx, nkImage image, string label, uint alignment);
-        public static int nk_combo_item_image_text(IntPtr ctx, nkImage image, string label, int p1, uint alignment);
-        public static int nk_combo_item_symbol_label(IntPtr ctx, nk_symbol_type symbol, string label, uint alignment);
-        public static int nk_combo_item_symbol_text(IntPtr ctx, nk_symbol_type symbol, string text, int p1, uint alignment);
-        */
+        public static bool ComboBegin(nk_symbol_type symbol, nk_vec2 size) => nk_combo_begin_symbol(ctx, symbol, size) != 0;        
+        public static bool ComboBegin(string selected, nk_symbol_type symbol, nk_vec2 size) => nk_combo_begin_symbol_text(ctx, selected, selected.Length, symbol, size) != 0;
+        public static bool ComboBegin(nkImage img, nk_vec2 size) => nk_combo_begin_image(ctx, img, size) != 0;
+        public static bool ComboBegin(string selected, nkImage image, nk_vec2 size) => nk_combo_begin_image_text(ctx, selected, selected.Length, image, size) != 0;
+        public static bool ComboItem(string text, uint alignment) => nk_combo_item_text(ctx, text, text.Length, alignment) != 0;
+        public static bool ComboItem(nkImage image, string label, uint alignment) => nk_combo_item_image_text(ctx, image, label, label.Length, alignment) != 0;
+        public static bool ComboItem(nk_symbol_type symbol, string text, uint alignment) => nk_combo_item_symbol_text(ctx, symbol, text, text.Length, alignment) != 0;
         public static void ComboClose() => nk_combo_close(ctx);
         public static void ComboEnd() => nk_combo_end(ctx);
-
-        /*
-        static extern int nk_contextual_begin(IntPtr ctx, uint p1, nk_vec2 p2, nk_rect trigger_bounds);
-        static extern int nk_contextual_item_text(IntPtr ctx, string label, int p1, uint align);
-        static extern int nk_contextual_item_label(IntPtr ctx, string label, uint align);
-        static extern int nk_contextual_item_image_label(IntPtr ctx, nkImage image, string label, uint alignment);        
-        static extern int nk_contextual_item_image_text(IntPtr ctx, nkImage image, string text, int len, uint alignment);        
-        static extern int nk_contextual_item_symbol_label(IntPtr ctx, nk_symbol_type symbol, string label, uint alignment);      
-        static extern int nk_contextual_item_symbol_text(IntPtr ctx, nk_symbol_type symbol, string text, int p1, uint alignment);        
-        static extern void nk_contextual_close(IntPtr ctx);        
-        static extern void nk_contextual_end(IntPtr ctx);        
-        static extern void nk_tooltip(IntPtr ctx, string tip);                
-        static extern int nk_tooltip_begin(IntPtr ctx, float width);
-        static extern void nk_tooltip_end(IntPtr ctx);
-        */
+        
+        public static int ContextualBegin(uint p1, nk_vec2 p2, nk_rect trigger_bounds)
+            => nk_contextual_begin(ctx, p1, p2, trigger_bounds);
+        public static int ContextualItem(string label, uint align)
+            => nk_contextual_item_text(ctx, label, label.Length, align); 
+        public static int ContextualItem(nkImage image, string text, uint alignment)
+            => nk_contextual_item_image_text(ctx, image, text, text.Length, alignment); 
+        public static int ContextualItem(nk_symbol_type symbol, string text, uint alignment)
+            => nk_contextual_item_symbol_text(ctx, symbol, text, text.Length, alignment);        
+        public static void ContextualClose() => nk_contextual_close(ctx);           
+        public static void ContextualEnd() => nk_contextual_end(ctx);      
+        public static void Tooltip(string tip) => nk_tooltip(ctx, tip);                 
+        public static int TooltipBegin(float width) => nk_tooltip_begin(ctx, width);
+        public static void TooltipEnd() => nk_tooltip_end(ctx); 
 
         public static void MenubarBegin() => nk_menubar_begin(ctx);
         public static void MenubarEnd() => nk_menubar_end(ctx);
-        public static bool MenuBeginText(string title, nk_text_alignment align, nk_vec2 size) => nk_menu_begin_text(ctx, title, title.Length, (uint)align, size) != 0;
-        public static bool MenuBeginLabel(string label, nk_text_alignment align, nk_vec2 size) => nk_menu_begin_label(ctx, label, (uint)align, size) != 0;
-        public static bool MenuBeginImage(string label, nkImage image, nk_vec2 size) => nk_menu_begin_image(ctx, label, image, size) != 0;
-        public static bool MenuBeginImageText(string label, int p, nk_text_alignment align, nkImage image, nk_vec2 size) => nk_menu_begin_image_text(ctx, label, p, (uint)align, image, size) != 0;
-        /*
-        public static int nk_menu_begin_image_label( string label, uint align, nk_image image, nk_vec2 size);
-        public static int nk_menu_begin_symbol( string label, nk_symbol_type symbol, nk_vec2 size);
-        public static int nk_menu_begin_symbol_text( string text, int p1, uint align, nk_symbol_type symbol, nk_vec2 size);
-        public static int nk_menu_begin_symbol_label( string label, uint align, nk_symbol_type symbol, nk_vec2 size);
-        */
-
-
-        public static bool MenuItemText(string text, nk_text_alignment align) => nk_menu_item_text(ctx, text, text.Length, (uint)align) != 0;
-        /*s
-        public static int nk_menu_item_label( string label, uint alignment);
-        public static int nk_menu_item_image_label( nk_image image, string label, uint alignment);
-        public static int nk_menu_item_image_text( nk_image image, string text, int len, uint alignment);
-        */
-
-        public static bool MenuItemSymbolText(nk_symbol_type symol, string text, nk_text_alignment align) => nk_menu_item_symbol_text(ctx, symol, text, text.Length, (uint)align) != 0;
-        public static bool MenuItemSymbolLabel(nk_symbol_type symol, string label, nk_text_alignment align) => nk_menu_item_symbol_label(ctx, symol, label, (uint)align) != 0;
-
+        public static bool MenuBegin(string title, nk_text_alignment align, nk_vec2 size) => nk_menu_begin_text(ctx, title, title.Length, (uint)align, size) != 0;
+        public static bool MenuBegin(string label, nkImage image, nk_vec2 size) => nk_menu_begin_image(ctx, label, image, size) != 0;
+        public static bool MenuBegin(string label, nk_text_alignment align, nkImage image, nk_vec2 size) => nk_menu_begin_image_text(ctx, label, label.Length, (uint)align, image, size) != 0;      
+        public static bool MenuBegin( string label, nk_symbol_type symbol, nk_vec2 size)
+            => nk_menu_begin_symbol(ctx, label, symbol, size) != 0;
+        public static bool MenuBegin( string text, nk_text_alignment align, nk_symbol_type symbol, nk_vec2 size)
+            => nk_menu_begin_symbol_text(ctx, text, text.Length, (uint)align, symbol, size) != 0;
+        public static bool MenuItem(string text, nk_text_alignment align) 
+            => nk_menu_item_text(ctx, text, text.Length, (uint)align) != 0;
+        public static bool MenuItem( nkImage image, string text, uint alignment)
+            => nk_menu_item_image_text(ctx, image, text, text.Length, alignment) != 0;
+        public static bool MenuItem(nk_symbol_type symol, string text, nk_text_alignment align) 
+            => nk_menu_item_symbol_text(ctx, symol, text, text.Length, (uint)align) != 0;
         public static void MenuClose() => nk_menu_close(ctx);
         public static void MenuEnd() => nk_menu_end(ctx);
 

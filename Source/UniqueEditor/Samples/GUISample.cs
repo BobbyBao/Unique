@@ -15,7 +15,7 @@ namespace UniqueEditor.Samples
 
         public override void OnGUI()
         {
-            if (ImGUI.Begin("Demo", new nk_rect(50, 50, 230, 250),
+            if (ImGUI.Begin("GUISample", new nk_rect(50, 50, 230, 250),
             nkPanelFlags.BORDER | nkPanelFlags.MOVABLE | nkPanelFlags.SCALABLE |
             nkPanelFlags.MINIMIZABLE | nkPanelFlags.TITLE))
             {

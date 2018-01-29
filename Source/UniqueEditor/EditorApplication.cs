@@ -42,7 +42,7 @@ namespace UniqueEditor
             {
                 ImGUI.MenubarBegin();
                 ImGUI.LayoutRowStatic(20, 60, 2);
-                if(ImGUI.MenuBeginText("Demo", nk_text_alignment.NK_TEXT_LEFT,  new nk_vec2(160, 100)))
+                if(ImGUI.MenuBegin("Demo", nk_text_alignment.NK_TEXT_LEFT,  new nk_vec2(160, 100)))
                 {
                     ImGUI.LayoutRowDynamic(25);
 
@@ -52,7 +52,7 @@ namespace UniqueEditor
                         if(t.IsSubclassOf(typeof(Sample)))
                         {
                             var currentType = current?.GetType();
-                            if (ImGUI.MenuItemSymbolText( t == currentType ? nk_symbol_type.NK_SYMBOL_CIRCLE_SOLID : nk_symbol_type.NK_SYMBOL_NONE, t.Name, nk_text_alignment.NK_TEXT_RIGHT))
+                            if (ImGUI.MenuItem( t == currentType ? nk_symbol_type.NK_SYMBOL_CIRCLE_SOLID : nk_symbol_type.NK_SYMBOL_NONE, t.Name, nk_text_alignment.NK_TEXT_RIGHT))
                             {
                                 SetSample(System.Activator.CreateInstance(t) as Sample);
                             }
@@ -63,13 +63,13 @@ namespace UniqueEditor
                     ImGUI.MenuEnd();
                 }
 
-                if (ImGUI.MenuBeginText("Skin", nk_text_alignment.NK_TEXT_LEFT, new nk_vec2(120, 160)))
+                if (ImGUI.MenuBegin("Skin", nk_text_alignment.NK_TEXT_LEFT, new nk_vec2(120, 160)))
                 {
                     ImGUI.LayoutRowDynamic(25);
                     string[] names = typeof(Theme).GetEnumNames();
                     for(int i = 0; i < names.Length; i++)
                     {
-                        if (ImGUI.MenuItemSymbolText(i == selected ? nk_symbol_type.NK_SYMBOL_X : nk_symbol_type.NK_SYMBOL_NONE, names[i], nk_text_alignment.NK_TEXT_CENTERED))
+                        if (ImGUI.MenuItem(i == selected ? nk_symbol_type.NK_SYMBOL_X : nk_symbol_type.NK_SYMBOL_NONE, names[i], nk_text_alignment.NK_TEXT_CENTERED))
                         {
                             selected = i;
                             ImGUI.SetStyle((Theme)selected);
