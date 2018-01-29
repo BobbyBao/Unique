@@ -33,8 +33,6 @@
 #include "../Graphics/Model.h"
 #include "../Graphics/Graphics.h"
 
-using namespace Diligent;
-
 namespace Unique
 {
 

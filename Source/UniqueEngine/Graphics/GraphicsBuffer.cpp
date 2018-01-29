@@ -2,9 +2,6 @@
 #include "GraphicsBuffer.h"
 #include "Graphics/Graphics.h"
 
-
-using namespace Diligent;
-
 namespace Unique
 {
 	uEnum
@@ -258,7 +255,7 @@ namespace Unique
 	bool IndexBuffer::SetSize(unsigned indexCount, bool largeIndices, bool dynamic)
 	{
 		Usage usage = dynamic ? USAGE_DYNAMIC : USAGE_STATIC;
-		uint flags = (dynamic ? Diligent::CPU_ACCESS_WRITE : 0);
+		uint flags = (dynamic ? CPU_ACCESS_WRITE : 0);
 		return GraphicsBuffer::Create(indexCount, largeIndices ? 4 : 2, usage, flags, nullptr);
 	}
 }

@@ -4,19 +4,11 @@
 #include "Core/Semaphore.h"
 #include "GraphicsEvents.h"
 #include "GraphicsBuffer.h"
-#include <RefCntAutoPtr.h>
-#include <RenderDevice.h>
-#include <DeviceContext.h>
-#include <SwapChain.h>
 
 struct SDL_Window;
 
 namespace Unique
 {
-	using IRenderDevice = Diligent::IRenderDevice;
-	using IDeviceContext = Diligent::IDeviceContext;
-	using ISwapChain = Diligent::ISwapChain;
-
 	class VertexBuffer;
 	class IndexBuffer;
 	class Geometry;
@@ -43,7 +35,7 @@ namespace Unique
 		Graphics();
 		~Graphics();
 		
-		bool CreateWindow(const IntVector2& size, DeviceType deviceType = DeviceType::D3D11);
+		bool CreateWindow(const IntVector2& size, DeviceType deviceType = DeviceType::D3D11);		
 		bool Initialize();
 		void Resize(const IntVector2& size);
 		void SetTitle(const String& title);
@@ -79,7 +71,7 @@ namespace Unique
 		void Frame();
 		//****************
 
-		//*******Render thread*******
+		//*******Render thread*******	
 		void CreateBuffer(GraphicsBuffer& buffer, const ByteArray& data);
 		void CreateShader(ShaderVariation& shader);
 		void CreateSampler(Sampler& sampler);
@@ -129,10 +121,8 @@ namespace Unique
 		int multiSampling_ = 4;
 		bool srgb_ = false;
 
-		Diligent::RefCntAutoPtr<IRenderDevice> renderDevice_;
-		Diligent::RefCntAutoPtr<IDeviceContext> deviceContext_;
-		Diligent::RefCntAutoPtr<ISwapChain> swapChain_;
-		Diligent::RefCntAutoPtr<Diligent::IResourceMapping> resourceMapping_;
+		struct Impl& impl_;
+
 		std::atomic<bool> inited_ = false;
 		SDL_Window *window_ = nullptr;
 		static ThreadID renderThreadID;

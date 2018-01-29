@@ -4,7 +4,6 @@
 
 namespace Unique
 {    
-
 	enum class MapFlags : int
     {
         DO_NOT_WAIT = 0x001,

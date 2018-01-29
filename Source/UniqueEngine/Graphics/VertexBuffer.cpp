@@ -97,7 +97,7 @@ namespace Unique
 	};
 
 	VertexBuffer::VertexBuffer(uint elementMask, ByteArray&& data, Usage usage) 
-		: GraphicsBuffer(Diligent::BIND_VERTEX_BUFFER)
+		: GraphicsBuffer(BIND_VERTEX_BUFFER)
 	{
 		elements_ = GetElements(elementMask);
 
@@ -106,7 +106,7 @@ namespace Unique
 		stride_ = GetVertexSize(elements_);
 		sizeInBytes_ = (uint)data.size();
 		usage_ = usage;
-		cpuAccessFlags_ |= (usage == USAGE_DYNAMIC ? Diligent::CPU_ACCESS_WRITE : 0);
+		cpuAccessFlags_ |= (usage == USAGE_DYNAMIC ? CPU_ACCESS_WRITE : 0);
 		auto& currentData = IsDynamic() ? MainContext(data_) : data_[0];
 		currentData = data;
 
@@ -114,7 +114,7 @@ namespace Unique
 	}
 
 	VertexBuffer::VertexBuffer(const PODVector<VertexElement>& elements, ByteArray&& data, Usage usage) 
-		: GraphicsBuffer(Diligent::BIND_VERTEX_BUFFER)
+		: GraphicsBuffer(BIND_VERTEX_BUFFER)
 	{
 		elements_ = elements;
 
@@ -123,7 +123,7 @@ namespace Unique
 		stride_ = GetVertexSize(elements_);
 		sizeInBytes_ = (uint)data.size();
 		usage_ = usage;
-		cpuAccessFlags_ |= (usage == USAGE_DYNAMIC ? Diligent::CPU_ACCESS_WRITE : 0);
+		cpuAccessFlags_ |= (usage == USAGE_DYNAMIC ? CPU_ACCESS_WRITE : 0);
 		auto& currentData = IsDynamic() ? MainContext(data_) : data_[0];
 		currentData = data;
 
@@ -139,7 +139,7 @@ namespace Unique
 		stride_ = GetVertexSize(elements_);
 		sizeInBytes_ = vertexCount * stride_;
 		usage_ = dynamic ? USAGE_DYNAMIC : USAGE_STATIC;
-		cpuAccessFlags_ |= (dynamic ? Diligent::CPU_ACCESS_WRITE : 0);
+		cpuAccessFlags_ |= (dynamic ? CPU_ACCESS_WRITE : 0);
 		data_[0].resize(sizeInBytes_);
 
 		if (IsDynamic())
@@ -159,7 +159,7 @@ namespace Unique
 		stride_ = GetVertexSize(elements_);
 		sizeInBytes_ = vertexCount * stride_;
 		usage_ = dynamic ? USAGE_DYNAMIC : USAGE_STATIC;
-		cpuAccessFlags_ |= (dynamic ? Diligent::CPU_ACCESS_WRITE : 0);
+		cpuAccessFlags_ |= (dynamic ? CPU_ACCESS_WRITE : 0);
 		data_[0].resize(sizeInBytes_);
 
 		if (IsDynamic())
