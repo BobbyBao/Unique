@@ -41,6 +41,24 @@ namespace UniqueEngine
             this.b = b;
             this.a = a;
         }
+
+        public nk_color(float r, float g, float b, float a = 1.0f)
+        {
+            this.r = (byte)MathHelper.Clamp((int)(r * 255), 0, 255);
+            this.g = (byte)MathHelper.Clamp((int)(g * 255), 0, 255);
+            this.b = (byte)MathHelper.Clamp((int)(b * 255), 0, 255);
+            this.a = (byte)MathHelper.Clamp((int)(a * 255), 0, 255);
+        }
+
+        public static implicit operator nk_color(Color value)
+        {
+            return new nk_color(value.r, value.g, value.b, value.a);
+        }
+
+        public static implicit operator Color(nk_color value)
+        {
+            return new Color(value.r, value.g, value.b, value.a);
+        }
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -106,7 +124,7 @@ namespace UniqueEngine
     public enum nk_show_states { NK_HIDDEN = 0, NK_SHOWN = 1 };
     public enum nk_chart_type { NK_CHART_LINES, NK_CHART_COLUMN, NK_CHART_MAX };
     public enum nk_chart_event { NK_CHART_HOVERING = 0x01, NK_CHART_CLICKED = 0x02 };
-    public enum nk_color_format { NK_RGB, NK_RGBA };
+    public enum nk_color_format : int { NK_RGB = 0, NK_RGBA = 1};
     public enum nk_popup_type { NK_POPUP_STATIC, NK_POPUP_DYNAMIC };
     public enum nk_layout_format { NK_DYNAMIC, NK_STATIC };
     public enum nk_tree_type { NK_TREE_NODE, NK_TREE_TAB };
@@ -987,10 +1005,11 @@ NK_API void nk_labelf(IntPtr ctx, uint, [MarshalAs(UnmanagedType.LPStr)]string, 
          * ============================================================================= */
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern nk_color nk_color_picker(IntPtr ctx, nk_color c, nk_color_format format);
+        [return: MarshalAs(UnmanagedType.Struct)]
+        static extern nk_color nk_color_picker(IntPtr ctx, Color c, uint format);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern int nk_color_pick(IntPtr ctx, nk_color* c, nk_color_format format);
+        static extern int nk_color_pick(IntPtr ctx, Color* c, uint format);
         /* =============================================================================
          *
          *                                  PROPERTIES

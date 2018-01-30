@@ -57,8 +57,7 @@ namespace UniqueEditor
                                 SetSample(System.Activator.CreateInstance(t) as Sample);
                             }
                         }
-                    }
-           
+                    }           
                    
                     ImGUI.MenuEnd();
                 }
@@ -66,6 +65,7 @@ namespace UniqueEditor
                 if (ImGUI.MenuBegin("Skin", nk_text_alignment.NK_TEXT_LEFT, new nk_vec2(120, 160)))
                 {
                     ImGUI.LayoutRowDynamic(25);
+
                     string[] names = typeof(Theme).GetEnumNames();
                     for(int i = 0; i < names.Length; i++)
                     {
@@ -103,6 +103,7 @@ namespace UniqueEditor
             {
                 current.OnGUI();
             }
+
 
         }
 

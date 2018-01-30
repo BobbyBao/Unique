@@ -27,7 +27,7 @@ namespace Unique
 
 	void GPUObject::Release()
 	{
-		uCall
+		uPost
 		(
 			ReleaseImpl();
 		);

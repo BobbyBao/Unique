@@ -215,8 +215,8 @@ namespace UniqueEngine
         public static int Slider(int min, ref int val, int max, int step) => nk_slider_int(ctx, min, (int*)Utilities.As(ref val), max, step);
         public static int Progress(ref int cur, int max, int modifyable) => nk_progress(ctx, (int *)Utilities.As(ref cur), max, modifyable);
         public static int Prog(int cur, int max, int modifyable) => nk_prog(ctx, cur, max, modifyable);
-        public static nk_color ColorPicker(nk_color c, nk_color_format format) => nk_color_picker(ctx, c, format);
-        public static int ColorPick(ref nk_color c, nk_color_format format) => nk_color_pick(ctx, (nk_color *)Utilities.As(ref c), format);
+        public static nk_color ColorPicker(Color c, nk_color_format format) => nk_color_picker(ctx, c, (uint)format);
+        public static bool ColorPick(ref Color c, nk_color_format format) => nk_color_pick(ctx, (Color *)Utilities.As(ref c), (uint)format) != 0;
         public static void PropertyInt(string name, int min, ref int val, int max, int step, float inc_per_pixel) => nk_property_int(ctx, name, min, (int*)Utilities.As(ref val), max, step, inc_per_pixel);
         public static void PropertyFloat(string name, float min, ref float val, float max, float step, float inc_per_pixel) => nk_property_float(ctx, name, min, (float*)Utilities.As(ref val), max, step, inc_per_pixel);
         public static void PropertyDouble(string name, double min, ref double val, double max, double step, float inc_per_pixel) => nk_property_double(ctx, name, min, (double*)Utilities.As(ref val), max, step, inc_per_pixel);

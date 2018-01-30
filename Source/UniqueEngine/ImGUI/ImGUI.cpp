@@ -58,8 +58,8 @@ namespace Unique
 		free(str);
 	}
 
-#define MAX_VERTEX_BUFFER 32 * 1024
-#define MAX_INDEX_BUFFER 8 * 1024
+#define MAX_VERTEX_BUFFER 512 * 1024
+#define MAX_INDEX_BUFFER 128 * 1024
 
 	nk_context *ctx = nullptr;
 	UNIQUE_C_API nk_context* nk_ctx()
@@ -485,8 +485,7 @@ namespace Unique
 	{
 		SendEvent(GUIEvent());
 
-
-		GUITest();
+		//GUITest();
 	}
 
 	static void nk_get_projection_matrix(int width, int height, float *result)

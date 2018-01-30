@@ -11,7 +11,8 @@ namespace UniqueEditor.Samples
         static int HARD = 1;
         static int op = EASY;
         static int property = 20;
-        nk_color background = new nk_color(28, 48, 62);
+        //nk_color background = new nk_color(28, 48, 62);
+        Color background = new Color(28, 48, 62);
 
         public override void OnGUI()
         {
@@ -28,13 +29,11 @@ namespace UniqueEditor.Samples
 
                 ImGUI.LayoutRowDynamic(30, 2);
                 if (ImGUI.Option("easy", op == EASY)) op = EASY;
-
                 if (ImGUI.Option("hard", op == HARD)) op = HARD;
 
                 ImGUI.LayoutRowDynamic(22, 1);
 
                 ImGUI.PropertyInt("Compression:", 0, ref property, 100, 10, 1);
-
 
                 ImGUI.LayoutRowDynamic(20, 1);
 
@@ -46,18 +45,20 @@ namespace UniqueEditor.Samples
                 {
                     ImGUI.LayoutRowDynamic(120, 1);
 
-                    background = ImGUI.ColorPicker(background, nk_color_format.NK_RGBA);
+                   // background = 
+                    ImGUI.ColorPick(ref background, nk_color_format.NK_RGBA);
 
                     ImGUI.LayoutRowDynamic(25, 1);
 
-                    background.r = (byte)ImGUI.Propertyi("#R:", 0, background.r, 255, 1, 1);
-                    background.g = (byte)ImGUI.Propertyi("#G:", 0, background.g, 255, 1, 1);
-                    background.b = (byte)ImGUI.Propertyi("#B:", 0, background.b, 255, 1, 1);
-                    background.a = (byte)ImGUI.Propertyi("#A:", 0, background.a, 255, 1, 1);
+                    background.r = ImGUI.Propertyf("#R:", 0, background.r, 1, 0.01f, 0.005f);
+                    background.g = ImGUI.Propertyf("#G:", 0, background.g, 1, 0.01f, 0.005f);
+                    background.b = ImGUI.Propertyf("#B:", 0, background.b, 1, 0.01f, 0.005f);
+                     background.a = ImGUI.Propertyf("#A:", 0, background.a, 1, 0.01f, 0.005f);
 
                     ImGUI.ComboEnd();
                 }
             }
+
             ImGUI.End();
 
 
