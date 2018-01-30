@@ -444,7 +444,7 @@ namespace Unique
 	//	const_cast<SDLRawInput&>(eventData).consumed_ = (ret != 0);
 	}
 
-	nk_color background = nk_rgb(28, 48, 62);
+	nk_colorf bg = {0.10f, 0.18f, 0.24f, 1.0f };
 	void GUITest()
 	{
 		if (nk_begin(ctx, "Demo", nk_rect(50, 50, 230, 250),
@@ -467,14 +467,14 @@ namespace Unique
 			nk_layout_row_dynamic(ctx, 20, 1);
 			nk_label(ctx, "background:", NK_TEXT_LEFT);
 			nk_layout_row_dynamic(ctx, 25, 1);
-			if (nk_combo_begin_color(ctx, background, nk_vec2(nk_widget_width(ctx), 400))) {
+			if (nk_combo_begin_color(ctx, nk_rgba_cf(bg), nk_vec2(nk_widget_width(ctx), 400))) {
 				nk_layout_row_dynamic(ctx, 120, 1);
-				background = nk_color_picker(ctx, background, NK_RGBA);
+				bg = nk_color_picker(ctx, bg, NK_RGBA);
 				nk_layout_row_dynamic(ctx, 25, 1);
-				background.r = (nk_byte)nk_propertyi(ctx, "#R:", 0, background.r, 255, 1, 1);
-				background.g = (nk_byte)nk_propertyi(ctx, "#G:", 0, background.g, 255, 1, 1);
-				background.b = (nk_byte)nk_propertyi(ctx, "#B:", 0, background.b, 255, 1, 1);
-				background.a = (nk_byte)nk_propertyi(ctx, "#A:", 0, background.a, 255, 1, 1);
+				bg.r = nk_propertyf(ctx, "#R:", 0, bg.r, 1.0f, 0.01f, 0.005f);
+				bg.g = nk_propertyf(ctx, "#G:", 0, bg.g, 1.0f, 0.01f, 0.005f);
+				bg.b = nk_propertyf(ctx, "#B:", 0, bg.b, 1.0f, 0.01f, 0.005f);
+				bg.a = nk_propertyf(ctx, "#A:", 0, bg.a, 1.0f, 0.01f, 0.005f);
 				nk_combo_end(ctx);
 			}
 		}
@@ -484,8 +484,9 @@ namespace Unique
 	void GUI::HandleBeginFrame(const BeginFrame& eventData)
 	{
 		SendEvent(GUIEvent());
-		
-		
+
+
+		GUITest();
 	}
 
 	static void nk_get_projection_matrix(int width, int height, float *result)
