@@ -10,6 +10,7 @@ uExport(Component, bool, IsEnabled)
 
 uExport(Node, void, SetPosition, const Vector3&)
 uExport(Node, void, SetRotation, const Quaternion&)
+uExport(Node, void, SetDirection, const Vector3&)
 uExport(Node, void, SetScale, const Vector3&)
 uExport(Node, void, Translate, const Vector3&, pos, TransformSpace)
 uExport(Node, void, Rotate, const Quaternion&, rot, TransformSpace)

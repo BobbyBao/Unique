@@ -429,7 +429,29 @@ namespace Unique
 		}
 
 		frameUniform_->SetData(frameParam);
-
+		
+		if(dirLights_.size() > 0)
+		{
+			Light* light = dirLights_[0];
+			Node* lightNode = light->GetNode();
+            float atten = 1.0f / Max(light->GetRange(), M_EPSILON);
+            Vector3 lightDir(lightNode->GetWorldRotation() * Vector3::BACK);
+            Vector4 lightPos(lightNode->GetWorldPosition(), atten);
+			       
+			float fade = 1.0f;
+            float fadeEnd = light->GetDrawDistance();
+            float fadeStart = light->GetFadeDistance();
+            // Do fade calculation for light if both fade & draw distance defined
+            if (light->GetLightType() != LIGHT_DIRECTIONAL && fadeEnd > 0.0f && fadeStart > 0.0f && fadeStart < fadeEnd)
+                fade = Min(1.0f - (light->GetDistance() - fadeStart) / (fadeEnd - fadeStart), 1.0f);
+			
+			Color lightColor = Color(light->GetEffectiveColor().Abs(), light->GetEffectiveSpecularIntensity()) * fade;
+			LightPS* lightPS = (LightPS*)lightPS_->Lock();
+			lightPS->LightColor = (float4&)lightColor;
+			lightPS->LightDirPS = lightDir;
+			lightPS->LightPosPS = lightPos;
+			lightPS_->Unlock();
+		}
 	}
 
 	void View::SetCameraShaderParameters(Camera* camera)

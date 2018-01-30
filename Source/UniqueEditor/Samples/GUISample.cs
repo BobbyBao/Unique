@@ -43,17 +43,14 @@ namespace UniqueEditor.Samples
 
                 if (ImGUI.ComboBegin(background, new nk_vec2(ImGUI.WidgetWidth(), 400)))
                 {
-                    ImGUI.LayoutRowDynamic(120, 1);
-
-                   // background = 
+                    ImGUI.LayoutRowDynamic(120, 1);                    
                     ImGUI.ColorPick(ref background, nk_color_format.NK_RGBA);
 
                     ImGUI.LayoutRowDynamic(25, 1);
-
                     background.r = ImGUI.Propertyf("#R:", 0, background.r, 1, 0.01f, 0.005f);
                     background.g = ImGUI.Propertyf("#G:", 0, background.g, 1, 0.01f, 0.005f);
                     background.b = ImGUI.Propertyf("#B:", 0, background.b, 1, 0.01f, 0.005f);
-                     background.a = ImGUI.Propertyf("#A:", 0, background.a, 1, 0.01f, 0.005f);
+                    background.a = ImGUI.Propertyf("#A:", 0, background.a, 1, 0.01f, 0.005f);
 
                     ImGUI.ComboEnd();
                 }

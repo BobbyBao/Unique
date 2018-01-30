@@ -35,6 +35,12 @@ namespace UniqueEngine
             return this;
         }
 
+        public Node Direction(Vector3 dir)
+        {
+            Node_SetDirection(native_, ref dir);
+            return this;
+        }
+
         public Node Scaling(Vector3 s)
         {
             Node_SetScale(native_, ref s);

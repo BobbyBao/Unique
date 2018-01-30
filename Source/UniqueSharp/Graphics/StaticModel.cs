@@ -5,7 +5,7 @@ using System.Text;
 
 namespace UniqueEngine
 {
-    public class StaticModel : Drawable
+    public partial class StaticModel : Drawable
     {
         public StaticModel()
         {
@@ -40,21 +40,6 @@ namespace UniqueEngine
             StaticModel_SetMaterialsAttr(nativePtr, mat.native_);
             return this;
         }
-
-        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern void StaticModel_SetModel(IntPtr self, IntPtr model);
-
-        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern void StaticModel_SetMaterial(IntPtr self, IntPtr material);
-
-        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern void StaticModel_SetMaterialAt(IntPtr self, int index, IntPtr material);
-
-        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern void StaticModel_SetModelAttr(IntPtr self, IntPtr model);
-          
-        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
-        static extern void StaticModel_SetMaterialsAttr(IntPtr self, IntPtr material);
 
     }
 }

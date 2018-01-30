@@ -1,5 +1,6 @@
 #include "UniquePCH.h"
 #include "Graphics/Camera.h"
+#include "Graphics/Light.h"
 #include "Graphics/StaticModel.h"
 
 using namespace Unique;
@@ -28,6 +29,20 @@ uExport(Camera, void, SetReflectionPlane, const Plane&)
 uExport(Camera, void, SetUseClipping, bool)
 uExport(Camera, void, SetClipPlane, const Plane&)
 uExport(Camera, void, SetFlipVertical, bool)
+
+uExport(Light, void, SetLightType, LightType, type)
+uExport(Light, void, SetPerVertex, bool, enable)
+uExport(Light, void, SetColor, const Color&, color)
+uExport(Light, void, SetTemperature, float, temperature)
+uExport(Light, void, SetRadius, float, radius)
+uExport(Light, void, SetLength, float, length)
+uExport(Light, void, SetUsePhysicalValues, float, enable)
+uExport(Light, void, SetSpecularIntensity, float, intensity)
+uExport(Light, void, SetBrightness, float, brightness)
+uExport(Light, void, SetRange, float, range)
+uExport(Light, void, SetFov, float, fov)
+uExport(Light, void, SetAspectRatio, float, aspectRatio)
+
 
 uExport(StaticModel, void, SetModel, Model*, model)
 uExport(StaticModel, void, SetMaterial, Material*, material)

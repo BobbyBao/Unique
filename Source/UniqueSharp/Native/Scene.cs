@@ -32,6 +32,9 @@ namespace UniqueEngine
         static extern void Node_SetRotation(IntPtr self, ref Quaternion rot);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern void Node_SetDirection(IntPtr self, ref Vector3 dir);
+
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
         static extern void Node_SetScale(IntPtr self, ref Vector3 s);
 
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]

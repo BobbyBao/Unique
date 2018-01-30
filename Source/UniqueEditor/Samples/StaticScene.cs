@@ -10,12 +10,16 @@ namespace UniqueEditor.Samples
         public override void Enter()
         {
             base.Enter();
-
+            
             New(ref scene)
             .Component<Octree>()
             .Component<DebugRenderer>()
             .Child("Light", c => c
-                .Component<Light>()
+                .Direction(new Vector3(0.6f, -1.0f, 0.8f))
+                .Component<Light>( light => light
+                    .SetLightType(LightType.DIRECTIONAL)              
+                )
+                
             )
             .Child("Camera", c => c
                 .Position(new Vector3(0.0f, 10.0f, -30.0f))

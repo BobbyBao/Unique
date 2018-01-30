@@ -1,3 +1,4 @@
+#define DIRLIGHT
 #include "Uniforms.hlsl"
 #include "Samplers.hlsl"
 #include "Transform.hlsl"
@@ -21,7 +22,7 @@ void VS(
     float4x3 modelMatrix = iModelMatrix;
     float3 worldPos = GetWorldPos(modelMatrix);
     oPos = GetClipPos(worldPos);
-
+    oNormal = GetWorldNormal(modelMatrix);
     oWorldPos = float4(worldPos, GetDepth(oPos));
       
     #if defined(D3D11) && defined(CLIPPLANE)
@@ -100,7 +101,7 @@ void PS(
         float spec = GetSpecular(normal, CameraPosPS - iWorldPos.xyz, lightDir, MatSpecColor.a);
         finalColor = diff * lightColor * (diffColor.rgb + spec * specColor * LightColor.a);
     #else
-        finalColor = /*diff * lightColor **/ diffColor.rgb;
+        finalColor = diff * lightColor * diffColor.rgb;
     #endif
 
     #ifdef AMBIENT
