@@ -23,6 +23,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\RenderPass\ClusteredLight.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\DrawableEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\GraphicsEvents.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Zone.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Input\Controls.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Input\Input.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Input\InputEvents.h" />
@@ -87,6 +88,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Export\SceneExport.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\RenderState.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\ShaderUtil.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Zone.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Input\Controls.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Input\Input.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Importers\DDSLoader.cpp" />

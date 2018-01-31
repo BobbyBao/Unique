@@ -505,7 +505,7 @@ void Node::AddChild(Node* node, unsigned index)
     if (IsChildOf(node))
         return;
 
-    // Keep a shared ptr to the node while visitorring
+    // Keep a shared ptr to the node while tansferring
     SPtr<Node> nodeShared(node);
     Node* oldParent = node->parent_;
     if (oldParent)
