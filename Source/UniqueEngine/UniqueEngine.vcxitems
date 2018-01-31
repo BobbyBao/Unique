@@ -20,6 +20,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Animation\AnimationState.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Application\Application.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Application\Engine.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\RenderPass\ClusteredLight.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\DrawableEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\GraphicsEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Input\Controls.h" />
@@ -77,6 +78,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Animation\AnimationState.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Application\Application.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Application\Engine.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\RenderPass\ClusteredLight.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Export\CoreExport.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Export\EngineExport.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Export\GraphicsExport.cpp" />

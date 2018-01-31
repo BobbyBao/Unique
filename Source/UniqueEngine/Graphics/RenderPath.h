@@ -122,8 +122,6 @@ struct UNIQUE_API RenderPathCommand
     {
     }
 
-    /// Read from an XML element.
-    //void Load(const XMLElement& element);
     /// Set a texture resource name. Can also refer to a rendertarget defined in the rendering path.
     void SetTextureName(TextureUnit unit, const String& name);
     /// Set a shader parameter.
@@ -210,7 +208,7 @@ struct UNIQUE_API RenderPathCommand
 };
 
 /// Rendering path definition. A sequence of commands (e.g. clear screen, draw objects with specific pass) that yields the scene rendering result.
-class UNIQUE_API RenderPath : public RefCounted
+class UNIQUE_API RenderPath : public Object
 {
 public:
     /// Construct.
