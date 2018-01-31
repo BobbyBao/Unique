@@ -238,16 +238,6 @@ void RenderPathCommand::SetTextureName(TextureUnit unit, const String& name)
         textureNames_[unit] = name;
 }
 
-void RenderPathCommand::SetShaderParameter(const String& name, const Variant& value)
-{
-    shaderParameters_[name] = value;
-}
-
-void RenderPathCommand::RemoveShaderParameter(const String& name)
-{
-    shaderParameters_.erase(name);
-}
-
 void RenderPathCommand::SetNumOutputs(unsigned num)
 {
     num = (unsigned)Clamp((int)num, 1, MAX_RENDERTARGETS);
@@ -287,12 +277,6 @@ void RenderPathCommand::SetDepthStencilName(const String& name)
 const String& RenderPathCommand::GetTextureName(TextureUnit unit) const
 {
     return unit < MAX_TEXTURE_UNITS ? textureNames_[unit] : String::EMPTY;
-}
-
-const Variant& RenderPathCommand::GetShaderParameter(const String& name) const
-{
-    auto i = shaderParameters_.find(name);
-    return i != shaderParameters_.end() ? i->second : Variant::EMPTY;
 }
 
 const String& RenderPathCommand::GetOutputName(unsigned index) const
@@ -498,30 +482,5 @@ void RenderPath::RemoveCommands(const String& tag)
     }
 }
 
-void RenderPath::SetShaderParameter(const String& name, const Variant& value)
-{
-    StringID nameHash(name);
-
-    for (unsigned i = 0; i < commands_.size(); ++i)
-    {
-        auto j = commands_[i].shaderParameters_.find(nameHash);
-        if (j != commands_[i].shaderParameters_.end())
-            j->second = value;
-    }
-}
-
-const Variant& RenderPath::GetShaderParameter(const String& name) const
-{
-    StringID nameHash(name);
-
-    for (unsigned i = 0; i < commands_.size(); ++i)
-    {
-       auto j = commands_[i].shaderParameters_.find(nameHash);
-        if (j != commands_[i].shaderParameters_.end())
-            return j->second;
-    }
-
-    return Variant::EMPTY;
-}
 
 }

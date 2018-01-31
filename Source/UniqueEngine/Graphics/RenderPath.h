@@ -124,10 +124,6 @@ struct UNIQUE_API RenderPathCommand
 
     /// Set a texture resource name. Can also refer to a rendertarget defined in the rendering path.
     void SetTextureName(TextureUnit unit, const String& name);
-    /// Set a shader parameter.
-    void SetShaderParameter(const String& name, const Variant& value);
-    /// Remove a shader parameter.
-    void RemoveShaderParameter(const String& name);
     /// Set number of output rendertargets.
     void SetNumOutputs(unsigned num);
     /// Set output rendertarget name and face index for cube maps.
@@ -141,8 +137,6 @@ struct UNIQUE_API RenderPathCommand
 
     /// Return texture resource name.
     const String& GetTextureName(TextureUnit unit) const;
-    /// Return shader parameter.
-    const Variant& GetShaderParameter(const String& name) const;
 
     /// Return number of output rendertargets.
     unsigned GetNumOutputs() const { return (uint)outputs_.size(); }
@@ -177,8 +171,10 @@ struct UNIQUE_API RenderPathCommand
     String pixelShaderDefines_;
     /// Textures.
     String textureNames_[MAX_TEXTURE_UNITS];
-    /// %Shader parameters.
-    HashMap<StringID, Variant> shaderParameters_;
+    /// Textures.
+    HashMap<String, SPtr<GraphicsBuffer>> buffers_;
+    /// Textures.
+    HashMap<String, SPtr<Texture>> textures_;
     /// Output rendertarget names and faces.
     Vector<Pair<String, CubeMapFace> > outputs_;
     /// Depth-stencil output name.

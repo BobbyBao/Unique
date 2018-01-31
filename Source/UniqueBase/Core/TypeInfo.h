@@ -26,7 +26,7 @@ namespace Unique
 		/// Return base type info.
 		const TypeInfo* GetBaseTypeInfo() const { return baseTypeInfo_; }
 
-		void Transfer(Visitor& serializer, void* obj) const;
+		void Visit(Visitor& serializer, void* obj) const;
 		/*
 		template<class C, class T>
 		void RegisterAttribute(const char* name, T C::* m, AttributeFlag flag = AttributeFlag::Default)
@@ -41,14 +41,7 @@ namespace Unique
 			RegisterAttribute(
 				new Unique::TAttribute<T>(name, offset, flag));
 		}
-
-		template<typename C, typename T, typename SET>
-		void RegisterMixedAttribute(const char* name, size_t offset, SET setter, AttributeFlag flag = AttributeFlag::Default)
-		{
-			RegisterAttribute(
-				new Unique::AttributeImpl<C, T>(name, offset, setter, flag));
-		}
-
+		
 		template<typename GET, typename SET>
 		void RegisterAccessor(const char* name, GET getter, SET setter, AttributeFlag flag = AttributeFlag::Default)
 		{
@@ -99,7 +92,7 @@ namespace Unique
 		}
 
 		uint GetAttributeCount(void* obj) const;
-		void TransferImpl(Visitor& serializer, void* obj) const;
+		void VisitImpl(Visitor& serializer, void* obj) const;
 
 
 		/// Type.
@@ -146,8 +139,8 @@ static void typeName##RegisterObject(Context* context) {typeName::RegisterObject
 #define uAttribute(name, variable, ...)\
 	typeInfo->RegisterAttribute<decltype(((ClassName*)0)->variable)>(name, offsetof(ClassName, variable), ##__VA_ARGS__);
 
-#define uMixedAttribute(name, variable, setter, ...)\
-	typeInfo->RegisterMixedAttribute<ClassName, decltype(((ClassName*)0)->variable)>(name, offsetof(ClassName, variable), &ClassName::setter, ##__VA_ARGS__);
+//#define uMixedAttribute(name, variable, setter, ...)\
+//	typeInfo->RegisterMixedAttribute<ClassName, decltype(((ClassName*)0)->variable)>(name, offsetof(ClassName, variable), &ClassName::setter, ##__VA_ARGS__);
 
 #define uAccessor(name, getFunction, setFunction, ...)\
 	typeInfo->RegisterAccessor(name, &ClassName::getFunction, &ClassName::setFunction, ##__VA_ARGS__);
@@ -162,8 +155,5 @@ void typeName##RegisterTypeInfo(TypeInfo* typeInfo);\
 		static RegisterRuntime s_##typeName##Callbacks(typeName##RegisterObject, nullptr);\
 		template<class ClassName>\
 		void typeName##RegisterTypeInfo(TypeInfo* typeInfo)
-
-#define uProperty(name, type, variable, ...)\
-	typeInfo->RegisterAttribute<type>(name, offsetof(ClassName, variable), ##__VA_ARGS__);
-
+	
 }

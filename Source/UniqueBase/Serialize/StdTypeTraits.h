@@ -40,11 +40,11 @@ namespace Unique
 	public:
 		typedef std::pair<FirstClass, SecondClass>	value_type;
 
-		template<class TransferFunction>
-		inline static void Transfer(value_type& data, TransferFunction& transfer)
+		template<class VisitFunction>
+		inline static void Visit(value_type& data, VisitFunction& visitor)
 		{
-			transfer.TransferAttribute("Key", data.first, AttributeFlag::Default);
-			transfer.TransferAttribute("Value", data.second, AttributeFlag::Default);
+			visitor.VisitAttribute("Key", data.first, AttributeFlag::Default);
+			visitor.VisitAttribute("Value", data.second, AttributeFlag::Default);
 		}
 	};
 
@@ -54,10 +54,10 @@ namespace Unique
 	public:
 		typedef std::map<FirstClass, SecondClass, Compare, Allocator>	value_type;
 
-		template<class TransferFunction> inline
-		static void Transfer(value_type& data, TransferFunction& transfer)
+		template<class VisitFunction> inline
+		static void Visit(value_type& data, VisitFunction& visitor)
 		{
-			transfer.TransferMap(data);
+			visitor.VisitMap(data);
 		}
 	};
 
@@ -67,10 +67,10 @@ namespace Unique
 	public:
 		typedef std::unordered_map<FirstClass, SecondClass, Compare, Allocator>	value_type;
 		
-		template<class TransferFunction> inline
-		static void Transfer(value_type& data, TransferFunction& transfer)
+		template<class VisitFunction> inline
+		static void Visit(value_type& data, VisitFunction& visitor)
 		{
-			transfer.TransferMap(data);
+			visitor.VisitMap(data);
 		}
 	};
 
@@ -80,10 +80,10 @@ namespace Unique
 	public:
 		typedef std::multimap<FirstClass, SecondClass, Compare, Allocator>	value_type;
 
-		template<class TransferFunction>
-		inline static void Transfer(value_type& data, TransferFunction& transfer)
+		template<class VisitFunction>
+		inline static void Visit(value_type& data, VisitFunction& visitor)
 		{
-			transfer.TransferMap(data);
+			visitor.VisitMap(data);
 		}
 	};
 
@@ -92,10 +92,10 @@ namespace Unique
 	class TypeTraits<std::set<T, Compare, Allocator> > : public SerializeTraitsArray<std::set<T, Compare, Allocator> >
 	{
 	public:
-		template<class TransferFunction> 
-		inline static void Transfer(value_type& data, TransferFunction& transfer)
+		template<class VisitFunction> 
+		inline static void Visit(value_type& data, VisitFunction& visitor)
 		{
-			transfer.TransferSet(data);
+			visitor.VisitSet(data);
 		}
 	};
 	

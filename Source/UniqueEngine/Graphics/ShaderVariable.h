@@ -28,6 +28,11 @@ namespace Unique
 			Vector4 float4Val_;
 			Color colorVal_;
 		};
+		
+		bool operator == ( const UniformData& rhs) const
+		{
+			return std::memcmp(this, &rhs, sizeof(*this)) == 0;
+		}
 
 	};
 
@@ -50,40 +55,45 @@ namespace Unique
 		StringID name_;
 		Uniform::Type type_ = Uniform::Type::INT;
 		UniformData value_;
-
-		template<class TransferFunction>
-		void Transfer(TransferFunction& transfer)
+		
+		bool operator == ( const Uniform& rhs) const
 		{
-			transfer.StartObject(3);
-			transfer.TransferAttribute("Name", name_);
-			transfer.TransferAttribute("Type", type_);
+			return name_ == rhs.name_ && type_ == rhs.type_ && value_ == rhs.value_;
+		}
+
+		template<class VisitFunction>
+		void Visit(VisitFunction& visitor)
+		{
+			visitor.StartObject(3);
+			visitor.VisitAttribute("Name", name_);
+			visitor.VisitAttribute("Type", type_);
 
 			switch (type_)
 			{
 			case Unique::Uniform::INT:
-				transfer.TransferAttribute("Value", value_.intVal_);
+				visitor.VisitAttribute("Value", value_.intVal_);
 				break;
 			case Unique::Uniform::FLOAT:
-				transfer.TransferAttribute("Value", value_.floatVal_);
+				visitor.VisitAttribute("Value", value_.floatVal_);
 				break;
 			case Unique::Uniform::FLOAT2:
-				transfer.TransferAttribute("Value", value_.float2Val_);
+				visitor.VisitAttribute("Value", value_.float2Val_);
 				break;
 			case Unique::Uniform::FLOAT3:
-				transfer.TransferAttribute("Value", value_.float3Val_);
+				visitor.VisitAttribute("Value", value_.float3Val_);
 				break;
 			case Unique::Uniform::FLOAT4:
-				transfer.TransferAttribute("Value", value_.float4Val_);
+				visitor.VisitAttribute("Value", value_.float4Val_);
 				break;
 			case Unique::Uniform::COLOR:
-				transfer.TransferAttribute("Value", value_.colorVal_);
+				visitor.VisitAttribute("Value", value_.colorVal_);
 				break;
 			default:
-				transfer.TransferAttribute("Value", value_.intVal_);
+				visitor.VisitAttribute("Value", value_.intVal_);
 				break;
 			}
 
-			transfer.EndObject();
+			visitor.EndObject();
 		}
 
 	};
@@ -100,6 +110,11 @@ namespace Unique
 		ResourceRef texAttr_;
 		SPtr<Texture> texture_;
 		
+		bool operator == ( const TextureSlot& rhs) const
+		{
+			return name_ == rhs.name_ && texAttr_ == rhs.name_ && texture_ == rhs.texture_;
+		}
+
 		uClass("Name", name_, "Texture", texAttr_)
 	};
 

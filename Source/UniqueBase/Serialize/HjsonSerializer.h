@@ -17,7 +17,7 @@ namespace Unique
 
 		virtual bool StartObject(uint size);
 		virtual void EndObject();
-		virtual void TransferBin(ByteArray& data);
+		virtual void VisitBin(ByteArray& data);
 	protected:
 		virtual bool StartDocument(const String& fileName);
 		virtual void EndDocument();
@@ -26,19 +26,19 @@ namespace Unique
 		virtual bool StartArray(uint& size);
 		virtual void SetElement(uint index);
 		virtual void EndArray();
-		virtual void TransferPrimitive(std::string& data);
-		virtual void TransferPrimitive(String& data);
-		virtual void TransferPrimitive(bool& data);
-		virtual void TransferPrimitive(char& data);
-		virtual void TransferPrimitive(unsigned char& data);
-		virtual void TransferPrimitive(short& data);
-		virtual void TransferPrimitive(unsigned short& data);
-		virtual void TransferPrimitive(int& data);
-		virtual void TransferPrimitive(unsigned int& data);
-		virtual void TransferPrimitive(long long& data);
-		virtual void TransferPrimitive(unsigned long long& data);
-		virtual void TransferPrimitive(float& data);
-		virtual void TransferPrimitive(double& data);
+		virtual void VisitPrimitive(std::string& data);
+		virtual void VisitPrimitive(String& data);
+		virtual void VisitPrimitive(bool& data);
+		virtual void VisitPrimitive(char& data);
+		virtual void VisitPrimitive(unsigned char& data);
+		virtual void VisitPrimitive(short& data);
+		virtual void VisitPrimitive(unsigned short& data);
+		virtual void VisitPrimitive(int& data);
+		virtual void VisitPrimitive(unsigned int& data);
+		virtual void VisitPrimitive(long long& data);
+		virtual void VisitPrimitive(unsigned long long& data);
+		virtual void VisitPrimitive(float& data);
+		virtual void VisitPrimitive(double& data);
 
 		Hjson::Value currentNode_;
 

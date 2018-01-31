@@ -5,7 +5,7 @@
 namespace Unique
 {
 	HjsonDeserializer::HjsonDeserializer(bool dsl) 
-		: Visitor(TransferState::Reading), dsl_(dsl)
+		: Visitor(VisitState::Reading), dsl_(dsl)
 	{
 	}
 
@@ -22,7 +22,7 @@ namespace Unique
 	{
 	}
 
-	void HjsonDeserializer::TransferBin(ByteArray& data)
+	void HjsonDeserializer::VisitBin(ByteArray& data)
 	{
 		const std::string& base64 = (const std::string&)currentNode_;
 		data = FromBase64(base64.c_str(), base64.length());
@@ -215,68 +215,68 @@ namespace Unique
 		parentNode_.pop_back();
 	}
 	
-	void HjsonDeserializer::TransferPrimitive(std::string& data)
+	void HjsonDeserializer::VisitPrimitive(std::string& data)
 	{
 		data = (const char*)currentNode_;
 	}
 
-	void HjsonDeserializer::TransferPrimitive(String& data)
+	void HjsonDeserializer::VisitPrimitive(String& data)
 	{
 		data = (const char*)currentNode_;
 	}
 
-	void HjsonDeserializer::TransferPrimitive(bool& data)
+	void HjsonDeserializer::VisitPrimitive(bool& data)
 	{
 		data = (bool)currentNode_;
 	}
 
-	void HjsonDeserializer::TransferPrimitive(char& data)
+	void HjsonDeserializer::VisitPrimitive(char& data)
 	{
 		data = (char)currentNode_;
 	}
 
-	void HjsonDeserializer::TransferPrimitive(unsigned char& data)
+	void HjsonDeserializer::VisitPrimitive(unsigned char& data)
 	{
 		data = (byte)currentNode_;
 	}
 
-	void HjsonDeserializer::TransferPrimitive(short& data)
+	void HjsonDeserializer::VisitPrimitive(short& data)
 	{
 		data = (short)currentNode_;
 	}
 	
-	void HjsonDeserializer::TransferPrimitive(unsigned short& data)
+	void HjsonDeserializer::VisitPrimitive(unsigned short& data)
 	{
 		data = (ushort)currentNode_;
 	}
 
-	void HjsonDeserializer::TransferPrimitive(int& data)
+	void HjsonDeserializer::VisitPrimitive(int& data)
 	{
 		data = (int)currentNode_;
 	}
 	
-	void HjsonDeserializer::TransferPrimitive(unsigned int& data)
+	void HjsonDeserializer::VisitPrimitive(unsigned int& data)
 	{
 		data = (uint)currentNode_;
 	}
 
-	void HjsonDeserializer::TransferPrimitive(long long& data)
+	void HjsonDeserializer::VisitPrimitive(long long& data)
 	{
 	//	data = (uint)currentNode_;
 	}
 
-	void HjsonDeserializer::TransferPrimitive(unsigned long long& data)
+	void HjsonDeserializer::VisitPrimitive(unsigned long long& data)
 	{
 	//	assert(currentNode_->IsUint64());
 	//	data = currentNode_->GetUint64();
 	}
 
-	void HjsonDeserializer::TransferPrimitive(float& data)
+	void HjsonDeserializer::VisitPrimitive(float& data)
 	{
 		data = (float)currentNode_;
 	}
 
-	void HjsonDeserializer::TransferPrimitive(double& data)
+	void HjsonDeserializer::VisitPrimitive(double& data)
 	{
 		data = (double)currentNode_;
 	}

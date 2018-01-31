@@ -10,7 +10,7 @@ using namespace rapidjson;
 
 namespace Unique
 {
-	JsonSerializer::JsonSerializer() : Visitor(TransferState::Writing)
+	JsonSerializer::JsonSerializer() : Visitor(VisitState::Writing)
 	{
 	}
 
@@ -55,7 +55,7 @@ namespace Unique
 		writer_->EndObject();
 	}
 	
-	void JsonSerializer::TransferBin(ByteArray& data)
+	void JsonSerializer::VisitBin(ByteArray& data)
 	{
 		ByteArray bytes = std::move(ToBase64(data));
 		writer_->String(bytes.data(), (rapidjson::SizeType)bytes.size());
@@ -86,115 +86,115 @@ namespace Unique
 		writer_->EndArray();
 	}
 
-	void JsonSerializer::TransferPrimitive(std::string& data)
+	void JsonSerializer::VisitPrimitive(std::string& data)
 	{
 		writer_->String(data.c_str());
 	}
 
-	void JsonSerializer::TransferPrimitive(String& data)
+	void JsonSerializer::VisitPrimitive(String& data)
 	{
 		writer_->String(data.CString());
 	}
 
-	void JsonSerializer::TransferPrimitive(bool& data)
+	void JsonSerializer::VisitPrimitive(bool& data)
 	{
 		writer_->Bool(data);
 	}
 
-	void JsonSerializer::TransferPrimitive(char& data)
+	void JsonSerializer::VisitPrimitive(char& data)
 	{
 		writer_->Int(data);
 	}
 
-	void JsonSerializer::TransferPrimitive(unsigned char& data)
+	void JsonSerializer::VisitPrimitive(unsigned char& data)
 	{
 		writer_->Uint(data);
 	}
 
-	void JsonSerializer::TransferPrimitive(short& data)
+	void JsonSerializer::VisitPrimitive(short& data)
 	{
 		writer_->Int(data);
 	}
 
-	void JsonSerializer::TransferPrimitive(unsigned short& data)
+	void JsonSerializer::VisitPrimitive(unsigned short& data)
 	{
 		writer_->Uint(data);
 	}
 
-	void JsonSerializer::TransferPrimitive(int& data)
+	void JsonSerializer::VisitPrimitive(int& data)
 	{
 		writer_->Int(data);
 	}
 
-	void JsonSerializer::TransferPrimitive(unsigned int& data)
+	void JsonSerializer::VisitPrimitive(unsigned int& data)
 	{
 		writer_->Uint(data);
 	}
 
-	void JsonSerializer::TransferPrimitive(long long& data)
+	void JsonSerializer::VisitPrimitive(long long& data)
 	{
 		writer_->Int64(data);
 	}
 
-	void JsonSerializer::TransferPrimitive(unsigned long long& data)
+	void JsonSerializer::VisitPrimitive(unsigned long long& data)
 	{
 		writer_->Uint64(data);
 	}
 
-	void JsonSerializer::TransferPrimitive(float& data)
+	void JsonSerializer::VisitPrimitive(float& data)
 	{
 		writer_->Double(data);
 	}
 
-	void JsonSerializer::TransferPrimitive(double& data)
+	void JsonSerializer::VisitPrimitive(double& data)
 	{
 		writer_->Double(data);
 	}
 	
-	void JsonSerializer::TransferPrimitive(Vector2& data)
+	void JsonSerializer::VisitPrimitive(Vector2& data)
 	{
 		writer_->StartArray();
-		TransferPrimitive(data.x_);
-		TransferPrimitive(data.y_);
+		VisitPrimitive(data.x_);
+		VisitPrimitive(data.y_);
 		writer_->EndArray();
 	}
 	
-	void JsonSerializer::TransferPrimitive(Vector3& data)
+	void JsonSerializer::VisitPrimitive(Vector3& data)
 	{
 		writer_->StartArray();
-		TransferPrimitive(data.x_);
-		TransferPrimitive(data.y_);
-		TransferPrimitive(data.z_);
+		VisitPrimitive(data.x_);
+		VisitPrimitive(data.y_);
+		VisitPrimitive(data.z_);
 		writer_->EndArray();
 	}
 	
-	void JsonSerializer::TransferPrimitive(Vector4& data)
+	void JsonSerializer::VisitPrimitive(Vector4& data)
 	{
 		writer_->StartArray();
-		TransferPrimitive(data.x_);
-		TransferPrimitive(data.y_);
-		TransferPrimitive(data.z_);
-		TransferPrimitive(data.w_);
+		VisitPrimitive(data.x_);
+		VisitPrimitive(data.y_);
+		VisitPrimitive(data.z_);
+		VisitPrimitive(data.w_);
 		writer_->EndArray();
 	}
 	
-	void JsonSerializer::TransferPrimitive(Color& data)
+	void JsonSerializer::VisitPrimitive(Color& data)
 	{
 		writer_->StartArray();
-		TransferPrimitive(data.r_);
-		TransferPrimitive(data.g_);
-		TransferPrimitive(data.b_);
-		TransferPrimitive(data.a_);
+		VisitPrimitive(data.r_);
+		VisitPrimitive(data.g_);
+		VisitPrimitive(data.b_);
+		VisitPrimitive(data.a_);
 		writer_->EndArray();
 	}
 	
-	void JsonSerializer::TransferPrimitive(Quaternion& data)
+	void JsonSerializer::VisitPrimitive(Quaternion& data)
 	{
 		writer_->StartArray();
-		TransferPrimitive(data.w_);
-		TransferPrimitive(data.x_);
-		TransferPrimitive(data.y_);
-		TransferPrimitive(data.z_);
+		VisitPrimitive(data.w_);
+		VisitPrimitive(data.x_);
+		VisitPrimitive(data.y_);
+		VisitPrimitive(data.z_);
 		writer_->EndArray();
 	}
 }

@@ -61,11 +61,22 @@ namespace Unique
 			Frequency(_Frequency),
 			InstanceDataStepRate(_InstanceDataStepRate)
 		{}
+
+		bool operator == ( const LayoutElement& rhs) const
+		{
+			return std::memcmp(this, &rhs, sizeof(*this)) == 0;
+		}
+
 	};
 
 	struct InputLayout
 	{
 		Vector<LayoutElement> layoutElements_;
+		
+		bool operator ==( const InputLayout& rhs) const
+		{
+			return layoutElements_ == rhs.layoutElements_;
+		}
 
 		uClass("LayoutElement", layoutElements_)
 	};
@@ -75,6 +86,11 @@ namespace Unique
 	public:	
 		Vector<Uniform>		uniforms_;
 		Vector<TextureSlot> textureSlots_;
+		
+		bool operator == ( const ShaderProperties& rhs) const
+		{
+			return uniforms_ == rhs.uniforms_ && textureSlots_ == rhs.textureSlots_;
+		}
 
 		uClass("Uniform", uniforms_, "TextureSlot", textureSlots_)
 	};

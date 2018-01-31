@@ -4,7 +4,7 @@
 
 namespace Unique
 {
-	JsonDeserializer::JsonDeserializer() : Visitor(TransferState::Reading)
+	JsonDeserializer::JsonDeserializer() : Visitor(VisitState::Reading)
 	{
 	}
 
@@ -21,7 +21,7 @@ namespace Unique
 	{
 	}
 
-	void JsonDeserializer::TransferBin(ByteArray& data)
+	void JsonDeserializer::VisitBin(ByteArray& data)
 	{
 		const char* base64 = currentNode_->GetString();
 		data = FromBase64(base64, currentNode_->GetStringLength());
@@ -102,83 +102,83 @@ namespace Unique
 		parentNode_.pop_back();
 	}
 	
-	void JsonDeserializer::TransferPrimitive(std::string& data)
+	void JsonDeserializer::VisitPrimitive(std::string& data)
 	{
 		data = currentNode_->GetString();
 	}
 
-	void JsonDeserializer::TransferPrimitive(String& data)
+	void JsonDeserializer::VisitPrimitive(String& data)
 	{
 		data = currentNode_->GetString();
 	}
 
-	void JsonDeserializer::TransferPrimitive(bool& data)
+	void JsonDeserializer::VisitPrimitive(bool& data)
 	{
 		assert(currentNode_->IsBool());
 		data = currentNode_->GetBool();
 	}
 
-	void JsonDeserializer::TransferPrimitive(char& data)
+	void JsonDeserializer::VisitPrimitive(char& data)
 	{
 		assert(currentNode_->IsInt());
 		data = currentNode_->GetInt();
 	}
 
-	void JsonDeserializer::TransferPrimitive(unsigned char& data)
+	void JsonDeserializer::VisitPrimitive(unsigned char& data)
 	{
 		assert(currentNode_->IsUint());
 		data = currentNode_->GetUint();
 	}
 
-	void JsonDeserializer::TransferPrimitive(short& data)
-	{
-		assert(currentNode_->IsInt());
-		data = currentNode_->GetInt();
-	}
-	
-	void JsonDeserializer::TransferPrimitive(unsigned short& data)
-	{
-		assert(currentNode_->IsUint());
-		data = currentNode_->GetUint();
-	}
-
-	void JsonDeserializer::TransferPrimitive(int& data)
+	void JsonDeserializer::VisitPrimitive(short& data)
 	{
 		assert(currentNode_->IsInt());
 		data = currentNode_->GetInt();
 	}
 	
-	void JsonDeserializer::TransferPrimitive(unsigned int& data)
+	void JsonDeserializer::VisitPrimitive(unsigned short& data)
 	{
 		assert(currentNode_->IsUint());
 		data = currentNode_->GetUint();
 	}
 
-	void JsonDeserializer::TransferPrimitive(long long& data)
+	void JsonDeserializer::VisitPrimitive(int& data)
+	{
+		assert(currentNode_->IsInt());
+		data = currentNode_->GetInt();
+	}
+	
+	void JsonDeserializer::VisitPrimitive(unsigned int& data)
+	{
+		assert(currentNode_->IsUint());
+		data = currentNode_->GetUint();
+	}
+
+	void JsonDeserializer::VisitPrimitive(long long& data)
 	{
 		assert(currentNode_->IsInt64());
 		data = currentNode_->GetInt64();
 	}
 
-	void JsonDeserializer::TransferPrimitive(unsigned long long& data)
+	void JsonDeserializer::VisitPrimitive(unsigned long long& data)
 	{
 		assert(currentNode_->IsUint64());
 		data = currentNode_->GetUint64();
 	}
 
-	void JsonDeserializer::TransferPrimitive(float& data)
+	void JsonDeserializer::VisitPrimitive(float& data)
 	{
 		assert(currentNode_->IsFloat());
 		data = currentNode_->GetFloat();
 	}
 
-	void JsonDeserializer::TransferPrimitive(double& data)
+	void JsonDeserializer::VisitPrimitive(double& data)
 	{
 		assert(currentNode_->IsDouble());
 		data = currentNode_->GetDouble();
 	}
 
-	void JsonDeserializer::TransferPrimitive(Vector2& data)
+	void JsonDeserializer::VisitPrimitive(Vector2& data)
 	{
 		uint size = 0;
 		if (StartArray(size))
@@ -189,10 +189,10 @@ namespace Unique
 				switch (i)
 				{
 				case 0:
-					TypeTraits<float>::Transfer(data.x_, *this);
+					TypeTraits<float>::Visit(data.x_, *this);
 					break;
 				case 1:
-					TypeTraits<float>::Transfer(data.y_, *this);
+					TypeTraits<float>::Visit(data.y_, *this);
 					break;
 				default:
 					break;
@@ -205,7 +205,7 @@ namespace Unique
 		
 	}
 
-	void JsonDeserializer::TransferPrimitive(Vector3& data)
+	void JsonDeserializer::VisitPrimitive(Vector3& data)
 	{
 		uint size = 0;
 		if (StartArray(size))
@@ -216,13 +216,13 @@ namespace Unique
 				switch (i)
 				{
 				case 0:
-					TypeTraits<float>::Transfer(data.x_, *this);
+					TypeTraits<float>::Visit(data.x_, *this);
 					break;
 				case 1:
-					TypeTraits<float>::Transfer(data.y_, *this);
+					TypeTraits<float>::Visit(data.y_, *this);
 					break;
 				case 2:
-					TypeTraits<float>::Transfer(data.z_, *this);
+					TypeTraits<float>::Visit(data.z_, *this);
 					break;
 				default:
 					break;
@@ -234,7 +234,7 @@ namespace Unique
 		}
 	}
 
-	void JsonDeserializer::TransferPrimitive(Vector4& data)
+	void JsonDeserializer::VisitPrimitive(Vector4& data)
 	{
 		uint size = 0;
 		if (StartArray(size))
@@ -245,16 +245,16 @@ namespace Unique
 				switch (i)
 				{
 				case 0:
-					TypeTraits<float>::Transfer(data.x_, *this);
+					TypeTraits<float>::Visit(data.x_, *this);
 					break;
 				case 1:
-					TypeTraits<float>::Transfer(data.y_, *this);
+					TypeTraits<float>::Visit(data.y_, *this);
 					break;
 				case 2:
-					TypeTraits<float>::Transfer(data.z_, *this);
+					TypeTraits<float>::Visit(data.z_, *this);
 					break;
 				case 3:
-					TypeTraits<float>::Transfer(data.w_, *this);
+					TypeTraits<float>::Visit(data.w_, *this);
 					break;
 				default:
 					break;
@@ -266,7 +266,7 @@ namespace Unique
 		}
 	}
 
-	void JsonDeserializer::TransferPrimitive(Color& data)
+	void JsonDeserializer::VisitPrimitive(Color& data)
 	{
 		uint size = 0;
 		if (StartArray(size))
@@ -277,16 +277,16 @@ namespace Unique
 				switch (i)
 				{
 				case 0:
-					TypeTraits<float>::Transfer(data.r_, *this);
+					TypeTraits<float>::Visit(data.r_, *this);
 					break;
 				case 1:
-					TypeTraits<float>::Transfer(data.g_, *this);
+					TypeTraits<float>::Visit(data.g_, *this);
 					break;
 				case 2:
-					TypeTraits<float>::Transfer(data.b_, *this);
+					TypeTraits<float>::Visit(data.b_, *this);
 					break;
 				case 3:
-					TypeTraits<float>::Transfer(data.a_, *this);
+					TypeTraits<float>::Visit(data.a_, *this);
 					break;
 				default:
 					break;
@@ -298,7 +298,7 @@ namespace Unique
 		}
 	}
 
-	void JsonDeserializer::TransferPrimitive(Quaternion& data)
+	void JsonDeserializer::VisitPrimitive(Quaternion& data)
 	{
 		uint size = 0;
 		if (StartArray(size))
@@ -309,16 +309,16 @@ namespace Unique
 				switch (i)
 				{
 				case 0:
-					TypeTraits<float>::Transfer(data.w_, *this);
+					TypeTraits<float>::Visit(data.w_, *this);
 					break;
 				case 1:
-					TypeTraits<float>::Transfer(data.x_, *this);
+					TypeTraits<float>::Visit(data.x_, *this);
 					break;
 				case 2:
-					TypeTraits<float>::Transfer(data.y_, *this);
+					TypeTraits<float>::Visit(data.y_, *this);
 					break;
 				case 3:
-					TypeTraits<float>::Transfer(data.z_, *this);
+					TypeTraits<float>::Visit(data.z_, *this);
 					break;
 				default:
 					break;

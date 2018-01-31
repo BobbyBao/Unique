@@ -11,25 +11,25 @@ enum class AttributeFlag : int
 	Map = 16,
 };
 
-ENABLE_BITMASK_OPERATORS(AttributeFlag)
+uBitMask(AttributeFlag)
 
-#define uTransferField(NAME, FIELD, ...) transfer.TransferAttribute (NAME, FIELD, ##__VA_ARGS__);
+#define uVisitField(NAME, FIELD, ...) visitor.VisitAttribute (NAME, FIELD, ##__VA_ARGS__);
 
-#define uTransferAccessor(NAME, GET, SET, TYPE, ...)\
+#define uVisitAccessor(NAME, GET, SET, TYPE, ...)\
 {\
 	TYPE tmp;\
-	if (transfer.IsWriting ())\
+	if (visitor.IsWriting ())\
 		tmp = GET(); \
-	transfer.TransferAttribute(NAME, tmp, ##__VA_ARGS__); \
-	if (transfer.IsReading ())\
+	visitor.VisitAttribute(NAME, tmp, ##__VA_ARGS__); \
+	if (visitor.IsReading ())\
 		SET (tmp);\
 }
 
 #define uClass(...) \
-	template<class TransferFunction> \
-	void Transfer(TransferFunction& transfer)\
+	template<class VisitFunction> \
+	void Visit(VisitFunction& visitor)\
 {\
-transfer.TransferAttributes(##__VA_ARGS__);\
+visitor.VisitAttributes(##__VA_ARGS__);\
 }
 
 
@@ -56,10 +56,10 @@ namespace Unique
 	class TypeTraits : public TypeTraitsBase<T>
 	{
 	public:
-		template<class TransferFunction>
-		inline static void Transfer(value_type& data, TransferFunction& transfer)
+		template<class VisitFunction>
+		inline static void Visit(value_type& data, VisitFunction& visitor)
 		{
-			transfer.Transfer(data);
+			visitor.Visit(data);
 		}
 
 	};
@@ -70,10 +70,10 @@ namespace Unique
 	public:
 		inline static bool IsBasicType() { return true; }
 
-		template<class TransferFunction>
-		inline static void Transfer(value_type& data, TransferFunction& transfer)
+		template<class VisitFunction>
+		inline static void Visit(value_type& data, VisitFunction& visitor)
 		{
-			transfer.TransferPrimitive(data);
+			visitor.VisitPrimitive(data);
 		}
 
 	};
@@ -90,10 +90,10 @@ namespace Unique
 	public:
 		inline static bool IsArray() { return true; }
 
-		template<class TransferFunction>
-		inline static void Transfer(value_type& data, TransferFunction& transfer)
+		template<class VisitFunction>
+		inline static void Visit(value_type& data, VisitFunction& visitor)
 		{
-			transfer.TransferArray(data);
+			visitor.VisitArray(data);
 		}
 
 		static bool IsContinousMemoryArray() { return IsContinous; }
@@ -106,10 +106,10 @@ namespace Unique
 	public:
 		inline static bool IsMap() { return true; }
 
-		template<class TransferFunction>
-		inline static void Transfer(value_type& data, TransferFunction& transfer)
+		template<class VisitFunction>
+		inline static void Visit(value_type& data, VisitFunction& visitor)
 		{
-			transfer.TransferArray(data);
+			visitor.VisitArray(data);
 		}
 
 		static bool IsContinousMemoryArray() { return false; }

@@ -29,7 +29,7 @@ public:
     /// Handle event.
     virtual void OnEvent(Object* sender, StringID eventType, const Event& eventData);
 	
-	virtual void Transfer(Visitor& transfer);
+	virtual void Visit(Visitor& transfer);
 
     /// Return type info static.
     static TypeInfo* GetTypeInfoStatic() { return Type<Object>::Info(); }

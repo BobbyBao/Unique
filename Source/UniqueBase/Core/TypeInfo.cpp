@@ -56,7 +56,7 @@ namespace Unique
 		return false;
 	}
 	
-	void TypeInfo::Transfer(Visitor& serializer, void* obj) const
+	void TypeInfo::Visit(Visitor& serializer, void* obj) const
 	{
 		uint attributeCount = 0;
 
@@ -79,10 +79,10 @@ namespace Unique
 		{
 			StringID tmp = GetType();
 
-			serializer.TransferAttribute("Type", tmp, AttributeFlag::FileWrite);
+			serializer.VisitAttribute("Type", tmp, AttributeFlag::FileWrite);
 		}
 
-		TransferImpl(serializer, obj);
+		VisitImpl(serializer, obj);
 
 		serializer.EndObject();
 	}
@@ -101,12 +101,12 @@ namespace Unique
 		return count;
 	}
 
-	void TypeInfo::TransferImpl(Visitor& serializer, void* obj) const
+	void TypeInfo::VisitImpl(Visitor& serializer, void* obj) const
 	{
 		const TypeInfo* baseTypeInfo = GetBaseTypeInfo();
 		if (baseTypeInfo)
 		{
-			baseTypeInfo->TransferImpl(serializer, obj);
+			baseTypeInfo->VisitImpl(serializer, obj);
 		}
 
 		auto& attributes = GetAttributes();

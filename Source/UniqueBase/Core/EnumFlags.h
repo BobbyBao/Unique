@@ -6,7 +6,7 @@ struct EnableBitMaskOperators
 	static const bool enable = false;
 };
 
-#define ENABLE_BITMASK_OPERATORS(x)  \
+#define uBitMask(x)  \
 template<>                           \
 struct EnableBitMaskOperators<x>     \
 {                                    \

@@ -20,10 +20,10 @@ namespace Unique
 			return true;
 		}
 
-		template<class TransferFunction>
-		inline static void Transfer(value_type& data, TransferFunction& transfer)
+		template<class VisitFunction>
+		inline static void Visit(value_type& data, VisitFunction& visitor)
 		{
-			transfer.TransferObject(data);
+			visitor.VisitObject(data);
 		}
 
 	};
@@ -32,10 +32,10 @@ namespace Unique
 // 	class TypeTraits<Vector<T> > : public SerializeTraitsArray<Vector<T> >
 // 	{
 // 	public:
-// 		template<class TransferFunction>
-// 		inline static void Transfer(value_type& data, TransferFunction& transfer)
+// 		template<class VisitFunction>
+// 		inline static void Visit(value_type& data, VisitFunction& visitor)
 // 		{
-// 			transfer.TransferArray(data);
+// 			visitor.VisitArray(data);
 // 		}
 // 	};
 	
@@ -43,10 +43,10 @@ namespace Unique
 	class TypeTraits<ByteArray> : public SerializeTraitsArray<ByteArray>
 	{
 	public:
-		template<class TransferFunction>
-		inline static void Transfer(value_type& data, TransferFunction& transfer)
+		template<class VisitFunction>
+		inline static void Visit(value_type& data, VisitFunction& visitor)
 		{
-			transfer.TransferBin(data);
+			visitor.VisitBin(data);
 		}
 
 	};
@@ -68,18 +68,18 @@ namespace Unique
 			return 0;
 		}
 
-		template<class TransferFunction, int count>
-		inline static void TransferEnum(value_type& data, const char*(&enumNames)[count], TransferFunction& transfer)
+		template<class VisitFunction, int count>
+		inline static void VisitEnum(value_type& data, const char*(&enumNames)[count], VisitFunction& visitor)
 		{
-			if (transfer.IsReading())
+			if (visitor.IsReading())
 			{
 				Unique::String str;
-				transfer.TransferPrimitive(str);
+				visitor.VisitPrimitive(str);
 				data = (value_type)GetEnum(enumNames, count, str);
 			}
 			else
 			{
-				transfer.TransferPrimitive(Unique::String(enumNames[(int)data]));
+				visitor.VisitPrimitive(Unique::String(enumNames[(int)data]));
 			}
 		}
 
@@ -89,13 +89,13 @@ namespace Unique
 	class SerializeTraitsFlags : public TypeTraitsBase<T>
 	{
 	public:
-		template<class TransferFunction>
-		inline static void TransferFlags(value_type& data, const HashMap<String, value_type>& flags, TransferFunction& transfer)
+		template<class VisitFunction>
+		inline static void VisitFlags(value_type& data, const HashMap<String, value_type>& flags, VisitFunction& visitor)
 		{
 			Unique::String str;
-			if (transfer.IsReading())
+			if (visitor.IsReading())
 			{
-				transfer.TransferPrimitive(str);
+				visitor.VisitPrimitive(str);
 				auto i = flags.find(str.CString());
 				if (i != flags.end())
 				{
@@ -140,7 +140,7 @@ namespace Unique
 				
 				}
 
-				transfer.TransferPrimitive(str);
+				visitor.VisitPrimitive(str);
 			}
 		}
 
@@ -148,18 +148,19 @@ namespace Unique
 }
 
 #define uFlags(CLASS, ...)\
+uBitMask(CLASS)\
 template<>\
 class TypeTraits<CLASS> : public SerializeTraitsFlags<CLASS>\
 {\
 public:\
-	template<class TransferFunction>\
-	inline static void Transfer(value_type& data, TransferFunction& transfer)\
+	template<class VisitFunction>\
+	inline static void Visit(value_type& data, VisitFunction& visitor)\
 	{\
 		static HashMap<String, value_type> flags = \
 		{\
 			__VA_ARGS__\
 		};\
-		TransferFlags<TransferFunction>(data, flags, transfer); \
+		VisitFlags<VisitFunction>(data, flags, visitor); \
 	}\
 };
 
@@ -168,14 +169,14 @@ template<>\
 class TypeTraits<CLASS> : public SerializeTraitsEnum<CLASS>\
 {\
 public:\
-	template<class TransferFunction>\
-	inline static void Transfer(value_type& data, TransferFunction& transfer)\
+	template<class VisitFunction>\
+	inline static void Visit(value_type& data, VisitFunction& visitor)\
 	{\
 		static const char* enumNames[] = \
 		{\
 				__VA_ARGS__\
 		}; \
-		TransferEnum<TransferFunction>(data, enumNames, transfer); \
+		VisitEnum<VisitFunction>(data, enumNames, visitor); \
 	}\
 };
 
@@ -184,9 +185,9 @@ template<>\
 class TypeTraits<CLASS> : public TypeTraitsBase<CLASS>\
 {\
 public:\
-	template<class TransferFunction>\
-	inline static void Transfer(value_type& self, TransferFunction& transfer)\
+	template<class VisitFunction>\
+	inline static void Visit(value_type& self, VisitFunction& visitor)\
 	{\
-transfer.TransferAttributes(##__VA_ARGS__);\
+visitor.VisitAttributes(##__VA_ARGS__);\
 	}\
 };

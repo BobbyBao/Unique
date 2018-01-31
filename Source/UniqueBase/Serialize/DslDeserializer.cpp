@@ -4,7 +4,7 @@
 
 namespace Unique
 {
-	DslDeserializer::DslDeserializer() : Visitor(TransferState::Reading), nameNode_("")
+	DslDeserializer::DslDeserializer() : Visitor(VisitState::Reading), nameNode_("")
 	{
 	}
 
@@ -21,7 +21,7 @@ namespace Unique
 	{
 	}
 
-	void DslDeserializer::TransferBin(ByteArray& data)
+	void DslDeserializer::VisitBin(ByteArray& data)
 	{
 		data = FromBase64(currentNode_->value_);
 	}
@@ -120,92 +120,92 @@ namespace Unique
  		parentNode_.pop_back();
 	}
 	
-	void DslDeserializer::TransferPrimitive(std::string& data)
+	void DslDeserializer::VisitPrimitive(std::string& data)
 	{
 		data = currentNode_->value_.CString();
 	}
 
-	void DslDeserializer::TransferPrimitive(String& data)
+	void DslDeserializer::VisitPrimitive(String& data)
 	{
 		data = currentNode_->value_;
 	}
 
-	void DslDeserializer::TransferPrimitive(bool& data)
+	void DslDeserializer::VisitPrimitive(bool& data)
 	{
 		data = FromString<bool>(currentNode_->value_);
 	}
 
-	void DslDeserializer::TransferPrimitive(char& data)
+	void DslDeserializer::VisitPrimitive(char& data)
 	{
 		data = FromString<char>(currentNode_->value_);
 	}
 
-	void DslDeserializer::TransferPrimitive(unsigned char& data)
+	void DslDeserializer::VisitPrimitive(unsigned char& data)
 	{
 		data = FromString<unsigned char>(currentNode_->value_);
 	}
 
-	void DslDeserializer::TransferPrimitive(short& data)
+	void DslDeserializer::VisitPrimitive(short& data)
 	{
 		data = FromString<short>(currentNode_->value_);
 	}
 	
-	void DslDeserializer::TransferPrimitive(unsigned short& data)
+	void DslDeserializer::VisitPrimitive(unsigned short& data)
 	{
 		data = FromString<unsigned short>(currentNode_->value_);
 	}
 
-	void DslDeserializer::TransferPrimitive(int& data)
+	void DslDeserializer::VisitPrimitive(int& data)
 	{
 		data = FromString<int>(currentNode_->value_);
 	}
 	
-	void DslDeserializer::TransferPrimitive(unsigned int& data)
+	void DslDeserializer::VisitPrimitive(unsigned int& data)
 	{
 		data = FromString<unsigned int>(currentNode_->value_);
 	}
 
-	void DslDeserializer::TransferPrimitive(long long& data)
+	void DslDeserializer::VisitPrimitive(long long& data)
 	{
 		data = FromString<long long>(currentNode_->value_);
 	}
 
-	void DslDeserializer::TransferPrimitive(unsigned long long& data)
+	void DslDeserializer::VisitPrimitive(unsigned long long& data)
 	{
 		data = FromString<unsigned long long>(currentNode_->value_);
 	}
 
-	void DslDeserializer::TransferPrimitive(float& data)
+	void DslDeserializer::VisitPrimitive(float& data)
 	{
 		data = FromString<float>(currentNode_->value_);
 	}
 
-	void DslDeserializer::TransferPrimitive(double& data)
+	void DslDeserializer::VisitPrimitive(double& data)
 	{
 		data = FromString<double>(currentNode_->value_);
 	}
 
-	void DslDeserializer::TransferPrimitive(Vector2& data)
+	void DslDeserializer::VisitPrimitive(Vector2& data)
 	{
 		data = FromString<Vector2>(currentNode_->value_);
 	}
 	
-	void DslDeserializer::TransferPrimitive(Vector3& data)
+	void DslDeserializer::VisitPrimitive(Vector3& data)
 	{
 		data = FromString<Vector3>(currentNode_->value_);
 	}
 	
-	void DslDeserializer::TransferPrimitive(Vector4& data)
+	void DslDeserializer::VisitPrimitive(Vector4& data)
 	{
 		data = FromString<Vector4>(currentNode_->value_);
 	}
 	
-	void DslDeserializer::TransferPrimitive(Color& data)
+	void DslDeserializer::VisitPrimitive(Color& data)
 	{
 		data = FromString<Color>(currentNode_->value_);
 	}
 	
-	void DslDeserializer::TransferPrimitive(Quaternion& data)
+	void DslDeserializer::VisitPrimitive(Quaternion& data)
 	{
 		data = FromString<Quaternion>(currentNode_->value_);
 	}

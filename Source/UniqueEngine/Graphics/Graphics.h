@@ -21,13 +21,6 @@ namespace Unique
 	
 	using CommandQueue = Vector<std::function<void()> > ;
 	
-	enum ClearFlags : int
-	{
-		CLEAR_COLOR_FLAG = 0x01,
-		CLEAR_DEPTH_FLAG = 0x02,    ///< Clear depth part of the buffer
-		CLEAR_STENCIL_FLAG = 0x04   ///< Clear stencil part of the buffer
-	};
-
 	class Graphics : public Object
 	{
 		uRTTI(Graphics, Object)
@@ -123,7 +116,7 @@ namespace Unique
 
 		struct Impl& impl_;
 
-		std::atomic<bool> inited_ = false;
+		bool inited_ = false;
 		SDL_Window *window_ = nullptr;
 		static ThreadID renderThreadID;
 		static bool singleThreaded_;

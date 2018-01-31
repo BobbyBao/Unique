@@ -38,12 +38,7 @@ namespace Unique
 
 	void TestPerf();
 	void TestParse();
-
-	uStruct(PerfBlock)
-	{
-		uMixedAttribute("Test", /*int,*/ test_, Test)
-	}
-
+	
 	enum TestEnum : byte
 	{
 		AAA

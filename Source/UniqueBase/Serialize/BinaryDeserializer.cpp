@@ -4,7 +4,7 @@
 
 namespace Unique
 {
-	BinaryDeserializer::BinaryDeserializer() : Visitor(TransferState::Reading)
+	BinaryDeserializer::BinaryDeserializer() : Visitor(VisitState::Reading)
 	{
 	}
 
@@ -21,7 +21,7 @@ namespace Unique
 	{
 	}
 
-	void BinaryDeserializer::TransferBin(ByteArray& data)
+	void BinaryDeserializer::VisitBin(ByteArray& data)
 	{
 		uint size = mpack_node_data_len(currentNode_);
 
@@ -116,7 +116,7 @@ namespace Unique
 		parentNode_.pop_back();
 	}
 	
-	void BinaryDeserializer::TransferPrimitive(std::string& data)
+	void BinaryDeserializer::VisitPrimitive(std::string& data)
 	{
 		const char* str = mpack_node_str(currentNode_);
 		if (str)
@@ -130,7 +130,7 @@ namespace Unique
 		}
 	}
 
-	void BinaryDeserializer::TransferPrimitive(String& data)
+	void BinaryDeserializer::VisitPrimitive(String& data)
 	{
 		const char* str = mpack_node_str(currentNode_);
 		if (str)
@@ -144,87 +144,87 @@ namespace Unique
 		}
 	}
 
-	void BinaryDeserializer::TransferPrimitive(bool& data)
+	void BinaryDeserializer::VisitPrimitive(bool& data)
 	{
 		data = mpack_node_bool(currentNode_);
 	}
 
-	void BinaryDeserializer::TransferPrimitive(char& data)
+	void BinaryDeserializer::VisitPrimitive(char& data)
 	{
 		data = mpack_node_i8(currentNode_);
 	}
 
-	void BinaryDeserializer::TransferPrimitive(unsigned char& data)
+	void BinaryDeserializer::VisitPrimitive(unsigned char& data)
 	{
 		data = mpack_node_u8(currentNode_);
 	}
 
-	void BinaryDeserializer::TransferPrimitive(short& data)
+	void BinaryDeserializer::VisitPrimitive(short& data)
 	{
 		data = mpack_node_i16(currentNode_);
 	}
 	
-	void BinaryDeserializer::TransferPrimitive(unsigned short& data)
+	void BinaryDeserializer::VisitPrimitive(unsigned short& data)
 	{
 		data = mpack_node_u16(currentNode_);
 	}
 
-	void BinaryDeserializer::TransferPrimitive(int& data)
+	void BinaryDeserializer::VisitPrimitive(int& data)
 	{
 		data = mpack_node_i32(currentNode_);
 	}
 	
-	void BinaryDeserializer::TransferPrimitive(unsigned int& data)
+	void BinaryDeserializer::VisitPrimitive(unsigned int& data)
 	{
 		data = mpack_node_u32(currentNode_);
 	}
 
-	void BinaryDeserializer::TransferPrimitive(long long& data)
+	void BinaryDeserializer::VisitPrimitive(long long& data)
 	{
 		data = mpack_node_i64(currentNode_);
 	}
 
-	void BinaryDeserializer::TransferPrimitive(unsigned long long& data)
+	void BinaryDeserializer::VisitPrimitive(unsigned long long& data)
 	{
 		data = mpack_node_u64(currentNode_);
 	}
 
-	void BinaryDeserializer::TransferPrimitive(float& data)
+	void BinaryDeserializer::VisitPrimitive(float& data)
 	{
 		data = mpack_node_float(currentNode_);
 	}
 
-	void BinaryDeserializer::TransferPrimitive(double& data)
+	void BinaryDeserializer::VisitPrimitive(double& data)
 	{
 		data = mpack_node_double(currentNode_);
 	}
 
-	void BinaryDeserializer::TransferPrimitive(Vector2& data)
+	void BinaryDeserializer::VisitPrimitive(Vector2& data)
 	{
-		TransferBin((void*)data.Data(), sizeof(Vector2));
+		VisitBin((void*)data.Data(), sizeof(Vector2));
 	}
 	
-	void BinaryDeserializer::TransferPrimitive(Vector3& data)
+	void BinaryDeserializer::VisitPrimitive(Vector3& data)
 	{
-		TransferBin((void*)data.Data(), sizeof(Vector3));
+		VisitBin((void*)data.Data(), sizeof(Vector3));
 	}
 	
-	void BinaryDeserializer::TransferPrimitive(Vector4& data)
+	void BinaryDeserializer::VisitPrimitive(Vector4& data)
 	{
-		TransferBin((void*)data.Data(), sizeof(Vector4));
+		VisitBin((void*)data.Data(), sizeof(Vector4));
 	}
 	
-	void BinaryDeserializer::TransferPrimitive(Color& data)
+	void BinaryDeserializer::VisitPrimitive(Color& data)
 	{
-		TransferBin((void*)data.Data(), sizeof(Color));
+		VisitBin((void*)data.Data(), sizeof(Color));
 	}
 	
-	void BinaryDeserializer::TransferPrimitive(Quaternion& data)
+	void BinaryDeserializer::VisitPrimitive(Quaternion& data)
 	{
-		TransferBin((void*)data.Data(), sizeof(Quaternion));
+		VisitBin((void*)data.Data(), sizeof(Quaternion));
 	}
 
-	void BinaryDeserializer::TransferBin(void* data, size_t byteSize)
+	void BinaryDeserializer::VisitBin(void* data, size_t byteSize)
 	{
 		uint size = mpack_node_data_len(currentNode_);
 		assert(size == byteSize);

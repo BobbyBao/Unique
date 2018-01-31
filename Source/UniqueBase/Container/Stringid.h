@@ -138,19 +138,19 @@ namespace Unique
 	class TypeTraits<Unique::StringID> : public PrimitiveTraits<Unique::StringID>
 	{
 	public:
-		template<class TransferFunction>
-		inline static void Transfer(value_type& data, TransferFunction& transfer)
+		template<class VisitFunction>
+		inline static void Visit(value_type& data, VisitFunction& visitor)
 		{
-			if (transfer.IsReading())
+			if (visitor.IsReading())
 			{
 				String temp;
-				transfer.TransferPrimitive(temp);
+				visitor.VisitPrimitive(temp);
 				data = StringID(temp);
 			}
 			else
 			{
 				String temp = data.ToString();
-				transfer.TransferPrimitive(temp);
+				visitor.VisitPrimitive(temp);
 			}
 
 		}

@@ -4,7 +4,7 @@
 
 namespace Unique
 {
-	enum class TransferState
+	enum class VisitState
 	{
 		Reading,
 		Writing,
@@ -16,14 +16,14 @@ namespace Unique
 	class Visitor
 	{
 	public:
-		Visitor(TransferState state) 
+		Visitor(VisitState state) 
 			: state_(state)
 		{
 		}
 
-		bool IsReading() const { return state_ == TransferState::Reading; }
+		bool IsReading() const { return state_ == VisitState::Reading; }
 
-		bool IsWriting() const { return state_ == TransferState::Writing; }
+		bool IsWriting() const { return state_ == VisitState::Writing; }
 
 		template<class T>
 		bool Save(const char* fileName, T& data)
@@ -33,7 +33,7 @@ namespace Unique
 				return false;
 			}
 
-			TypeTraits<T>::Transfer(data, *this);
+			TypeTraits<T>::Visit(data, *this);
 
 			EndDocument();
 
@@ -67,31 +67,31 @@ namespace Unique
 			rootType_ = TypeTraits<T>::GetTypeName();
 
 			StartDocument(source.GetName());
-			TypeTraits<T>::Transfer(data, *this);
+			TypeTraits<T>::Visit(data, *this);
 			EndDocument();
 			return true;
 		}
 
 		template<class T>
-		void TransferPrimitive(T& data)
+		void VisitPrimitive(T& data)
 		{
-			data.Transfer(*this);
+			data.Visit(*this);
 		}
 
 		template<class T>
-		void TransferObject(SPtr<T>& data);
+		void VisitObject(SPtr<T>& data);
 
 		template<class T>
-		void TransferArray(T& data, int metaFlag = 0);
+		void VisitArray(T& data, int metaFlag = 0);
 
 		template<class T>
-		void TransferMap(T& data, int metaFlag = 0);
+		void VisitMap(T& data, int metaFlag = 0);
 
 		template<class T>
-		void TransferSet(T& data, int metaFlag = 0);
+		void VisitSet(T& data, int metaFlag = 0);
 
 		template<class T>
-		void TransferAttribute(const char* name, T& data, AttributeFlag metaFlag = AttributeFlag::Default)\
+		void VisitAttribute(const char* name, T& data, AttributeFlag metaFlag = AttributeFlag::Default)\
 		{
 			AttributeFlag metaFlagSave = attributeFlag_;
 
@@ -109,7 +109,7 @@ namespace Unique
 
 			if (StartAttribute(name))
 			{
-				Unique::TypeTraits<T>::Transfer(data, *this);
+				Unique::TypeTraits<T>::Visit(data, *this);
 				EndAttribute();
 			}
 
@@ -117,24 +117,24 @@ namespace Unique
 		}
 
 		template <typename... Rest>
-		void TransferAttributes(Rest&... rest)\
+		void VisitAttributes(Rest&... rest)\
 		{
 			int sz = sizeof ...(Rest);
 			StartObject(sz / 2);
-			TransferImpl1(rest...);
+			VisitImpl1(rest...);
 			EndObject();
 		}
 
 		template<class T>
-		void Transfer(T& data)
+		void Visit(T& data)
 		{
 // 			TypeInfo* typeInfo = TypeInfo.Get<T>();
 // 			if (typeInfo)
 // 			{
-// 				typeInfo->Transfer(*this, &data);
+// 				typeInfo->Visit(*this, &data);
 // 			}
 
-			data.Transfer(*this);
+			data.Visit(*this);
 		}
 
 		virtual bool StartDocument(const String& fileName) { return true; }
@@ -148,56 +148,56 @@ namespace Unique
 		virtual void SetElement(uint index) {}
 		virtual void EndArray() {}
 
-		virtual void TransferBin(ByteArray& data) {}
-		virtual void TransferPrimitive(std::string& data) {}
-		virtual void TransferPrimitive(String& data) {}
-		virtual void TransferPrimitive(bool& data) {}
-		virtual void TransferPrimitive(char& data) {}
-		virtual void TransferPrimitive(unsigned char& data) {}
-		virtual void TransferPrimitive(short& data) {}
-		virtual void TransferPrimitive(unsigned short& data) {}
-		virtual void TransferPrimitive(int& data) {}
-		virtual void TransferPrimitive(unsigned int& data) {}
-		virtual void TransferPrimitive(long long& data) {}
-		virtual void TransferPrimitive(unsigned long long& data) {}
-		virtual void TransferPrimitive(float& data) {}
-		virtual void TransferPrimitive(double& data) {}
-		virtual void TransferPrimitive(Vector2& data) {}
-		virtual void TransferPrimitive(Vector3& data) {}
-		virtual void TransferPrimitive(Vector4& data) {}
-		virtual void TransferPrimitive(Color& data) {}
-		virtual void TransferPrimitive(Quaternion& data) {}
+		virtual void VisitBin(ByteArray& data) {}
+		virtual void VisitPrimitive(std::string& data) {}
+		virtual void VisitPrimitive(String& data) {}
+		virtual void VisitPrimitive(bool& data) {}
+		virtual void VisitPrimitive(char& data) {}
+		virtual void VisitPrimitive(unsigned char& data) {}
+		virtual void VisitPrimitive(short& data) {}
+		virtual void VisitPrimitive(unsigned short& data) {}
+		virtual void VisitPrimitive(int& data) {}
+		virtual void VisitPrimitive(unsigned int& data) {}
+		virtual void VisitPrimitive(long long& data) {}
+		virtual void VisitPrimitive(unsigned long long& data) {}
+		virtual void VisitPrimitive(float& data) {}
+		virtual void VisitPrimitive(double& data) {}
+		virtual void VisitPrimitive(Vector2& data) {}
+		virtual void VisitPrimitive(Vector3& data) {}
+		virtual void VisitPrimitive(Vector4& data) {}
+		virtual void VisitPrimitive(Color& data) {}
+		virtual void VisitPrimitive(Quaternion& data) {}
 
 
 	protected:
 		template <typename First, typename... Rest>
-		void TransferImpl1(First first, Rest&... rest)
+		void VisitImpl1(First first, Rest&... rest)
 		{
-			TransferImpl2(first, rest...);
+			VisitImpl2(first, rest...);
 		}
 
 		template <typename First, typename Second, typename... Rest>
-		void TransferImpl2(First name, Second& val, Rest&... rest)
+		void VisitImpl2(First name, Second& val, Rest&... rest)
 		{
-			TransferAttribute(name, val);
-			TransferImpl1(rest...);
+			VisitAttribute(name, val);
+			VisitImpl1(rest...);
 		}
 
 		template <typename First, typename Second, typename... Rest>
-		void TransferImpl2(First name, Second& val)
+		void VisitImpl2(First name, Second& val)
 		{
-			TransferAttribute(name, val);
+			VisitAttribute(name, val);
 		}
 
 		bool rootObject_ = true;
 		std::string rootType_;
 		AttributeFlag attributeFlag_;
-		TransferState state_;
+		VisitState state_;
 		ByteArray data_;
 	};
 
 	template<class T>
-	inline void Visitor::TransferObject(SPtr<T>& data)
+	inline void Visitor::VisitObject(SPtr<T>& data)
 	{
 		if (IsReading())
 		{
@@ -210,13 +210,13 @@ namespace Unique
 
 		if (data)
 		{
-			data->Transfer(*this);
+			data->Visit(*this);
 		}
 
 	}
 
 	template<class T>
-	inline void Visitor::TransferArray(T& data, int metaFlag)
+	inline void Visitor::VisitArray(T& data, int metaFlag)
 	{
 		typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
 		
@@ -230,7 +230,7 @@ namespace Unique
 				{
 					SetElement(i);
 					non_const_value_type val;
-					TypeTraits<non_const_value_type>::Transfer(val, *this);
+					TypeTraits<non_const_value_type>::Visit(val, *this);
 					data.push_back(val);
 				}
 
@@ -245,7 +245,7 @@ namespace Unique
 			{
 				for (non_const_value_type& val : data)
 				{
-					TypeTraits<non_const_value_type>::Transfer(val, *this);
+					TypeTraits<non_const_value_type>::Visit(val, *this);
 				}
 
 				EndArray();
@@ -256,7 +256,7 @@ namespace Unique
 	}
 
 	template<class T>
-	inline void Visitor::TransferMap(T& data, int metaFlag)
+	inline void Visitor::VisitMap(T& data, int metaFlag)
 	{
 		typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
 		typedef typename non_const_value_type::first_type first_type;
@@ -272,7 +272,7 @@ namespace Unique
 				{
 					SetElement(i);
 					non_const_value_type val;
-					TypeTraits<non_const_value_type>::Transfer(val, *this);
+					TypeTraits<non_const_value_type>::Visit(val, *this);
 					data.insert(val);
 				}
 
@@ -287,7 +287,7 @@ namespace Unique
 			{
 				for (non_const_value_type& val : data)
 				{
-					TypeTraits<non_const_value_type>::Transfer(val, *this);
+					TypeTraits<non_const_value_type>::Visit(val, *this);
 				}
 
 				EndArray();
@@ -298,7 +298,7 @@ namespace Unique
 
 
 	template<class T>
-	inline void Visitor::TransferSet(T& data, int metaFlag)
+	inline void Visitor::VisitSet(T& data, int metaFlag)
 	{
 		typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
 
@@ -312,7 +312,7 @@ namespace Unique
 				{
 					SetElement(i);
 					non_const_value_type val;
-					TypeTraits<non_const_value_type>::Transfer(val, *this);
+					TypeTraits<non_const_value_type>::Visit(val, *this);
 					data.insert(val);
 				}
 
@@ -327,7 +327,7 @@ namespace Unique
 			{
 				for (non_const_value_type& val : data)
 				{
-					TypeTraits<non_const_value_type>::Transfer(val, *this);
+					TypeTraits<non_const_value_type>::Visit(val, *this);
 				}
 
 				EndArray();

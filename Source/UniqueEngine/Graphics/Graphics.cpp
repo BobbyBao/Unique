@@ -105,7 +105,10 @@ namespace Unique
 		{
 			UNIQUE_LOGERROR("Create render failed.");
 		}
-
+		
+		GetSubsystem<ResourceCache>().AddResourceDir("CoreData\\Shaders");
+		GetSubsystem<ResourceCache>().AddResourceDir("CoreData\\Shaders\\Include");
+		GetSubsystem<ResourceCache>().AddResourceDir("CoreData\\Shaders\\HLSL");
 		return true;
 	}
 
@@ -175,7 +178,7 @@ namespace Unique
 
 	void Graphics::RemoveResourceByName(const char *Name, uint ArrayIndex)
 	{
-		uCall
+		uPost
 		(
 			impl_.resourceMapping_->RemoveResourceByName(Name, ArrayIndex);
 		);
@@ -280,8 +283,6 @@ namespace Unique
 		public:
 			ShaderSourceStreamFactory()
 			{
-				GetSubsystem<ResourceCache>().AddResourceDir("CoreData\\Shaders");
-				GetSubsystem<ResourceCache>().AddResourceDir("CoreData\\Shaders\\HLSL");
 			}
 
 			~ShaderSourceStreamFactory()

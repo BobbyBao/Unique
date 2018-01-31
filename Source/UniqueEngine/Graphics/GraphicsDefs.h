@@ -14,6 +14,13 @@ namespace Unique
 		OpenGL,     ///< OpenGL device 
 		OpenGLES    ///< OpenGLES device
 	};
+	
+	enum ClearFlags : int
+	{
+		CLEAR_COLOR_FLAG = 0x01,
+		CLEAR_DEPTH_FLAG = 0x02,    ///< Clear depth part of the buffer
+		CLEAR_STENCIL_FLAG = 0x04   ///< Clear stencil part of the buffer
+	};
 
 	enum ValueType : int
 	{
@@ -77,14 +84,14 @@ namespace Unique
 		FILTER_TYPE_NUM_FILTERS             ///< Helper value that stores the total number of filter types in the enumeration
 	};
 
-	enum class TextureAddressMode : int
+	enum TextureAddressMode : int
 	{
-		UNKNOWN = 0,
-		WRAP = 1,
-		MIRROR = 2,
-		CLAMP = 3,
-		BORDER = 4,
-		MIRROR_ONCE = 5,
+		TEXTURE_ADDRESS_UNKNOWN = 0,
+		TEXTURE_ADDRESS_WRAP = 1,
+		TEXTURE_ADDRESS_MIRROR = 2,
+		TEXTURE_ADDRESS_CLAMP = 3,
+		TEXTURE_ADDRESS_BORDER = 4,
+		TEXTURE_ADDRESS_MIRROR_ONCE = 5,
 		TEXTURE_ADDRESS_NUM_MODES
 	};
 
@@ -327,8 +334,9 @@ namespace Unique
 		FC_DIRECTION,
 	};
 
-	uEnum(ValueType,
-				"UNDEFINED", "INT8", "INT16", "INT32", "UINT8", "UINT16", "UINT32", "FLOAT16", "FLOAT32")
+	uFlags(ClearFlags, {"COLOR", CLEAR_COLOR_FLAG}, {"DEPTH", CLEAR_DEPTH_FLAG}, {"STENCIL", CLEAR_STENCIL_FLAG})
+
+	uEnum(ValueType, "UNDEFINED", "INT8", "INT16", "INT32", "UINT8", "UINT16", "UINT32", "FLOAT16", "FLOAT32")
 	
 	uEnum(PrimitiveTopology,
 				"UNDEFINED", "TRIANGLE_LIST", "TRIANGLE_STRIP", "POINT_LIST", "LINE_LIST", 
@@ -359,7 +367,6 @@ namespace Unique
 		"AND_INVERTED",	"OR_REVERSE", "OR_INVERTED")
 		
 
-	ENABLE_BITMASK_OPERATORS(ColorMask)
 	uFlags(ColorMask, {"RED", COLOR_MASK_RED}, {"GREEN", COLOR_MASK_GREEN}, {"BLUE", COLOR_MASK_BLUE}, {"ALPHA", COLOR_MASK_ALPHA}, { "ALL", COLOR_MASK_ALL })
 
 	/// Vertex element description for arbitrary vertex declarations.

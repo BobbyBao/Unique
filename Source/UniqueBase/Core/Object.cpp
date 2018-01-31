@@ -20,29 +20,29 @@ Object::~Object()
 		GetContext()->RemoveEventSender(this);
 }
 
-template<class TransferFunction>
-inline void TransferTypeInfo(TransferFunction& transfer, const TypeInfo* typeInfo, void* obj)
+template<class VisitFunction>
+inline void VisitTypeInfo(VisitFunction& visitor, const TypeInfo* typeInfo, void* obj)
 {
 	const TypeInfo* baseTypeInfo = typeInfo->GetBaseTypeInfo();
 	if (baseTypeInfo)
 	{
-		TransferTypeInfo(transfer, baseTypeInfo, obj);
+		VisitTypeInfo(visitor, baseTypeInfo, obj);
 	}
 
 	auto& attributes = typeInfo->GetAttributes();
 	for (Attribute* attri : attributes)
 	{
-		attri->Visit(transfer, obj);
+		attri->Visit(visitor, obj);
 	}
 }
 
-void Object::Transfer(Visitor& transfer)
+void Object::Visit(Visitor& visitor)
 {
 	const TypeInfo* typeInfo = GetTypeInfo();
 
 	int attributeCount = 0;
 
-	if (transfer.IsWriting())
+	if (visitor.IsWriting())
 	{
 		attributeCount += (int)typeInfo->GetAttributes().size();
 
@@ -55,18 +55,18 @@ void Object::Transfer(Visitor& transfer)
 
 	}
 
-	transfer.StartObject(attributeCount + 1);
+	visitor.StartObject(attributeCount + 1);
 
-	if (transfer.IsWriting())
+	if (visitor.IsWriting())
 	{
 		StringID tmp = GetType();
 
-		transfer.TransferAttribute("Type", tmp, AttributeFlag::FileWrite);
+		visitor.VisitAttribute("Type", tmp, AttributeFlag::FileWrite);
 	}
 
-	TransferTypeInfo(transfer, typeInfo, this);
+	VisitTypeInfo(visitor, typeInfo, this);
 
-	transfer.EndObject();
+	visitor.EndObject();
 }
 
 void Object::OnEvent(Object* sender, StringID eventType, const Event& eventData)

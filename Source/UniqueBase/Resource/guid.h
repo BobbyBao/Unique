@@ -32,9 +32,10 @@ namespace Unique
 			return 0;
 		//	return std::_Hash_seq((byte*)data, 16);
 		}
+
+		String ToString();
 	};
 
-	String GUIDToString(const Guid& guid);
 	void GUIDToString(const Guid& guid, char* string);
 
 	Guid StringToGUID(const String& guidString);

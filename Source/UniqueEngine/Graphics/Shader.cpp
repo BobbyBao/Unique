@@ -40,7 +40,7 @@ namespace Unique
 	)
 	
 	uEnum(LayoutElement::FREQUENCY, "UNDEFINED", "PER_VERTEX", "PER_INSTANCE")
-		
+
 	uClassTraits
 	(
 		LayoutElement, 
@@ -51,7 +51,7 @@ namespace Unique
 		"RelativeOffset", self.RelativeOffset,
 		"Frequency", self.Frequency,
 		"InstanceDataStepRate", self.InstanceDataStepRate
-	) 
+	)
 
 	uObject(Pass)
 	{

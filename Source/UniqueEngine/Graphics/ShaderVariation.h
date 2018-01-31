@@ -91,6 +91,12 @@ namespace Unique
 			return !source_.Empty();
 		}
 
+		bool operator ==( const ShaderStage& rhs)
+		{
+			return shaderType_ == rhs.shaderType_ && entryPoint_ == rhs.entryPoint_ 
+				&& shaderProfile_ == rhs.shaderProfile_ && defines_ == rhs.defines_ && source_ == rhs.source_;
+		}
+
 		uClass("EntryPoint", entryPoint_, "ShaderProfile", shaderProfile_, "Defines", defines_, "Source", source_);
 
 		ShaderType		shaderType_;

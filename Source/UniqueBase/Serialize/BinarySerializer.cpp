@@ -5,7 +5,7 @@
 
 namespace Unique
 {
-	BinarySerializer::BinarySerializer() : Visitor(TransferState::Writing)
+	BinarySerializer::BinarySerializer() : Visitor(VisitState::Writing)
 	{
 	}
 
@@ -44,7 +44,7 @@ namespace Unique
 		mpack_finish_map(&writer_);
 	}
 	
-	void BinarySerializer::TransferBin(ByteArray& data)
+	void BinarySerializer::VisitBin(ByteArray& data)
 	{
 		mpack_write_bin(&writer_, data.data(), (uint)data.size());
 	}
@@ -74,92 +74,92 @@ namespace Unique
 		mpack_finish_array(&writer_);
 	}
 
-	void BinarySerializer::TransferPrimitive(std::string& data)
+	void BinarySerializer::VisitPrimitive(std::string& data)
 	{
 		mpack_write_str(&writer_, data.c_str(), (uint)data.size());
 	}
 
-	void BinarySerializer::TransferPrimitive(String& data)
+	void BinarySerializer::VisitPrimitive(String& data)
 	{
 		mpack_write_str(&writer_, data.CString(), data.Length());
 	}
 
-	void BinarySerializer::TransferPrimitive(bool& data)
+	void BinarySerializer::VisitPrimitive(bool& data)
 	{
 		mpack_write_bool(&writer_, data);
 	}
 
-	void BinarySerializer::TransferPrimitive(char& data)
+	void BinarySerializer::VisitPrimitive(char& data)
 	{
 		mpack_write(&writer_, data);
 	}
 
-	void BinarySerializer::TransferPrimitive(unsigned char& data)
+	void BinarySerializer::VisitPrimitive(unsigned char& data)
 	{
 		mpack_write(&writer_, data);
 	}
 
-	void BinarySerializer::TransferPrimitive(short& data)
+	void BinarySerializer::VisitPrimitive(short& data)
 	{
 		mpack_write(&writer_, data);
 	}
 
-	void BinarySerializer::TransferPrimitive(unsigned short& data)
+	void BinarySerializer::VisitPrimitive(unsigned short& data)
 	{
 		mpack_write(&writer_, data);
 	}
 
-	void BinarySerializer::TransferPrimitive(int& data)
+	void BinarySerializer::VisitPrimitive(int& data)
 	{
 		mpack_write(&writer_, data);
 	}
 
-	void BinarySerializer::TransferPrimitive(unsigned int& data)
+	void BinarySerializer::VisitPrimitive(unsigned int& data)
 	{
 		mpack_write(&writer_, data);
 	}
 
-	void BinarySerializer::TransferPrimitive(long long& data)
+	void BinarySerializer::VisitPrimitive(long long& data)
 	{
 		mpack_write(&writer_, data);
 	}
 
-	void BinarySerializer::TransferPrimitive(unsigned long long& data)
+	void BinarySerializer::VisitPrimitive(unsigned long long& data)
 	{
 		mpack_write(&writer_, data);
 	}
 
-	void BinarySerializer::TransferPrimitive(float& data)
+	void BinarySerializer::VisitPrimitive(float& data)
 	{
 		mpack_write(&writer_, data);
 	}
 
-	void BinarySerializer::TransferPrimitive(double& data)
+	void BinarySerializer::VisitPrimitive(double& data)
 	{
 		mpack_write(&writer_, data);
 	}
 	
-	void BinarySerializer::TransferPrimitive(Vector2& data)
+	void BinarySerializer::VisitPrimitive(Vector2& data)
 	{
 		mpack_write_bin(&writer_, (const char*)data.Data(), sizeof(Vector2));
 	}
 	
-	void BinarySerializer::TransferPrimitive(Vector3& data)
+	void BinarySerializer::VisitPrimitive(Vector3& data)
 	{
 		mpack_write_bin(&writer_, (const char*)data.Data(), sizeof(Vector3));
 	}
 	
-	void BinarySerializer::TransferPrimitive(Vector4& data)
+	void BinarySerializer::VisitPrimitive(Vector4& data)
 	{
 		mpack_write_bin(&writer_, (const char*)data.Data(), sizeof(Vector4));
 	}
 	
-	void BinarySerializer::TransferPrimitive(Color& data)
+	void BinarySerializer::VisitPrimitive(Color& data)
 	{
 		mpack_write_bin(&writer_, (const char*)data.Data(), sizeof(Color));
 	}
 	
-	void BinarySerializer::TransferPrimitive(Quaternion& data)
+	void BinarySerializer::VisitPrimitive(Quaternion& data)
 	{
 		mpack_write_bin(&writer_, (const char*)data.Data(), sizeof(Quaternion));
 	}

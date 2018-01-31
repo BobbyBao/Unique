@@ -5,7 +5,7 @@
 
 namespace Unique
 {
-	HjsonSerializer::HjsonSerializer() : Visitor(TransferState::Writing)
+	HjsonSerializer::HjsonSerializer() : Visitor(VisitState::Writing)
 	{
 	}
 
@@ -31,7 +31,7 @@ namespace Unique
 	{
 	}
 	
-	void HjsonSerializer::TransferBin(ByteArray& data)
+	void HjsonSerializer::VisitBin(ByteArray& data)
 	{
 	//	ByteArray bytes = std::move(ToBase64(data));
 	//	writer_->String(bytes.data(), (rapidjson::SizeType)bytes.size());
@@ -62,67 +62,67 @@ namespace Unique
 	//	writer_->EndArray();
 	}
 
-	void HjsonSerializer::TransferPrimitive(std::string& data)
+	void HjsonSerializer::VisitPrimitive(std::string& data)
 	{
 	//	writer_->String(data.c_str());
 	}
 
-	void HjsonSerializer::TransferPrimitive(String& data)
+	void HjsonSerializer::VisitPrimitive(String& data)
 	{
 	//	writer_->String(data.CString());
 	}
 
-	void HjsonSerializer::TransferPrimitive(bool& data)
+	void HjsonSerializer::VisitPrimitive(bool& data)
 	{
 	//	writer_->Bool(data);
 	}
 
-	void HjsonSerializer::TransferPrimitive(char& data)
+	void HjsonSerializer::VisitPrimitive(char& data)
 	{
 	//	writer_->Int(data);
 	}
 
-	void HjsonSerializer::TransferPrimitive(unsigned char& data)
+	void HjsonSerializer::VisitPrimitive(unsigned char& data)
 	{
 	//	writer_->Uint(data);
 	}
 
-	void HjsonSerializer::TransferPrimitive(short& data)
+	void HjsonSerializer::VisitPrimitive(short& data)
 	{
 	//	writer_->Int(data);
 	}
 
-	void HjsonSerializer::TransferPrimitive(unsigned short& data)
+	void HjsonSerializer::VisitPrimitive(unsigned short& data)
 	{
 	//	writer_->Uint(data);
 	}
 
-	void HjsonSerializer::TransferPrimitive(int& data)
+	void HjsonSerializer::VisitPrimitive(int& data)
 	{
 	//	writer_->Int(data);
 	}
 
-	void HjsonSerializer::TransferPrimitive(unsigned int& data)
+	void HjsonSerializer::VisitPrimitive(unsigned int& data)
 	{
 	//	writer_->Uint(data);
 	}
 
-	void HjsonSerializer::TransferPrimitive(long long& data)
+	void HjsonSerializer::VisitPrimitive(long long& data)
 	{
 	//	writer_->Int64(data);
 	}
 
-	void HjsonSerializer::TransferPrimitive(unsigned long long& data)
+	void HjsonSerializer::VisitPrimitive(unsigned long long& data)
 	{
 	//	writer_->Uint64(data);
 	}
 
-	void HjsonSerializer::TransferPrimitive(float& data)
+	void HjsonSerializer::VisitPrimitive(float& data)
 	{
 	//	writer_->Double(data);
 	}
 
-	void HjsonSerializer::TransferPrimitive(double& data)
+	void HjsonSerializer::VisitPrimitive(double& data)
 	{
 	//	writer_->Double(data);
 	}
