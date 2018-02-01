@@ -263,10 +263,11 @@ namespace Unique
 		
 		auto& batchQueues = MainContext(batchQueues_);
 
+		auto& renderPass = MainContext(renderPasses_);
 		// Make sure that all necessary batch queues exist
 		for (size_t i = 0; i < renderPath_->commands_.size(); ++i)
 		{
-			RenderPathCommand& command = renderPath_->commands_[i];
+			RenderPass& command = *renderPath_->commands_[i];
 			if (!command.enabled_)
 				continue;
 
@@ -294,8 +295,10 @@ namespace Unique
 
 			}
 
-			MainContext(batchMatrics_).clear();
+			renderPass.push_back(renderPath_->commands_[i]);
 		}
+
+		MainContext(batchMatrics_).clear();
 
 		if (hasScenePasses_)
 		{
@@ -312,7 +315,6 @@ namespace Unique
 		return true;
 	}
 
-	int lastUpdateFrame = 0;
 	void View::Update(const FrameInfo& frame)
 	{
 		frame_.camera_ = camera_;
@@ -407,11 +409,12 @@ namespace Unique
 
 	void View::Render()
 	{		
-		auto& passes = RenderContext(scenePasses_);
+		auto& passes = RenderContext(renderPasses_);
 		for(int i = 0; i < passes.size(); i++)
 		{
-			auto& scenePassInfo = passes[i];
-			scenePassInfo.batchQueue_->Draw(this, camera_);
+			passes[i]->Render(this);
+		//	auto& scenePassInfo = passes[i];
+		//	scenePassInfo.batchQueue_->Draw(this, camera_);
 		}
 		
 		LOG_RENDER("Render : ", Graphics::GetRenderContext());

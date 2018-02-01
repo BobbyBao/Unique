@@ -15,6 +15,8 @@
 #include "Serialize/JsonSerializer.h"
 #include "Input/Input.h"
 
+//#define ENABLE_ANIM
+
 UNIQUE_IMPLEMENT_MAIN(Unique::SceneSample)
 
 namespace Unique
@@ -28,7 +30,7 @@ namespace Unique
 		Subscribe(&SceneSample::HandleShutdown);
 		Subscribe(&SceneSample::HandleUpdate);
 
-	//	SetDeviceType(DeviceType::OpenGL);
+		SetDeviceType(DeviceType::OpenGL);
 	}
 
 	SceneSample::~SceneSample()
@@ -48,12 +50,16 @@ namespace Unique
 		node_ = scene_->CreateChild("Model");
 		node_->SetRotation(Quaternion(0, 180, 0));
 
-		//StaticModel* model = node_->CreateComponent<StaticModel>();
+#ifdef ENABLE_ANIM
 		AnimatedModel* model = node_->CreateComponent<AnimatedModel>();
+#else
+		StaticModel* model = node_->CreateComponent<StaticModel>();
+#endif
 		model->SetModelAttr(ResourceRef::Create<Model>("Models/Kachujin/Kachujin.mdl"));
   		model->SetMaterialsAttr(ResourceRefList::Create<Material>(
   		{ "Models/Kachujin/Materials/Kachujin.material" }));
 
+#ifdef ENABLE_ANIM
 		Animation* walkAnimation = cache.GetResource<Animation>("Models/Kachujin/Kachujin_Walk.ani");
 		AnimationState* state = model->AddAnimationState(walkAnimation);
 		// The state would fail to create (return null) if the animation was not found
@@ -64,7 +70,7 @@ namespace Unique
 			state->SetLooped(true);
 			state->SetTime(Random(walkAnimation->GetLength()));
 		}
-
+#endif
 		auto& renderer = GetSubsystem<Renderer>();
 		Viewport* viewport = new Viewport(scene_, camera_);
 		renderer.SetViewport(0, viewport);
@@ -124,12 +130,13 @@ namespace Unique
 			camera_->GetNode()->Translate(Vector3::RIGHT * MOVE_SPEED * timeStep);
 
 
+#ifdef ENABLE_ANIM
 		AnimatedModel* model = node_->GetComponent<AnimatedModel>(true);
 		if (model && model->GetNumAnimationStates())
 		{
 			AnimationState* state = model->GetAnimationStates()[0];
 			state->AddTime(timeStep);
 		}
-
+#endif
 	}
 }

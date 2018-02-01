@@ -36,28 +36,6 @@
 namespace Unique
 {
 
-static const char* commandTypeNames[] =
-{
-    "none",
-    "clear",
-    "scenepass",
-    "quad",
-    "forwardlights",
-    "lightvolumes",
-    "renderui",
-    "sendevent",
-    nullptr
-};
-
-static const char* sortModeNames[] =
-{
-    "fronttoback",
-    "backtofront",
-    nullptr
-};
-
-extern const char* blendModeNames[];
-
 TextureUnit ParseTextureUnitName(String name);
 /*
 void RenderTargetInfo::Load(const XMLElement& element)
@@ -232,63 +210,6 @@ void RenderPathCommand::Load(const XMLElement& element)
     }
 }*/
 
-void RenderPathCommand::SetTextureName(TextureUnit unit, const String& name)
-{
-    if (unit < MAX_TEXTURE_UNITS)
-        textureNames_[unit] = name;
-}
-
-void RenderPathCommand::SetNumOutputs(unsigned num)
-{
-    num = (unsigned)Clamp((int)num, 1, MAX_RENDERTARGETS);
-    outputs_.resize(num);
-}
-
-void RenderPathCommand::SetOutput(unsigned index, const String& name, CubeMapFace face)
-{
-    if (index < outputs_.size())
-        outputs_[index] = MakePair(name, face);
-    else if (index == outputs_.size() && index < MAX_RENDERTARGETS)
-        outputs_.push_back(MakePair(name, face));
-}
-
-void RenderPathCommand::SetOutputName(unsigned index, const String& name)
-{
-    if (index < outputs_.size())
-        outputs_[index].first = name;
-    else if (index == outputs_.size() && index < MAX_RENDERTARGETS)
-        outputs_.push_back(MakePair(name, FACE_POSITIVE_X));
-}
-
-void RenderPathCommand::SetOutputFace(unsigned index, CubeMapFace face)
-{
-    if (index < outputs_.size())
-        outputs_[index].second = face;
-    else if (index == outputs_.size() && index < MAX_RENDERTARGETS)
-        outputs_.push_back(MakePair(String::EMPTY, face));
-}
-
-
-void RenderPathCommand::SetDepthStencilName(const String& name)
-{
-    depthStencilName_ = name;
-}
-
-const String& RenderPathCommand::GetTextureName(TextureUnit unit) const
-{
-    return unit < MAX_TEXTURE_UNITS ? textureNames_[unit] : String::EMPTY;
-}
-
-const String& RenderPathCommand::GetOutputName(unsigned index) const
-{
-    return index < outputs_.size() ? outputs_[index].first : String::EMPTY;
-}
-
-CubeMapFace RenderPathCommand::GetOutputFace(unsigned index) const
-{
-    return index < outputs_.size() ? outputs_[index].second : FACE_POSITIVE_X;
-}
-
 RenderPath::RenderPath()
 {
 }
@@ -357,8 +278,8 @@ void RenderPath::SetEnabled(const String& tag, bool active)
 
     for (unsigned i = 0; i < commands_.size(); ++i)
     {
-        if (!commands_[i].tag_.Compare(tag, false))
-            commands_[i].enabled_ = active;
+        if (!commands_[i]->tag_.Compare(tag, false))
+            commands_[i]->enabled_ = active;
     }
 }
 
@@ -372,7 +293,7 @@ bool RenderPath::IsEnabled(const String& tag) const
 
     for (unsigned i = 0; i < commands_.size(); ++i)
     {
-        if (!commands_[i].tag_.Compare(tag, false) && commands_[i].enabled_)
+        if (!commands_[i]->tag_.Compare(tag, false) && commands_[i]->enabled_)
             return true;
     }
 
@@ -389,7 +310,7 @@ bool RenderPath::IsAdded(const String& tag) const
 
     for (unsigned i = 0; i < commands_.size(); ++i)
     {
-        if (!commands_[i].tag_.Compare(tag, false))
+        if (!commands_[i]->tag_.Compare(tag, false))
             return true;
     }
 
@@ -406,8 +327,8 @@ void RenderPath::ToggleEnabled(const String& tag)
 
     for (unsigned i = 0; i < commands_.size(); ++i)
     {
-        if (!commands_[i].tag_.Compare(tag, false))
-            commands_[i].enabled_ = !commands_[i].enabled_;
+        if (!commands_[i]->tag_.Compare(tag, false))
+            commands_[i]->enabled_ = !commands_[i]->enabled_;
     }
 }
 
@@ -443,14 +364,14 @@ void RenderPath::RemoveRenderTarget(const String& name)
 
 void RenderPath::RemoveRenderTargets(const String& tag)
 {
-    for (unsigned i = renderTargets_.size() - 1; i < renderTargets_.size(); --i)
+    for (size_t i = renderTargets_.size() - 1; i < renderTargets_.size(); --i)
     {
         if (!renderTargets_[i].tag_.Compare(tag, false))
             renderTargets_.erase(renderTargets_.begin() + i);
     }
 }
 
-void RenderPath::SetCommand(unsigned index, const RenderPathCommand& command)
+void RenderPath::SetCommand(unsigned index, RenderPass* command)
 {
     if (index < commands_.size())
         commands_[index] = command;
@@ -458,14 +379,14 @@ void RenderPath::SetCommand(unsigned index, const RenderPathCommand& command)
         AddCommand(command);
 }
 
-void RenderPath::AddCommand(const RenderPathCommand& command)
+void RenderPath::AddCommand(RenderPass* command)
 {
-    commands_.push_back(command);
+    commands_.push_back(SPtr<RenderPass>(command));
 }
 
-void RenderPath::InsertCommand(unsigned index, const RenderPathCommand& command)
+void RenderPath::InsertCommand(unsigned index, RenderPass* command)
 {
-    commands_.insert(commands_.begin() + index, command);
+    commands_.insert(commands_.begin() + index, SPtr<RenderPass>(command));
 }
 
 void RenderPath::RemoveCommand(unsigned index)
@@ -477,7 +398,7 @@ void RenderPath::RemoveCommands(const String& tag)
 {
     for (unsigned i = commands_.size() - 1; i < commands_.size(); --i)
     {
-        if (!commands_[i].tag_.Compare(tag, false))
+        if (!commands_[i]->tag_.Compare(tag, false))
             commands_.erase(commands_.begin() + i);
     }
 }

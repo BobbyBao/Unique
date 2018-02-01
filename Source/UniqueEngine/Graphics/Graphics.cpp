@@ -419,7 +419,7 @@ namespace Unique
 		uint flags = ClearFlags >> 1;
 		if(pView)
 		{
-			if(ClearFlags & CLEAR_COLOR_FLAG)
+			if(ClearFlags & CLEAR_COLOR)
 				impl_.deviceContext_->ClearRenderTarget(*pView, color);
 
 			if(flags)
@@ -427,7 +427,7 @@ namespace Unique
 		}
 		else
 		{
-			if(ClearFlags & CLEAR_COLOR_FLAG)
+			if(ClearFlags & CLEAR_COLOR)
 				impl_.deviceContext_->ClearRenderTarget(nullptr, color);
 
 			if(flags)

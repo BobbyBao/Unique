@@ -45,8 +45,8 @@ namespace Unique
 	void Renderer::Initialize()
 	{
 		defaultRenderPath_ = new RenderPath();
-		defaultRenderPath_->AddCommand(RenderPathCommand(CMD_CLEAR));
-		defaultRenderPath_->AddCommand(RenderPathCommand(CMD_SCENEPASS));
+//		defaultRenderPath_->AddCommand(new RenderPass(CMD_CLEAR));
+		defaultRenderPath_->AddCommand(new RenderPass(CMD_SCENEPASS));
 		
 		Subscribe(&Renderer::HandleStartup);
 		Subscribe(&Renderer::HandleRenderUpdate);
@@ -254,7 +254,7 @@ namespace Unique
 
 		//if (views.empty())
 		{		
-			graphics_.Clear(nullptr, Color::GRAY, CLEAR_COLOR_FLAG|CLEAR_DEPTH_FLAG, 1.0f, 0xff);
+			graphics_.Clear(nullptr, Color::GRAY, CLEAR_COLOR |CLEAR_DEPTH, 1.0f, 0xff);
 		}
 		
 		for(int i = 0; i < views.size(); i++)

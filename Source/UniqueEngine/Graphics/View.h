@@ -143,7 +143,7 @@ namespace Unique
 		/// Mark to stencil flag.
 		bool markToStencil_;
 
-		RenderCommandSortMode sortMode_;
+		RenderPassSortMode sortMode_;
 		/// Batch queue.
 		BatchQueue* batchQueue_;
 	};
@@ -319,6 +319,8 @@ namespace Unique
 
 		/// Number of active occluders.
 		unsigned activeOccluders_;
+
+		Vector<SPtr<RenderPass>> renderPasses_[2];
 		/// Info for scene render passes defined by the renderpath.
 		PODVector<ScenePassInfo> scenePasses_[2];
 		/// Per-pixel light queues.

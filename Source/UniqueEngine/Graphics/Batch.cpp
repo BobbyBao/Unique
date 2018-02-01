@@ -212,7 +212,7 @@ namespace Unique
 		auto& graphics = GetSubsystem<Graphics>();
 		auto& renderer = GetSubsystem<Renderer>();
 
-		Node* cameraNode = camera ? camera->GetNode() : 0;
+	//	Node* cameraNode = camera ? camera->GetNode() : 0;
 		//Light* light = lightQueue_ ? lightQueue_->light_ : 0;
 		//Texture* shadowMap = lightQueue_ ? lightQueue_->shadowMap_ : 0;
 		
@@ -221,10 +221,10 @@ namespace Unique
 		//	view->SetGlobalShaderParameters();
 
 		// Set camera & viewport shader parameters
-		unsigned cameraHash = (unsigned)(size_t)camera;
-		IntRect viewport = view->GetViewRect();
-		IntVector2 viewSize = IntVector2(viewport.Width(), viewport.Height());
-		unsigned viewportHash = (unsigned)(viewSize.x_ | (viewSize.y_ << 16));
+// 		unsigned cameraHash = (unsigned)(size_t)camera;
+// 		IntRect viewport = view->GetViewRect();
+// 		IntVector2 viewSize = IntVector2(viewport.Width(), viewport.Height());
+// 		unsigned viewportHash = (unsigned)(viewSize.x_ | (viewSize.y_ << 16));
 
 		if (geometryType_ == GEOM_SKINNED)
 		{

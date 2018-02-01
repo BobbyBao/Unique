@@ -17,9 +17,10 @@ namespace Unique
 	
 	enum ClearFlags : int
 	{
-		CLEAR_COLOR_FLAG = 0x01,
-		CLEAR_DEPTH_FLAG = 0x02,    ///< Clear depth part of the buffer
-		CLEAR_STENCIL_FLAG = 0x04   ///< Clear stencil part of the buffer
+		CLEAR_NONE = 0,
+		CLEAR_COLOR = 0x01,
+		CLEAR_DEPTH = 0x02,    ///< Clear depth part of the buffer
+		CLEAR_STENCIL = 0x04   ///< Clear stencil part of the buffer
 	};
 
 	enum ValueType : int

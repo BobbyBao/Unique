@@ -77,7 +77,7 @@ namespace Unique
 		
 		bool BeginRender();
 		void EndRender();    
-		void Clear(TextureView *pView, const Color& color, uint ClearFlags = CLEAR_COLOR_FLAG, float fDepth = 1.0f, byte Stencil = 0xff);
+		void Clear(TextureView *pView, const Color& color, uint ClearFlags = CLEAR_COLOR, float fDepth = 1.0f, byte Stencil = 0xff);
 		void SetScissorRects(uint NumRects, const IntRect *pRects, uint RTWidth = 0, uint RTHeight = 0);
 		void Draw(Geometry* geometry, PipelineState* pipeline);
 		void Draw(Geometry* geometry, PipelineState* pipeline, PrimitiveTopology primitiveType, 
