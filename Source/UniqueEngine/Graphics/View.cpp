@@ -52,6 +52,65 @@ namespace Unique
 			}
 		}
 	};
+	
+	/// %Frustum octree query for zones and occluders.
+	class ZoneOctreeQuery : public FrustumOctreeQuery
+	{
+	public:
+		/// Construct with frustum and query parameters.
+		ZoneOctreeQuery(View* view,
+			PODVector<Drawable*>& result, const Frustum& frustum, unsigned char drawableFlags = DRAWABLE_ANY,
+			unsigned viewMask = DEFAULT_VIEWMASK) :
+			FrustumOctreeQuery(result, frustum, drawableFlags, viewMask), view_(view)
+		{
+			Node* cameraNode = view_->cullCamera_->GetNode();
+			cameraPos = cameraNode->GetWorldPosition();
+		}
+
+		/// Intersection test for drawables.
+		virtual void TestDrawables(Drawable** start, Drawable** end, bool inside) override
+		{
+			while (start != end)
+			{
+				Drawable* drawable = *start++;
+
+				if(drawable->GetViewMask() & viewMask_)
+				{
+					unsigned char flags = drawable->GetDrawableFlags();
+
+					if (flags == DRAWABLE_ZONE)
+					{
+						if (inside || frustum_.IsInsideFast(drawable->GetWorldBoundingBox()))
+						{	
+							Zone* zone = (Zone*)drawable;
+							view_->zones_.push_back(zone);
+							int priority = zone->GetPriority();
+							if (priority > view_->highestZonePriority_)
+								view_->highestZonePriority_ = priority;
+							if (priority > bestPriority && zone->IsInside(cameraPos))
+							{
+								view_->cameraZone_ = zone;
+								bestPriority = priority;
+							}
+						}
+
+						  
+					}
+					else if (flags & drawableFlags_)
+					{
+						if (inside || frustum_.IsInsideFast(drawable->GetWorldBoundingBox()))
+							result_.push_back(drawable);
+					}
+				}
+
+			}
+		}
+		
+		/// Zone vector reference.
+		View* view_;
+		Vector3 cameraPos;
+		int bestPriority = M_MIN_INT;
+	};
 
 	void CheckVisibilityWork(const WorkItem* item, unsigned threadIndex)
 	{
@@ -62,6 +121,7 @@ namespace Unique
 		Vector3 viewZ = Vector3(viewMatrix.m20_, viewMatrix.m21_, viewMatrix.m22_);
 		Vector3 absViewZ = viewZ.Abs();
 		unsigned cameraViewMask = view->cullCamera_->GetViewMask();
+		bool cameraZoneOverride = view->cameraZoneOverride_;
 		PerThreadSceneResult& result = view->sceneResults_[threadIndex];
 
 		while (start != end)
@@ -83,7 +143,12 @@ namespace Unique
 
 				// For geometries, find zone, clear lights and calculate view space Z range
 				if (drawable->GetDrawableFlags() & DRAWABLE_GEOMETRY)
-				{
+				{             
+					Zone* drawableZone = drawable->GetZone();
+					if (!cameraZoneOverride &&
+						(drawable->IsZoneDirty() || !drawableZone || (drawableZone->GetViewMask() & cameraViewMask) == 0))
+						view->FindZone(drawable);
+
 					const BoundingBox& geomBox = drawable->GetWorldBoundingBox();
 					Vector3 center = geomBox.Center();
 					Vector3 edge = geomBox.Size() * 0.5f;
@@ -176,7 +241,10 @@ namespace Unique
 	View::View()
 		: graphics_(GetSubsystem<Graphics>()),
 		renderer_(GetSubsystem<Renderer>()), 
-		geometriesUpdated_(false), minInstances_(2)
+		geometriesUpdated_(false),
+		minInstances_(2),
+		cameraZone_(nullptr),
+		farClipZone_(nullptr)
 	{
 		unsigned numThreads = GetSubsystem<WorkQueue>().GetNumThreads() + 1; // Worker threads + main thread
 		tempDrawables_.resize(numThreads);
@@ -327,6 +395,9 @@ namespace Unique
 	//	renderTargets_.Clear();
 		geometries_.clear();
 		dirLights_.clear();
+		pointLights_.clear();
+		spotLights_.clear();
+		zones_.clear();
 		
 		auto& batchQueues = MainContext(batchQueues_);
 
@@ -548,10 +619,36 @@ namespace Unique
 		UNIQUE_PROFILE(GetDrawables);
 
 		auto& queue = GetSubsystem<WorkQueue>();
+		
+		highestZonePriority_ = M_MIN_INT;
+		int bestPriority = M_MIN_INT;
+		Node* cameraNode = cullCamera_->GetNode();
+		Vector3 cameraPos = cameraNode->GetWorldPosition();
 
 		PODVector<Drawable*>& tempDrawables = tempDrawables_[0];
-		FrustumOctreeQuery query(tempDrawables, cullCamera_->GetFrustum(), DRAWABLE_GEOMETRY | DRAWABLE_LIGHT, cullCamera_->GetViewMask());
+		ZoneOctreeQuery query(this, tempDrawables, cullCamera_->GetFrustum(), DRAWABLE_ZONE | DRAWABLE_GEOMETRY | DRAWABLE_LIGHT, cullCamera_->GetViewMask());
 		octree_->GetDrawables(query);
+
+		// Determine the zone at far clip distance. If not found, or camera zone has override mode, use camera zone
+		cameraZoneOverride_ = cameraZone_->GetOverride();
+		if (!cameraZoneOverride_)
+		{
+			Vector3 farClipPos = cameraPos + cameraNode->GetWorldDirection() * Vector3(0.0f, 0.0f, cullCamera_->GetFarClip());
+			bestPriority = M_MIN_INT;
+
+			for (auto i = zones_.begin(); i != zones_.end(); ++i)
+			{
+				int priority = (*i)->GetPriority();
+				if (priority > bestPriority && (*i)->IsInside(farClipPos))
+				{
+					farClipZone_ = *i;
+					bestPriority = priority;
+				}
+			}
+		}
+		/*
+		if (farClipZone_ == renderer_.GetDefaultZone())
+			farClipZone_ = cameraZone_;*/
 		
 		// Check drawable occlusion, find zones for moved drawables and collect geometries & lights in worker threads
 		if(tempDrawables.size() > 0)
@@ -957,6 +1054,39 @@ namespace Unique
 	void View::ProcessLight(LightQueryResult& query, unsigned threadIndex)
 	{
 
+	}
+	
+	void View::FindZone(Drawable* drawable)
+	{
+		Vector3 center = drawable->GetWorldBoundingBox().Center();
+		int bestPriority = M_MIN_INT;
+		Zone* newZone = nullptr;
+
+		// If bounding box center is in view, the zone assignment is conclusive also for next frames. Otherwise it is temporary
+		// (possibly incorrect) and must be re-evaluated on the next frame
+		bool temporary = !cullCamera_->GetFrustum().IsInside(center);
+
+		// First check if the current zone remains a conclusive result
+		Zone* lastZone = drawable->GetZone();
+
+		if (lastZone && (lastZone->GetViewMask() & cullCamera_->GetViewMask()) && lastZone->GetPriority() >= highestZonePriority_ &&
+			(drawable->GetZoneMask() & lastZone->GetZoneMask()) && lastZone->IsInside(center))
+			newZone = lastZone;
+		else
+		{
+			for (auto i = zones_.begin(); i != zones_.end(); ++i)
+			{
+				Zone* zone = *i;
+				int priority = zone->GetPriority();
+				if (priority > bestPriority && (drawable->GetZoneMask() & zone->GetZoneMask()) && zone->IsInside(center))
+				{
+					newZone = zone;
+					bestPriority = priority;
+				}
+			}
+		}
+
+		drawable->SetZone(newZone, temporary);
 	}
 
 }

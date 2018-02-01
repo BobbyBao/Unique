@@ -3,6 +3,7 @@
 #include "Batch.h"
 #include "RenderPath.h"
 #include "../Graphics/Light.h"
+#include "../Graphics/Zone.h"
 
 namespace Unique
 {
@@ -252,6 +253,32 @@ namespace Unique
 		void UpdateGeometries();
 		/// Query for lit geometries and shadow casters for a light.
 		void ProcessLight(LightQueryResult& query, unsigned threadIndex);
+		  
+		/// Find and set a new zone for a drawable when it has moved.
+		void FindZone(Drawable* drawable);
+		
+		/// Return the drawable's zone, or camera zone if it has override mode enabled.
+		Zone* GetZone(Drawable* drawable)
+		{
+			if (cameraZoneOverride_)
+				return cameraZone_;
+			Zone* drawableZone = drawable->GetZone();
+			return drawableZone ? drawableZone : cameraZone_;
+		}
+
+		/// Return the drawable's light mask, considering also its zone.
+		unsigned GetLightMask(Drawable* drawable)
+		{
+			return drawable->GetLightMask() & GetZone(drawable)->GetLightMask();
+		}
+
+		/// Return the drawable's shadow mask, considering also its zone.
+		unsigned GetShadowMask(Drawable* drawable)
+		{
+			return drawable->GetShadowMask() & GetZone(drawable)->GetShadowMask();
+		}
+		
+		
 		/// Graphics subsystem.
 		Graphics& graphics_;
 		/// Renderer subsystem.
@@ -264,6 +291,10 @@ namespace Unique
 		Camera* camera_;
 		/// Culling camera. Usually same as the viewport camera.
 		Camera* cullCamera_;
+		/// Zone the camera is inside, or default zone if not assigned.
+		Zone* cameraZone_;
+		/// Zone at far clip plane.
+		Zone* farClipZone_;
 		/// Destination color rendertarget.
 		TextureView* renderTarget_;
 		/// Substitute rendertarget for deferred rendering. Allocated if necessary.
@@ -294,8 +325,14 @@ namespace Unique
 		float maxZ_;
 		/// Minimum number of instances required in a batch group to render as instanced.
 		int minInstances_;
+		/// Highest zone priority currently visible.
+		int highestZonePriority_;
 		/// Geometries updated flag.
 		bool geometriesUpdated_;
+		/// Camera zone's override flag.
+		bool cameraZoneOverride_;
+		/// Draw shadows flag.
+		bool drawShadows_;
 		/// Has scene passes flag. If no scene passes, view can be defined without a valid scene or camera to only perform quad rendering.
 		bool hasScenePasses_;
 		/// Draw debug geometry flag. Copied from the viewport.
@@ -345,6 +382,7 @@ namespace Unique
 		friend class ScenePass;
 		friend struct Batch;
 		friend struct BatchQueue;
+		friend class ZoneOctreeQuery;
 
 		friend void CheckVisibilityWork(const WorkItem* item, unsigned threadIndex);
 		friend void ProcessLightWork(const WorkItem* item, unsigned threadIndex);

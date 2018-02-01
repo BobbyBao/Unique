@@ -80,6 +80,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Animation\AnimationState.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Application\Application.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Application\Engine.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Export\AnimationExport.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\RenderPass\ClusteredLight.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Export\CoreExport.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Export\EngineExport.cpp" />

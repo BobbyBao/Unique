@@ -1,8 +1,15 @@
 #pragma once
-class ClusteredLight
+#include "../RenderPass.h"
+
+namespace Unique
 {
-public:
-	ClusteredLight();
-	~ClusteredLight();
-};
+	class ClusteredLight : public ScenePass
+	{
+	public:
+		ClusteredLight();
+		~ClusteredLight();
+	};
+
+
+}
 

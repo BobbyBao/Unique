@@ -26,7 +26,10 @@ namespace Unique
 	}
 
 	Renderer::Renderer() 
-		: graphics_(GetSubsystem<Graphics>()), numExtraInstancingBufferElements_(0), drawDebug_(true)
+		: graphics_(GetSubsystem<Graphics>()),
+		defaultZone_(new Zone()),
+		numExtraInstancingBufferElements_(0),
+		drawDebug_(true)
 	{
 		Initialize();
 

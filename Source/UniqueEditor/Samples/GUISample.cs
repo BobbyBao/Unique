@@ -11,7 +11,7 @@ namespace UniqueEditor.Samples
         static int HARD = 1;
         static int op = EASY;
         static int property = 20;
-        //nk_color background = new nk_color(28, 48, 62);
+
         Color background = new Color(28, 48, 62);
 
         public override void OnGUI()

@@ -14,10 +14,6 @@ namespace UniqueEditor.Samples
             New(ref scene)
             .Component<Octree>()
             .Component<DebugRenderer>()
-            /************
-            .Child("Light", c => c
-                .Component<Light>()
-            )*/
             .Child("Camera", c => c
                 .Position(new Vector3(0.0f, 0.0f, -5.0f))
                 .LookAt(new Vector3(0.0f, 0.0f, 0.0f))

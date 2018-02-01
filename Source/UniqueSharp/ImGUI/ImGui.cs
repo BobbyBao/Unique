@@ -82,11 +82,11 @@ namespace UniqueEngine
         public static void LayoutRowPush(float value) => nk_layout_row_push(ctx, value);
         public static void LayoutRowEnd() => nk_layout_row_end(ctx);
         public static void LayoutRow(nk_layout_format fmt, float height, int cols, IntPtr ratio) => nk_layout_row(ctx, fmt, height, cols, ratio);
-        public static void LayoutRow_template_begin(float row_height) => nk_layout_row_template_begin(ctx, row_height);
-        public static void LayoutRowTemplate_push_dynamic() => nk_layout_row_template_push_dynamic(ctx);
-        public static void LayoutRow_template_push_variable(float min_width) => nk_layout_row_template_push_variable(ctx, min_width);
-        public static void LayoutRow_template_push_static(float width) => nk_layout_row_template_push_static(ctx, width);
-        public static void LayoutRow_template_end() => nk_layout_row_template_end(ctx);
+        public static void LayoutRowTemplateBegin(float row_height) => nk_layout_row_template_begin(ctx, row_height);
+        public static void LayoutRowTemplatePushDynamic() => nk_layout_row_template_push_dynamic(ctx);
+        public static void LayoutRowTemplatePushVariable(float min_width) => nk_layout_row_template_push_variable(ctx, min_width);
+        public static void LayoutRowTemplatePushStatic(float width) => nk_layout_row_template_push_static(ctx, width);
+        public static void LayoutRowTemplateEnd() => nk_layout_row_template_end(ctx);
         public static void LayoutSpaceBegin(nk_layout_format fmt, float height, int widget_count) => nk_layout_space_begin(ctx, fmt, height, widget_count);
         public static void LayoutSpacePush(nk_rect rect) => nk_layout_space_push(ctx, rect);
         public static void LayoutSpaceEnd() => nk_layout_space_end(ctx);
@@ -158,17 +158,13 @@ namespace UniqueEngine
         public static void ValueColorByte(string prefix, nk_color c)=> nk_value_color_byte(ctx, prefix, c);
         public static void ValueColorFloat(string prefix, nk_color c) => nk_value_color_float(ctx, prefix, c);
         public static void ValueColorHex(string prefix, nk_color c) => nk_value_color_hex(ctx, prefix, c);
-
         public static bool Button(string text) => nk_button_text(ctx, text, text.Length) != 0;
-        //public static bool ButtonLabel(string label) => nk_button_label(ctx, label) != 0;
         public static bool Button(char c) => Button(c.ToString());      
         public static bool Button(nk_color c)=> nk_button_color(ctx, c) != 0;
         public static bool Button(nk_symbol_type t) => nk_button_symbol(ctx, t) != 0;
         public static bool Button(nkImage img) => nk_button_image(ctx, img) != 0;
         public static bool Button(nk_symbol_type t, string text, uint alignment) =>
             nk_button_symbol_text(ctx, t, text, text.Length, alignment) != 0;        
-        //public static bool Button(nkImage img, string text, uint text_alignment) =>
-        //    nk_button_image_label(ctx, img, text, text_alignment) != 0;
         public static bool Button(nkImage img, string text, uint alignment) =>
             nk_button_image_text(ctx, img, text, text.Length, alignment) != 0;
         public static bool ButtonTextStyled(nk_style_button* btn, string title, int len)
@@ -199,16 +195,11 @@ namespace UniqueEngine
         public static int CheckboxFlagsLabel(string label, ref uint flags, uint value) => nk_checkbox_flags_label(ctx, label, (uint *)Utilities.As(ref flags), value);
         public static int CheckboxFlagsText(string label, ref uint flags, uint value) => nk_checkbox_flags_text(ctx, label, label.Length, (uint*) Utilities.As(ref flags), value);
         public static int Radio(string label, ref int active) => nk_radio_text(ctx, label,  label.Length, (int*)Utilities.As(ref active));
-        //public static int OptionLabel(string label, int active) => nk_option_label(ctx, label, active);
         public static bool Option(string label, bool active) => nk_option_text(ctx, label, label.Length, active ? 1 :0) != 0;
-        //public static int SelectableLabel(string label, uint align, ref int value) => nk_selectable_label(ctx, label, align, (int*) Utilities.As(ref value));
         public static int Selectable(string label, uint align, ref int value) => nk_selectable_text(ctx, label, label.Length, align, (int*)Utilities.As(ref value));
         public static int Selectable(nkImage img, string label, uint align, ref int value) => nk_selectable_image_label(ctx, img, label, align, (int*)Utilities.As(ref value));
-        //public static int Selectable(nkImage img, string label, uint align, ref int value) => nk_selectable_image_text(ctx, img, label, label.Length, align, (int*)Utilities.As(ref value));
         public static int Select(string label, uint align, int value) => nk_select_label(ctx, label, align, value);
-        //public static int SelectText(string label, uint align, int value) => nk_select_text(ctx, label, p1, align, value);
         public static int Select(nkImage img, string label, uint align, int value) => nk_select_image_label(ctx, img, label, align, value);
-        //public static int Select(nkImage img, string label, uint align, int value) => nk_select_image_text(ctx, img, label, label.Length, align, value);
         public static float Slide(float min, float val, float max, float step) => nk_slide_float(ctx, min, val, max, step);
         public static int Slide(int min, int val, int max, int step) => nk_slide_int(ctx, min, val, max, step);
         public static int Slider(float min, ref float val, float max, float step) => nk_slider_float(ctx, min, (float*)Utilities.As(ref val), max, step);

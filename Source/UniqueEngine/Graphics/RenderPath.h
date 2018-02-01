@@ -32,12 +32,6 @@
 
 namespace Unique
 {
-
-class XMLElement;
-class XMLFile;
-
-
-
 /// Rendertarget size mode.
 enum RenderTargetSizeMode
 {

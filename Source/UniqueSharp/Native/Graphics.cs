@@ -146,6 +146,13 @@ namespace UniqueEngine
     }
 
     [SuppressUnmanagedCodeSecurity]
+    public partial class AnimatedModel
+    {
+        [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl)]
+        static extern void AnimatedModel_SetModelAttr(IntPtr self, IntPtr model);
+    }
+
+    [SuppressUnmanagedCodeSecurity]
     public partial class Material
     {
         [DllImport(Native.DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)]

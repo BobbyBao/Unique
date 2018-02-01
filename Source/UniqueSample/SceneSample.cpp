@@ -15,7 +15,7 @@
 #include "Serialize/JsonSerializer.h"
 #include "Input/Input.h"
 
-//#define ENABLE_ANIM
+#define ENABLE_ANIM
 
 UNIQUE_IMPLEMENT_MAIN(Unique::SceneSample)
 

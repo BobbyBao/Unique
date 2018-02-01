@@ -10,6 +10,7 @@ namespace Unique
 {
 	class Geometry;
 	struct Batch;
+	class Zone;
 
 	static const int INSTANCING_BUFFER_DEFAULT_SIZE = 1024;
 
@@ -50,6 +51,9 @@ namespace Unique
 		VertexBuffer* GetInstancingBuffer() const { return instancingBuffer_.Get(); }
 
 		RenderPath* GetDefaultRenderPath() { return defaultRenderPath_; }
+		 
+		/// Return the default zone.
+		Zone* GetDefaultZone() const { return defaultZone_; }
 
 		Material* GetDefaultMaterial() { return defaultMaterial_.Get(); }
 
@@ -93,6 +97,8 @@ namespace Unique
 		SPtr<Material> defaultMaterial_;
 		/// Default shader.
 		SPtr<Shader> defaultTechnique_;
+		/// Default zone.
+		SPtr<Zone> defaultZone_;
 		/// Backbuffer viewports.
 		Vector<SPtr<Viewport> > viewports_;
 		/// Render surface viewports queued for update.

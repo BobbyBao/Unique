@@ -15,3 +15,8 @@ UNIQUE_C_API ResourceRefList* ResourceRefList_new(const char* type, const char* 
 }
 
 uExportDelete(ResourceRefList)
+
+UNIQUE_C_API Resource* ResourceCache_GetResource(ResourceCache* self, const StringID& type, const char* name, bool sendEventOnFailure)
+{
+	return self->GetResource(type, name, sendEventOnFailure);
+}

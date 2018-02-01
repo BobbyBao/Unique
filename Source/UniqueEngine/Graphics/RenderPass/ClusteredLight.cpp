@@ -1,8 +1,9 @@
 #include "UniquePCH.h"
 #include "ClusteredLight.h"
 
-
-ClusteredLight::ClusteredLight()
+namespace Unique
+{
+	ClusteredLight::ClusteredLight()
 {
 	/*
 	uint32 lights[CLUSTER_Z][CLUSTER_Y][CLUSTER_X] = {};
@@ -79,4 +80,6 @@ ClusteredLight::ClusteredLight()
 
 ClusteredLight::~ClusteredLight()
 {
+}
+
 }
