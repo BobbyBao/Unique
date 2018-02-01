@@ -46,7 +46,7 @@ namespace Unique
 	{
 		defaultRenderPath_ = new RenderPath();
 //		defaultRenderPath_->AddCommand(new RenderPass(CMD_CLEAR));
-		defaultRenderPath_->AddCommand(new RenderPass(CMD_SCENEPASS));
+		defaultRenderPath_->AddCommand(new ScenePass());
 		
 		Subscribe(&Renderer::HandleStartup);
 		Subscribe(&Renderer::HandleRenderUpdate);

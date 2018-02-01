@@ -4,10 +4,13 @@
 namespace Unique
 {		
 	RenderPass::RenderPass(RenderPassType type) :
-		type_(type),
-		clearFlags_(0),
-		//blendMode_(BLEND_REPLACE),
+		type_(type),	
 		enabled_(true),
+		clearFlags_(0),
+		clearColor_(Color::GRAY),
+		clearDepth_(1.0f),
+		clearStencil_(0xff),
+		//blendMode_(BLEND_REPLACE),
 		useFogColor_(false),
 		markToStencil_(false),
 		useLitBase_(true),

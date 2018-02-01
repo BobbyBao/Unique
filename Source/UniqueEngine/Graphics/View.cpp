@@ -416,7 +416,7 @@ namespace Unique
 		//	auto& scenePassInfo = passes[i];
 		//	scenePassInfo.batchQueue_->Draw(this, camera_);
 		}
-		
+		passes.clear();
 		LOG_RENDER("Render : ", Graphics::GetRenderContext());
 	}
 

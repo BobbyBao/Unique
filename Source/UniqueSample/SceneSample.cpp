@@ -30,7 +30,7 @@ namespace Unique
 		Subscribe(&SceneSample::HandleShutdown);
 		Subscribe(&SceneSample::HandleUpdate);
 
-		SetDeviceType(DeviceType::OpenGL);
+	//	SetDeviceType(DeviceType::OpenGL);
 	}
 
 	SceneSample::~SceneSample()
