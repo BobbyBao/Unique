@@ -312,13 +312,6 @@ namespace Unique
 		}
 
 		scene_ = viewport->GetScene();
-		if(!scene_)
-		{
-			return false;
-		}
-
-		octree_ = scene_->GetComponent<Octree>();
-
 		cullCamera_ = viewport->GetCullCamera();
 		camera_ = viewport->GetCamera();
 		if (!cullCamera_)
@@ -367,12 +360,17 @@ namespace Unique
 		}
 
 		MainContext(batchMatrics_).clear();
+		   
+		octree_ = nullptr;
+		// Get default zone first in case we do not have zones defined
+		cameraZone_ = farClipZone_ = renderer_.GetDefaultZone();
 
 		if (hasScenePasses_)
 		{
 			if (!scene_ || !camera_ || !camera_->IsEnabledEffective())
 				return false;
-
+			
+			octree_ = scene_->GetComponent<Octree>();
 			if (!octree_)
 				return false;
 
