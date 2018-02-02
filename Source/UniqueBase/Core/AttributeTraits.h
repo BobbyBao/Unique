@@ -25,19 +25,25 @@ namespace Unique
 	/// Attribute trait (default use const reference for object type).
 	template <typename T> struct AttributeTrait
 	{
-		/// Get function return type.
-		typedef T RawType;
+		using RawType = typename remove_reference<T>::type;
 		/// Get function return type.
 		typedef const T& ReturnType;
 		/// Set function parameter type.
 		typedef const T& ParameterType;
-	};
 
+		static ReturnType DEFAULT()
+		{
+			static RawType defaultVal;
+			return defaultVal;
+		}
+	};
+	
 	/// Int attribute trait.
 	template <> struct AttributeTrait<int>
 	{
 		typedef int ReturnType;
 		typedef int ParameterType;
+		static int DEFAULT(){ return 0; }
 	};
 
 	/// unsigned attribute trait.
@@ -45,6 +51,7 @@ namespace Unique
 	{
 		typedef unsigned ReturnType;
 		typedef unsigned ParameterType;
+		static unsigned DEFAULT(){ return 0; }
 	};
 
 	/// Bool attribute trait.
@@ -52,6 +59,7 @@ namespace Unique
 	{
 		typedef bool ReturnType;
 		typedef bool ParameterType;
+		static bool DEFAULT(){ return false; }
 	};
 
 	/// Float attribute trait.
@@ -59,7 +67,9 @@ namespace Unique
 	{
 		typedef float ReturnType;
 		typedef float ParameterType;
+		static float DEFAULT(){ return 0.0f; }
 	};
+	
 
 	/// Mixed attribute trait (use const reference for set function only).
 	template <typename T> struct MixedAttributeTrait

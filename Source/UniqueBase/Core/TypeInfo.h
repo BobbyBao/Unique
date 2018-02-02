@@ -36,24 +36,24 @@ namespace Unique
 		}*/
 
 		template<class T>
-		void RegisterAttribute(const char* name, size_t offset, AttributeFlag flag = AF_DEFAULT)
+		void RegisterAttribute(const char* name, size_t offset, const T& defaultVal = AttributeTrait<T>::DEFAULT(), AttributeFlag flag = AF_DEFAULT)
 		{
 			RegisterAttribute(
-				new Unique::TAttribute<T>(name, offset, flag));
+				new Unique::TAttribute<T>(name, offset, defaultVal, flag));
 		}
 		
 		template<typename GET, typename SET>
-		void RegisterAccessor(const char* name, GET getter, SET setter, AttributeFlag flag = AF_DEFAULT)
+		void RegisterAccessor(const char* name, GET getter, SET setter, typename function_traits<GET>::ParameterType defaultVal, AttributeFlag flag = AF_DEFAULT)
 		{
 			RegisterAttribute(
-				new Unique::AttributeAccessorImpl<function_traits<GET>::ClassType, function_traits<GET>::RawType, function_traits<GET>>(name, getter, setter, flag));
+				new Unique::AttributeAccessorImpl<function_traits<GET>::ClassType, typename function_traits<GET>::RawType, function_traits<GET>>(name, getter, setter, defaultVal, flag));
 		}
 
 		template<typename GET, typename SET>
-		void RegisterMixedAccessor(const char* name, GET getter, SET setter, AttributeFlag flag = AF_DEFAULT)
+		void RegisterMixedAccessor(const char* name, GET getter, SET setter, typename mixed_function_traits<GET>::ParameterType defaultVal, AttributeFlag flag = AF_DEFAULT)
 		{
 			RegisterAttribute(
-				new Unique::AttributeAccessorImpl<mixed_function_traits<GET>::ClassType, mixed_function_traits<GET>::RawType, mixed_function_traits<GET>>(name, getter, setter, flag));
+				new Unique::AttributeAccessorImpl<mixed_function_traits<GET>::ClassType, mixed_function_traits<GET>::RawType, mixed_function_traits<GET>>(name, getter, setter, defaultVal, flag));
 		}
 
 		void RegisterAttribute(Attribute* attr);

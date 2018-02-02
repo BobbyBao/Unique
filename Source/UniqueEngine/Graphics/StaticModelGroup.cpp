@@ -48,7 +48,7 @@ static const StringVector instanceNodesStructureElementNames =
 uObject(StaticModelGroup)
 {
 	uFactory("Geometry")
-	uAccessor("Instance Nodes", GetNodeIDsAttr, SetNodeIDsAttr);
+//	uAccessor("Instance Nodes", GetNodeIDsAttr, SetNodeIDsAttr );
 }
 
 StaticModelGroup::StaticModelGroup()

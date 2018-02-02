@@ -72,18 +72,18 @@ uEnum(LightType, "DIRECTIONAL", "SPOT", "POINT")
 uObject(Light)
 {
 	uFactory("Scene");
-	uAccessor("Is Enabled", IsEnabled, SetEnabled);
-	uAccessor("Light Type", GetLightType, SetLightType);
-	uAccessor("Color", GetColor, SetColor);
-	uAccessor("Specular Intensity", GetSpecularIntensity, SetSpecularIntensity);
-	uAccessor("Brightness Multiplier", GetBrightness, SetBrightness);
-	uAccessor("Temperature", GetTemperature, SetTemperature);
-	uAttribute("Use Physical Values", usePhysicalValues_);
-	uAccessor("Radius", GetRadius, SetRadius);
-	uAccessor("Length", GetLength, SetLength);
-	uAccessor("Range", GetRange, SetRange);
-	uAccessor("Spot FOV", GetFov, SetFov);
-	uAccessor("Spot Aspect Ratio", GetAspectRatio, SetAspectRatio);
+	uAccessor("Is Enabled", IsEnabled, SetEnabled, true);
+	uAccessor("Light Type", GetLightType, SetLightType, DEFAULT_LIGHTTYPE);
+	uAccessor("Color", GetColor, SetColor, Color::WHITE);
+	uAccessor("Specular Intensity", GetSpecularIntensity, SetSpecularIntensity, DEFAULT_SPECULARINTENSITY);
+	uAccessor("Brightness Multiplier", GetBrightness, SetBrightness, DEFAULT_BRIGHTNESS);
+	uAccessor("Temperature", GetTemperature, SetTemperature, DEFAULT_TEMPERATURE);
+	uAttribute("Use Physical Values", usePhysicalValues_, false);
+	uAccessor("Radius", GetRadius, SetRadius, DEFAULT_RADIUS);
+	uAccessor("Length", GetLength, SetLength, DEFAULT_LENGTH);
+	uAccessor("Range", GetRange, SetRange, DEFAULT_RANGE);
+	uAccessor("Spot FOV", GetFov, SetFov, DEFAULT_LIGHT_FOV);
+	uAccessor("Spot Aspect Ratio", GetAspectRatio, SetAspectRatio, 1.0f);
 	//     UNIQUE_MIXED_ACCESSOR_ATTRIBUTE("Attenuation Texture", GetRampTextureAttr, SetRampTextureAttr, ResourceRef,
 	//         ResourceRef(Texture2D::GetTypeStatic()), TF_DEFAULT);
 	//     UNIQUE_MIXED_ACCESSOR_ATTRIBUTE("Light Shape Texture", GetShapeTextureAttr, SetShapeTextureAttr, ResourceRef,

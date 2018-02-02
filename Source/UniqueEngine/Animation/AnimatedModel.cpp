@@ -70,19 +70,19 @@ static const unsigned MAX_ANIMATION_STATES = 256;
 
 uObject(AnimatedModel)
 {
-	uFactory("Geometry");
+	uFactory(GEOMETRY_CATEGORY);
 
-	uAccessor("Is Enabled", IsEnabled, SetEnabled);
-	uMixedAccessor("Model", GetModelAttr, SetModelAttr);
-	uAccessor("Material", GetMaterialsAttr, SetMaterialsAttr);
+	uAccessor("Is Enabled", IsEnabled, SetEnabled, true);
+	uMixedAccessor("Model", GetModelAttr, SetModelAttr, ResourceRef(Model::GetTypeStatic()));
+	uAccessor("Material", GetMaterialsAttr, SetMaterialsAttr, ResourceRefList(Material::GetTypeStatic()));
 	uAttribute("Is Occluder", occluder_);
-	uAccessor("Can Be Occluded", IsOccludee, SetOccludee/*, bool, true, TF_DEFAULT*/);
-	uAttribute("Cast Shadows", castShadows_/*, false, TF_DEFAULT*/);
-	uAccessor("Update When Invisible", GetUpdateInvisible, SetUpdateInvisible/*, bool, false, TF_DEFAULT*/);
-	uAccessor("Draw Distance", GetDrawDistance, SetDrawDistance/*, float, 0.0f, TF_DEFAULT*/);
-	uAccessor("Shadow Distance", GetShadowDistance, SetShadowDistance/*, float, 0.0f, TF_DEFAULT*/);
-	uAccessor("LOD Bias", GetLodBias, SetLodBias/*, float, 1.0f, TF_DEFAULT*/);
-	uAccessor("Animation LOD Bias", GetAnimationLodBias, SetAnimationLodBias/*, float, 1.0f, TF_DEFAULT*/);
+	uAccessor("Can Be Occluded", IsOccludee, SetOccludee, true);
+	uAttribute("Cast Shadows", castShadows_, false);
+	uAccessor("Update When Invisible", GetUpdateInvisible, SetUpdateInvisible, false);
+	uAccessor("Draw Distance", GetDrawDistance, SetDrawDistance, 0.0f);
+	uAccessor("Shadow Distance", GetShadowDistance, SetShadowDistance, 0.0f);
+	uAccessor("LOD Bias", GetLodBias, SetLodBias, 1.0f);
+	uAccessor("Animation LOD Bias", GetAnimationLodBias, SetAnimationLodBias, 1.0f);
 
 	//uMixedAccessor("Bone Animation Enabled", GetBonesEnabledAttr, SetBonesEnabledAttr);
 	//uMixedAccessor("Animation States", GetAnimationStatesAttr, SetAnimationStatesAttr);

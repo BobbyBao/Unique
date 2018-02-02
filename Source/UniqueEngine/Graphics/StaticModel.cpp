@@ -47,16 +47,16 @@ extern const char* GEOMETRY_CATEGORY;
 
 uObject(StaticModel)
 {
-	uFactory("Object")
-		uMixedAccessor("Model", GetModelAttr, SetModelAttr)
-		uAccessor("Material", GetMaterialsAttr, SetMaterialsAttr)
-		uAttribute("Is Occluder", occluder_)
-		uAccessor("Can Be Occluded", IsOccludee, SetOccludee)
-		uAttribute("Cast Shadows", castShadows_)
-		uAccessor("Draw Distance", GetDrawDistance, SetDrawDistance)
-		uAccessor("Shadow Distance", GetShadowDistance, SetShadowDistance)
-		uAccessor("LOD Bias", GetLodBias, SetLodBias)
-		uAttribute("Occlusion LOD Level", occlusionLodLevel_)
+	uFactory("Object");
+	uMixedAccessor("Model", GetModelAttr, SetModelAttr, ResourceRef(Model::GetTypeStatic()));
+	uAccessor("Material", GetMaterialsAttr, SetMaterialsAttr, ResourceRefList(Material::GetTypeStatic()));
+	uAttribute("Is Occluder", occluder_);
+	uAccessor("Can Be Occluded", IsOccludee, SetOccludee, false);
+	uAttribute("Cast Shadows", castShadows_);
+	uAccessor("Draw Distance", GetDrawDistance, SetDrawDistance, 0.0f);
+	uAccessor("Shadow Distance", GetShadowDistance, SetShadowDistance, 0.0f);
+	uAccessor("LOD Bias", GetLodBias, SetLodBias, 1.0f);
+	uAttribute("Occlusion LOD Level", occlusionLodLevel_, M_MAX_UNSIGNED);
 }
 
 StaticModel::StaticModel() :

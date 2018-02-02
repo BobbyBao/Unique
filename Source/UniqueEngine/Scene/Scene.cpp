@@ -54,7 +54,7 @@ static const float DEFAULT_SNAP_THRESHOLD = 5.0f;
 
 uObject(Scene)
 {
-	uFactory()
+	uFactory(SCENE_CATEGORY)
 }
 
 Scene::Scene() :

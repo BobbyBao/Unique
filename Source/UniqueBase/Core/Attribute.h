@@ -34,8 +34,8 @@ namespace Unique
 	public:
 		using RawType = typename remove_reference<T>::type;
 
-		TAttribute(const String& name, size_t offset, AttributeFlag flag)
-			: Attribute(name, flag), offset_(offset)
+		TAttribute(const String& name, size_t offset, const T& defaultVal, AttributeFlag flag)
+			: Attribute(name, flag), offset_(offset), defaultVal_(defaultVal)
 		{
 		}
 
@@ -91,9 +91,10 @@ namespace Unique
 		typedef void (T::*SetFunctionPtr)(typename Trait::ParameterType);
 
 		/// Construct with function pointers.
-		AttributeAccessorImpl(const String& name, GetFunctionPtr getFunction, SetFunctionPtr setFunction, AttributeFlag flag) :
+		AttributeAccessorImpl(const String& name, GetFunctionPtr getFunction, SetFunctionPtr setFunction, const RawType& defaultVal, AttributeFlag flag) :
 			getFunction_(getFunction),
 			setFunction_(setFunction),
+			defaultVal_(defaultVal),
 			Attribute(name, flag)
 		{
 			assert(getFunction_);

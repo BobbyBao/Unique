@@ -21,15 +21,14 @@ namespace Unique
 
 	uObject(Node)
 	{
-		uAccessor("Is Enabled", IsEnabled, SetEnabled)
-			uAccessor("Name", GetName, SetName)
-			uAccessor("Tags", GetTags, SetTags)
-			uAccessor("Position", GetPosition, SetPosition)
-			uAccessor("Rotation", GetRotation, SetRotation)
-			uAccessor("Scale", GetScale, SetScale)
-			uAttribute("Components", components_)
-			uAttribute("Children", children_)
-
+		uAccessor("Is Enabled", IsEnabled, SetEnabled, true);
+		uAccessor("Name", GetName, SetName, "");
+		uAccessor("Tags", GetTags, SetTags, StringVector());
+		uAccessor("Position", GetPosition, SetPosition, Vector3::ZERO);
+		uAccessor("Rotation", GetRotation, SetRotation, Quaternion::IDENTITY);
+		uAccessor("Scale", GetScale, SetScale, Vector3::ONE);
+		uAttribute("Components", components_);
+		uAttribute("Children", children_);
 	}
 
 Node::Node() :

@@ -9,7 +9,7 @@
 #include "../Graphics/Material.h"
 #include "../Graphics/Octree.h"
 #include "../Graphics/VertexBuffer.h"
-//#include "../Graphics/Zone.h"
+#include "../Graphics/Zone.h"
 #include "IO/Log.h"
 #include "../Scene/Scene.h"
 #include "DebugNew.h"

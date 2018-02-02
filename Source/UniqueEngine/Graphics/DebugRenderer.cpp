@@ -33,7 +33,7 @@ static const unsigned MAX_TRIANGLES = 100000;
 uObject(DebugRenderer)
 {
 	uFactory();
-	uAccessor("Line Antialias", GetLineAntiAlias, SetLineAntiAlias)
+	uAccessor("Line Antialias", GetLineAntiAlias, SetLineAntiAlias, true)
 }
 
 DebugRenderer::DebugRenderer() : Drawable(DRAWABLE_DEBUG), lineAntiAlias_(false)

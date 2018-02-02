@@ -50,24 +50,24 @@ extern const char* SCENE_CATEGORY;
 uObject(Zone)
 {
 	uFactory(SCENE_CATEGORY);
-	/*
-    uAccessor("Is Enabled", IsEnabled, SetEnabled, bool, true, AM_DEFAULT);
-    //URHO3D_ATTRIBUTE_EX("Bounding Box Min", Vector3, boundingBox_.min_, MarkNodeDirty, DEFAULT_BOUNDING_BOX_MIN, AM_DEFAULT);
-    //URHO3D_ATTRIBUTE_EX("Bounding Box Max", Vector3, boundingBox_.max_, MarkNodeDirty, DEFAULT_BOUNDING_BOX_MAX, AM_DEFAULT);
-    uAttribute("Ambient Color", Color, ambientColor_, DEFAULT_AMBIENT_COLOR, AM_DEFAULT);
-    uAttribute("Fog Color", Color, fogColor_, DEFAULT_FOG_COLOR, AM_DEFAULT);
-    uAttribute("Fog Start", float, fogStart_, DEFAULT_FOG_START, AM_DEFAULT);
-    uAttribute("Fog End", float, fogEnd_, DEFAULT_FOG_END, AM_DEFAULT);
-    uAttribute("Fog Height", float, fogHeight_, DEFAULT_FOG_HEIGHT, AM_DEFAULT);
-    uAttribute("Fog Height Scale", float, fogHeightScale_, DEFAULT_FOG_HEIGHT_SCALE, AM_DEFAULT);
-    uAttribute("Height Fog Mode", bool, heightFog_, false, AM_DEFAULT);
-    uAttribute("Override Mode", bool, override_, false, AM_DEFAULT);
-    uAttribute("Ambient Gradient", ambientGradient_, false, AM_DEFAULT);
-    uAttribute("Priority", priority_, MarkNodeDirty, 0, AM_DEFAULT);
-    uMixedAccessor("Zone Texture", GetZoneTextureAttr, SetZoneTextureAttr, AM_DEFAULT);
-    uAttribute("Light Mask", int, lightMask_, DEFAULT_LIGHTMASK, AM_DEFAULT);
-    uAttribute("Shadow Mask", int, shadowMask_, DEFAULT_SHADOWMASK, AM_DEFAULT);
-    uAccessor("Zone Mask", GetZoneMask, SetZoneMask, unsigned, DEFAULT_ZONEMASK, AM_DEFAULT);*/
+	
+    uAccessor("Is Enabled", IsEnabled, SetEnabled, true);
+    uAttribute("Bounding Box Min", boundingBox_.min_, DEFAULT_BOUNDING_BOX_MIN);
+    uAttribute("Bounding Box Max", boundingBox_.max_, DEFAULT_BOUNDING_BOX_MAX);
+    uAttribute("Ambient Color", ambientColor_, DEFAULT_AMBIENT_COLOR);
+    uAttribute("Fog Color", fogColor_, DEFAULT_FOG_COLOR);
+    uAttribute("Fog Start", fogStart_, DEFAULT_FOG_START);
+    uAttribute("Fog End", fogEnd_, DEFAULT_FOG_END);
+    uAttribute("Fog Height", fogHeight_, DEFAULT_FOG_HEIGHT);
+    uAttribute("Fog Height Scale", fogHeightScale_, DEFAULT_FOG_HEIGHT_SCALE);
+    uAttribute("Height Fog Mode", heightFog_, false);
+    uAttribute("Override Mode", override_, false);
+    uAttribute("Ambient Gradient", ambientGradient_, false);
+    uAttribute("Priority", priority_, 0);
+    uMixedAccessor("Zone Texture", GetZoneTextureAttr, SetZoneTextureAttr, ResourceRef(Texture::GetTypeStatic()));
+    uAttribute("Light Mask", lightMask_, DEFAULT_LIGHTMASK);
+    uAttribute("Shadow Mask", shadowMask_, DEFAULT_SHADOWMASK);
+    uAccessor("Zone Mask", GetZoneMask, SetZoneMask, DEFAULT_ZONEMASK);
 }
 
 Zone::Zone() :
