@@ -23,12 +23,12 @@ cbuffer CameraVS
     float4 ClipPlane;
 }
 
-//cbuffer ZoneVS
-//{
-//    float3 AmbientStartColor;
-//    float3 AmbientEndColor;
-//    float4x3 Zone;
-//}
+cbuffer ZoneVS
+{
+    float3 AmbientStartColor;
+    float3 AmbientEndColor;
+    float4x3 Zone;
+}
 
 #ifndef CUSTOM_MATERIAL_CBUFFER
 cbuffer MaterialVS

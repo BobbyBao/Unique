@@ -76,11 +76,9 @@ namespace Unique
 	{
 		return index < outputs_.size() ? outputs_[index].second : FACE_POSITIVE_X;
 	}
-
 	
 	void RenderPass::Update()
 	{
-
 	}
 	
 	void RenderPass::Render(View* view)
@@ -112,7 +110,7 @@ namespace Unique
 		auto it = batchQueues.find(passIndex_);
 		if (it != batchQueues.end())
 		{
-			it->second.Draw(view, view->camera_);
+			it->second.Draw(view);
 		}
 	}
 }

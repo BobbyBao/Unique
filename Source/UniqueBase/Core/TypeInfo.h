@@ -29,28 +29,28 @@ namespace Unique
 		void Visit(Visitor& serializer, void* obj) const;
 		/*
 		template<class C, class T>
-		void RegisterAttribute(const char* name, T C::* m, AttributeFlag flag = AttributeFlag::Default)
+		void RegisterAttribute(const char* name, T C::* m, AttributeFlag flag = AF_DEFAULT)
 		{
 			RegisterAttribute(
 				new Unique::TAttribute<T>(name, OffsetOf(m), flag));
 		}*/
 
 		template<class T>
-		void RegisterAttribute(const char* name, size_t offset, AttributeFlag flag = AttributeFlag::Default)
+		void RegisterAttribute(const char* name, size_t offset, AttributeFlag flag = AF_DEFAULT)
 		{
 			RegisterAttribute(
 				new Unique::TAttribute<T>(name, offset, flag));
 		}
 		
 		template<typename GET, typename SET>
-		void RegisterAccessor(const char* name, GET getter, SET setter, AttributeFlag flag = AttributeFlag::Default)
+		void RegisterAccessor(const char* name, GET getter, SET setter, AttributeFlag flag = AF_DEFAULT)
 		{
 			RegisterAttribute(
 				new Unique::AttributeAccessorImpl<function_traits<GET>::ClassType, function_traits<GET>::RawType, function_traits<GET>>(name, getter, setter, flag));
 		}
 
 		template<typename GET, typename SET>
-		void RegisterMixedAccessor(const char* name, GET getter, SET setter, AttributeFlag flag = AttributeFlag::Default)
+		void RegisterMixedAccessor(const char* name, GET getter, SET setter, AttributeFlag flag = AF_DEFAULT)
 		{
 			RegisterAttribute(
 				new Unique::AttributeAccessorImpl<mixed_function_traits<GET>::ClassType, mixed_function_traits<GET>::RawType, mixed_function_traits<GET>>(name, getter, setter, flag));

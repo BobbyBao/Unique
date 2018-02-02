@@ -576,4 +576,18 @@ namespace Unique
 
 		}
 	}
+
+	UNIQUE_C_API void nk_property_vector3(nk_context* ctx, const char* name, Vector3* vec)
+	{
+		nk_property_float(ctx, "x", FLT_MIN, &vec->x_, FLT_MAX, 0.1f, 0.05f);
+		nk_property_float(ctx, "y", FLT_MIN, &vec->y_, FLT_MAX, 0.1f, 0.05f);
+		nk_property_float(ctx, "z", FLT_MIN, &vec->z_, FLT_MAX, 0.1f, 0.05f);
+	}
+	
+	UNIQUE_C_API void nk_property_object(nk_context* ctx, const char* name, Object* obj)
+	{
+		//nk_property_float(ctx, "x", FLT_MIN, &vec->x_, FLT_MAX, 0.1f, 0.05f);
+		//nk_property_float(ctx, "y", FLT_MIN, &vec->y_, FLT_MAX, 0.1f, 0.05f);
+		//nk_property_float(ctx, "z", FLT_MIN, &vec->z_, FLT_MAX, 0.1f, 0.05f);
+	}
 }

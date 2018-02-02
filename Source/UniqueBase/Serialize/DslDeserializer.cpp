@@ -63,7 +63,7 @@ namespace Unique
 			return false;
 		}
 
-		bool isCollection = (attributeFlag_ & AttributeFlag::Vector) || (attributeFlag_ & AttributeFlag::Map);
+		bool isCollection = (attributeFlag_ & AF_VECTOR) || (attributeFlag_ & AF_MAP);
 		if (isCollection)
 		{
 			childIterator_ = currentNode_->GetIterator(key);
@@ -80,7 +80,7 @@ namespace Unique
 
 	void DslDeserializer::EndAttribute()
 	{
-		bool isCollection = (attributeFlag_ & AttributeFlag::Vector) || (attributeFlag_ & AttributeFlag::Map);
+		bool isCollection = (attributeFlag_ & AF_VECTOR) || (attributeFlag_ & AF_MAP);
 
 		if (isCollection)
 		{

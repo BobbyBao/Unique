@@ -91,7 +91,7 @@ namespace Unique
 		void VisitSet(T& data, int metaFlag = 0);
 
 		template<class T>
-		void VisitAttribute(const char* name, T& data, AttributeFlag metaFlag = AttributeFlag::Default)\
+		void VisitAttribute(const char* name, T& data, AttributeFlag metaFlag = AF_DEFAULT)\
 		{
 			AttributeFlag metaFlagSave = attributeFlag_;
 
@@ -99,12 +99,12 @@ namespace Unique
 
 			if (TypeTraits<T>::IsArray())
 			{
-				attributeFlag_ |= AttributeFlag::Vector;
+				attributeFlag_ |= AF_VECTOR;
 			}
 
 			if (TypeTraits<T>::IsMap())
 			{
-				attributeFlag_ |= AttributeFlag::Map;
+				attributeFlag_ |= AF_MAP;
 			}
 
 			if (StartAttribute(name))

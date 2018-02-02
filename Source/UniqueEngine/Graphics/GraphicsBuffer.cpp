@@ -231,6 +231,7 @@ namespace Unique
 
 	void* GraphicsBuffer::Map(MapFlags mapFlags)
 	{
+		assert(Graphics::IsRenderThread());
 		auto& graphics = GetSubsystem<Graphics>();
 		void* bufferData = graphics.Map(this, mapFlags);
 		mapFlags_ = mapFlags;
@@ -239,6 +240,7 @@ namespace Unique
 
 	void GraphicsBuffer::UnMap()
 	{
+		assert(Graphics::IsRenderThread());
 		auto& graphics = GetSubsystem<Graphics>();
 		graphics.Unmap(this, mapFlags_);
 	}

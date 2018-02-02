@@ -42,9 +42,9 @@ namespace Unique
 		/// Calculate state sorting key, which consists of base pass flag, light, pass and geometry.
 		void CalculateSortKey();
 		/// Prepare for rendering.
-		void Prepare(View* view, Camera* camera, bool setModelTransform) const;
+		void Prepare(View* view, bool setModelTransform) const;
 		/// Prepare and draw.
-		void Draw(View* view, Camera* camera) const;
+		void Draw(View* view) const;
 		/// Draw.
 		void Draw() const;
 
@@ -87,7 +87,7 @@ namespace Unique
 		void* instancingData_;
 
 		PipelineState*  pipelineState_;
-
+		Zone* zone_;
 	};
 
 
@@ -153,7 +153,7 @@ namespace Unique
 		/// Pre-set the instance data. Buffer must be big enough to hold all data.
 		void SetInstancingData(void* lockedData, unsigned stride, unsigned& freeIndex);
 		/// Prepare and draw.
-		void Draw(View* view, Camera* camera) const;
+		void Draw(View* view) const;
 
 		/// Instance data.
 		PODVector<InstanceData> instances_;
@@ -181,7 +181,7 @@ namespace Unique
 		}
 
 		/// Zone.
-		//Zone* zone_;
+		Zone* zone_;
 		/// Light properties.
 		LightBatchQueue* lightQueue_ = nullptr;
 		/// Pipeline State.
@@ -196,14 +196,14 @@ namespace Unique
 		/// Test for equality with another batch group key.
 		bool operator ==(const BatchGroupKey& rhs) const
 		{
-			return /*zone_ == rhs.zone_ &&*/ lightQueue_ == rhs.lightQueue_ && pipelineState_ == rhs.pipelineState_ && material_ == rhs.material_ &&
+			return zone_ == rhs.zone_ && lightQueue_ == rhs.lightQueue_ && pipelineState_ == rhs.pipelineState_ && material_ == rhs.material_ &&
 				geometry_ == rhs.geometry_ && renderOrder_ == rhs.renderOrder_;
 		}
 
 		/// Test for inequality with another batch group key.
 		bool operator !=(const BatchGroupKey& rhs) const
 		{
-			return /*zone_ != rhs.zone_ ||*/ lightQueue_ != rhs.lightQueue_ || pipelineState_ != rhs.pipelineState_ || material_ != rhs.material_ ||
+			return zone_ != rhs.zone_ || lightQueue_ != rhs.lightQueue_ || pipelineState_ != rhs.pipelineState_ || material_ != rhs.material_ ||
 				geometry_ != rhs.geometry_ || renderOrder_ != rhs.renderOrder_;
 		}
 
@@ -244,7 +244,7 @@ namespace Unique
 		/// Pre-set instance data of all groups. The vertex buffer must be big enough to hold all data.
 		void SetInstancingData(void* lockedData, unsigned stride, unsigned& freeIndex);
 		/// Draw.
-		void Draw(View* view, Camera* camera) const;
+		void Draw(View* view) const;
 		/// Return the combined amount of instances.
 		size_t GetNumInstances(View* view);
 

@@ -207,7 +207,7 @@ namespace Unique
 			(((unsigned long long)materialID) << 16) | geometryID;
 	}
 
-	void Batch::Prepare(View* view, Camera* camera, bool setModelTransform) const
+	void Batch::Prepare(View* view, bool setModelTransform) const
 	{
 		auto& graphics = GetSubsystem<Graphics>();
 		auto& renderer = GetSubsystem<Renderer>();
@@ -215,55 +215,37 @@ namespace Unique
 	//	Node* cameraNode = camera ? camera->GetNode() : 0;
 		//Light* light = lightQueue_ ? lightQueue_->light_ : 0;
 		//Texture* shadowMap = lightQueue_ ? lightQueue_->shadowMap_ : 0;
-		
-		// Set global (per-frame) shader parameters
-		//if (graphics->NeedParameterUpdate(SP_FRAME, (void*)0))
-		//	view->SetGlobalShaderParameters();
-
-		// Set camera & viewport shader parameters
-// 		unsigned cameraHash = (unsigned)(size_t)camera;
-// 		IntRect viewport = view->GetViewRect();
-// 		IntVector2 viewSize = IntVector2(viewport.Width(), viewport.Height());
-// 		unsigned viewportHash = (unsigned)(viewSize.x_ | (viewSize.y_ << 16));
-
-		if (geometryType_ == GEOM_SKINNED)
-		{
-			view->SetSkinedTransform(transformOffset_, numWorldTransforms_);
-		}
-		else
-		{	
-			view->SetWorldTransform(transformOffset_);
-		}
-		
-#if false
-		if (graphics->NeedParameterUpdate(SP_CAMERA, reinterpret_cast<const void*>(cameraHash + viewportHash)))
-		{
-			view->SetCameraShaderParameters(camera);
-			// During renderpath commands the G-Buffer or viewport texture is assumed to always be viewport-sized
-			view->SetGBufferShaderParameters(viewSize, IntRect(0, 0, viewSize.x_, viewSize.y_));
-		}
-
+							
 		// Set model or skinning transforms
-		if (setModelTransform && graphics->NeedParameterUpdate(SP_OBJECT, worldTransform_))
+		if (setModelTransform && view->NeedParameterUpdate(SP_OBJECT, (void*)transformOffset_))
 		{
 			if (geometryType_ == GEOM_SKINNED)
 			{
-				graphics->SetShaderParameter(VSP_SKINMATRICES, reinterpret_cast<const float*>(worldTransform_),
-					12 * numWorldTransforms_);
+				view->SetSkinedTransform(transformOffset_, numWorldTransforms_);
 			}
 			else
-				graphics->SetShaderParameter(VSP_MODEL, *worldTransform_);
+			{	
+				view->SetWorldTransform(transformOffset_);
+			}
 
 			// Set the orientation for billboards, either from the object itself or from the camera
-			if (geometryType_ == GEOM_BILLBOARD)
-			{
-				if (numWorldTransforms_ > 1)
-					graphics->SetShaderParameter(VSP_BILLBOARDROT, worldTransform_[1].RotationMatrix());
-				else
-					graphics->SetShaderParameter(VSP_BILLBOARDROT, cameraNode->GetWorldRotation().RotationMatrix());
-			}
+			//if (geometryType_ == GEOM_BILLBOARD)
+			//{
+			//	if (numWorldTransforms_ > 1)
+			//		view->SetShaderParameter(VSP_BILLBOARDROT, worldTransform_[1].RotationMatrix());
+			//	else
+			//		view->SetShaderParameter(VSP_BILLBOARDROT, cameraNode->GetWorldRotation().RotationMatrix());
+			//}
 		}
 
+			
+		if (zone_ && view->NeedParameterUpdate(SP_ZONE, zone_))
+		{
+			view->SetZoneShaderParameters(zone_);
+		}
+		
+#if false
+		
 		// Set zone-related shader parameters
 		BlendMode blend = graphics->GetBlendMode();
 		// If the pass is additive, override fog color to black so that shaders do not need a separate additive path
@@ -589,13 +571,13 @@ namespace Unique
 #endif
 	}
 
-	void Batch::Draw(View* view, Camera* camera) const
+	void Batch::Draw(View* view) const
 	{		
 		if (!geometry_->IsEmpty())
 		{
 			auto& graphics = GetSubsystem<Graphics>();
 
-			Prepare(view, camera, true);
+			Prepare(view, true);
 
 			if (material_)
 			{
@@ -674,7 +656,7 @@ namespace Unique
 		freeIndex += (uint)instances_.size();
 	}
 
-	void BatchGroup::Draw(View* view, Camera* camera) const
+	void BatchGroup::Draw(View* view) const
 	{
 		auto& graphics = GetSubsystem<Graphics>();
 		auto& renderer = GetSubsystem<Renderer>();
@@ -690,18 +672,21 @@ namespace Unique
 			VertexBuffer* instanceBuffer = renderer.GetInstancingBuffer();
 			if (!instanceBuffer || geometryType_ != GEOM_INSTANCED || startIndex_ == M_MAX_UNSIGNED)
 			{
-				Batch::Prepare(view, camera, false);
+				Batch::Prepare(view, false);
 				
 				for (unsigned i = 0; i < instances_.size(); ++i)
 				{
-// 					if (graphics->NeedParameterUpdate(SP_OBJECT, instances_[i].worldTransform_))
-// 						graphics->SetShaderParameter(VSP_MODEL, *instances_[i].worldTransform_);
+					//if (view->NeedParameterUpdate(SP_OBJECT, instances_[i].worldTransform_))
+					{
+						view->SetWorldTransform(transformOffset_);
+					}
+
 					graphics.Draw(geometry_, pipelineState_);
 				}
 			}
 			else
 			{
-				//Batch::Prepare(view, camera, false);
+				Batch::Prepare(view, false);
 
 				// Get the geometry vertex buffers, then add the instancing stream buffer
 				// Hack: use a const_cast to avoid dynamic allocation of new temp vectors
@@ -804,21 +789,21 @@ namespace Unique
 		}
 	}
 
-	void BatchQueue::Draw(View* view, Camera* camera) const
+	void BatchQueue::Draw(View* view) const
 	{
 		// Instanced
 		//for (auto i = sortedBatchGroups_.begin(); i != sortedBatchGroups_.end(); ++i)
 		for (int i = 0; i < sortedBatchGroups_.size(); ++i)
 		{
 			BatchGroup* group = sortedBatchGroups_[i];//*i;
-			group->Draw(view, camera);
+			group->Draw(view);
 		}
 		// Non-instanced
 		//for (auto i = sortedBatches_.begin(); i != sortedBatches_.end(); ++i)
 		for (int i = 0; i < sortedBatches_.size(); ++i)
 		{
 			Batch* batch = sortedBatches_[i];//*i;
-			batch->Draw(view, camera);
+			batch->Draw(view);
 		}
 		
 	}

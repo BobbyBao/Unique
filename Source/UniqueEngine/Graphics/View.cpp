@@ -479,14 +479,46 @@ namespace Unique
 	void View::Render()
 	{		
 		auto& passes = RenderContext(renderPasses_);
+
+		ClearParameterSources();
+
 		for(int i = 0; i < passes.size(); i++)
 		{
 			passes[i]->Render(this);
-		//	auto& scenePassInfo = passes[i];
-		//	scenePassInfo.batchQueue_->Draw(this, camera_);
 		}
+
 		passes.clear();
+
 		LOG_RENDER("Render : ", Graphics::GetRenderContext());
+	}
+
+	
+	bool View::NeedParameterUpdate(ShaderParameterGroup group, const void* source)
+	{
+		if ((unsigned)(size_t)shaderParameterSources_[group] == M_MAX_UNSIGNED || shaderParameterSources_[group] != source)
+		{
+			shaderParameterSources_[group] = source;
+			return true;
+		}
+		else
+			return false;
+	}
+
+	void View::ClearParameterSource(ShaderParameterGroup group)
+	{
+		shaderParameterSources_[group] = (const void*)(uint64)M_MAX_UNSIGNED;
+	}
+
+	void View::ClearParameterSources()
+	{
+		for (unsigned i = 0; i < MAX_SHADER_PARAMETER_GROUPS; ++i)
+			shaderParameterSources_[i] = (const void*)(uint64)M_MAX_UNSIGNED;
+	}
+
+	void View::ClearTransformSources()
+	{
+		shaderParameterSources_[SP_CAMERA] = (const void*)(uint64)M_MAX_UNSIGNED;
+		shaderParameterSources_[SP_OBJECT] = (const void*)(uint64)M_MAX_UNSIGNED;
 	}
 
 	void View::SetGlobalShaderParameters()
@@ -554,7 +586,6 @@ namespace Unique
 			else
 				depthMode.w_ = 1.0f / camera->GetFarClip();
 
-
 			Vector3 nearVector, farVector;
 			camera->GetFrustumSize(nearVector, farVector);
 
@@ -579,13 +610,11 @@ namespace Unique
 			cameraParam->viewProj_ = projection * camera->GetView();
 
 			cameraVS_->Unlock();
-
 		}
 
 		{
 			CameraPS* cameraParam = (CameraPS*)cameraPS_->Lock();
 			cameraParam->cameraPosPS_ = cameraEffectiveTransform.Translation();
-
 			cameraParam->nearClipPS_ = nearClip;
 			cameraParam->farClipPS_ = farClip;
 
@@ -607,6 +636,43 @@ namespace Unique
 			data->matDiffColor = float4(1,1,1,1);
 			materialPS_->Unlock();
 		}
+	}
+
+	void View::SetZoneShaderParameters(Zone* zone)
+	{
+		const BoundingBox& box = zone->GetBoundingBox();
+		Vector3 boxSize = box.Size();
+		Matrix3x4 adjust(Matrix3x4::IDENTITY);
+		adjust.SetScale(Vector3(1.0f / boxSize.x_, 1.0f / boxSize.y_, 1.0f / boxSize.z_));
+		adjust.SetTranslation(Vector3(0.5f, 0.5f, 0.5f));
+		Matrix3x4 zoneTransform = adjust * zone->GetInverseWorldTransform();
+		//	graphics->SetShaderParameter(VSP_ZONE, zoneTransform);
+
+		ZonePS* zonePS = (ZonePS*)zonePS_->Map();
+		zonePS->ambientColor = zone->GetAmbientColor();	
+		zonePS->fogColor = /*overrideFogColorToBlack ? Color::BLACK :*/ zone->GetFogColor();
+		zonePS->zoneMin = zone->GetBoundingBox().min_;
+		zonePS->zoneMax = zone->GetBoundingBox().max_;
+	
+		float farClip = camera_->GetFarClip();
+		float fogStart = Min(zone->GetFogStart(), farClip);
+		float fogEnd = Min(zone->GetFogEnd(), farClip);
+		if (fogStart >= fogEnd * (1.0f - M_LARGE_EPSILON))
+			fogStart = fogEnd * (1.0f - M_LARGE_EPSILON);
+		float fogRange = Max(fogEnd - fogStart, M_EPSILON);
+		Vector4 fogParams(fogEnd / farClip, farClip / fogRange, 0.0f, 0.0f);
+
+		Node* zoneNode = zone->GetNode();
+		if (zone->GetHeightFog() && zoneNode)
+		{
+			Vector3 worldFogHeightVec = zoneNode->GetWorldTransform() * Vector3(0.0f, zone->GetFogHeight(), 0.0f);
+			fogParams.z_ = worldFogHeightVec.y_;
+			fogParams.w_ = zone->GetFogHeightScale() / Max(zoneNode->GetWorldScale().y_, M_EPSILON);
+		}
+
+		zonePS->fogParams = fogParams;
+		zonePS_->UnMap();
+		//	graphics->SetShaderParameter(PSP_FOGPARAMS, fogParams);
 	}
 
 	void View::GetDrawables()
@@ -644,9 +710,9 @@ namespace Unique
 				}
 			}
 		}
-		/*
+		
 		if (farClipZone_ == renderer_.GetDefaultZone())
-			farClipZone_ = cameraZone_;*/
+			farClipZone_ = cameraZone_;
 		
 		// Check drawable occlusion, find zones for moved drawables and collect geometries & lights in worker threads
 		if(tempDrawables.size() > 0)
@@ -795,6 +861,7 @@ namespace Unique
 
 					Batch destBatch(srcBatch);
 					destBatch.pass_ = info.passIndex_;
+					destBatch.zone_ = GetZone(drawable);
 					//destBatch.lightMask_ = (unsigned char)GetLightMask(drawable);
 					//destBatch.lightQueue_ = 0;
 

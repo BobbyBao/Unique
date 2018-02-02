@@ -43,8 +43,8 @@ namespace Unique
 		template<class VisitFunction>
 		inline static void Visit(value_type& data, VisitFunction& visitor)
 		{
-			visitor.VisitAttribute("Key", data.first, AttributeFlag::Default);
-			visitor.VisitAttribute("Value", data.second, AttributeFlag::Default);
+			visitor.VisitAttribute("Key", data.first, AF_DEFAULT);
+			visitor.VisitAttribute("Value", data.second, AF_DEFAULT);
 		}
 	};
 

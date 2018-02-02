@@ -79,7 +79,7 @@ namespace Unique
 		{
 			StringID tmp = GetType();
 
-			serializer.VisitAttribute("Type", tmp, AttributeFlag::FileWrite);
+			serializer.VisitAttribute("Type", tmp, AF_FILEWRITE);
 		}
 
 		VisitImpl(serializer, obj);

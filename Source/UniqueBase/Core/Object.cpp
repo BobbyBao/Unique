@@ -61,7 +61,7 @@ void Object::Visit(Visitor& visitor)
 	{
 		StringID tmp = GetType();
 
-		visitor.VisitAttribute("Type", tmp, AttributeFlag::FileWrite);
+		visitor.VisitAttribute("Type", tmp, AF_FILEWRITE);
 	}
 
 	VisitTypeInfo(visitor, typeInfo, this);

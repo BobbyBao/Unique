@@ -1,14 +1,14 @@
 #pragma once
 #include "../Core/EnumFlags.h"
 
-enum class AttributeFlag : int
+enum AttributeFlag : int
 {
-	Editable = 1,
-	FileRead = 2,
-	FileWrite = 4,
-	Default = 7,
-	Vector = 8,
-	Map = 16,
+	AF_EDITABLE = 1,
+	AF_FILEREAD = 2,
+	AF_FILEWRITE = 4,
+	AF_DEFAULT = 7,
+	AF_VECTOR = 8,
+	AF_MAP = 16,
 };
 
 uBitMask(AttributeFlag)

@@ -62,6 +62,7 @@ namespace Unique
 	Graphics::~Graphics()
 	{
 		GetContext()->ReleaseSDL();
+		delete &impl_;
 	}
 
 	bool Graphics::CreateWindow(const IntVector2& size, DeviceType deviceType)

@@ -323,6 +323,19 @@ namespace Unique
 		MAX_TEXTURE_UNITS = 16
 	};
 
+	/// Shader parameter groups for determining need to update. On APIs that support constant buffers, these correspond to different constant buffers.
+	enum ShaderParameterGroup
+	{
+		SP_FRAME = 0,
+		SP_CAMERA,
+		SP_ZONE,
+		SP_LIGHT,
+		SP_MATERIAL,
+		SP_OBJECT,
+		SP_CUSTOM,
+		MAX_SHADER_PARAMETER_GROUPS
+	};
+
 	/// Billboard camera facing modes.
 	enum FaceCameraMode
 	{

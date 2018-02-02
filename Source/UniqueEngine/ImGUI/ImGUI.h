@@ -38,4 +38,7 @@ namespace Unique
 		SPtr<PipelineState> pipeline_;
 		SPtr<Texture> font_texture;
 	};
+
+	UNIQUE_C_API void nk_property_vector3(nk_context* ctx, const char* name, Vector3* vec);
+	UNIQUE_C_API void nk_property_object(nk_context* ctx, const char* name, Object* obj);
 }

@@ -42,7 +42,7 @@ namespace UniqueEditor
             {
                 ImGUI.MenubarBegin();
                 ImGUI.LayoutRowStatic(20, 60, 2);
-                if(ImGUI.MenuBegin("Demo", nk_text_alignment.NK_TEXT_LEFT,  new nk_vec2(160, 100)))
+                if(ImGUI.MenuBegin("Demo", nk_text_alignment.NK_TEXT_LEFT,  new nk_vec2(160, 200)))
                 {
                     ImGUI.LayoutRowDynamic(25);
 

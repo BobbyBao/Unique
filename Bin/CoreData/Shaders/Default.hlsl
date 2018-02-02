@@ -106,10 +106,10 @@ void PS(
 
     #ifdef AMBIENT
         finalColor += AmbientColor.rgb * diffColor.rgb;
-        finalColor += MatEmissiveColor;
+        //finalColor += MatEmissiveColor;
         oColor = float4(GetFog(finalColor, fogFactor), diffColor.a);
     #else
-        oColor = float4(finalColor, diffColor.a);//float4(GetLitFog(finalColor, fogFactor), diffColor.a);
+        oColor = float4(GetLitFog(finalColor, fogFactor), diffColor.a);
     #endif
 
 

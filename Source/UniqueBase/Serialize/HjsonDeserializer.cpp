@@ -122,7 +122,7 @@ namespace Unique
 
 	bool HjsonDeserializer::StartAttribute(const String& key)
 	{
-		if (dsl_ && ((attributeFlag_ & AttributeFlag::Vector) || (attributeFlag_ & AttributeFlag::Map)))
+		if (dsl_ && ((attributeFlag_ & AF_VECTOR) || (attributeFlag_ & AF_MAP)))
 		{
 			Vector<std::pair<std::string, Hjson::Value>> elements;
 			for (auto& it = currentNode_.begin(); it != currentNode_.end(); ++it)

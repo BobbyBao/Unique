@@ -73,9 +73,9 @@ namespace Unique
 
 	struct ZonePS
 	{
-		Vector4 ambientColor;
+		Color ambientColor;
 		Vector4 fogParams;
-		Vector3 fogColor;
+		Color fogColor;
 		Vector3 zoneMin;
 		Vector3 zoneMax;
 	};
@@ -226,12 +226,24 @@ namespace Unique
 
 		/// Return light batch queues.
 //		const Vector<LightBatchQueue>& GetLightQueues() const { return lightQueues_; }
-
+		  
+		/// Check whether a shader parameter group needs update. Does not actually check whether parameters exist in the shaders.
+		bool NeedParameterUpdate(ShaderParameterGroup group, const void* source);
+		/// Clear remembered shader parameter source group.
+		void ClearParameterSource(ShaderParameterGroup group);
+		/// Clear remembered shader parameter sources.
+		void ClearParameterSources();
+		/// Clear remembered transform shader parameter sources.
+		void ClearTransformSources();
 		/// Set global (per-frame) shader parameters. Called by Batch and internally by View.
 		void SetGlobalShaderParameters();
 		/// Set camera-specific shader parameters. Called by Batch and internally by View.
 		void SetCameraShaderParameters(Camera* camera);
-	
+		void SetZoneShaderParameters(Zone* zone);
+		size_t GetMatrics(const Matrix3x4* transform, uint num);
+		void SetWorldTransform(size_t offset);
+		void SetSkinedTransform(size_t offset, uint numTransforms);
+
 	protected:
 		/// Query the octree for drawable objects.
 		void GetDrawables();
@@ -241,11 +253,6 @@ namespace Unique
 		void GetBaseBatches();
 
 		void AddBatchToQueue(BatchQueue& queue, Batch& batch, uint passIndex, bool allowInstancing = true, bool allowShadows = true);
-		
-		size_t GetMatrics(const Matrix3x4* transform, uint num);
-
-		void SetWorldTransform(size_t offset);
-		void SetSkinedTransform(size_t offset, uint numTransforms);
 
 		/// Prepare instancing buffer by filling it with all instance transforms.
 		void PrepareInstancingBuffer();
@@ -277,7 +284,6 @@ namespace Unique
 		{
 			return drawable->GetShadowMask() & GetZone(drawable)->GetShadowMask();
 		}
-		
 		
 		/// Graphics subsystem.
 		Graphics& graphics_;
@@ -353,7 +359,6 @@ namespace Unique
 		PODVector<Drawable*> threadedGeometries_;
 		/// Occluder objects.
 		PODVector<Drawable*> occluders_;
-
 		/// Number of active occluders.
 		unsigned activeOccluders_;
 
@@ -365,13 +370,15 @@ namespace Unique
 		/// Batch queues by pass index.
 		HashMap<byte, BatchQueue> batchQueues_[2];
 		
+		/// Remembered shader parameter sources.
+		const void* shaderParameterSources_[MAX_SHADER_PARAMETER_GROUPS];
+
 		SPtr<UniformBuffer> frameUniform_;
 		SPtr<UniformBuffer> cameraVS_;
 		SPtr<UniformBuffer> objectVS_;
 		SPtr<UniformBuffer> skinnedVS_;
 		SPtr<UniformBuffer> billboardVS_;
 		SPtr<UniformBuffer> materialVS_;
-		
 		SPtr<UniformBuffer> cameraPS_; 
 		SPtr<UniformBuffer> zonePS_;
 		SPtr<UniformBuffer> lightPS_;
@@ -380,8 +387,6 @@ namespace Unique
 		Vector<Matrix3x4>	batchMatrics_[2];
 				
 		friend class ScenePass;
-		friend struct Batch;
-		friend struct BatchQueue;
 		friend class ZoneOctreeQuery;
 
 		friend void CheckVisibilityWork(const WorkItem* item, unsigned threadIndex);
