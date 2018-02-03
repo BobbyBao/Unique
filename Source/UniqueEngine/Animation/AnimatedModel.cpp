@@ -347,7 +347,6 @@ void AnimatedModel::SetModel(Model* model, bool createBones)
         for (unsigned i = 0; i < morphs.size(); ++i)
         {
             ModelMorph newMorph;
-            newMorph.name_ = morphs[i].name_;
             newMorph.nameHash_ = morphs[i].nameHash_;
             newMorph.weight_ = 0.0f;
             newMorph.buffers_ = morphs[i].buffers_;
@@ -552,18 +551,6 @@ void AnimatedModel::SetMorphWeight(unsigned index, float weight)
     }
 }
 
-void AnimatedModel::SetMorphWeight(const String& name, float weight)
-{
-    for (unsigned i = 0; i < morphs_.size(); ++i)
-    {
-        if (morphs_[i].name_ == name)
-        {
-            SetMorphWeight(i, weight);
-            return;
-        }
-    }
-}
-
 void AnimatedModel::SetMorphWeight(StringID nameHash, float weight)
 {
     for (unsigned i = 0; i < morphs_.size(); ++i)
@@ -601,17 +588,6 @@ void AnimatedModel::ResetMorphWeights()
 float AnimatedModel::GetMorphWeight(unsigned index) const
 {
     return index < morphs_.size() ? morphs_[index].weight_ : 0.0f;
-}
-
-float AnimatedModel::GetMorphWeight(const String& name) const
-{
-    for (Vector<ModelMorph>::const_iterator i = morphs_.begin(); i != morphs_.end(); ++i)
-    {
-        if (i->name_ == name)
-            return i->weight_;
-    }
-
-    return 0.0f;
 }
 
 float AnimatedModel::GetMorphWeight(StringID nameHash) const
@@ -805,7 +781,7 @@ void AnimatedModel::SetAnimationStatesAttr(const Vector<bool>& value)
             newState->SetLooped(value[index++].GetBool());
             newState->SetWeight(value[index++].GetFloat());
             newState->SetTime(value[index++].GetFloat());
-            newState->SetLayer((unsigned char)value[index++].GetInt());
+            newState->SetLayer((byte)value[index++].GetInt());
         }
         else
         {
@@ -822,7 +798,7 @@ void AnimatedModel::SetAnimationStatesAttr(const Vector<bool>& value)
     }
 }*/
 
-void AnimatedModel::SetMorphsAttr(const PODVector<unsigned char>& value)
+void AnimatedModel::SetMorphsAttr(const PODVector<byte>& value)
 {
     for (unsigned index = 0; index < value.size(); ++index)
         SetMorphWeight(index, (float)value[index] / 255.0f);
@@ -1146,7 +1122,7 @@ void AnimatedModel::CopyMorphVertices(void* destVertexData, void* srcVertexData,
     unsigned tangentOffset = srcBuffer->GetElementOffset(SEM_TANGENT);
     unsigned vertexSize = srcBuffer->GetVertexSize();
     float* dest = (float*)destVertexData;
-    unsigned char* src = (unsigned char*)srcVertexData;
+    byte* src = (byte*)srcVertexData;
 
     while (vertexCount--)
     {
@@ -1352,8 +1328,8 @@ void AnimatedModel::ApplyMorph(VertexBuffer* buffer, void* destVertexData, unsig
     unsigned tangentOffset = buffer->GetElementOffset(SEM_TANGENT);
     unsigned vertexSize = buffer->GetVertexSize();
 
-    unsigned char* srcData = morph.morphData_;
-    unsigned char* destData = (unsigned char*)destVertexData;
+    byte* srcData = (byte*)morph.morphData_.data();
+    byte* destData = (byte*)destVertexData;
 
     while (vertexCount--)
     {

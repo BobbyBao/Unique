@@ -99,7 +99,7 @@ namespace Unique
 	{
 	}
 
-	ScenePass::ScenePass(unsigned clearFlags) : RenderPass(CMD_SCENEPASS)
+	ScenePass::ScenePass(unsigned clearFlags) : RenderPass(PASS_SCENE)
 	{
 		clearFlags_ = clearFlags;
 	}

@@ -65,7 +65,7 @@ namespace Unique
 		delete &impl_;
 	}
 
-	bool Graphics::CreateWindow(const IntVector2& size, DeviceType deviceType)
+	bool Graphics::CreateMainWindow(const IntVector2& size, DeviceType deviceType)
 	{
 		resolution_ = size;
 		deviceType_ = deviceType;

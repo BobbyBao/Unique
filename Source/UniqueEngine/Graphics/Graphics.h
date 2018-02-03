@@ -28,7 +28,7 @@ namespace Unique
 		Graphics();
 		~Graphics();
 		
-		bool CreateWindow(const IntVector2& size, DeviceType deviceType = DeviceType::D3D11);		
+		bool CreateMainWindow(const IntVector2& size, DeviceType deviceType = DeviceType::D3D11);		
 		bool Initialize();
 		void Resize(const IntVector2& size);
 		void SetTitle(const String& title);

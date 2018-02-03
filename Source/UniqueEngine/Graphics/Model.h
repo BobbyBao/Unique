@@ -44,17 +44,13 @@ struct VertexBufferMorph
     unsigned elementMask_;
     /// Number of vertices.
     unsigned vertexCount_;
-    /// Morphed vertices data size as bytes.
-    unsigned dataSize_;
     /// Morphed vertices. Stored packed as <index, data> pairs.
-    SharedArrayPtr<unsigned char> morphData_;
+    Vector<unsigned char> morphData_;
 };
 
 /// Definition of a model's vertex morph.
 struct ModelMorph
 {
-    /// Morph name.
-    String name_;
     /// Morph name hash.
     StringID nameHash_;
     /// Current morph weight.
@@ -63,7 +59,7 @@ struct ModelMorph
     HashMap<unsigned, VertexBufferMorph> buffers_;
 };
 
-/// Description of a geometry for asynchronous loading.
+/// Description of a geometry for loading.
 struct GeometryDesc
 {
     /// Primitive type.
@@ -76,6 +72,13 @@ struct GeometryDesc
     unsigned indexStart_;
     /// Index count.
     unsigned indexCount_;
+    /// LOD distance.
+    float lodDistance_;
+
+	bool operator ==(const GeometryDesc& rhs) const
+	{
+		return std::memcmp(this, &rhs, sizeof(*this)) == 0;
+	}
 };
 
 /// 3D model resource.
@@ -89,7 +92,7 @@ public:
     virtual ~Model();
     /// Load resource from stream. May be called from a worker thread. Return true if successful.
     virtual bool Load(IStream& source);
-
+	virtual bool Prepare();
     /// Set local-space bounding box.
     void SetBoundingBox(const BoundingBox& box);
     /// Set vertex buffers and their morph ranges.
@@ -178,6 +181,8 @@ private:
     Vector<SPtr<IndexBuffer> > indexBuffers_;
     /// Geometries.
     Vector<Vector<SPtr<Geometry> > > geometries_;
+    /// Geometry definitions for loading.
+    Vector<PODVector<GeometryDesc> > loadGeometries_;
     /// Geometry bone mappings.
     Vector<PODVector<unsigned> > geometryBoneMappings_;
     /// Geometry centers.
@@ -188,8 +193,6 @@ private:
     PODVector<unsigned> morphRangeStarts_;
     /// Vertex buffer morph range vertex count.
     PODVector<unsigned> morphRangeCounts_;
-    /// Geometry definitions for asynchronous loading.
-    Vector<PODVector<GeometryDesc> > loadGeometries_;
 
 	friend class ModelImporter;
 };

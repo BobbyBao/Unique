@@ -5,6 +5,7 @@ using UniqueEngine;
 
 namespace UniqueEditor.Samples
 {
+    [SampleDesc(sortOrder = 2)]
     public class GUISample : Sample
     {
         static int EASY = 0;
@@ -16,7 +17,9 @@ namespace UniqueEditor.Samples
 
         public override void OnGUI()
         {
-            if (ImGUI.Begin("GUISample", new nk_rect(50, 50, 230, 250),
+            base.OnGUI();
+
+            if (ImGUI.Begin("GUI Demo", new nk_rect(50, 50, 230, 250),
             nkPanelFlags.BORDER | nkPanelFlags.MOVABLE | nkPanelFlags.SCALABLE |
             nkPanelFlags.MINIMIZABLE | nkPanelFlags.TITLE))
             {

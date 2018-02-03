@@ -5,6 +5,7 @@ using UniqueEngine;
 
 namespace UniqueEditor.Samples
 {
+    [SampleDesc(sortOrder = 10)]
     public class CharacterSample : Sample
     {
         public override void Enter()

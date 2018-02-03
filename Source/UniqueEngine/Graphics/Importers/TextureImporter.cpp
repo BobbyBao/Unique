@@ -32,10 +32,10 @@ namespace Unique
 	}
 
 
-	SPtr<Resource> TextureImporter::LoadDDS(const String& path)
+	SPtr<Resource> TextureImporter::LoadDDS(const String& filePath)
 	{
 		ResourceCache& cache = GetSubsystem<ResourceCache>();
-		SPtr<File> file = cache.GetFile(path);
+		SPtr<File> file = cache.GetFile(filePath);
 		if (!file)
 		{
 			return nullptr;

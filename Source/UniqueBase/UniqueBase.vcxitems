@@ -14,7 +14,11 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Container\mpscqueue.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Container\spscqueue.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Cpu.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Export.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\HashUtil.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)IO\MemoryStream.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Variant.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\DslDeserializer.h" />
@@ -171,5 +175,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-platform.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-reader.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-writer.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Container\spscqueue.inl" />
   </ItemGroup>
 </Project>

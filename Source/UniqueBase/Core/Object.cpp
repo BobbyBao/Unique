@@ -273,12 +273,12 @@ void Object::SendEvent(const StringID& eventType)
 }
 
 void Object::SendEvent(const StringID& eventType, const Event& eventData)
-{
+{/*
     if (!Thread::IsMainThread())
     {
         UNIQUE_LOGERROR("Sending events is only supported from the main thread");
         return;
-    }
+    }*/
 
     // Make a weak pointer to self to check for destruction during event handling
     WPtr<Object> self(this);

@@ -1,4 +1,6 @@
-﻿using UniqueEditor.Samples;
+﻿using System;
+using System.Collections.Generic;
+using UniqueEditor.Samples;
 using UniqueEngine;
 
 namespace UniqueEditor
@@ -20,7 +22,11 @@ namespace UniqueEditor
 
             Engine.instance.maxFps = 1000;
 
-            SetSample(new CubeSample());
+
+            if(Sample.all.Count > 0)
+            {
+                SetSample(Activator.CreateInstance(Sample.all[0].Item4)as Sample);
+            }
         }
         
         protected override void Shutdown()
@@ -45,18 +51,16 @@ namespace UniqueEditor
                 if(ImGUI.MenuBegin("Demo", nk_text_alignment.NK_TEXT_LEFT,  new nk_vec2(160, 200)))
                 {
                     ImGUI.LayoutRowDynamic(25);
-
-                    var types = System.Reflection.Assembly.GetExecutingAssembly().GetTypes();
-                    foreach(var t in types)
+                    
+                    foreach(var s in Sample.all)
                     {
-                        if(t.IsSubclassOf(typeof(Sample)))
+                        (string name, string d, int sort, Type t) = s;
+                        var currentType = current?.GetType();
+                        if (ImGUI.MenuItem( t == currentType ? nk_symbol_type.NK_SYMBOL_CIRCLE_SOLID : nk_symbol_type.NK_SYMBOL_NONE, name, nk_text_alignment.NK_TEXT_RIGHT))
                         {
-                            var currentType = current?.GetType();
-                            if (ImGUI.MenuItem( t == currentType ? nk_symbol_type.NK_SYMBOL_CIRCLE_SOLID : nk_symbol_type.NK_SYMBOL_NONE, t.Name, nk_text_alignment.NK_TEXT_RIGHT))
-                            {
-                                SetSample(System.Activator.CreateInstance(t) as Sample);
-                            }
+                            SetSample(System.Activator.CreateInstance(t) as Sample);
                         }
+                        
                     }           
                    
                     ImGUI.MenuEnd();
@@ -97,6 +101,7 @@ namespace UniqueEditor
                 ImGUI.Text(Graphics.updateWait.ToString(), nk_text_alignment.NK_TEXT_LEFT);
 
             }
+
             ImGUI.End();
 
             if (current)

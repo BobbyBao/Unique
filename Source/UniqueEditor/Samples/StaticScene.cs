@@ -5,6 +5,7 @@ using UniqueEngine;
 
 namespace UniqueEditor.Samples
 {
+    [SampleDesc(sortOrder = 3)]
     public class StaticScene : Sample
     {
         public override void Enter()

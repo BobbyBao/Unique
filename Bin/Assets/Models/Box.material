@@ -2,7 +2,7 @@
     "Type": "Material",
     "Shader": {
         "Type": "Shader",
-        "Name": "Shaders/Basic.shader"
+        "Name": "Shaders/Debug.shader"
     },
     "ShaderDefines": "",
     "Uniforms": [],

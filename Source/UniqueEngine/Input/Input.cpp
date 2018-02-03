@@ -381,7 +381,7 @@ void Input::Update()
         mouseMoved = true;
 
     ResetInputAccumulation();
-	
+	/*
 	auto& events = MainContext(events_);
 	if (!events.empty())
 	{
@@ -392,7 +392,20 @@ void Input::Update()
 		}
 
 		events.clear();
-	}
+	}*/
+
+		
+	const SDL_Event* ev;
+	do
+	{
+		ev = events_.pop();
+		if (NULL != ev)
+		{
+			HandleSDLEvent((void*)ev);
+			delete ev;
+		}
+			
+	} while (NULL != ev);
 
     if (suppressNextMouseMove_ && (mouseMove_ != IntVector2::ZERO || mouseMoved))
         UnsuppressMouseMove();
@@ -2537,27 +2550,16 @@ void Input::HandleScreenJoystickTouch(const TouchBegin& eventData)
 
 bool Input::ProcessEvents()
 {
-	auto& events = RenderContext(events_);
-	events.clear();
+	//auto& events = RenderContext(events_);
+	//events.clear();
 
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
 	{
 		switch (event.type)
 		{
-		case SDL_KEYDOWN:
-		case SDL_KEYUP:
-			events.push_back(event);
-			break;
-		case SDL_TEXTEDITING:
-			events.push_back(event);
-			break;
-		case SDL_TEXTINPUT:
-			events.push_back(event);
-			break;
-		case SDL_MOUSEBUTTONDOWN:
-			events.push_back(event);
-			break;
+		case SDL_QUIT:
+			return false;
 		case SDL_WINDOWEVENT:
 			switch (event.window.event)
 			{
@@ -2571,11 +2573,11 @@ bool Input::ProcessEvents()
 				break;
 			}
 			break;
-		case SDL_QUIT:
-			return false;
-			break;
 		default:
-			events.push_back(event);
+			//events.push_back(event);
+			SDL_Event*ev = new SDL_Event();
+			*ev = event;
+			events_.push(ev);
 			break;
 		}
 	}

@@ -332,7 +332,7 @@ namespace Unique
 			if (!command.enabled_)
 				continue;
 
-			if (command.type_ == CMD_SCENEPASS)
+			if (command.type_ == PASS_SCENE)
 			{
 				hasScenePasses_ = true;
 

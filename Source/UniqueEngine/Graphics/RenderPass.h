@@ -6,12 +6,11 @@ namespace Unique
 	/// Rendering path command types.
 	enum RenderPassType
 	{
-		CMD_SCENEPASS,
-		CMD_QUAD,
-		CMD_FORWARDLIGHTS,
-		CMD_LIGHTVOLUMES,
-		CMD_RENDERUI,
-		CMD_SENDEVENT
+		PASS_SCENE,
+		PASS_QUAD,
+		PASS_FORWARDLIGHTS,
+		PASS_LIGHTVOLUMES,
+		PASS_RENDERUI
 	};
 
 	/// Rendering path sorting modes.

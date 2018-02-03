@@ -12,5 +12,6 @@
 #include "Core/Context.h"
 #include "Core/Profiler.h"
 #include "Core/CoreEvents.h"
+#include "Core/HashUtil.h"
 #include "IO/FileSystem.h"
 #include "Resource/ResourceCache.h"

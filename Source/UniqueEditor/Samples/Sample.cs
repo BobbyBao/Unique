@@ -5,6 +5,13 @@ using UniqueEngine;
 
 namespace UniqueEditor.Samples
 {
+    public class SampleDescAttribute : System.Attribute
+    {
+        public string name;
+        public string desc;
+        public int sortOrder;
+    }
+
     public abstract class Sample : UniqueEngine.Object
     {
         protected Scene scene;
@@ -14,6 +21,31 @@ namespace UniqueEditor.Samples
         protected float yaw_;
         /// Camera pitch angle.
         protected float pitch_;
+
+        public static List<(string, string, int, Type)> all = new List<(string, string, int, Type)>();
+
+        static Sample()
+        {
+            var types = System.Reflection.Assembly.GetExecutingAssembly().GetTypes();
+            foreach (var t in types)
+            {
+                if (t.IsSubclassOf(typeof(Sample)))
+                {
+                    var attr = t.GetCustomAttributes(typeof(SampleDescAttribute), true);
+                    if (attr.IsNullOrEmpty())
+                    {
+                        all.Add((t.Name, "", 0, t));
+                    }
+                    else
+                    {
+                        var a = (SampleDescAttribute)attr[0];
+                        all.Add((string.IsNullOrEmpty(a.name) ? t.Name : a.name, a.desc, a.sortOrder, t));
+                    }
+                }
+            }
+
+            all.Sort((v1, v2) => v1.Item3 - v2.Item3);
+        }
 
         public virtual void Enter()
         {
@@ -29,6 +61,20 @@ namespace UniqueEditor.Samples
 
         public virtual void OnGUI()
         {
+            var graphics = GetSubsystem<Graphics>();
+
+            if (ImGUI.Begin(GetType().Name, new nk_rect(graphics.width - 200, 40, 200, 120), nkPanelFlags.MINIMIZABLE | nkPanelFlags.TITLE))
+            {
+                ImGUI.LayoutRowDynamic(20, 2);
+                ImGUI.Label("FPS:");
+                ImGUI.Text(Engine.instance.fps.ToString(), nk_text_alignment.NK_TEXT_LEFT);
+                ImGUI.Label("RenderWait:");
+                ImGUI.Text(Graphics.renderWait.ToString(), nk_text_alignment.NK_TEXT_LEFT);
+                ImGUI.Label("UpdateWait:");
+                ImGUI.Text(Graphics.updateWait.ToString(), nk_text_alignment.NK_TEXT_LEFT);
+            }
+
+            ImGUI.End();
         }
 
         public virtual void Exit()
@@ -38,6 +84,11 @@ namespace UniqueEditor.Samples
 
         protected void UpdateCamera(float timeStep)
         {
+            if(camera == null)
+            {
+                return;
+            }
+
             var input = GetSubsystem<Input>();
             Vector3 offset = Vector3.Zero;
 

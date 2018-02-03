@@ -25,6 +25,7 @@
 #include "Core/Object.h"
 #include "InputEvents.h"
 //#include "../UI/Cursor.h"
+#include "Container/spscqueue.h"
 
 typedef int SDL_JoystickID;
 
@@ -432,7 +433,8 @@ private:
     /// Flag indicating current pointer-lock status.
     bool emscriptenPointerLock_;
 #endif
-	Vector<SDL_Event> events_[2];
+	//Vector<SDL_Event> events_[2];
+	SpScUnboundedQueueT<SDL_Event> events_;
 };
 
 }

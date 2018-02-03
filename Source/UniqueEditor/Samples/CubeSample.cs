@@ -5,6 +5,7 @@ using UniqueEngine;
 
 namespace UniqueEditor.Samples
 {
+    [SampleDesc(sortOrder = 1)]
     public class CubeSample : Sample
     {
         public override void Enter()

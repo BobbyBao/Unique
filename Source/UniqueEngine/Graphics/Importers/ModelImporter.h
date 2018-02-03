@@ -11,8 +11,9 @@ namespace Unique
 		ModelImporter();
 		~ModelImporter();
 
-		virtual SPtr<Resource> Import(const String& path);
+		virtual SPtr<Resource> Import(const String& filePath);
 	private:
+		SPtr<Resource> LoadObjFile(IStream& source);
 
 	};
 

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace UniqueEngine
 {
-    public partial class Graphics : Object
+    public partial class Graphics : Subsystem<Graphics>
     {
         public int width => Graphics_GetWidth(native_);
 

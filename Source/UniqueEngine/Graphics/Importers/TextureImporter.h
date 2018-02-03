@@ -10,9 +10,9 @@ namespace Unique
 	public:
 		TextureImporter();
 
-		virtual SPtr<Resource> Import(const String& path);
+		virtual SPtr<Resource> Import(const String& filePath);
 	private:
-		SPtr<Resource> LoadDDS(const String& path);
+		SPtr<Resource> LoadDDS(const String& filePath);
 		TextureLoadInfo TexLoadInfo;
 	};
 

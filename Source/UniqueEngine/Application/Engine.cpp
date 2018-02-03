@@ -99,7 +99,7 @@ namespace Unique
 		cache.RegisterImporter(new ModelImporter());
 		cache.RegisterImporter(new AnimationImporter());
 
-		graphics.CreateWindow(resolution_, deviceType_);
+		graphics.CreateMainWindow(resolution_, deviceType_);
 
 		loadingDone_ = true;
 	}

@@ -56,6 +56,25 @@ unsigned LookupIndexBuffer(IndexBuffer* buffer, const Vector<SPtr<IndexBuffer> >
     return 0;
 }
 
+uClassTraits(
+	GeometryDesc,
+	"PrimitiveTopology", self.type_,
+	"VertexBufferRef", self.vbRef_,
+	"IndexBufferRef", self.ibRef_,
+	"IndexStart", self.indexStart_,
+	"IndexCount", self.indexCount_,
+	"LodDistance", self.lodDistance_
+)
+
+uClassTraits(
+	ModelMorph,
+	"PrimitiveTopology", self.type_,
+	"VertexBufferRef", self.vbRef_,
+	"IndexBufferRef", self.ibRef_,
+	"IndexStart", self.indexStart_,
+	"IndexCount", self.indexCount_,
+	"LodDistance", self.lodDistance_
+)
 
 uObject(Model)
 {
@@ -63,6 +82,7 @@ uObject(Model)
 	uAttribute("Bounding Box", boundingBox_);
 	uAttribute("VertexBuffers", vertexBuffers_);
 	uAttribute("IndexBuffers", indexBuffers_);
+	uAttribute("GeometryDesc", loadGeometries_);
 
 }
 
@@ -156,17 +176,7 @@ bool Model::Load(IStream& source)
         memoryUse += sizeof(IndexBuffer) + indexCount * indexSize;
         indexBuffers_.push_back(buffer);
     }
-
-// 	enum PrimitiveType
-// 	{
-// 		TRIANGLE_LIST = 0,
-// 		LINE_LIST,
-// 		POINT_LIST,
-// 		TRIANGLE_STRIP,
-// 		LINE_STRIP,
-// 		TRIANGLE_FAN
-// 	};
-
+	
 	PrimitiveTopology primitiveType[] = 
 	{
 		PrimitiveTopology::TRIANGLE_LIST,
@@ -179,7 +189,7 @@ bool Model::Load(IStream& source)
 
     // Read geometries
     unsigned numGeometries = source.Read<uint>();
-    geometries_.reserve(numGeometries);
+    //geometries_.reserve(numGeometries);
     geometryBoneMappings_.reserve(numGeometries);
     geometryCenters_.reserve(numGeometries);
     loadGeometries_.resize(numGeometries);
@@ -193,8 +203,6 @@ bool Model::Load(IStream& source)
         geometryBoneMappings_.push_back(boneMapping);
 
         unsigned numLodLevels = source.Read<uint>();
-        Vector<SPtr<Geometry> > geometryLodLevels;
-        geometryLodLevels.reserve(numLodLevels);
         loadGeometries_[i].resize(numLodLevels);
 
         for (unsigned j = 0; j < numLodLevels; ++j)
@@ -220,21 +228,16 @@ bool Model::Load(IStream& source)
                 return false;
             }
 
-            SPtr<Geometry> geometry(new Geometry());
-            geometry->SetLodDistance(distance);
-
             // Prepare geometry to be defined during EndLoad()
             loadGeometries_[i][j].type_ = type;
             loadGeometries_[i][j].vbRef_ = vbRef;
             loadGeometries_[i][j].ibRef_ = ibRef;
             loadGeometries_[i][j].indexStart_ = indexStart;
             loadGeometries_[i][j].indexCount_ = indexCount;
-
-            geometryLodLevels.push_back(geometry);
+			loadGeometries_[i][j].lodDistance_ = distance;
             memoryUse += sizeof(Geometry);
         }
 
-        geometries_.push_back(geometryLodLevels);
     }
 
     // Read morphs
@@ -244,8 +247,7 @@ bool Model::Load(IStream& source)
     {
         ModelMorph newMorph;
 
-        newMorph.name_ = source.ReadString();
-        newMorph.nameHash_ = newMorph.name_;
+        newMorph.nameHash_ = source.ReadString();
         newMorph.weight_ = 0.0f;
         unsigned numBuffers = source.Read<uint>();
 
@@ -266,33 +268,19 @@ bool Model::Load(IStream& source)
                 vertexSize += sizeof(Vector3);
             if (newBuffer.elementMask_ & MASK_TANGENT)
                 vertexSize += sizeof(Vector3);
-            newBuffer.dataSize_ = newBuffer.vertexCount_ * vertexSize;
-            newBuffer.morphData_ = new unsigned char[newBuffer.dataSize_];
 
-            source.Read(&newBuffer.morphData_[0], newBuffer.vertexCount_ * vertexSize);
+            uint dataSize_ = newBuffer.vertexCount_ * vertexSize;
+            newBuffer.morphData_.resize(dataSize_);
+
+            source.Read(&newBuffer.morphData_[0], dataSize_);
 
             newMorph.buffers_[bufferIndex] = newBuffer;
-            memoryUse += sizeof(VertexBufferMorph) + newBuffer.vertexCount_ * vertexSize;
+            memoryUse += sizeof(VertexBufferMorph) + dataSize_;
         }
 
         morphs_.push_back(newMorph);
         memoryUse += sizeof(ModelMorph);
     }
-
-	// Set up geometries
-	for (unsigned i = 0; i < geometries_.size(); ++i)
-	{
-		for (unsigned j = 0; j < geometries_[i].size(); ++j)
-		{
-			Geometry* geometry = geometries_[i][j];
-			GeometryDesc& desc = loadGeometries_[i][j];
-			geometry->SetVertexBuffer(0, vertexBuffers_[desc.vbRef_]);
-			geometry->SetIndexBuffer(indexBuffers_[desc.ibRef_]);
-			geometry->SetDrawRange(desc.type_, desc.indexStart_, desc.indexCount_);
-		}
-	}
-
-	loadGeometries_.clear();
 
     // Read skeleton
     skeleton_.Load(source);
@@ -303,15 +291,41 @@ bool Model::Load(IStream& source)
 	boundingBox_.max_ = source.Read<Vector3>();
 
     // Read geometry centers
-    for (unsigned i = 0; i < geometries_.size() && !source.IsEof(); ++i)
+    for (unsigned i = 0; i < loadGeometries_.size() && !source.IsEof(); ++i)
         geometryCenters_.push_back(source.Read<Vector3>());
-    while (geometryCenters_.size() < geometries_.size())
+    while (geometryCenters_.size() < loadGeometries_.size())
         geometryCenters_.push_back(Vector3::ZERO);
-    memoryUse += sizeof(Vector3) * (unsigned)geometries_.size();
+    memoryUse += sizeof(Vector3) * (unsigned)loadGeometries_.size();
 
     SetMemoryUse(memoryUse);
+	
+//	Prepare();
 
     return true;
+}
+
+bool Model::Prepare()
+{
+	geometries_.resize(loadGeometries_.size());
+	// Set up geometries
+	for (unsigned i = 0; i < loadGeometries_.size(); ++i)
+	{
+		geometries_[i].resize(loadGeometries_[i].size());
+		for (unsigned j = 0; j < loadGeometries_[i].size(); ++j)
+		{
+			GeometryDesc& desc = loadGeometries_[i][j];
+            SPtr<Geometry> geometry(new Geometry());
+            geometry->SetLodDistance(desc.lodDistance_);
+			geometry->SetVertexBuffer(0, vertexBuffers_[desc.vbRef_]);
+			geometry->SetIndexBuffer(indexBuffers_[desc.ibRef_]);
+			geometry->SetDrawRange(desc.type_, desc.indexStart_, desc.indexCount_);
+			geometries_[i][j] = geometry;
+		}
+	}
+
+	//loadGeometries_.clear();
+
+	return true;
 }
 
 void Model::SetBoundingBox(const BoundingBox& box)
@@ -537,7 +551,7 @@ SPtr<Model> Model::Clone(const String& cloneName) const
 
 
     // Deep copy the morph data (if any) to allow modifying it
-    for (auto i = ret->morphs_.begin(); i != ret->morphs_.end(); ++i)
+   /* for (auto i = ret->morphs_.begin(); i != ret->morphs_.end(); ++i)
     {
         ModelMorph& morph = *i;
         for (auto j = morph.buffers_.begin(); j != morph.buffers_.end(); ++j)
@@ -550,7 +564,7 @@ SPtr<Model> Model::Clone(const String& cloneName) const
                 vbMorph.morphData_ = cloneData;
             }
         }
-    }
+    }*/
 
     ret->SetMemoryUse(GetMemoryUse());
 

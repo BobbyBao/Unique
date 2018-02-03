@@ -70,7 +70,7 @@ protected:
     volatile bool shouldRun_;
 
     /// Main thread's thread ID.
-    static ThreadID mainThreadID;
+    static volatile ThreadID mainThreadID;
 };
 
 }

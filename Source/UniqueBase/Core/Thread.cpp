@@ -56,7 +56,7 @@ static void* ThreadFunctionStatic(void* data)
 
 #endif
 
-ThreadID Thread::mainThreadID;
+volatile ThreadID Thread::mainThreadID;
 
 Thread::Thread() :
     handle_(0),

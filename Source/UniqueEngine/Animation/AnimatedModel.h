@@ -82,8 +82,6 @@ public:
     void SetUpdateInvisible(bool enable);
     /// Set vertex morph weight by index.
     void SetMorphWeight(unsigned index, float weight);
-    /// Set vertex morph weight by name.
-    void SetMorphWeight(const String& name, float weight);
     /// Set vertex morph weight by name hash.
     void SetMorphWeight(StringID nameHash, float weight);
     /// Reset all vertex morphs to zero.
@@ -126,8 +124,6 @@ public:
 
     /// Return vertex morph weight by index.
     float GetMorphWeight(unsigned index) const;
-    /// Return vertex morph weight by name.
-    float GetMorphWeight(const String& name) const;
     /// Return vertex morph weight by name hash.
     float GetMorphWeight(StringID nameHash) const;
 
