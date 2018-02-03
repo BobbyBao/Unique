@@ -157,6 +157,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CharacterSample.cpp" />
     <ClCompile Include="CubeSample.cpp" />
     <ClCompile Include="SceneSample.cpp" />
     <ClCompile Include="Test.cpp" />
@@ -194,6 +195,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CharacterSample.h" />
     <ClInclude Include="CubeSample.h" />
     <ClInclude Include="SceneSample.h" />
   </ItemGroup>

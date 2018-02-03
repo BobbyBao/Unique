@@ -24,12 +24,18 @@
     <ClCompile Include="SceneSample.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="CharacterSample.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CubeSample.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="SceneSample.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterSample.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

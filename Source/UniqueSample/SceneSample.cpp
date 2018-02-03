@@ -14,6 +14,7 @@
 #include "Graphics/DebugRenderer.h"
 #include "Serialize/JsonSerializer.h"
 #include "Input/Input.h"
+#include "ImGUI/ImGUI.h"
 
 #define ENABLE_ANIM
 
@@ -29,6 +30,7 @@ namespace Unique
 		Subscribe(&SceneSample::HandleStartup);
 		Subscribe(&SceneSample::HandleShutdown);
 		Subscribe(&SceneSample::HandleUpdate);
+		Subscribe(&SceneSample::HandleGUI);
 
 	//	SetDeviceType(DeviceType::OpenGL);
 	}
@@ -50,32 +52,16 @@ namespace Unique
 		node_ = scene_->CreateChild("Model");
 		node_->SetRotation(Quaternion(0, 180, 0));
 
-#ifdef ENABLE_ANIM
-		AnimatedModel* model = node_->CreateComponent<AnimatedModel>();
-#else
 		StaticModel* model = node_->CreateComponent<StaticModel>();
-#endif
-		model->SetModelAttr(ResourceRef::Create<Model>("Models/Kachujin/Kachujin.mdl"));
-  		model->SetMaterialsAttr(ResourceRefList::Create<Material>(
-  		{ "Models/Kachujin/Materials/Kachujin.material" }));
+		model->SetModelAttr(ResourceRef::Create<Model>("Models/Sponza/sponza.obj"));
+  		//model->SetMaterialsAttr(ResourceRefList::Create<Material>(
+  		//{ "Models/Kachujin/Materials/Kachujin.material" }));
 
-#ifdef ENABLE_ANIM
-		Animation* walkAnimation = cache.GetResource<Animation>("Models/Kachujin/Kachujin_Walk.ani");
-		AnimationState* state = model->AddAnimationState(walkAnimation);
-		// The state would fail to create (return null) if the animation was not found
-		if (state)
-		{
-			// Enable full blending weight and looping
-			state->SetWeight(1.0f);
-			state->SetLooped(true);
-			state->SetTime(Random(walkAnimation->GetLength()));
-		}
-#endif
 		auto& renderer = GetSubsystem<Renderer>();
 		Viewport* viewport = new Viewport(scene_, camera_);
 		renderer.SetViewport(0, viewport);
 		viewport->SetDrawDebug(true);
-		camera_->GetNode()->SetPosition(Vector3(0, 1, -5));
+		camera_->GetNode()->SetPosition(Vector3(0, 1, -30));
 	}
 
 	void SceneSample::HandleShutdown(const struct Shutdown& eventData)
@@ -83,9 +69,17 @@ namespace Unique
 
 	}
 
-	void SceneSample::HandleGUI(const GUI& eventData)
-	{
-
+	Vector3 test;
+	void SceneSample::HandleGUI(const GUIEvent& eventData)
+	{		
+		if (nk_begin(nk_ctx(), "Demo", nk_rect(50, 50, 230, 250),
+			NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE |
+			NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE))
+		{
+			nk_layout_row_static(nk_ctx(), 30, 80, 1);
+			nk_property_vector3(nk_ctx(), "pos:", &test);
+		}
+		nk_end(nk_ctx());
 	}
 
 	void SceneSample::HandleUpdate(const struct Update& eventData)
@@ -129,14 +123,5 @@ namespace Unique
 		if (input.GetKeyDown(KEY_D))
 			camera_->GetNode()->Translate(Vector3::RIGHT * MOVE_SPEED * timeStep);
 
-
-#ifdef ENABLE_ANIM
-		AnimatedModel* model = node_->GetComponent<AnimatedModel>(true);
-		if (model && model->GetNumAnimationStates())
-		{
-			AnimationState* state = model->GetAnimationStates()[0];
-			state->AddTime(timeStep);
-		}
-#endif
 	}
 }

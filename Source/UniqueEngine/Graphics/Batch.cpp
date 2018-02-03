@@ -575,8 +575,11 @@ namespace Unique
 	{		
 		if (!geometry_->IsEmpty())
 		{
-			auto& graphics = GetSubsystem<Graphics>();
-
+			if(!pipelineState_->GetPipeline())
+			{
+				return;
+			}
+			
 			Prepare(view, true);
 
 			if (material_)
@@ -584,6 +587,7 @@ namespace Unique
 				material_->Apply(pipelineState_);
 			}
 
+			auto& graphics = GetSubsystem<Graphics>();
 			if (scissor_ != 0)
 			{
 				auto& scissor = GetSubsystem<Renderer>().GetScissor(scissor_);
@@ -607,13 +611,17 @@ namespace Unique
 	{
 		if (!geometry_->IsEmpty())
 		{
-			auto& graphics = GetSubsystem<Graphics>();
-
+			if(!pipelineState_->GetPipeline())
+			{
+				return;
+			}
+			
 			if (material_)
 			{
 				material_->Apply(pipelineState_);
 			}
 
+			auto& graphics = GetSubsystem<Graphics>();
 			if (scissor_ != 0)
 			{
 				auto& scissor = GetSubsystem<Renderer>().GetScissor(scissor_);
@@ -658,16 +666,20 @@ namespace Unique
 
 	void BatchGroup::Draw(View* view) const
 	{
-		auto& graphics = GetSubsystem<Graphics>();
-		auto& renderer = GetSubsystem<Renderer>();
-
 		if (instances_.size() && !geometry_->IsEmpty())
 		{
+			if(!pipelineState_->GetPipeline())
+			{
+				return;
+			}
+			
 			if (material_)
 			{
 				material_->Apply(pipelineState_);
 			}
-
+			
+			auto& graphics = GetSubsystem<Graphics>();
+			auto& renderer = GetSubsystem<Renderer>();
 			// Draw as individual objects if instancing not supported or could not fill the instancing buffer
 			VertexBuffer* instanceBuffer = renderer.GetInstancingBuffer();
 			if (!instanceBuffer || geometryType_ != GEOM_INSTANCED || startIndex_ == M_MAX_UNSIGNED)

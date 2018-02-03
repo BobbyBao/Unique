@@ -122,6 +122,7 @@ namespace Unique
 
 	IShaderVariable* PipelineState::GetShaderVariable(const StringID& name)
 	{
+		/*
 		if (!shaderResourceBinding_)
 		{	
 			GetPipeline();
@@ -130,7 +131,7 @@ namespace Unique
 		if (!shaderResourceBinding_)
 		{	
 			return nullptr;
-		}
+		}*/
 
 		return shaderResourceBinding_->GetVariable(Diligent::SHADER_TYPE_PIXEL, name.c_str());
 	}

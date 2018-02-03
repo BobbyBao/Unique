@@ -6,16 +6,16 @@ namespace Unique
 	class Scene;
 	class Camera;
 
-	class SceneSample : public Application
+	class CharacterSample : public Application
 	{
 	public:
-		SceneSample(int argc, char* argv[]);
-		~SceneSample();
+		CharacterSample(int argc, char* argv[]);
+		~CharacterSample();
 
 	private:
 		void HandleStartup(const struct Startup& eventData);
 		void HandleShutdown(const struct Shutdown& eventData);
-		void HandleGUI(const struct GUIEvent& eventData);
+		void HandleGUI(const struct GUI& eventData);
 		void HandleUpdate(const struct Update& eventData);
 		void UpdateCamera(float timeStep);
 

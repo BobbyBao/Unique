@@ -39,6 +39,7 @@ namespace Unique
 		SPtr<Texture> font_texture;
 	};
 
+	UNIQUE_C_API nk_context* nk_ctx();
 	UNIQUE_C_API void nk_property_vector3(nk_context* ctx, const char* name, Vector3* vec);
 	UNIQUE_C_API void nk_property_object(nk_context* ctx, const char* name, Object* obj);
 }

@@ -5,7 +5,7 @@ using UniqueEngine;
 
 namespace UniqueEditor.Samples
 {
-    [SampleDesc(sortOrder = 0)]
+    [SampleDesc(sortOrder = 100)]
     public class ClusteredLighting : Sample
     {
         public override void Enter()
@@ -31,8 +31,6 @@ namespace UniqueEditor.Samples
             )
 
             .Child("Scene", c => c
-                .Position(Vector3.Zero)
-                .Scaling(new Vector3(100.0f, 100.0f, 100.0f))
                 .Component<StaticModel>(sm => sm
                     .Model(new ResourceRef(TypeOf<Model>(), /*"Models/map-bump.obj"*/"Models/Sponza/sponza.obj"))
                     //.Material(new ResourceRefList(TypeOf<Material>(), "Models/Stone.material"))

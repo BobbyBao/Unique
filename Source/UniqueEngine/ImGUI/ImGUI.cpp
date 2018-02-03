@@ -579,9 +579,15 @@ namespace Unique
 
 	UNIQUE_C_API void nk_property_vector3(nk_context* ctx, const char* name, Vector3* vec)
 	{
-		nk_property_float(ctx, "x", FLT_MIN, &vec->x_, FLT_MAX, 0.1f, 0.05f);
-		nk_property_float(ctx, "y", FLT_MIN, &vec->y_, FLT_MAX, 0.1f, 0.05f);
-		nk_property_float(ctx, "z", FLT_MIN, &vec->z_, FLT_MAX, 0.1f, 0.05f);
+		nk_layout_row_dynamic(ctx, 20, 1);
+		nk_label(ctx, name, NK_TEXT_LEFT);
+		nk_layout_row_dynamic(ctx, 20, 3);
+		ctx->style.property.sym_left = NK_SYMBOL_NONE;
+		ctx->style.property.sym_right = NK_SYMBOL_NONE;
+		ctx->style.property.rounding = 0.0f;
+		nk_property_float(ctx, "X:", FLT_MIN, &vec->x_, FLT_MAX, 0.1f, 0.05f);
+		nk_property_float(ctx, "Y:", FLT_MIN, &vec->y_, FLT_MAX, 0.1f, 0.05f);
+		nk_property_float(ctx, "Z:", FLT_MIN, &vec->z_, FLT_MAX, 0.1f, 0.05f);
 	}
 	
 	UNIQUE_C_API void nk_property_object(nk_context* ctx, const char* name, Object* obj)

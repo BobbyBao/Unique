@@ -13,7 +13,7 @@ Shader "Error"
 	
 		RasterizerState 
 		{
-			FillMode WIREFRAME
+			//FillMode WIREFRAME
 			CullMode NONE
 		}
 		
