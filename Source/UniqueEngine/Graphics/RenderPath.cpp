@@ -396,7 +396,7 @@ void RenderPath::RemoveCommand(unsigned index)
 
 void RenderPath::RemoveCommands(const String& tag)
 {
-    for (unsigned i = commands_.size() - 1; i < commands_.size(); --i)
+    for (size_t i = commands_.size() - 1; i < commands_.size(); --i)
     {
         if (!commands_[i]->tag_.Compare(tag, false))
             commands_.erase(commands_.begin() + i);

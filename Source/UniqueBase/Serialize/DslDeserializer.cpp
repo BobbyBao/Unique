@@ -4,7 +4,7 @@
 
 namespace Unique
 {
-	DslDeserializer::DslDeserializer() : Visitor(VisitState::Reading), nameNode_("")
+	DslDeserializer::DslDeserializer() : Serializer(VS_READ), nameNode_("")
 	{
 	}
 

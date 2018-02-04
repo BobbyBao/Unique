@@ -11,15 +11,23 @@ using namespace rapidjson;
 namespace Unique
 {
 
-	class JsonDeserializer : public Visitor
+	class JsonDeserializer : public Serializer
 	{
 	public:
 		JsonDeserializer();
 		~JsonDeserializer();
+	
+		virtual bool StartDocument(const String& fileName);
+		virtual void EndDocument();
 		virtual bool StartObject(uint size);
 		virtual void EndObject();
+		virtual SPtr<Object> CreateObject();
+		virtual bool StartAttribute(const String& key);
+		virtual void EndAttribute();
+		virtual bool StartArray(uint& size);
+		virtual void SetElement(uint index);
+		virtual void EndArray();
 		virtual void VisitBin(ByteArray& data);
-
 		virtual void VisitPrimitive(std::string& data);
 		virtual void VisitPrimitive(String& data);
 		virtual void VisitPrimitive(bool& data);
@@ -38,16 +46,6 @@ namespace Unique
 		virtual void VisitPrimitive(Vector4& data);
 		virtual void VisitPrimitive(Color& data);
 		virtual void VisitPrimitive(Quaternion& data);
-	protected:
-		virtual bool StartDocument(const String& fileName);
-		virtual void EndDocument();
-		virtual SPtr<Object> CreateObject();
-		virtual bool StartAttribute(const String& key);
-		virtual void EndAttribute();
-		virtual bool StartArray(uint& size);
-		virtual void SetElement(uint index);
-		virtual void EndArray();
-
 	private:
 		UPtr<rapidjson::Document> document = nullptr;
 		rapidjson::Value* currentNode_ = nullptr;

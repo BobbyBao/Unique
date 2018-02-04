@@ -4,8 +4,9 @@
 
 namespace Unique
 {
+	class Model;
 
-	class ModelImporter : public ResourceImporter
+	class ModelImporter : public TResourceImporter<Model>
 	{
 	public:
 		ModelImporter();
@@ -14,10 +15,12 @@ namespace Unique
 		virtual SPtr<Resource> Import(const String& filePath);
 	private:
 		SPtr<Resource> LoadObjFile(IStream& source);
+		template<class Vertex>
+		SPtr<Resource> LoadModel();
 
 	};
 
-	class AnimationImporter : public ResourceImporter
+	class AnimationImporter : public TResourceImporter<class Animation>
 	{
 	public:
 		AnimationImporter();

@@ -4,7 +4,7 @@
 
 namespace Unique
 {
-	JsonDeserializer::JsonDeserializer() : Visitor(VisitState::Reading)
+	JsonDeserializer::JsonDeserializer() : Serializer(VS_READ)
 	{
 	}
 

@@ -16,7 +16,7 @@ namespace Unique
 		{
 		}
 
-		virtual void Visit(Visitor& serializer, void* obj) {}
+		virtual void Visit(Visitor& visitor, void* obj) {}
 		virtual void Get(const void* ptr, void* dest) const = 0;
 		virtual void Set(void* ptr, const void* value) = 0;
 		virtual bool IsDefault(void* ptr) const { return false; }
@@ -39,9 +39,9 @@ namespace Unique
 		{
 		}
 
-		virtual void Visit(Visitor& serializer, void* obj)
+		virtual void Visit(Visitor& visitor, void* obj)
 		{
-			VisitImpl(serializer, obj);
+			VisitImpl(visitor, obj);
 		}
 		
 		virtual void Get(const void* ptr, void* dest) const
@@ -101,9 +101,9 @@ namespace Unique
 			assert(setFunction_);
 		}
 
-		virtual void Visit(Visitor& serializer, void* obj)
+		virtual void Visit(Visitor& visitor, void* obj)
 		{
-			VisitImpl(serializer, obj);
+			VisitImpl(visitor, obj);
 		}
 
 		/// Invoke getter function.

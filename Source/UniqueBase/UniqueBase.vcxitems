@@ -178,5 +178,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Container\spscqueue.inl" />
+    <None Include="$(MSBuildThisFileDirectory)Serialize\Visitor.inl" />
   </ItemGroup>
 </Project>

@@ -570,37 +570,7 @@ Resource* ResourceCache::GetResource(StringID type, const String& nameIn, bool s
     if (existing)
         return existing;
 
-    SPtr<Resource> resource;
-	/*
-    // Make sure the pointer is non-null and is a Resource subclass
-    resource = DynamicCast<Resource>(context_->CreateObject(type));
-    if (!resource)
-    {
-        UNIQUE_LOGERROR("Could not load unknown resource type " + String(type));
-
-        if (sendEventOnFailure)
-        {
-            using namespace UnknownResourceType;
-
-            VariantMap& eventData = GetEventDataMap();
-            eventData[P_RESOURCETYPE] = type;
-            SendEvent(E_UNKNOWNRESOURCETYPE, eventData);
-        }
-
-        return 0;
-    }
-
-    // Attempt to load the resource
-    SPtr<File> file = GetFile(name, sendEventOnFailure);
-    if (!file)
-        return 0;   // Error is already logged
-
-    UNIQUE_LOGDEBUG("Loading resource " + name);
-    resource->SetName(name);*/
-
-    //if (!resource->Load(*(file.Get())))
-
-	resource = LoadResource(type, name);
+    SPtr<Resource> resource = LoadResource(type, name);
 	if (!resource)
     {
         // Error should already been logged by corresponding resource descendant class

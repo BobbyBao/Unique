@@ -4,7 +4,7 @@
 
 namespace Unique
 {
-	BinaryDeserializer::BinaryDeserializer() : Visitor(VisitState::Reading)
+	BinaryDeserializer::BinaryDeserializer() : Serializer(VS_READ)
 	{
 	}
 

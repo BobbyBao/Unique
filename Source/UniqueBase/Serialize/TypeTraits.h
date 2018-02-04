@@ -59,6 +59,12 @@ namespace Unique
 		template<class VisitFunction>
 		inline static void Visit(value_type& data, VisitFunction& visitor)
 		{
+// 			TypeInfo* typeInfo = TypeInfo.Get<T>();
+// 			if (typeInfo)
+// 			{
+// 				typeInfo->Visit(*this, &data);
+// 			}
+
 			visitor.Visit(data);
 		}
 

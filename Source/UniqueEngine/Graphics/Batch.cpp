@@ -146,7 +146,8 @@ namespace Unique
 		worldTransform_(rhs.worldTransform_),
 		numWorldTransforms_(rhs.numWorldTransforms_),
 		instancingData_(rhs.instancingData_),
-		geometryType_(rhs.geometryType_)
+		geometryType_(rhs.geometryType_),
+		zone_(nullptr)
 	{
 		assert(worldTransform_);
 		primitiveTopology_ = rhs.primitiveTopology_;
@@ -164,7 +165,8 @@ namespace Unique
 		worldTransform_(worldTransform),
 		numWorldTransforms_(1),
 		instancingData_(nullptr),
-		geometryType_(GEOM_STATIC)
+		geometryType_(GEOM_STATIC),
+		zone_(nullptr)
 	{
 		if (material)
 		{

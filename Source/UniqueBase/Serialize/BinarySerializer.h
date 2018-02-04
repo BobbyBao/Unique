@@ -4,7 +4,7 @@
 
 namespace Unique
 {
-	class BinarySerializer : public Visitor
+	class BinarySerializer : public Serializer
 	{
 	public:
 		BinarySerializer();

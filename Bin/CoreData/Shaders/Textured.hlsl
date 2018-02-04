@@ -6,7 +6,7 @@ void VS(
 		float3 iPos : ATTRIB0, 
         float3 iNormal : ATTRIB1,
         float2 iTexCoord : ATTRIB2,
-        float4 iTangent : ATTRIB3,
+        //float4 iTangent : ATTRIB3,
 		float4x3 iModelInstance : ATTRIB4,
         out float2 oTexCoord : TEXCOORD0,
 		out float4 oPos : OUTPOSITION

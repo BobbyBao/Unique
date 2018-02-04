@@ -11,14 +11,21 @@
 
 namespace Unique
 {
-	class JsonSerializer : public Visitor
+	class JsonSerializer : public Serializer
 	{
 	public:
 		JsonSerializer();
 		~JsonSerializer();
 
+		virtual bool StartDocument(const String& fileName);
+		virtual void EndDocument();		
 		virtual bool StartObject(uint size);
 		virtual void EndObject();
+		virtual bool StartAttribute(const String& key);
+		virtual void EndAttribute();
+		virtual bool StartArray(uint& size);
+		virtual void SetElement(uint index);
+		virtual void EndArray();
 		virtual void VisitBin(ByteArray& data);
 		virtual void VisitPrimitive(std::string& data);
 		virtual void VisitPrimitive(String& data);
@@ -39,14 +46,6 @@ namespace Unique
 		virtual void VisitPrimitive(Color& data);
 		virtual void VisitPrimitive(Quaternion& data);
 	protected:
-		virtual bool StartDocument(const String& fileName);
-		virtual void EndDocument();
-		virtual bool StartAttribute(const String& key);
-		virtual void EndAttribute();
-		virtual bool StartArray(uint& size);
-		virtual void SetElement(uint index);
-		virtual void EndArray();
-		
 		std::ofstream jsonFile;
 		rapidjson::OStreamWrapper* ostreamWrapper = nullptr;
 		rapidjson::PrettyWriter<rapidjson::OStreamWrapper>* writer_ = nullptr;

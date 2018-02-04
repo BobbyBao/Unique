@@ -1,28 +1,25 @@
 #pragma once
-#include "Visitor.h"
-#include "Serialize/mpack/mpack.h"
+#include "Serialize/Visitor.h"
 
 namespace Unique
 {
-
-	class BinaryDeserializer : public Serializer
+	class ObjectInspector : public Visitor
 	{
 	public:
-		BinaryDeserializer();
-		~BinaryDeserializer();
-		virtual bool StartObject(uint size);
-		virtual void EndObject();
-		virtual void VisitBin(ByteArray& data);
-	protected:
+		ObjectInspector();
+		~ObjectInspector();
+		
 		virtual bool StartDocument(const String& fileName);
 		virtual void EndDocument();
+		virtual bool StartObject(uint size);
+		virtual void EndObject();
 		virtual SPtr<Object> CreateObject();
 		virtual bool StartAttribute(const String& key);
 		virtual void EndAttribute();
 		virtual bool StartArray(uint& size);
 		virtual void SetElement(uint index);
 		virtual void EndArray();
-
+		virtual void VisitBin(ByteArray& data);
 		virtual void VisitPrimitive(std::string& data);
 		virtual void VisitPrimitive(String& data);
 		virtual void VisitPrimitive(bool& data);
@@ -41,11 +38,6 @@ namespace Unique
 		virtual void VisitPrimitive(Vector4& data);
 		virtual void VisitPrimitive(Color& data);
 		virtual void VisitPrimitive(Quaternion& data);
-	private:
-		void VisitBin(void* data, size_t size);
-		mpack_tree_t tree_;
-		mpack_node_t currentNode_;
-		Vector<mpack_node_t> parentNode_;
 	};
 
 }

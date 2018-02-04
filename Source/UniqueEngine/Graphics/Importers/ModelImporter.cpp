@@ -7,75 +7,12 @@
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
 #include <sstream>
+#include "../Vertex.h"
 
-namespace Unique
-{
-	struct Vertex 
-	{
-		Vector3 pos;
-		Vector3 normal;
-		//Vector3 color;
-		Vector2 texCoord;
-		/*
-		static VkVertexInputBindingDescription getBindingDescription() {
-			VkVertexInputBindingDescription bindingDescription = {};
-			bindingDescription.binding = 0;
-			bindingDescription.stride = sizeof(Vertex);
-			bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
-
-			return bindingDescription;
-		}
-
-		static std::array<VkVertexInputAttributeDescription, 3> getAttributeDescriptions() {
-			std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions = {};
-
-			attributeDescriptions[0].binding = 0;
-			attributeDescriptions[0].location = 0;
-			attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
-			attributeDescriptions[0].offset = offsetof(Vertex, pos);
-
-			attributeDescriptions[1].binding = 0;
-			attributeDescriptions[1].location = 1;
-			attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
-			attributeDescriptions[1].offset = offsetof(Vertex, color);
-
-			attributeDescriptions[2].binding = 0;
-			attributeDescriptions[2].location = 2;
-			attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
-			attributeDescriptions[2].offset = offsetof(Vertex, texCoord);
-
-			return attributeDescriptions;
-		}
-		*/
-		bool operator==(const Vertex& other) const {
-			return pos == other.pos && normal == other.normal && texCoord == other.texCoord;
-		}
-	};
-}
-
-namespace std 
-{
-	using namespace Unique;
-	
-    template<> struct hash<Vertex>
-	{
-        size_t operator()(Vertex const& vertex) const
-		{		
-			size_t seed = 0;
-			hash<Vector3> hashVec3;
-			hash<Vector2> hashVec2;
-			HashCombine(seed, hashVec3(vertex.pos));
-			HashCombine(seed, hashVec3(vertex.normal));
-			HashCombine(seed, hashVec2(vertex.texCoord));
-			return seed;
-		}
-    };
-}
 
 namespace Unique
 {
 	ModelImporter::ModelImporter()
-		: ResourceImporter(Model::GetTypeStatic())
 	{
 	}
 
@@ -103,11 +40,11 @@ namespace Unique
 
 	#include <streambuf>
 
-	class char_array_buffer : public std::streambuf
+	class MemBuffer : public std::streambuf
 	{
 	public:
-		char_array_buffer(const char *begin, const char *end);
-		char_array_buffer(const char *str, size_t len);
+		MemBuffer(const char *begin, const char *end);
+		MemBuffer(const char *str, size_t len);
 
 	private:
 		int_type underflow();
@@ -117,8 +54,8 @@ namespace Unique
 
 		// copy ctor and assignment not implemented;
 		// copying not allowed
-		char_array_buffer(const char_array_buffer &);
-		char_array_buffer &operator= (const char_array_buffer &);
+		MemBuffer(const MemBuffer &);
+		MemBuffer &operator= (const MemBuffer &);
 
 	private:
 		const char * const begin_;
@@ -126,7 +63,7 @@ namespace Unique
 		const char * current_;
 	};
 	
-	char_array_buffer::char_array_buffer(const char *begin, const char *end) :
+	MemBuffer::MemBuffer(const char *begin, const char *end) :
 		begin_(begin),
 		end_(end),
 		current_(begin_)
@@ -134,14 +71,14 @@ namespace Unique
 		assert(std::less_equal<const char *>()(begin_, end_));
 	}
 
-	char_array_buffer::char_array_buffer(const char *str, size_t len) :
+	MemBuffer::MemBuffer(const char *str, size_t len) :
 		begin_(str),
 		end_(begin_ + len),
 		current_(begin_)
 	{
 	}
 
-	char_array_buffer::int_type char_array_buffer::underflow()
+	MemBuffer::int_type MemBuffer::underflow()
 	{
 		if (current_ == end_)
 			return traits_type::eof();
@@ -149,7 +86,7 @@ namespace Unique
 		return traits_type::to_int_type(*current_);
 	}
 
-	char_array_buffer::int_type char_array_buffer::uflow()
+	MemBuffer::int_type MemBuffer::uflow()
 	{
 		if (current_ == end_)
 			return traits_type::eof();
@@ -157,7 +94,7 @@ namespace Unique
 		return traits_type::to_int_type(*current_++);
 	}
 
-	char_array_buffer::int_type char_array_buffer::pbackfail(int_type ch)
+	MemBuffer::int_type MemBuffer::pbackfail(int_type ch)
 	{
 		if (current_ == begin_ || (ch != traits_type::eof() && ch != current_[-1]))
 			return traits_type::eof();
@@ -165,7 +102,7 @@ namespace Unique
 		return traits_type::to_int_type(*--current_);
 	}
 
-	std::streamsize char_array_buffer::showmanyc()
+	std::streamsize MemBuffer::showmanyc()
 	{
 		assert(std::less_equal<const char *>()(current_, end_));
 		return end_ - current_;
@@ -191,7 +128,7 @@ namespace Unique
 		
 		SPtr<File> file = cache.GetFile(modelPath + matId.c_str());
 		ByteArray bytes = file->ReadAll();
-		char_array_buffer buf(&bytes[0], bytes.size());
+		MemBuffer buf(&bytes[0], bytes.size());
 		std::istream stream(&buf, true);
 
 		std::string warning;
@@ -209,15 +146,22 @@ namespace Unique
 		String modelPath;
 	};
 
+	tinyobj::attrib_t attrib;
+	std::vector<tinyobj::shape_t> shapes;
+	std::vector<tinyobj::material_t> materials;
+
 	SPtr<Resource> ModelImporter::LoadObjFile(IStream& source)
 	{
-		tinyobj::attrib_t attrib;
-		std::vector<tinyobj::shape_t> shapes;
-		std::vector<tinyobj::material_t> materials;
+		attrib.vertices.clear();
+		attrib.normals.clear();
+		attrib.texcoords.clear();
+		attrib.colors.clear();
+		shapes.clear();
+		materials.clear();
 
 		std::string err;
 		ByteArray bytes = source.ReadAll();
-		char_array_buffer buf(&bytes[0], bytes.size());
+		MemBuffer buf(&bytes[0], bytes.size());
 		std::istream stream(&buf, true);
 		MaterialStringStreamReader matReader(GetPath(source.GetName()));
 		bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &err, &stream, &matReader);
@@ -227,6 +171,33 @@ namespace Unique
 			return nullptr;
 		}
 		
+		if(attrib.normals.size() > 0)
+		{
+			return LoadModel<VertexPosNormTex>();
+		}
+		else
+		{
+			return LoadModel<VertexPosTex>();
+		}
+	}
+
+	void SetNormal(VertexPosNormTex& vertex, const index_t& index)
+	{
+		vertex.normal = 
+		{
+			attrib.normals[3 * index.normal_index + 0],
+			attrib.normals[3 * index.normal_index + 1],
+			attrib.normals[3 * index.normal_index + 2]
+		};
+	}
+		
+	void SetNormal(VertexPosTex& vertex, const index_t& index)
+	{
+	}
+
+	template<class Vertex>
+	SPtr<Resource> ModelImporter::LoadModel()
+	{
 		Vector<SPtr<VertexBuffer>> vertexBuffers;
 		PODVector<unsigned> morphRangeStarts;
         PODVector<unsigned> morphRangeCounts;
@@ -247,21 +218,16 @@ namespace Unique
             for (const auto& index : shape.mesh.indices)
 			{
                 Vertex vertex = {};
-                vertex.pos = 
+                vertex.position =
 				{
                     attrib.vertices[3 * index.vertex_index + 0],
                     attrib.vertices[3 * index.vertex_index + 1],
                     attrib.vertices[3 * index.vertex_index + 2]
                 };
 
-				bundingBox.Merge(vertex.pos);
+				bundingBox.Merge(vertex.position);
 				
-                vertex.normal = 
-				{
-                    attrib.normals[3 * index.normal_index + 0],
-                    attrib.normals[3 * index.normal_index + 1],
-                    attrib.normals[3 * index.normal_index + 2]
-                };
+				SetNormal(vertex, index);
 
                 vertex.texCoord =
 				{
@@ -287,8 +253,8 @@ namespace Unique
             }
 					
 			model->loadGeometries_[i].resize(1);
-			GeometryDesc& desc = model->loadGeometries_[i][0];
 
+			GeometryDesc& desc = model->loadGeometries_[i][0];
 			desc.type_ = PrimitiveTopology::TRIANGLE_LIST;
 			desc.vbRef_ = vertexBuffers.size();
 			desc.ibRef_ = indexBuffers.size();
@@ -309,7 +275,7 @@ namespace Unique
 		return model;
 	}
 
-	AnimationImporter::AnimationImporter() : ResourceImporter(Animation::GetTypeStatic())
+	AnimationImporter::AnimationImporter()
 	{
 	}
 

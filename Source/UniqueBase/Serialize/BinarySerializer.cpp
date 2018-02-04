@@ -5,7 +5,7 @@
 
 namespace Unique
 {
-	BinarySerializer::BinarySerializer() : Visitor(VisitState::Writing)
+	BinarySerializer::BinarySerializer() : Serializer(VS_WRITE)
 	{
 	}
 

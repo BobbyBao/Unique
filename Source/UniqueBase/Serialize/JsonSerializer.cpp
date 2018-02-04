@@ -10,7 +10,7 @@ using namespace rapidjson;
 
 namespace Unique
 {
-	JsonSerializer::JsonSerializer() : Visitor(VisitState::Writing)
+	JsonSerializer::JsonSerializer() : Serializer(VS_WRITE)
 	{
 	}
 

@@ -38,14 +38,14 @@ Resource::Resource() :
 
 bool Resource::Load()
 {
-    // Because BeginLoad() / EndLoad() can be called from worker threads, where profiling would be a no-op,
+    // Because Load() / Prepare() can be called from worker threads, where profiling would be a no-op,
     // create a type name -based profile block here
 #ifdef UNIQUE_PROFILING
     String profileBlockName("Load" + GetTypeName());
 
-    Profiler* profiler = Subsystem<Profiler>();
+    Profiler& profiler = GetSubsystem<Profiler>();
     if (profiler)
-        profiler->BeginBlock(profileBlockName.CString());
+        profiler.BeginBlock(profileBlockName.CString());
 #endif
 
     // If we are loading synchronously in a non-main thread, behave as if async loading (for example use

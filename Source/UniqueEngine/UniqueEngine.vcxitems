@@ -24,6 +24,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\DrawableEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\GraphicsEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Zone.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ImGUI\nuklear.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Input\Controls.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Input\Input.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Input\InputEvents.h" />
@@ -61,6 +62,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\RenderPath.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\RenderState.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\RenderPass.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ImGUI\ObjectInspector.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Scene\Component.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Scene\LogicComponent.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Scene\Node.h" />
@@ -72,6 +74,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\ShaderUtil.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)UniquePCH.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\VertexBuffer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Vertex.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Animation\AnimatedModel.cpp" />
@@ -127,6 +130,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\RenderPath.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Export\ResourceExport.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\RenderPass.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)ImGUI\ObjectInspector.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Scene\Component.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Scene\LogicComponent.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Scene\Node.cpp" />

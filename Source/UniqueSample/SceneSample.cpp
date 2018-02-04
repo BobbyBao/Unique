@@ -53,9 +53,13 @@ namespace Unique
 		node_->SetRotation(Quaternion(0, 180, 0));
 
 		StaticModel* model = node_->CreateComponent<StaticModel>();
-		model->SetModelAttr(ResourceRef::Create<Model>("Models/Sponza/sponza.obj"));
-  		//model->SetMaterialsAttr(ResourceRefList::Create<Material>(
-  		//{ "Models/Kachujin/Materials/Kachujin.material" }));
+		model->SetModelAttr(ResourceRef::Create<Model>(
+			"Models/Sponza/sponza.obj"
+			//"Models/Corridor2/Map.obj"
+			//"Models/map-bump.obj"
+			));
+  		model->SetMaterialsAttr(ResourceRefList::Create<Material>(
+  		{ "Models/map-bump.material" }));
 
 		auto& renderer = GetSubsystem<Renderer>();
 		Viewport* viewport = new Viewport(scene_, camera_);
@@ -77,7 +81,7 @@ namespace Unique
 			NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE))
 		{
 			nk_layout_row_static(nk_ctx(), 30, 80, 1);
-			nk_property_vector3(nk_ctx(), "pos:", &test);
+			nk_property_vector3(nk_ctx(), "pos:", test);
 		}
 		nk_end(nk_ctx());
 	}
