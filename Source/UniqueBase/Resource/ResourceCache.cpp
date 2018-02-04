@@ -618,35 +618,7 @@ SPtr<Resource> ResourceCache::GetTempResource(StringID type, const String& nameI
     if (name.Empty())
         return SPtr<Resource>();
 
-    SPtr<Resource> resource;
-	/*
-    // Make sure the pointer is non-null and is a Resource subclass
-    resource = DynamicCast<Resource>(context_->CreateObject(type));
-    if (!resource)
-    {
-        UNIQUE_LOGERROR("Could not load unknown resource type " + String(type));
-
-        if (sendEventOnFailure)
-        {
-            using namespace UnknownResourceType;
-
-            VariantMap& eventData = GetEventDataMap();
-            eventData[P_RESOURCETYPE] = type;
-            SendEvent(E_UNKNOWNRESOURCETYPE, eventData);
-        }
-
-        return SPtr<Resource>();
-    }
-
-    // Attempt to load the resource
-    SPtr<File> file = GetFile(name, sendEventOnFailure);
-    if (!file)
-        return SPtr<Resource>();  // Error is already logged
-
-    UNIQUE_LOGDEBUG("Loading temporary resource " + name);
-    resource->SetName(file->GetName());*/
-
-	resource = LoadResource(type, name);
+    SPtr<Resource> resource = LoadResource(type, name);
 	if (!resource)
 	{
         // Error should already been logged by corresponding resource descendant class
@@ -1083,6 +1055,7 @@ File* ResourceCache::SearchResourceDirs(const String& nameIn)
             // so that the file's name can be used in further GetFile() calls (for example over the network)
             File* file(new File(resourceDirs_[i] + nameIn));
             file->SetName(nameIn);
+			file->SetGroupName(resourceDirs_[i]);
             return file;
         }
     }
@@ -1105,13 +1078,6 @@ File* ResourceCache::SearchPackages(const String& nameIn)
     return 0;
 }
 
-void ResourceCache::RegisterResource(StringID type, Resource* resource)
-{
-    std::lock_guard<Mutex> lock(resourceMutex_);
-
-    resourceGroups_[type].resources_[resource->GetNameHash()] = resource;
-}
-
 void ResourceCache::RegisterImporter(ResourceImporter* importer)
 {
 	resourceImporters_[importer->GetResourceType()] = importer;
@@ -1126,12 +1092,9 @@ SPtr<Resource> ResourceCache::LoadResource(StringID type, const String& name)
 	if (it != resourceImporters_.end())
 	{
 		resource = it->second->Import(name);
-
-
 	}
 	else
 	{
-
 		ResourceImporter resImporter(type);
 		resource = resImporter.Import(name);
 	}

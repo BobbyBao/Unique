@@ -56,7 +56,8 @@ unsigned LookupIndexBuffer(IndexBuffer* buffer, const Vector<SPtr<IndexBuffer> >
     return 0;
 }
 
-uClassTraits(
+uClassTraits
+(
 	GeometryDesc,
 	"PrimitiveTopology", self.type_,
 	"VertexBufferRef", self.vbRef_,
@@ -64,17 +65,23 @@ uClassTraits(
 	"IndexStart", self.indexStart_,
 	"IndexCount", self.indexCount_,
 	"LodDistance", self.lodDistance_
-)
+);
 
-uClassTraits(
+uClassTraits
+(
+	VertexBufferMorph,
+	"ElementMask", self.elementMask_,
+	"VertexCount", self.vertexCount_,
+	"MorphData", self.morphData_
+);
+
+uClassTraits
+(
 	ModelMorph,
-	"PrimitiveTopology", self.type_,
-	"VertexBufferRef", self.vbRef_,
-	"IndexBufferRef", self.ibRef_,
-	"IndexStart", self.indexStart_,
-	"IndexCount", self.indexCount_,
-	"LodDistance", self.lodDistance_
-)
+	"Name", self.nameHash_,
+	"Weight", self.weight_,
+	"Buffers", self.buffers_
+);
 
 uObject(Model)
 {
@@ -82,8 +89,12 @@ uObject(Model)
 	uAttribute("Bounding Box", boundingBox_);
 	uAttribute("VertexBuffers", vertexBuffers_);
 	uAttribute("IndexBuffers", indexBuffers_);
-	uAttribute("GeometryDesc", loadGeometries_);
-
+	uAttribute("GeometryDesc", loadGeometries_); 
+	uAttribute("GeometryBoneMappings", geometryBoneMappings_);
+	uAttribute("GeometryCenters", geometryCenters_);
+	uAttribute("Morphs", morphs_);
+	uAttribute("MorphRangeStarts", morphRangeStarts_);
+	uAttribute("MorphRangeCounts", morphRangeCounts_);
 }
 
 Model::Model()

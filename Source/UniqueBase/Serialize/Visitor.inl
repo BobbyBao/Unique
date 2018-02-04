@@ -39,7 +39,7 @@ namespace Unique
 	template<class T>
 	inline void Visitor::Visit(T& data)
 	{
-		if (Visit(TypeInfo::GetTypeID<T>(), &data))
+		if (Visit(TypeInfo::GetTypeID<T>(), (void*)&data))
 		{
 			return;
 		}
@@ -136,9 +136,16 @@ namespace Unique
 			size = (uint)data.size();
 			if (StartArray(size))
 			{
-				for (non_const_value_type& val : data)
+// 				for (non_const_value_type& val : data)
+// 				{
+// 					TypeTraits<non_const_value_type>::Visit(val, *this);
+// 				}
+
+				auto end = data.end();
+				for (auto i = data.begin(); i != end; ++i)
 				{
-					TypeTraits<non_const_value_type>::Visit(val, *this);
+					non_const_value_type& p = (non_const_value_type&)(*i);
+					TypeTraits<non_const_value_type>::Visit(p, *this);
 				}
 
 				EndArray();

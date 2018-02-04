@@ -48,7 +48,6 @@ namespace Unique
 	void Renderer::Initialize()
 	{
 		defaultRenderPath_ = new RenderPath();
-//		defaultRenderPath_->AddCommand(new RenderPass(CMD_CLEAR));
 		defaultRenderPath_->AddCommand(new ScenePass());
 		
 		Subscribe(&Renderer::HandleStartup);
@@ -148,7 +147,8 @@ namespace Unique
 		geo->SetDrawRange(PrimitiveTopology::TRIANGLE_LIST, 0, pIndexBuffer->GetIndexCount());
 		m->SetGeometry(0, 0, geo);
 		m->SetBoundingBox(BoundingBox(-1, 1));
-		cache.RegisterResource(m);
+
+		cache.AddManualResource(m);
 
 		CreateInstancingBuffer();
 	}
@@ -182,7 +182,7 @@ namespace Unique
 		defaultTexture->SetName("Magenta");
 		defaultTexture->Create(desc, std::move(mip));
 
-		cache.RegisterResource(defaultTexture);
+		cache.AddManualResource(defaultTexture);
 
 		//defaultMaterial_->SetTexture("DiffMap", defaultTexture);
 

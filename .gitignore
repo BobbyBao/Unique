@@ -3,5 +3,7 @@
 
 Temp/
 build/
+Source/UniqueStudio/obj
+Source/UniqueStudio/bin
 
 **/.vscode

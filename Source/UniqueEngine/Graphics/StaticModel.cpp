@@ -270,7 +270,13 @@ void StaticModel::SetModel(Model* model)
         SetBoundingBox(BoundingBox());
     }
 
-    
+    if (model->materials_.size() > 0)
+    {
+		for (uint i = 0; i < model->materials_.size(); i++)
+		{
+			SetMaterial(i, model->materials_[i]);
+		}
+    }
 }
 
 void StaticModel::SetMaterial(Material* material)

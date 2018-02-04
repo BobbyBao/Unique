@@ -2,7 +2,6 @@
 #include "Graphics/Shader.h"
 #include "Serialize/JsonSerializer.h"
 #include "Serialize/JsonDeserializer.h"
-#include "Serialize/HjsonDeserializer.h"
 #include <Timer.h>
 #include "Serialize/DSL/ASTParser.h"
 #include "Serialize/DslDeserializer.h"
@@ -61,8 +60,8 @@ namespace Unique
 		HashMap<String, int> a= { {"", 0} };
 
 		SPtr<Shader> shader(new Shader());
-		HjsonDeserializer jsonReader(true);
-		jsonReader.Load("Shaders/Test.shader", shader);
+// 		HjsonDeserializer jsonReader(true);
+// 		jsonReader.Load("Shaders/Test.shader", shader);
 #ifdef NO_VIRTUAL
 		JsonWriter jsonWriter;
 		jsonWriter.Save("test2.json", shader);

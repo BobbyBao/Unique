@@ -87,6 +87,9 @@ public:
     /// Change the file name. Used by the resource system.
     void SetName(const String& name);
 
+	void SetGroupName(const String& groupName) { groupName_ = groupName; }
+
+	const String& GetGroupName() { return groupName_; }
     /// Return the open mode.
     FileMode GetMode() const { return mode_; }
 
@@ -109,6 +112,8 @@ private:
 
     /// File name.
     String fileName_;
+	// Group name.
+	String groupName_;
     /// Open mode.
     FileMode mode_;
     /// File handle.

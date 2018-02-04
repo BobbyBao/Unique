@@ -9,6 +9,9 @@ namespace Unique
 
 	Texture::Texture()
 	{
+		sampler_.samplerDesc_.AddressU = Diligent::TEXTURE_ADDRESS_WRAP;
+		sampler_.samplerDesc_.AddressV = Diligent::TEXTURE_ADDRESS_WRAP;
+		sampler_.samplerDesc_.AddressW = Diligent::TEXTURE_ADDRESS_WRAP;
 	}
 
 	Texture::~Texture()

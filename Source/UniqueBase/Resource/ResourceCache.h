@@ -78,6 +78,7 @@ public:
     virtual void Route(String& name, ResourceRequest requestType) = 0;
 };
 
+
 /// %Resource cache subsystem. Loads resources on demand and stores them for later access.
 class UNIQUE_API ResourceCache : public Object
 {
@@ -210,7 +211,7 @@ public:
 
     /// Returns a formatted string containing the memory actively used.
     String PrintMemoryUsage() const;
-
+	/*
 	template<class T>
 	void RegisterResource(T* resource)
 	{
@@ -223,7 +224,7 @@ public:
 		RegisterResource(T::GetTypeStatic(), resource);
 	}
 
-	void RegisterResource(StringID type, Resource* resource);
+	void RegisterResource(StringID type, Resource* resource);*/
 
 	void RegisterImporter(ResourceImporter* importer);
 private:
@@ -272,6 +273,27 @@ private:
     int finishBackgroundResourcesMs_;
 
 	HashMap<StringID, SPtr<ResourceImporter>> resourceImporters_;
+};
+
+class ResourceDirGuard
+{
+public:
+	ResourceDirGuard(const String& path, ResourceCache& cache)
+		: path_(path), cache_(cache)
+	{
+		cache_.AddResourceDir(path_);
+	}
+
+	~ResourceDirGuard()
+	{
+		cache_.RemoveResourceDir(path_);
+	}
+
+	ResourceDirGuard(const ResourceDirGuard&) = delete;
+	ResourceDirGuard& operator=(const ResourceDirGuard&) = delete;
+private:
+	const String& path_;
+	ResourceCache& cache_;
 };
 
 template <class T> T* ResourceCache::GetExistingResource(const String& name)

@@ -73,16 +73,15 @@ namespace Unique
 		void ReleaseImpl();
 
 		TextureDesc desc_;
-		TextureData texData_;
 		Sampler sampler_;
+		Vector< Vector<byte> > Mips;
 
+		TextureData texData_;
+		Vector<TextureSubResData> pSubResources;
 		SPtr<TextureView> shaderResourceView_;
 		SPtr<TextureView> renderTargetView_;
 		SPtr<TextureView> depthStencilView_;
 		SPtr<TextureView> unorderedAccessView_;
-
-		Vector<TextureSubResData> pSubResources;
-		Vector< Vector<byte> > Mips;
 
 		friend class Graphics;
 	};

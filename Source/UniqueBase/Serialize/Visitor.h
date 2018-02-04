@@ -1,6 +1,7 @@
 #pragma once
 #include "IO/IStream.h"
 #include "PrimitiveTypeTraits.h"
+#include "StdTypeTraits.h"
 
 namespace Unique
 {

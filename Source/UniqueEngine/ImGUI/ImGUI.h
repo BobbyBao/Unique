@@ -19,6 +19,8 @@ namespace Unique
 	public:
 		GUI();
 		~GUI();
+		
+		static Vector3 Property(const char* name, const Vector3& min, const Vector3& vec, const Vector3& max);
 	private:
 		void HandleStartup(const struct Startup& eventData);
 		void FontStashBegin(nk_font_atlas **atlas);
@@ -41,6 +43,6 @@ namespace Unique
 	};
 
 	UNIQUE_C_API nk_context* nk_ctx();
-	UNIQUE_C_API void nk_property_vector3(nk_context* ctx, const char* name, Vector3& vec);
+	UNIQUE_C_API void nk_property_vector3(nk_context* ctx, const char* name, const Vector3& min, Vector3& vec, const Vector3& max);
 	UNIQUE_C_API void nk_property_object(nk_context* ctx, const char* name, Object* obj);
 }

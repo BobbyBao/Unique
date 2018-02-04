@@ -21,6 +21,7 @@ namespace Unique
 
 		SPtr<Scene> scene_;
 		SPtr<Camera> camera_;
+		Node* lightNode_;
 		Node* node_;
 		/// Camera yaw angle.
 		float yaw_;
@@ -28,8 +29,10 @@ namespace Unique
 		float pitch_;
 		/// Flag to indicate whether touch input has been enabled.
 		bool touchEnabled_;
-		/// Mouse mode option to use in the sample.
-		//MouseMode useMouseMode_;
+		// Movement speed as world units per second
+		float moveSpeed = 20.0f;
+		// Mouse sensitivity as degrees per pixel
+		float mouseSensitivity = 0.1f;
 	};
 
 }

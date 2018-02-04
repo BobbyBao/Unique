@@ -141,6 +141,7 @@ bool File::Open(PackageFile* package, const String& fileName)
     }
 
     fileName_ = fileName;
+	groupName_ = package->GetName();
     offset_ = entry->offset_;
     checksum_ = entry->checksum_;
     size_ = entry->size_;

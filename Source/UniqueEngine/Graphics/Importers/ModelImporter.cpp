@@ -27,7 +27,9 @@ namespace Unique
 		{
 			return nullptr;
 		}
-	
+
+		String path = GetPath(file->GetGroupName() + filePath);
+		ResourceDirGuard dirGuard(path, cache);
 		if (filePath.EndsWith(".obj", false))
 		{
 			return LoadObjFile(*file);
@@ -195,6 +197,17 @@ namespace Unique
 	{
 	}
 
+	SPtr<Material> CreateMaterial(material_t& mat)
+	{
+		SPtr<Material> pMat(new Material());
+		pMat->SetShaderAttr(ResourceRef::Create<Shader>("Shaders/Default.shader"));
+		if (!mat.diffuse_texname.empty())
+		{
+			pMat->SetTexture("DiffMap", ResourceRef::Create<Texture>(mat.diffuse_texname.c_str()));
+		}
+		return pMat;
+	}
+
 	template<class Vertex>
 	SPtr<Resource> ModelImporter::LoadModel()
 	{
@@ -209,12 +222,13 @@ namespace Unique
 	
 		model->loadGeometries_.resize(shapes.size());
 
+		Vector<Vertex> vertices;
+		Vector<uint32_t> indices;
+		HashMap<Vertex, uint32_t> uniqueVertices = {};
+		uint indexOffset = 0;
         for (size_t i = 0; i < shapes.size(); i++)
 		{	
-			const auto& shape  = shapes[i];
-			Vector<Vertex> vertices;
-			Vector<uint32_t> indices;
-			HashMap<Vertex, uint32_t> uniqueVertices = {};
+			const auto& shape = shapes[i];
             for (const auto& index : shape.mesh.indices)
 			{
                 Vertex vertex = {};
@@ -237,10 +251,6 @@ namespace Unique
 
                 //vertex.color = {1.0f, 1.0f, 1.0f};
 
-#ifdef NO_HASH
-                indices.push_back(vertices.size()); 
-				vertices.push_back(vertex);
-#else
                 if (uniqueVertices.count(vertex) == 0)
 				{
                     uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
@@ -248,8 +258,7 @@ namespace Unique
                 }
 
                 indices.push_back(uniqueVertices[vertex]); 
-#endif
-				
+	
             }
 					
 			model->loadGeometries_[i].resize(1);
@@ -258,15 +267,25 @@ namespace Unique
 			desc.type_ = PrimitiveTopology::TRIANGLE_LIST;
 			desc.vbRef_ = vertexBuffers.size();
 			desc.ibRef_ = indexBuffers.size();
-			desc.indexStart_ = 0;
+			desc.indexStart_ = indexOffset;
 			desc.indexCount_ = indices.size();
 			desc.lodDistance_ = 0.0f;
-
+			indexOffset = indices.size();
 			SPtr<VertexBuffer> pVertexBuffer(new VertexBuffer());
 			pVertexBuffer->Create(std::move(vertices));
 			vertexBuffers.emplace_back(pVertexBuffer);
 			indexBuffers.emplace_back(new IndexBuffer(std::move(indices)));
 
+			int matId = shape.mesh.material_ids[0];
+			if (matId >= materials.size())
+			{
+				UNIQUE_LOGERROR("Error material id : ", matId);
+				break;
+			}
+
+			auto& mat = materials[matId];
+
+			model->materials_.push_back(CreateMaterial(mat));
 		}
 
 		model->SetBoundingBox(bundingBox);

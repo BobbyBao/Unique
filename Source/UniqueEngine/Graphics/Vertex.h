@@ -18,7 +18,7 @@ namespace Unique
 		Vector3 position;
 		Vector3 normal;
 		Vector2 texCoord;
-
+		Vector4 tangent;
 		bool operator==(const VertexPosNormTex& other) const {
 			return position == other.position && normal == other.normal && texCoord == other.texCoord;
 		}

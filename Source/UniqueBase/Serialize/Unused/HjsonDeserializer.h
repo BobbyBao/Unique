@@ -1,5 +1,5 @@
 #pragma once
-#include "Visitor.h"
+#include "../Visitor.h"
 #include "hjson/hjson.h"
 
 namespace Hjson

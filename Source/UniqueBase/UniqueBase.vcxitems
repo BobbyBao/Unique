@@ -26,8 +26,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\MathTypeTraits.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\BinaryDeserializer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\BinarySerializer.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\HjsonDeserializer.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\HjsonSerializer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\Unused\HjsonDeserializer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\Unused\HjsonSerializer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\JsonDeserializer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\JsonSerializer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Container\ContainerUtils.h" />
@@ -93,7 +93,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Resource\ResourceImporter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Resource\ResourceRef.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\Visitor.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\hjson\hjson.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\Unused\hjson\hjson.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-common.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-expect.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-node.h" />
@@ -114,8 +114,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\BinarySerializer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\DslDeserializer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\DSL\ASTParser.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\HjsonDeserializer.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\HjsonSerializer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\Unused\HjsonDeserializer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\Unused\HjsonSerializer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\JsonDeserializer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\JsonSerializer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Container\RefCounted.cpp" />
@@ -165,10 +165,10 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Resource\ResourceImporter.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Resource\ResourceRef.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\Visitor.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\hjson\hjson_decode.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\hjson\hjson_encode.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\hjson\hjson_parsenumber.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\hjson\hjson_value.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\Unused\hjson\hjson_decode.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\Unused\hjson\hjson_encode.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\Unused\hjson\hjson_parsenumber.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\Unused\hjson\hjson_value.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-common.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-expect.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Serialize\mpack\mpack-node.c" />

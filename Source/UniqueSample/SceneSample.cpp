@@ -41,13 +41,17 @@ namespace Unique
 
 	void SceneSample::HandleStartup(const struct Startup& eventData)
 	{
-		UNIQUE_UNUSED(eventData);
-
 		auto& cache = GetSubsystem<ResourceCache>();
 		scene_ = new Scene();
 		scene_->CreateComponent<Octree>();
 		scene_->CreateComponent<DebugRenderer>();
 		camera_ = scene_->CreateChild("Camera")->CreateComponent<Camera>();
+		camera_->SetFarClip(1000);
+
+		lightNode_ = scene_->CreateChild("DirectionalLight");
+		lightNode_->SetDirection(Vector3(0.6f, -1.0f, 0.8f)); // The direction vector does not need to be normalized
+		Light* light = lightNode_->CreateComponent<Light>();
+		light->SetLightType(LIGHT_DIRECTIONAL);
 
 		node_ = scene_->CreateChild("Model");
 		node_->SetRotation(Quaternion(0, 180, 0));
@@ -55,11 +59,10 @@ namespace Unique
 		StaticModel* model = node_->CreateComponent<StaticModel>();
 		model->SetModelAttr(ResourceRef::Create<Model>(
 			"Models/Sponza/sponza.obj"
-			//"Models/Corridor2/Map.obj"
 			//"Models/map-bump.obj"
 			));
-  		model->SetMaterialsAttr(ResourceRefList::Create<Material>(
-  		{ "Models/map-bump.material" }));
+//   		model->SetMaterialsAttr(ResourceRefList::Create<Material>(
+//   		{ "Models/map-bump.material" }));
 
 		auto& renderer = GetSubsystem<Renderer>();
 		Viewport* viewport = new Viewport(scene_, camera_);
@@ -70,18 +73,39 @@ namespace Unique
 
 	void SceneSample::HandleShutdown(const struct Shutdown& eventData)
 	{
-
 	}
 
-	Vector3 test;
 	void SceneSample::HandleGUI(const GUIEvent& eventData)
-	{		
-		if (nk_begin(nk_ctx(), "Demo", nk_rect(50, 50, 230, 250),
+	{
+		auto& graphics = GetSubsystem<Graphics>();
+		nk_context* ctx = nk_ctx();
+		if (nk_begin(ctx, "Static Scene", nk_rect((float)graphics.GetWidth() - 220, 20, 200, 300),
 			NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE |
 			NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE))
 		{
-			nk_layout_row_static(nk_ctx(), 30, 80, 1);
-			nk_property_vector3(nk_ctx(), "pos:", test);
+			Vector3 dir = GUI::Property("Light dir: ", Vector3(-1.0f, -1.0f, -1.0f),
+				lightNode_->GetDirection(), Vector3(1.0f, 1.0f, 1.0f));
+			if (dir != lightNode_->GetDirection())
+			{
+				lightNode_->SetDirection(dir);
+			}
+
+			nk_layout_row_dynamic(ctx, 25, 1);
+
+			float scale = nk_propertyf(ctx, "Scaling", 0.01f, node_->GetScale().x_, 100.0f, 0.1f, 0.05f);
+			if (scale != node_->GetScale().x_)
+			{
+				node_->SetScale(Vector3(scale, scale, scale));
+			}
+
+			float farClip = nk_propertyf(ctx, "Camera Far Clip", 100, camera_->GetFarClip(), 3000, 1, 0.5f);
+			if (farClip != camera_->GetFarClip())
+			{
+				camera_->SetFarClip(farClip);
+			}
+
+			nk_property_float(ctx, "Move Speed", -100.0f, &moveSpeed, 100.0f, 0.1f, 0.05f);
+			nk_property_float(ctx, "Mouse Sensitivity", -100.0f, &mouseSensitivity, 100.0f, 0.1f, 0.05f);
 		}
 		nk_end(nk_ctx());
 	}
@@ -99,17 +123,13 @@ namespace Unique
 	{
 		auto& input = GetSubsystem<Input>();
 
-		// Movement speed as world units per second
-		const float MOVE_SPEED = 20.0f;
-		// Mouse sensitivity as degrees per pixel
-		const float MOUSE_SENSITIVITY = 0.1f;
 
 		if (input.GetMouseButtonDown(MOUSEB_RIGHT))
 		{
 			// Use this frame's mouse motion to adjust camera node yaw and pitch. Clamp the pitch between -90 and 90 degrees
 			IntVector2 mouseMove = input.GetMouseMove();
-			yaw_ += MOUSE_SENSITIVITY * mouseMove.x_;
-			pitch_ += MOUSE_SENSITIVITY * mouseMove.y_;
+			yaw_ += mouseSensitivity * mouseMove.x_;
+			pitch_ += mouseSensitivity * mouseMove.y_;
 			pitch_ = Clamp(pitch_, -90.0f, 90.0f);
 
 			// Construct new orientation for the camera scene node from yaw and pitch. Roll is fixed to zero
@@ -119,13 +139,13 @@ namespace Unique
 		// Read WASD keys and move the camera scene node to the corresponding direction if they are pressed
 		// Use the Translate() function (default local space) to move relative to the node's orientation.
 		if (input.GetKeyDown(KEY_W))
-			camera_->GetNode()->Translate(Vector3::FORWARD * MOVE_SPEED * timeStep);
+			camera_->GetNode()->Translate(Vector3::FORWARD * moveSpeed * timeStep);
 		if (input.GetKeyDown(KEY_S))
-			camera_->GetNode()->Translate(Vector3::BACK * MOVE_SPEED * timeStep);
+			camera_->GetNode()->Translate(Vector3::BACK * moveSpeed * timeStep);
 		if (input.GetKeyDown(KEY_A))
-			camera_->GetNode()->Translate(Vector3::LEFT * MOVE_SPEED * timeStep);
+			camera_->GetNode()->Translate(Vector3::LEFT * moveSpeed * timeStep);
 		if (input.GetKeyDown(KEY_D))
-			camera_->GetNode()->Translate(Vector3::RIGHT * MOVE_SPEED * timeStep);
+			camera_->GetNode()->Translate(Vector3::RIGHT * moveSpeed * timeStep);
 
 	}
 }

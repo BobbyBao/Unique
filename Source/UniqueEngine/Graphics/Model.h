@@ -28,6 +28,7 @@
 #include "../Graphics/Skeleton.h"
 #include "Math/BoundingBox.h"
 #include "Resource/Resource.h"
+#include "Material.h"
 
 namespace Unique
 {
@@ -36,6 +37,7 @@ class Geometry;
 class IndexBuffer;
 class Graphics;
 class VertexBuffer;
+class Material;
 
 /// Vertex buffer morph data.
 struct VertexBufferMorph
@@ -45,7 +47,13 @@ struct VertexBufferMorph
     /// Number of vertices.
     unsigned vertexCount_;
     /// Morphed vertices. Stored packed as <index, data> pairs.
-    Vector<unsigned char> morphData_;
+	Vector<unsigned char> morphData_;
+
+	bool operator ==(const VertexBufferMorph& rhs) const
+	{
+		return elementMask_ == rhs.elementMask_ && vertexCount_ == rhs.vertexCount_
+			&& morphData_ == rhs.morphData_;
+	}
 };
 
 /// Definition of a model's vertex morph.
@@ -57,6 +65,12 @@ struct ModelMorph
     float weight_;
     /// Morph data per vertex buffer.
     HashMap<unsigned, VertexBufferMorph> buffers_;
+
+	bool operator ==(const ModelMorph& rhs) const
+	{
+		return nameHash_ == rhs.nameHash_ && weight_ == rhs.weight_
+			&& buffers_ == rhs.buffers_;
+	}
 };
 
 /// Description of a geometry for loading.
@@ -170,6 +184,7 @@ public:
     /// Return vertex buffer morph range vertex count.
     unsigned GetMorphRangeCount(unsigned bufferIndex) const;
 
+	Vector<SPtr<Material>> materials_;
 private:
     /// Bounding box.
     BoundingBox boundingBox_;

@@ -61,11 +61,11 @@ namespace Unique
 		}
 	};
 
-	template<class FirstClass, class SecondClass, class Compare, class Allocator>
-	class TypeTraits<std::unordered_map<FirstClass, SecondClass, Compare, Allocator> > : public SerializeTraitsMap<std::map<FirstClass, SecondClass, Compare, Allocator> >
+	template<class FirstClass, class SecondClass>
+	class TypeTraits<std::unordered_map<FirstClass, SecondClass> > : public SerializeTraitsMap<std::unordered_map<FirstClass, SecondClass> >
 	{
 	public:
-		typedef std::unordered_map<FirstClass, SecondClass, Compare, Allocator>	value_type;
+		typedef std::unordered_map<FirstClass, SecondClass>	value_type;
 		
 		template<class VisitFunction> inline
 		static void Visit(value_type& data, VisitFunction& visitor)
@@ -107,6 +107,12 @@ namespace Unique
 
 	template<class T0, class T1, class Compare, class Allocator>
 	struct NonConstContainerValueType<std::map<T0, T1, Compare, Allocator> >
+	{
+		typedef std::pair<T0, T1> value_type;
+	};
+
+	template<class T0, class T1>
+	struct NonConstContainerValueType<std::unordered_map<T0, T1> >
 	{
 		typedef std::pair<T0, T1> value_type;
 	};
