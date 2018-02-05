@@ -46,7 +46,7 @@ namespace Unique
 		scene_->CreateComponent<Octree>();
 		scene_->CreateComponent<DebugRenderer>();
 		camera_ = scene_->CreateChild("Camera")->CreateComponent<Camera>();
-		camera_->SetFarClip(1000);
+		camera_->SetFarClip(2000);
 
 		lightNode_ = scene_->CreateChild("DirectionalLight");
 		lightNode_->SetDirection(Vector3(0.6f, -1.0f, 0.8f)); // The direction vector does not need to be normalized
@@ -65,6 +65,9 @@ namespace Unique
 //   		{ "Models/map-bump.material" }));
 
 		auto& renderer = GetSubsystem<Renderer>();
+		Zone* zone = renderer.GetDefaultZone();
+		zone->SetAmbientColor(Color(0.11f, 0.27f, 0.54f));
+		zone->SetFogColor(Color(0.4f, 0.5f, 1.0f));
 		Viewport* viewport = new Viewport(scene_, camera_);
 		renderer.SetViewport(0, viewport);
 		viewport->SetDrawDebug(true);
@@ -78,13 +81,50 @@ namespace Unique
 	void SceneSample::HandleGUI(const GUIEvent& eventData)
 	{
 		auto& graphics = GetSubsystem<Graphics>();
+		auto& renderer = GetSubsystem<Renderer>();
 		nk_context* ctx = nk_ctx();
-		if (nk_begin(ctx, "Static Scene", nk_rect((float)graphics.GetWidth() - 220, 20, 200, 300),
-			NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE |
+		if (nk_begin(ctx, "Static Scene", nk_rect((float)graphics.GetWidth() - 220, 20, 200, 500),
+			NK_WINDOW_BORDER | /*NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE |*/
 			NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE))
 		{
-			Vector3 dir = GUI::Property("Light dir: ", Vector3(-1.0f, -1.0f, -1.0f),
-				lightNode_->GetDirection(), Vector3(1.0f, 1.0f, 1.0f));
+			Zone* zone = renderer.GetDefaultZone();
+			Engine& engine = GetSubsystem<Engine>();
+
+			nk_layout_row_dynamic(ctx, 20, 2);
+			
+			nk_label(ctx, "FPS:", NK_TEXT_LEFT);
+			nk_label(ctx, String(1 / engine.GetNextTimeStep()), NK_TEXT_LEFT);
+			nk_label(ctx, "RenderWait:", NK_TEXT_LEFT);
+			nk_label(ctx, String(graphics.GetRenderWait()), NK_TEXT_LEFT);
+			nk_label(ctx, "UpdateWait:", NK_TEXT_LEFT);
+			nk_label(ctx, String(graphics.GetUpdateWait()), NK_TEXT_LEFT);
+
+			
+			Color ambient = GUI::Property("Ambient Color: ", zone->GetAmbientColor(), false);
+			if (ambient != zone->GetAmbientColor())
+			{
+				zone->SetAmbientColor(ambient);
+			}
+
+			Color fogColor = GUI::Property("Fog Color: ", zone->GetFogColor(), false);
+			if (fogColor != zone->GetAmbientColor())
+			{
+				zone->SetFogColor(fogColor);
+			}
+
+			float fogStart = nk_propertyf(ctx, "Fog Start", 0, zone->GetFogStart(), 3000, 1, 0.5f);
+			if (fogStart != zone->GetFogStart())
+			{
+				zone->SetFogStart(fogStart);
+			}
+
+			float fogEnd = nk_propertyf(ctx, "Fog End", 0, zone->GetFogEnd(), 3000, 1, 0.5f);
+			if (fogEnd != zone->GetFogEnd())
+			{
+				zone->SetFogEnd(fogEnd);
+			}
+
+			Vector3 dir = GUI::Property("Light dir: ", Vector3(-1.0f, -1.0f, -1.0f), lightNode_->GetDirection(), Vector3(1.0f, 1.0f, 1.0f));
 			if (dir != lightNode_->GetDirection())
 			{
 				lightNode_->SetDirection(dir);
@@ -92,11 +132,7 @@ namespace Unique
 
 			nk_layout_row_dynamic(ctx, 25, 1);
 
-			float scale = nk_propertyf(ctx, "Scaling", 0.01f, node_->GetScale().x_, 100.0f, 0.1f, 0.05f);
-			if (scale != node_->GetScale().x_)
-			{
-				node_->SetScale(Vector3(scale, scale, scale));
-			}
+			nk_label(ctx, "Camera:", NK_TEXT_ALIGN_LEFT);
 
 			float farClip = nk_propertyf(ctx, "Camera Far Clip", 100, camera_->GetFarClip(), 3000, 1, 0.5f);
 			if (farClip != camera_->GetFarClip())
@@ -107,6 +143,7 @@ namespace Unique
 			nk_property_float(ctx, "Move Speed", -100.0f, &moveSpeed, 100.0f, 0.1f, 0.05f);
 			nk_property_float(ctx, "Mouse Sensitivity", -100.0f, &mouseSensitivity, 100.0f, 0.1f, 0.05f);
 		}
+
 		nk_end(nk_ctx());
 	}
 

@@ -229,6 +229,7 @@ namespace Unique
         for (size_t i = 0; i < shapes.size(); i++)
 		{	
 			const auto& shape = shapes[i];
+			uint indexCount = 0;
             for (const auto& index : shape.mesh.indices)
 			{
                 Vertex vertex = {};
@@ -258,7 +259,7 @@ namespace Unique
                 }
 
                 indices.push_back(uniqueVertices[vertex]); 
-	
+				indexCount++;
             }
 					
 			model->loadGeometries_[i].resize(1);
@@ -268,9 +269,9 @@ namespace Unique
 			desc.vbRef_ = vertexBuffers.size();
 			desc.ibRef_ = indexBuffers.size();
 			desc.indexStart_ = indexOffset;
-			desc.indexCount_ = indices.size();
+			desc.indexCount_ = indexCount;
 			desc.lodDistance_ = 0.0f;
-			indexOffset = indices.size();
+			indexOffset += indexCount;
 			SPtr<VertexBuffer> pVertexBuffer(new VertexBuffer());
 			pVertexBuffer->Create(std::move(vertices));
 			vertexBuffers.emplace_back(pVertexBuffer);

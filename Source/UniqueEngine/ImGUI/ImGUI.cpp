@@ -577,6 +577,27 @@ namespace Unique
 		}
 	}
 
+	Color GUI::Property(const char* name, const Color& color, bool alpha)
+	{
+		nk_colorf c = (nk_colorf&)color;
+		nk_layout_row_dynamic(ctx, 20, 1);
+		nk_label(ctx, name, NK_TEXT_LEFT);
+		nk_layout_row_dynamic(ctx, 25, 1);
+		if (nk_combo_begin_color(ctx, nk_rgba_cf(c), nk_vec2(nk_widget_width(ctx), 400)))
+		{
+			nk_layout_row_dynamic(ctx, 120, 1);
+			c = nk_color_picker(ctx, c, (nk_color_format)alpha);
+			nk_layout_row_dynamic(ctx, 25, 1);
+			c.r = nk_propertyf(ctx, "#R:", 0, c.r, 1.0f, 0.01f, 0.005f);
+			c.g = nk_propertyf(ctx, "#G:", 0, c.g, 1.0f, 0.01f, 0.005f);
+			c.b = nk_propertyf(ctx, "#B:", 0, c.b, 1.0f, 0.01f, 0.005f);
+			c.a = nk_propertyf(ctx, "#A:", 0, c.a, 1.0f, 0.01f, 0.005f);
+			nk_combo_end(ctx);
+		}
+
+		return (Color&)c;
+	}
+
 	Vector3 GUI::Property(const char* name, const Vector3& min, const Vector3& vec, const Vector3& max)
 	{
 		Vector3 v = vec;

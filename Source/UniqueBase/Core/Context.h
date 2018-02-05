@@ -161,6 +161,15 @@ public:
 		return *obj;
 	}
 
+	/// Register a subsystem.
+	template<typename T>
+	T& RegisterSubsystem(T* subsystem)
+	{
+		InstanceHolder<T>::Instance() = subsystem;
+		RegisterSubsystem((Object*)subsystem);
+		return *subsystem;
+	}
+
 	template<class T>
 	static T* GetSubsystem()
 	{

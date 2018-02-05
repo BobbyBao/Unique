@@ -20,6 +20,7 @@ namespace Unique
 		GUI();
 		~GUI();
 		
+		static Color Property(const char* name, const Color& color, bool alpha = false);
 		static Vector3 Property(const char* name, const Vector3& min, const Vector3& vec, const Vector3& max);
 	private:
 		void HandleStartup(const struct Startup& eventData);
