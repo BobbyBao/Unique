@@ -248,10 +248,10 @@ namespace Unique
 	void GraphicsBuffer::UpdateBuffer()
 	{
 		auto& graphics = GetSubsystem<Graphics>();
-		void* bufferData = graphics.Map(this);
+		void* bufferData = graphics.Map(this, MapFlags::DISCARD);
 		memcpy(bufferData, RenderContext(data_).data() + RenderContext(lockStart_) * GetStride(),
 			RenderContext(lockCount_) * GetStride());
-		graphics.Unmap(this);
+		graphics.Unmap(this, MapFlags::DISCARD);
 	}
 
 	bool IndexBuffer::SetSize(unsigned indexCount, bool largeIndices, bool dynamic)

@@ -37,6 +37,8 @@ namespace Unique
 	long long Graphics::waitRender_ = 0;
 	CommandQueue Graphics::comands_;
 	CommandQueue Graphics::postComands_;
+	uint Graphics::batchCount_;
+	uint Graphics::triangleCount_;
 
 	struct Impl
 	{
@@ -393,6 +395,9 @@ namespace Unique
 			impl_.swapChain_->Present();
 		}
 
+		batchCount_ = 0;
+		triangleCount_ = 0;
+
 		if (MainSemWait())
 		{
 			UNIQUE_PROFILE(ExecCommands);
@@ -465,11 +470,13 @@ namespace Unique
 			drawAttribs.NumIndices = geometry->indexCount_; 
 			drawAttribs.IndexType = geometry->indexBuffer_->GetStride() == 4 ? (VALUE_TYPE)ValueType::VT_UINT32 : (VALUE_TYPE)ValueType::VT_UINT16;
 			impl_.deviceContext_->SetIndexBuffer(*geometry->indexBuffer_, 0);
+			triangleCount_ += geometry->indexCount_ / 3;
 		}
 		else if (geometry->vertexCount_ > 0)
 		{
 			drawAttribs.StartVertexLocation = geometry->vertexStart_;
 			drawAttribs.NumVertices = geometry->vertexCount_;
+			triangleCount_ += geometry->vertexCount_ / 3;
 		}
 
 		impl_.deviceContext_->SetPipelineState((Diligent::IPipelineState*)pipeline->GetPipeline());
@@ -480,6 +487,7 @@ namespace Unique
 			impl_.resourceMapping_, BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED | BIND_SHADER_RESOURCES_ALL_RESOLVED);
 		impl_.deviceContext_->CommitShaderResources(pipeline->GetShaderResourceBinding(), COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
 		impl_.deviceContext_->Draw(drawAttribs);
+		batchCount_++;
 	}
 		
 	void Graphics::Draw(Geometry* geometry, PipelineState* pipeline, PrimitiveTopology primitiveType, 
@@ -507,10 +515,12 @@ namespace Unique
 			drawAttribs.NumIndices = indexCount;
 			drawAttribs.IndexType = geometry->indexBuffer_->GetStride() == 4 ? (VALUE_TYPE)ValueType::VT_UINT32 : (VALUE_TYPE)ValueType::VT_UINT16;
 			impl_.deviceContext_->SetIndexBuffer(*geometry->indexBuffer_, 0);
+			triangleCount_ += indexCount / 3;
 		}
 		else if (geometry->vertexCount_ > 0)
 		{
 			drawAttribs.NumVertices = vertexCount;
+			triangleCount_ += vertexCount  / 3;
 		}
 
 		impl_.deviceContext_->SetPipelineState((Diligent::IPipelineState*)pipeline->GetPipeline());
@@ -523,6 +533,7 @@ namespace Unique
 		impl_.deviceContext_->CommitShaderResources(pipeline->GetShaderResourceBinding(), COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
 
 		impl_.deviceContext_->Draw(drawAttribs);
+		batchCount_++;
 	}
 
 	void Graphics::DrawInstanced(Geometry* geometry, PipelineState* pipeline, uint instanceOffset, uint numInstances)
@@ -549,10 +560,12 @@ namespace Unique
 			drawAttribs.NumIndices = geometry->indexCount_;
 			drawAttribs.IndexType = geometry->indexBuffer_->GetStride() == 4 ? (VALUE_TYPE)ValueType::VT_UINT32 : (VALUE_TYPE)ValueType::VT_UINT16;
 			impl_.deviceContext_->SetIndexBuffer(*geometry->indexBuffer_, 0);
+			triangleCount_ += geometry->indexCount_ / 3 * numInstances;
 		}
 		else if (geometry->vertexCount_ > 0)
 		{
 			drawAttribs.NumVertices = geometry->vertexCount_;
+			triangleCount_ += geometry->vertexCount_ / 3 * numInstances;
 		}
 
 		drawAttribs.NumInstances = numInstances;
@@ -568,6 +581,7 @@ namespace Unique
 		impl_.deviceContext_->CommitShaderResources(pipeline->GetShaderResourceBinding(), COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
 
 		impl_.deviceContext_->Draw(drawAttribs);
+		batchCount_++;
 	}
 
 	void Graphics::Close()

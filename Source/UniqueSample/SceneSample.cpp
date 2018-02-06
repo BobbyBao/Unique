@@ -58,7 +58,8 @@ namespace Unique
 
 		StaticModel* model = node_->CreateComponent<StaticModel>();
 		model->SetModelAttr(ResourceRef::Create<Model>(
-			"Models/Sponza/sponza.obj"
+			"Models/crytek-sponza/sponza.obj"
+			//"Models/Sponza/sponza.obj"
 			//"Models/map-bump.obj"
 			));
 //   		model->SetMaterialsAttr(ResourceRefList::Create<Material>(
@@ -94,12 +95,15 @@ namespace Unique
 			
 			nk_label(ctx, "FPS:", NK_TEXT_LEFT);
 			nk_label(ctx, String(1 / engine.GetNextTimeStep()), NK_TEXT_LEFT);
-			nk_label(ctx, "RenderWait:", NK_TEXT_LEFT);
-			nk_label(ctx, String(graphics.GetRenderWait()), NK_TEXT_LEFT);
-			nk_label(ctx, "UpdateWait:", NK_TEXT_LEFT);
-			nk_label(ctx, String(graphics.GetUpdateWait()), NK_TEXT_LEFT);
-
-			
+			nk_label(ctx, "Render Wait:", NK_TEXT_LEFT);
+			nk_label(ctx, String(Graphics::GetRenderWait()), NK_TEXT_LEFT);
+			nk_label(ctx, "Update Wait:", NK_TEXT_LEFT);
+			nk_label(ctx, String(Graphics::GetUpdateWait()), NK_TEXT_LEFT);
+			nk_label(ctx, "Batch Count:", NK_TEXT_LEFT);
+			nk_label(ctx, String(Graphics::GetBatchCount()), NK_TEXT_LEFT);
+			nk_label(ctx, "Tri Count:", NK_TEXT_LEFT);
+			nk_label(ctx, String(Graphics::GetTriCount()), NK_TEXT_LEFT);
+#if false
 			Color ambient = GUI::Property("Ambient Color: ", zone->GetAmbientColor(), false);
 			if (ambient != zone->GetAmbientColor())
 			{
@@ -142,6 +146,7 @@ namespace Unique
 
 			nk_property_float(ctx, "Move Speed", -100.0f, &moveSpeed, 100.0f, 0.1f, 0.05f);
 			nk_property_float(ctx, "Mouse Sensitivity", -100.0f, &mouseSensitivity, 100.0f, 0.1f, 0.05f);
+#endif
 		}
 
 		nk_end(nk_ctx());

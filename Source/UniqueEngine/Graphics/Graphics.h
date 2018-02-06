@@ -97,6 +97,8 @@ namespace Unique
 
 		static float GetRenderWait() { return  waitSubmit_/ 1000.0f;}
 		static float GetUpdateWait() { return  waitRender_/ 1000.0f;}
+		static uint GetBatchCount() { return batchCount_; }
+		static uint GetTriCount() {	return triangleCount_; }
 	protected:
 		static void SetRenderThread();
 		static void ExecuteCommands(CommandQueue& cmds);
@@ -106,6 +108,7 @@ namespace Unique
 		static void RenderSemPost();
 		static void RenderSemWait();
 
+		struct Impl& impl_;
 		String title_;
 		IntVector2 resolution_;
 		DeviceType deviceType_;
@@ -113,11 +116,9 @@ namespace Unique
 		bool vsync_ = false;
 		int multiSampling_ = 4;
 		bool srgb_ = false;
-
-		struct Impl& impl_;
-
 		bool inited_ = false;
 		SDL_Window *window_ = nullptr;
+
 		static ThreadID renderThreadID;
 		static bool singleThreaded_;
 		static Semaphore renderSem_;
@@ -126,6 +127,8 @@ namespace Unique
 		static long long waitRender_;
 		static CommandQueue comands_;
 		static CommandQueue postComands_;
+		static uint batchCount_;
+		static uint triangleCount_;
 
 		template<class T>
 		friend T& MainContext(T* data);

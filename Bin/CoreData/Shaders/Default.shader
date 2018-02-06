@@ -24,7 +24,7 @@ Shader "Default"
 		RasterizerState 
 		{
 			FillMode SOLID
-			CullMode NONE
+		//	CullMode NONE
 		}
 		
 		InputLayout
