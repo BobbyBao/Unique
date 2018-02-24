@@ -385,6 +385,7 @@ namespace Unique
 		SPtr<UniformBuffer> materialPS_;
 
 		Vector<Matrix3x4>	batchMatrics_[2];
+		HashMap<const Matrix3x4*, size_t> matricsToOffset_;
 				
 		friend class ScenePass;
 		friend class ZoneOctreeQuery;

@@ -258,7 +258,6 @@ namespace Unique
 		billboardVS_ = graphics_.AddUniform<BillboardVS>();
 		materialVS_ = graphics_.AddUniform<MaterialVS>();
 
-
 		cameraPS_ = graphics_.AddUniform<CameraPS>();
 		zonePS_ = graphics_.AddUniform<ZonePS>();
 		lightPS_ = graphics_.AddUniform<LightPS>();
@@ -360,7 +359,8 @@ namespace Unique
 		}
 
 		MainContext(batchMatrics_).clear();
-		   
+		matricsToOffset_.clear();
+
 		octree_ = nullptr;
 		// Get default zone first in case we do not have zones defined
 		cameraZone_ = farClipZone_ = renderer_.GetDefaultZone();
@@ -942,6 +942,12 @@ namespace Unique
 
 	size_t View::GetMatrics(const Matrix3x4* transform, uint num)
 	{
+		auto it = matricsToOffset_.find(transform);
+		if (it != matricsToOffset_.end())
+		{
+			return it->second;
+		}
+
 		auto& batchMatrics = MainContext(batchMatrics_);
 		size_t offset = batchMatrics.size();
 		size_t newSize = offset + num;
@@ -953,6 +959,7 @@ namespace Unique
 
 		batchMatrics.resize(newSize);
 		std::memcpy(&batchMatrics[offset], transform, num * sizeof(Matrix3x4));
+		matricsToOffset_[transform] = offset;
 		return offset;
 	}
 

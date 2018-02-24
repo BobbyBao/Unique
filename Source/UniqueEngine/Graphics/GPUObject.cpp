@@ -5,22 +5,14 @@
 namespace Unique
 {
 	Vector<GPUObject*> GPUObject::updateQueue_[2];
+
 	bool GPUObject::Create()
 	{
-		if (Thread::IsMainThread())
-		{
-			uCall
-			(
-				ReleaseImpl();
-				CreateImpl();
-			);
-
-		}
-		else
-		{
+		uCall
+		(
 			ReleaseImpl();
 			CreateImpl();
-		}
+		);
 
 		return true;
 	}
