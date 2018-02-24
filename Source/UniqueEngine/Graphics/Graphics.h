@@ -172,7 +172,7 @@ namespace Unique
  auto fn = [=]{CODE};\
 	if (Thread::IsMainThread())\
 	{\
-		Graphics::AddCommand(fn);\
+		Graphics::PostCommand(fn);\
 	}\
 	else\
 	{\

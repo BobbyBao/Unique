@@ -17,6 +17,7 @@ namespace Unique
 		operator T**() { return (T**)&deviceObject_; }
 		template<class T>
 		operator const T**()const { return (T**)&deviceObject_; }
+
 	protected:	
 		virtual bool CreateImpl();
 		virtual void ReleaseImpl();
@@ -24,8 +25,10 @@ namespace Unique
 		void MarkDirty();
 
 		static void UpdateBuffers();
-		void* deviceObject_ = nullptr;
 		static Vector<GPUObject*> updateQueue_[2];
+
+		void* deviceObject_ = nullptr;
+
 		friend class Graphics;
 	};
 	

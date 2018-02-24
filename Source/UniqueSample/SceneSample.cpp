@@ -84,7 +84,7 @@ namespace Unique
 		auto& graphics = GetSubsystem<Graphics>();
 		auto& renderer = GetSubsystem<Renderer>();
 		nk_context* ctx = nk_ctx();
-		if (nk_begin(ctx, "Static Scene", nk_rect((float)graphics.GetWidth() - 220, 20, 200, 500),
+		if (nk_begin(ctx, "Static Scene", nk_rect((float)graphics.GetWidth() - 220, 20, 200, 560),
 			NK_WINDOW_BORDER | /*NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE |*/
 			NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE))
 		{
@@ -103,7 +103,7 @@ namespace Unique
 			nk_label(ctx, String(Graphics::GetBatchCount()), NK_TEXT_LEFT);
 			nk_label(ctx, "Tri Count:", NK_TEXT_LEFT);
 			nk_label(ctx, String(Graphics::GetTriCount()), NK_TEXT_LEFT);
-#if false
+
 			Color ambient = GUI::Property("Ambient Color: ", zone->GetAmbientColor(), false);
 			if (ambient != zone->GetAmbientColor())
 			{
@@ -146,7 +146,7 @@ namespace Unique
 
 			nk_property_float(ctx, "Move Speed", -100.0f, &moveSpeed, 100.0f, 0.1f, 0.05f);
 			nk_property_float(ctx, "Mouse Sensitivity", -100.0f, &mouseSensitivity, 100.0f, 0.1f, 0.05f);
-#endif
+
 		}
 
 		nk_end(nk_ctx());
@@ -164,7 +164,6 @@ namespace Unique
 	void SceneSample::UpdateCamera(float timeStep)
 	{
 		auto& input = GetSubsystem<Input>();
-
 
 		if (input.GetMouseButtonDown(MOUSEB_RIGHT))
 		{
