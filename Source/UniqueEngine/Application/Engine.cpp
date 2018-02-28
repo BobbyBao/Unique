@@ -130,7 +130,6 @@ namespace Unique
 
 	void Engine::ThreadFunction()
 	{
-		// Set the main thread ID (assuming the Context is created in it)
 		Thread::SetMainThread();
 
 		auto& graphics = GetSubsystem<Graphics>();
