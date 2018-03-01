@@ -32,12 +32,12 @@ namespace UniqueEditor.Samples
 
             .Child("Scene", c => c
                 .Component<StaticModel>(sm => sm
-                    .Model(new ResourceRef(TypeOf<Model>(), /*"Models/map-bump.obj"*/"Models/Sponza/sponza.obj"))
-                    //.Material(new ResourceRefList(TypeOf<Material>(), "Models/Stone.material"))
+                    .Model("Models/crytek-sponza/sponza.obj")
                 )
             );
 
-            viewport.Scene(scene)
+            viewport
+                .Scene(scene)
                 .Camera(camera);
         }
 

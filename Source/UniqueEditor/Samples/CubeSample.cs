@@ -27,14 +27,12 @@ namespace UniqueEditor.Samples
                 .Position(Vector3.Zero)
                 .Scaling(new Vector3(1.0f, 1.0f, 1.0f))
                 .Component<StaticModel>(sm => sm
-                    .Model(new ResourceRef(TypeOf<Model>(), "Cube"))                    
-                    .Material(new ResourceRefList(TypeOf<Material>(), "Models/Box.material"))
+                    .Model("Cube")                    
+                    .Material("Models/Box.material")
                 )
             );
 
-            viewport
-                .Scene(scene)
-                .Camera(camera);
+            viewport.Scene(scene).Camera(camera);
         }
     }
 }

@@ -29,13 +29,12 @@ namespace UniqueEditor.Samples
                    .Store(ref camera)
                 )
             )
-
             .Child("Floor", c => c
                 .Position(Vector3.Zero)
                 .Scaling(new Vector3(100.0f, 100.0f, 100.0f))
                 .Component<StaticModel>(sm => sm
-                    .Model(new ResourceRef(TypeOf<Model>(), "Models/Plane.mdl"))
-                    .Material(new ResourceRefList(TypeOf<Material>(), "Models/Stone.material"))
+                    .Model("Models/Plane.mdl")
+                    .Material("Models/Stone.material")
                 )
             );
             
@@ -47,8 +46,8 @@ namespace UniqueEditor.Samples
                     .Rotation(new Quaternion(0.0f, MathHelper.Random(360.0f), 0.0f))
                     .Scaling(0.5f + MathHelper.Random(2.0f))
                     .Component<StaticModel>(sm => sm
-                        .Model(new ResourceRef(TypeOf<Model>(), "Models/Mushroom.mdl"))
-                        .Material(new ResourceRefList(TypeOf<Material>(), "Models/Mushroom.material"))
+                        .Model("Models/Mushroom.mdl")
+                        .Material("Models/Mushroom.material")
                     )
                 );
 

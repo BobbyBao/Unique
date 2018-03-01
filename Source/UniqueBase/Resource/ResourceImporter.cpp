@@ -19,16 +19,16 @@ namespace Unique
 	SPtr<Resource> ResourceImporter::Import(const String& filePath)
 	{
 		SPtr<Resource> res = DynamicCast<Resource>(GetContext()->CreateObject(type_));
-		if (filePath.EndsWith(".json", false))
+		//if (filePath.EndsWith(".json", false))
 		{
 			JsonDeserializer jsonReader;
 			jsonReader.Load(filePath, res);
 		}
-		else
-		{
-			BinaryDeserializer binaryReader;
-			binaryReader.Load(filePath, res);
-		}
+// 		else
+// 		{
+// 			BinaryDeserializer binaryReader;
+// 			binaryReader.Load(filePath, res);
+// 		}
 		return res;
 	}
 
