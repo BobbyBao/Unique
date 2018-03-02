@@ -108,13 +108,13 @@ namespace UniqueEngine
             Object_SendEvent(native_, ref eventType, Utilities.As(ref eventData));
         }
 
-        public T New<T>(ref T val) where T : Object, new()
+        public T New<T>(out T val) where T : Object, new()
         {
             val = new T();
             return val;
         }
 
-        public T Store<T>(ref T val) where T : Object
+        public T Store<T>(out T val) where T : Object
         {
             val = (T)this;
             return val;

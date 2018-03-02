@@ -12,7 +12,7 @@ namespace UniqueEditor.Samples
         {
             base.Enter();
 
-            New(ref scene)
+            New(out scene)
             .Component<Octree>()
             .Component<DebugRenderer>()
             .Child("Light", c => c
@@ -26,7 +26,7 @@ namespace UniqueEditor.Samples
                 .Position(new Vector3(0.0f, 10.0f, -30.0f))
                 .LookAt(new Vector3(0.0f, 0.0f, 0.0f))
                 .Component<Camera>(cam => cam
-                   .Store(ref camera)
+                   .Store(out camera)
                 )
             )
 
