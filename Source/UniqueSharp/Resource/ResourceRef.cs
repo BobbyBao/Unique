@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 
 namespace UniqueEngine
-{
+{   
     public partial class ResourceRef : DisposeBase
     {
         public IntPtr native_;
@@ -20,6 +20,13 @@ namespace UniqueEngine
         
     }
 
+    public class ResourceRef<T> : ResourceRef
+    {
+        public ResourceRef(string name) : base(Object.TypeOf<T>(), name)
+        {
+        }
+    }
+
     public partial class ResourceRefList : DisposeBase
     {
         public IntPtr native_;
@@ -30,9 +37,14 @@ namespace UniqueEngine
             type_ = type;
             names_ = names;
             native_ = ResourceRefList_new(type, names);
+        }        
+        
+    }
+
+    public class ResourceRefList<T> : ResourceRefList
+    {
+        public ResourceRefList(string name) : base(Object.TypeOf<T>(), name)
+        {
         }
-        
-        
-        
     }
 }

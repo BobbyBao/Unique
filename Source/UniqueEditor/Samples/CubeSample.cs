@@ -12,14 +12,14 @@ namespace UniqueEditor.Samples
         {
             base.Enter();
 
-            New(ref scene)
+            New(out scene)
             .Component<Octree>()
             .Component<DebugRenderer>()
             .Child("Camera", c => c
                 .Position(new Vector3(0.0f, 0.0f, -5.0f))
                 .LookAt(new Vector3(0.0f, 0.0f, 0.0f))
                 .Component<Camera>(cam => cam
-                   .Store(ref camera)
+                   .Store(out camera)
                 )
             )
 
@@ -27,14 +27,12 @@ namespace UniqueEditor.Samples
                 .Position(Vector3.Zero)
                 .Scaling(new Vector3(1.0f, 1.0f, 1.0f))
                 .Component<StaticModel>(sm => sm
-                    .Model(new ResourceRef(TypeOf<Model>(), "Cube"))                    
-                    .Material(new ResourceRefList(TypeOf<Material>(), "Models/Box.material"))
+                    .Model("Cube")                    
+                    .Material("Models/Box.material")
                 )
             );
 
-            viewport
-                .Scene(scene)
-                .Camera(camera);
+            viewport.Scene(scene).Camera(camera);
         }
     }
 }

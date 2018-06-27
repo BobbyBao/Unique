@@ -29,10 +29,20 @@ namespace UniqueEngine
             return this;
         }
 
+        public  StaticModel Model(string name)
+        {
+            return Model(new ResourceRef<Model>(name));
+        }
+
         public StaticModel Model(ResourceRef model)
         {
             StaticModel_SetModelAttr(nativePtr, model.native_);
             return this;
+        }
+
+        public StaticModel Material(string name)
+        {
+            return Material(new ResourceRefList<Material>(name));
         }
 
         public StaticModel Material(ResourceRefList mat)

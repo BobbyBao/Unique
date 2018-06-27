@@ -12,7 +12,7 @@ namespace UniqueEditor.Samples
         {
             base.Enter();
 
-            New(ref scene)
+            New(out scene)
             .Component<Octree>()
             .Component<DebugRenderer>()
             .Child("Light", c => c
@@ -26,18 +26,18 @@ namespace UniqueEditor.Samples
                 .Position(new Vector3(0.0f, 10.0f, -30.0f))
                 .LookAt(new Vector3(0.0f, 0.0f, 0.0f))
                 .Component<Camera>(cam => cam
-                   .Store(ref camera)
+                   .Store(out camera)
                 )
             )
 
             .Child("Scene", c => c
                 .Component<StaticModel>(sm => sm
-                    .Model(new ResourceRef(TypeOf<Model>(), /*"Models/map-bump.obj"*/"Models/Sponza/sponza.obj"))
-                    //.Material(new ResourceRefList(TypeOf<Material>(), "Models/Stone.material"))
+                    .Model("Models/crytek-sponza/sponza.obj")
                 )
             );
 
-            viewport.Scene(scene)
+            viewport
+                .Scene(scene)
                 .Camera(camera);
         }
 
