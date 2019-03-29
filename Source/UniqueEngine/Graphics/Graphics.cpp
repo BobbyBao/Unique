@@ -207,22 +207,22 @@ namespace Unique
 	void Graphics::CreateBuffer(GraphicsBuffer& buffer, const ByteArray& data)
 	{
 		BufferDesc buffDesc;
-		buffDesc.BindFlags = buffer.bindFlags_;
+		buffDesc.BindFlags = (Diligent::BIND_FLAGS)buffer.bindFlags_;
 		buffDesc.Usage = (Diligent::USAGE)buffer.usage_;
 		buffDesc.ElementByteStride = buffer.stride_;
 		buffDesc.uiSizeInBytes = buffer.sizeInBytes_;
-		buffDesc.CPUAccessFlags = buffer.cpuAccessFlags_;
+		buffDesc.CPUAccessFlags = (Diligent::CPU_ACCESS_FLAGS)buffer.cpuAccessFlags_;
 
 		BufferData buffData;
 		buffData.pData = data.data();
 		buffData.DataSize = (uint)data.size();
 
-		impl_.renderDevice_->CreateBuffer(buffDesc, buffData, buffer);
+		impl_.renderDevice_->CreateBuffer(buffDesc, &buffData, buffer);
 	}
 
 	void Graphics::CreateShader(ShaderVariation& shader)
 	{
-		ShaderCreationAttribs Attrs;
+		ShaderCreateInfo Attrs;
 		Attrs.Desc.Name = shader.shaderStage_.source_.CString();// owner_.GetName().CString();
 		Attrs.Macros = (const Diligent::ShaderMacro*)(const ShaderMacro*)shader.macros_;
 		Attrs.FilePath = shader.shaderStage_.source_;
@@ -231,8 +231,8 @@ namespace Unique
 		//Attrs.Source = source_.CString();
 		Attrs.Desc.ShaderType = (Diligent::SHADER_TYPE)shader.shaderStage_.shaderType_;
 		Attrs.Desc.TargetProfile = (Diligent::SHADER_PROFILE)SHADER_PROFILE_DX_4_0;
-		Attrs.Desc.VariableDesc = (const Diligent::ShaderVariableDesc *)shader.shaderVariableDesc_.data();
-		Attrs.Desc.NumVariables = (uint)shader.shaderVariableDesc_.size();
+// 		Attrs.Desc.VariableDesc = (const Diligent::ShaderVariableDesc *)shader.shaderVariableDesc_.data();
+// 		Attrs.Desc.NumVariables = (uint)shader.shaderVariableDesc_.size();
 
 		class ShaderSourceStream : public Diligent::ObjectBase<IFileStream>
 		{
@@ -330,7 +330,7 @@ namespace Unique
 	
 	void Graphics::CreateTexture(Texture& texture)
 	{
-		impl_.renderDevice_->CreateTexture(texture.desc_, texture.texData_, texture);
+		impl_.renderDevice_->CreateTexture(texture.desc_, &texture.texData_, texture);
 		
 		CreateSampler(texture.sampler_);
 
@@ -365,7 +365,7 @@ namespace Unique
 	{
 		impl_.renderDevice_->CreatePipelineState(pipelineState.psoDesc_, pipelineState);
 		IPipelineState* pIPipelineState = pipelineState;
-		pIPipelineState->BindShaderResources(impl_.resourceMapping_, BIND_SHADER_RESOURCES_ALL_RESOLVED);
+		pIPipelineState->BindStaticResources(SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, impl_.resourceMapping_, Diligent::BIND_SHADER_RESOURCES_VERIFY_ALL_RESOLVED);
 		pIPipelineState->CreateShaderResourceBinding(&pipelineState.shaderResourceBinding_);
 	}
 
@@ -378,14 +378,14 @@ namespace Unique
 	{
 		IBuffer* pBuffer = *buffer;
 		void* bufferData = nullptr;
-		pBuffer->Map(impl_.deviceContext_, MAP_WRITE, (uint)mapFlags, bufferData);
+		impl_.deviceContext_->MapBuffer(pBuffer, MAP_WRITE, (Diligent::MAP_FLAGS)mapFlags, bufferData);
 		return bufferData;
 	}
 
 	void Graphics::Unmap(GraphicsBuffer* buffer, MapFlags mapFlags)
 	{
 		IBuffer* pBuffer = *buffer;
-		pBuffer->Unmap(impl_.deviceContext_, MAP_WRITE, (uint)mapFlags);
+		impl_.deviceContext_->UnmapBuffer(pBuffer, MAP_WRITE);
 	}
 	
 	bool Graphics::BeginRender()
@@ -426,18 +426,18 @@ namespace Unique
 		if(pView)
 		{
 			if(ClearFlags & CLEAR_COLOR)
-				impl_.deviceContext_->ClearRenderTarget(*pView, color);
+				impl_.deviceContext_->ClearRenderTarget(*pView, color, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-			if(flags)
-				impl_.deviceContext_->ClearDepthStencil(*pView, flags, fDepth, Stencil);
+			if (flags)
+				impl_.deviceContext_->ClearDepthStencil(*pView, (Diligent::CLEAR_DEPTH_STENCIL_FLAGS)flags, fDepth, Stencil, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 		}
 		else
 		{
 			if(ClearFlags & CLEAR_COLOR)
-				impl_.deviceContext_->ClearRenderTarget(nullptr, color);
+				impl_.deviceContext_->ClearRenderTarget(nullptr, color, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 			if(flags)
-				impl_.deviceContext_->ClearDepthStencil(nullptr, flags, fDepth, Stencil);
+				impl_.deviceContext_->ClearDepthStencil(nullptr, (Diligent::CLEAR_DEPTH_STENCIL_FLAGS)flags, fDepth, Stencil, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 		}
 	}
 	
@@ -458,10 +458,10 @@ namespace Unique
 			strides[i] = geometry->vertexBuffers_[i]->GetStride();
 		}
 		
-		impl_.deviceContext_->SetVertexBuffers(0, (uint)geometry->vertexBuffers_.size(), buffer, strides, offsets, SET_VERTEX_BUFFERS_FLAG_RESET);
+		impl_.deviceContext_->SetVertexBuffers(0, (uint)geometry->vertexBuffers_.size(), buffer, strides, /*offsets,*/RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
 
 		DrawAttribs drawAttribs;
-		drawAttribs.Topology = (Diligent::PRIMITIVE_TOPOLOGY)geometry->primitiveType_;
+//		drawAttribs.Topology = (Diligent::PRIMITIVE_TOPOLOGY)geometry->primitiveType_;
 		drawAttribs.IsIndexed = (geometry->indexBuffer_ != nullptr);
 		
 		if (geometry->indexBuffer_ && geometry->indexCount_ > 0)
@@ -469,7 +469,7 @@ namespace Unique
 			drawAttribs.FirstIndexLocation = geometry->indexStart_;
 			drawAttribs.NumIndices = geometry->indexCount_; 
 			drawAttribs.IndexType = geometry->indexBuffer_->GetStride() == 4 ? (VALUE_TYPE)ValueType::VT_UINT32 : (VALUE_TYPE)ValueType::VT_UINT16;
-			impl_.deviceContext_->SetIndexBuffer(*geometry->indexBuffer_, 0);
+			impl_.deviceContext_->SetIndexBuffer(*geometry->indexBuffer_, 0, RESOURCE_STATE_TRANSITION_MODE_NONE);
 			triangleCount_ += geometry->indexCount_ / 3;
 		}
 		else if (geometry->vertexCount_ > 0)
@@ -484,8 +484,8 @@ namespace Unique
 		auto& graphics = GetSubsystem<Graphics>();
 		
 		pipeline->GetShaderResourceBinding()->BindResources(SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL,
-			impl_.resourceMapping_, BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED | BIND_SHADER_RESOURCES_ALL_RESOLVED);
-		impl_.deviceContext_->CommitShaderResources(pipeline->GetShaderResourceBinding(), COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
+			impl_.resourceMapping_, BIND_SHADER_RESOURCES_KEEP_EXISTING);
+		impl_.deviceContext_->CommitShaderResources(pipeline->GetShaderResourceBinding(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 		impl_.deviceContext_->Draw(drawAttribs);
 		batchCount_++;
 	}
@@ -503,10 +503,10 @@ namespace Unique
 			strides[i] = geometry->vertexBuffers_[i]->GetStride();
 		}
 
-		impl_.deviceContext_->SetVertexBuffers(0, (uint)geometry->vertexBuffers_.size(), buffer, strides, offsets, SET_VERTEX_BUFFERS_FLAG_RESET);
+		impl_.deviceContext_->SetVertexBuffers(0, (uint)geometry->vertexBuffers_.size(), buffer, strides, /*offsets,*/RESOURCE_STATE_TRANSITION_MODE_NONE, SET_VERTEX_BUFFERS_FLAG_RESET);
 
 		DrawAttribs drawAttribs;
-		drawAttribs.Topology = (Diligent::PRIMITIVE_TOPOLOGY)primitiveType;
+//		drawAttribs.Topology = (Diligent::PRIMITIVE_TOPOLOGY)primitiveType;
 		drawAttribs.IsIndexed = (geometry->indexBuffer_ != nullptr);
 		
 		if (geometry->indexBuffer_ && geometry->indexCount_ > 0)
@@ -514,7 +514,7 @@ namespace Unique
 			drawAttribs.FirstIndexLocation = indexStart;
 			drawAttribs.NumIndices = indexCount;
 			drawAttribs.IndexType = geometry->indexBuffer_->GetStride() == 4 ? (VALUE_TYPE)ValueType::VT_UINT32 : (VALUE_TYPE)ValueType::VT_UINT16;
-			impl_.deviceContext_->SetIndexBuffer(*geometry->indexBuffer_, 0);
+			impl_.deviceContext_->SetIndexBuffer(*geometry->indexBuffer_, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 			triangleCount_ += indexCount / 3;
 		}
 		else if (geometry->vertexCount_ > 0)
@@ -528,9 +528,9 @@ namespace Unique
 		auto& graphics = GetSubsystem<Graphics>();
 
 		pipeline->GetShaderResourceBinding()->BindResources(SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL,
-			impl_.resourceMapping_, BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED | BIND_SHADER_RESOURCES_ALL_RESOLVED);
+			impl_.resourceMapping_, BIND_SHADER_RESOURCES_KEEP_EXISTING);
 
-		impl_.deviceContext_->CommitShaderResources(pipeline->GetShaderResourceBinding(), COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
+		impl_.deviceContext_->CommitShaderResources(pipeline->GetShaderResourceBinding(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 		impl_.deviceContext_->Draw(drawAttribs);
 		batchCount_++;
@@ -549,17 +549,17 @@ namespace Unique
 		}
 
 		DrawAttribs drawAttribs;
-		drawAttribs.Topology = (Diligent::PRIMITIVE_TOPOLOGY)geometry->primitiveType_;
+//		drawAttribs.Topology = (Diligent::PRIMITIVE_TOPOLOGY)geometry->primitiveType_;
 		drawAttribs.IsIndexed = (geometry->indexBuffer_ != nullptr);
 		
-		impl_.deviceContext_->SetVertexBuffers(0, (uint)geometry->vertexBuffers_.size(), buffer, strides, offsets, SET_VERTEX_BUFFERS_FLAG_RESET);
+		impl_.deviceContext_->SetVertexBuffers(0, (uint)geometry->vertexBuffers_.size(), buffer, strides, /*offsets,*/RESOURCE_STATE_TRANSITION_MODE_NONE, SET_VERTEX_BUFFERS_FLAG_RESET);
 
 		if (geometry->indexBuffer_ && geometry->indexCount_ > 0)
 		{
 			drawAttribs.FirstIndexLocation = geometry->indexStart_;
 			drawAttribs.NumIndices = geometry->indexCount_;
 			drawAttribs.IndexType = geometry->indexBuffer_->GetStride() == 4 ? (VALUE_TYPE)ValueType::VT_UINT32 : (VALUE_TYPE)ValueType::VT_UINT16;
-			impl_.deviceContext_->SetIndexBuffer(*geometry->indexBuffer_, 0);
+			impl_.deviceContext_->SetIndexBuffer(*geometry->indexBuffer_, 0, RESOURCE_STATE_TRANSITION_MODE_NONE);
 			triangleCount_ += geometry->indexCount_ / 3 * numInstances;
 		}
 		else if (geometry->vertexCount_ > 0)
@@ -576,9 +576,9 @@ namespace Unique
 
 		pipeline->GetShaderResourceBinding()->BindResources(
 			SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, impl_.resourceMapping_,
-			BIND_SHADER_RESOURCES_UPDATE_UNRESOLVED | BIND_SHADER_RESOURCES_ALL_RESOLVED);
+			BIND_SHADER_RESOURCES_KEEP_EXISTING);
 
-		impl_.deviceContext_->CommitShaderResources(pipeline->GetShaderResourceBinding(), COMMIT_SHADER_RESOURCES_FLAG_TRANSITION_RESOURCES);
+		impl_.deviceContext_->CommitShaderResources(pipeline->GetShaderResourceBinding(), RESOURCE_STATE_TRANSITION_MODE_NONE);
 
 		impl_.deviceContext_->Draw(drawAttribs);
 		batchCount_++;

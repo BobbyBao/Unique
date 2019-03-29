@@ -56,7 +56,7 @@ namespace Unique
 		psoDesc_.GraphicsPipeline.NumRenderTargets = 1;
 		psoDesc_.GraphicsPipeline.RTVFormats[0] = graphics.IsSRgb() ? TEX_FORMAT_RGBA8_UNORM_SRGB : TEX_FORMAT_RGBA8_UNORM;
 		psoDesc_.GraphicsPipeline.DSVFormat = TEX_FORMAT_D32_FLOAT;
-		psoDesc_.GraphicsPipeline.PrimitiveTopologyType = PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		psoDesc_.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 	}
 
 	bool PipelineState::CreateImpl()

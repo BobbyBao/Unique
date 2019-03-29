@@ -10,9 +10,9 @@
 #include "DeviceContext.h"
 #include "SwapChain.h"
 
-#include <RenderDeviceFactoryD3D11.h>
-#include <RenderDeviceFactoryD3D12.h>
-#include <RenderDeviceFactoryOpenGL.h>
+#include <EngineFactoryD3D11.h>
+//#include <RenderDeviceFactoryD3D12.h>
+//#include <RenderDeviceFactoryOpenGL.h>
 #include "../GraphicsDefs.h"
 #include <Windows.h>
 
@@ -40,18 +40,19 @@ namespace Unique
 		{
 		case DeviceType::D3D11:
 		{
-			EngineD3D11Attribs DeviceAttribs;
+			EngineD3D11CreateInfo DeviceAttribs;
 			DeviceAttribs.DebugFlags = (unsigned)EngineD3D11DebugFlags::VerifyCommittedShaderResources |
 				(unsigned)EngineD3D11DebugFlags::VerifyCommittedResourceRelevance;
 
+			FullScreenModeDesc fullScreenModeDesc;
 #ifdef ENGINE_DLL
 			GetEngineFactoryD3D11Type GetEngineFactoryD3D11 = nullptr;
 			// Load the dll and import GetEngineFactoryD3D11() function
 			LoadGraphicsEngineD3D11(GetEngineFactoryD3D11);
 #endif
 			auto *pFactoryD3D11 = GetEngineFactoryD3D11();
-			pFactoryD3D11->CreateDeviceAndContextsD3D11(DeviceAttribs, ppRenderDevice, ppImmediateContext, 0);
-			pFactoryD3D11->CreateSwapChainD3D11(*ppRenderDevice, *ppImmediateContext, SCDesc, hWnd, ppSwapChain);
+			pFactoryD3D11->CreateDeviceAndContextsD3D11(DeviceAttribs, ppRenderDevice, ppImmediateContext);
+			pFactoryD3D11->CreateSwapChainD3D11(*ppRenderDevice, *ppImmediateContext, SCDesc, fullScreenModeDesc, hWnd, ppSwapChain);
 		}
 		break;
 #if false
@@ -75,7 +76,6 @@ namespace Unique
 		}
 		break; 
 
-#endif
 		case DeviceType::OpenGL:
 		{
 #ifdef ENGINE_DLL
@@ -84,11 +84,12 @@ namespace Unique
 			// Load the dll and import GetEngineFactoryOpenGL() function
 			LoadGraphicsEngineOpenGL(GetEngineFactoryOpenGL);
 #endif
-			EngineCreationAttribs EngineCreationAttribs;
+			EngineCreateInfo EngineCreationAttribs;
 			GetEngineFactoryOpenGL()->CreateDeviceAndSwapChainGL(
 				EngineCreationAttribs, ppRenderDevice, ppImmediateContext, SCDesc, hWnd, ppSwapChain);
 		}
 		break;
+#endif
 
 		default:
 			//	LOG_ERROR_AND_THROW("Unknown device type");

@@ -952,8 +952,8 @@ static void CreateTexture(
     desc.ArraySize = static_cast<Uint32>(arraySize);
     desc.Format = DXGIFormatToTexFormat(format);
     desc.Usage = (USAGE)usage;
-    desc.BindFlags = bindFlags;
-    desc.CPUAccessFlags = cpuAccessFlags;
+    desc.BindFlags = (Diligent::BIND_FLAGS)bindFlags;
+    desc.CPUAccessFlags = (Diligent::CPU_ACCESS_FLAGS)cpuAccessFlags;
     //desc.MiscFlags = miscFlags & ~D3D11_RESOURCE_MISC_TEXTURECUBE;
 
     TextureData InitData;

@@ -51,9 +51,9 @@ namespace Unique
 		//if (TexLoadInfo.MipLevels > 0)
 		//	desc_.MipLevels = std::min(desc_.MipLevels, TexLoadInfo.MipLevels);
 		desc_.Usage = (Diligent::USAGE)TexLoadInfo.Usage;
-		desc_.BindFlags = TexLoadInfo.BindFlags;
+		desc_.BindFlags = (Diligent::BIND_FLAGS)TexLoadInfo.BindFlags;
 		desc_.Format = TexLoadInfo.Format;
-		desc_.CPUAccessFlags = TexLoadInfo.CPUAccessFlags;
+		desc_.CPUAccessFlags = (Diligent::CPU_ACCESS_FLAGS)TexLoadInfo.CPUAccessFlags;
 		auto ChannelDepth = ImgDesc.bitsPerPixel / ImgDesc.numComponents;
 
 		uint NumComponents = ImgDesc.numComponents == 3 ? 4 : ImgDesc.numComponents;

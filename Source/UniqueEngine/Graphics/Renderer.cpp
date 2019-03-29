@@ -177,7 +177,7 @@ namespace Unique
 		desc.SampleCount = 1;
 		desc.Usage = Diligent::USAGE_STATIC;
 		desc.BindFlags = Diligent::BIND_SHADER_RESOURCE;
-		desc.CPUAccessFlags = 0;
+		desc.CPUAccessFlags = Diligent::CPU_ACCESS_NONE;
 		
 		defaultTexture->SetName("Magenta");
 		defaultTexture->Create(desc, std::move(mip));
