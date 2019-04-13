@@ -23,7 +23,7 @@
     <ProjectGuid>{494B184A-3FB8-4244-9CFC-F5B3BCC36CF2}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>UniqueNative</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.10240.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -94,7 +94,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;PLATFORM_WIN32;UNIQUE_SHARED_LIB_BUILD;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;PLATFORM_WIN32;UNIQUE_SHARED_LIB_BUILD;_CRT_SECURE_NO_WARNINGS;D3D11_SUPPORTED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\..\External\include;.\;..\UniqueBase;../../External/Include;../../DiligentCore/Common/include;../../DiligentCore/Common/interface;../../DiligentCore/Graphics/GraphicsEngine/include;../../DiligentCore/Graphics/GraphicsEngine/interface;../../DiligentCore/Platforms/Basic/interface;../../DiligentCore/Platforms/interface;../../DiligentCore/Graphics/GraphicsEngineD3D11/include;../../DiligentCore/Graphics/GraphicsEngineD3D11/interface;../../DiligentCore/Graphics/GraphicsEngineD3D12/include;../../DiligentCore/Graphics/GraphicsEngineD3D12/interface;../../DiligentCore/Graphics/GraphicsEngineOpenGL/include;../../DiligentCore/Graphics/GraphicsEngineOpenGL/interface;../../DiligentCore/Graphics/HLSL2GLSLConverterLib/interface;../../DiligentCore/Graphics/GraphicsTools/include;../../DiligentCore/Primitives/interface;../../DiligentCore/Platforms/Win32/include;../../DiligentCore/Graphics/GraphicsAccessories/interface;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -108,7 +108,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>

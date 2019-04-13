@@ -9,7 +9,7 @@
 
 namespace Unique
 {
-	using IShaderVariable = Diligent::IShaderVariable;
+	using IShaderVariable = Diligent::IShaderResourceVariable;
 	using IShaderResourceBinding = Diligent::IShaderResourceBinding;
 	using IResourceMapping = Diligent::IResourceMapping;
 

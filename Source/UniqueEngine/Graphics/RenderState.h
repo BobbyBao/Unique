@@ -1,7 +1,6 @@
 #pragma once
 #include "GraphicsDefs.h"
 
-
 namespace Unique
 {
 

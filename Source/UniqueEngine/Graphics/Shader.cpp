@@ -46,7 +46,7 @@ namespace Unique
 		LayoutElement, 
 		"BufferSlot", self.BufferSlot,
 		"NumComponents", self.NumComponents,
-		"ValueType", self.valueType,
+		"ValueType", self.ValueType,
 		"IsNormalized", self.IsNormalized,
 		"RelativeOffset", self.RelativeOffset,
 		"Frequency", self.Frequency,
@@ -146,7 +146,7 @@ namespace Unique
 
 		for (size_t i = 0; i < inputLayout_.layoutElements_.size(); i++)
 		{
-			inputLayout_.layoutElements_[i].inputIndex_ = (uint)i;
+			inputLayout_.layoutElements_[i].InputIndex = (uint)i;
 		}
 
 		auto& computeShader = shaderStage_[5];

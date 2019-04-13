@@ -18,7 +18,7 @@
 
 #define ENABLE_ANIM
 
-UNIQUE_IMPLEMENT_MAIN(Unique::SceneSample)
+//UNIQUE_IMPLEMENT_MAIN(Unique::SceneSample)
 
 namespace Unique
 {
