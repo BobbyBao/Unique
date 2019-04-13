@@ -7,7 +7,7 @@
 #include "Math/Matrix3x4.h"
 #include "Math/Matrix4.h"
 
-//UNIQUE_IMPLEMENT_MAIN(Unique::CubeSample)
+UNIQUE_IMPLEMENT_MAIN(Unique::CubeSample)
 
 namespace Unique
 {
@@ -52,7 +52,7 @@ namespace Unique
 		Subscribe(&CubeSample::HandleUpdate);
 		Subscribe(&CubeSample::HandleRenderUpdate);
 
-		SetDeviceType(DeviceType::OpenGL);
+		SetDeviceType(DeviceType::D3D11);
 	}
 
 	CubeSample::~CubeSample()
