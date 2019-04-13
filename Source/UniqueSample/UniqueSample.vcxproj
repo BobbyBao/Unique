@@ -166,6 +166,30 @@
     <ProjectReference Include="..\..\Build\Common\Common.vcxproj">
       <Project>{f2686e24-81e6-34e8-aec3-4c2e3a1d63a7}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\build\DiligentCore\Common\Common.vcxproj">
+      <Project>{0da062a7-03f4-3949-b246-a1d29477b7a9}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\build\DiligentCore\DiligentCore-static.vcxproj">
+      <Project>{6e62fb9d-8618-34e1-8bbc-cc8e789f993d}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\build\DiligentCore\Graphics\GraphicsAccessories\GraphicsAccessories.vcxproj">
+      <Project>{a290dbc2-1e70-3662-8781-e41cccdb5511}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\build\DiligentCore\Graphics\GraphicsEngineD3D11\GraphicsEngineD3D11-static.vcxproj">
+      <Project>{586c598b-be45-3ba4-b018-85e407995625}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\build\DiligentCore\Graphics\GraphicsEngineD3DBase\GraphicsEngineD3DBase.vcxproj">
+      <Project>{ece85b23-8cd2-395e-a126-1c796e4dfbaf}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\build\DiligentCore\Graphics\GraphicsEngine\GraphicsEngine.vcxproj">
+      <Project>{9342935d-e398-3b0b-a950-4771e71799e3}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\build\DiligentCore\Platforms\Basic\BasicPlatform.vcxproj">
+      <Project>{b0af94fd-4ba9-33b5-a7bb-47c04f30291e}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\build\DiligentCore\Primitives\Primitives.vcxproj">
+      <Project>{1240c28c-99c9-3e58-af59-43f668becce2}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Build\External\glew\glew-static.vcxproj">
       <Project>{5e5f5050-85e9-3aa9-8136-ace27f710cf6}</Project>
     </ProjectReference>

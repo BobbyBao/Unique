@@ -13,7 +13,7 @@
 #include <SwapChain.h>
 #include <GraphicsTypes.h>
 #include <Buffer.h>
-#include <BasicShaderSourceStreamFactory.h>
+#include <DefaultShaderSourceStreamFactory.h>
 #include <Shader.h>
 #include <TextureView.h>
 #include <Sampler.h>
@@ -281,10 +281,10 @@ namespace Unique
 			SPtr<File> file_;
 		};
 
-		class ShaderSourceStreamFactory : public IShaderSourceInputStreamFactory
+		class ShaderSourceStreamFactory : public ObjectBase<IShaderSourceInputStreamFactory>
 		{
 		public:
-			ShaderSourceStreamFactory()
+			ShaderSourceStreamFactory() : ObjectBase<IShaderSourceInputStreamFactory>(nullptr)
 			{
 			}
 

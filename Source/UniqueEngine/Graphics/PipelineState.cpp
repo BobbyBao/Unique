@@ -133,7 +133,7 @@ namespace Unique
 			return nullptr;
 		}*/
 
-		return shaderResourceBinding_->GetVariable(Diligent::SHADER_TYPE_PIXEL, name.c_str());
+		return shaderResourceBinding_->GetVariableByName(Diligent::SHADER_TYPE_PIXEL, name.c_str());
 	}
 
 	void* PipelineState::GetPipeline()
