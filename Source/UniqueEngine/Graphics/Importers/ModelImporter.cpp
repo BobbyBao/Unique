@@ -265,7 +265,7 @@ namespace Unique
 			model->loadGeometries_[i].resize(1);
 
 			GeometryDesc& desc = model->loadGeometries_[i][0];
-			desc.type_ = PrimitiveTopology::TRIANGLE_LIST;
+			desc.type_ = PrimitiveTopology::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 			desc.vbRef_ = vertexBuffers.size();
 			desc.ibRef_ = indexBuffers.size();
 			desc.indexStart_ = indexOffset;

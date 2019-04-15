@@ -190,12 +190,12 @@ bool Model::Load(IStream& source)
 	
 	PrimitiveTopology primitiveType[] = 
 	{
-		PrimitiveTopology::TRIANGLE_LIST,
-		PrimitiveTopology::LINE_LIST,
-		PrimitiveTopology::POINT_LIST,
-		PrimitiveTopology::TRIANGLE_STRIP,
-		PrimitiveTopology::UNDEFINED,
-		PrimitiveTopology::UNDEFINED
+		PrimitiveTopology::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
+		PrimitiveTopology::PRIMITIVE_TOPOLOGY_LINE_LIST,
+		PrimitiveTopology::PRIMITIVE_TOPOLOGY_POINT_LIST,
+		PrimitiveTopology::PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP,
+		PrimitiveTopology::PRIMITIVE_TOPOLOGY_UNDEFINED,
+		PrimitiveTopology::PRIMITIVE_TOPOLOGY_UNDEFINED
 	};
 
     // Read geometries

@@ -10,8 +10,8 @@ namespace Unique
 	class PipelineState;
 
 	/// Description of a single element of the input layout
-	struct LayoutElement
-	{
+	struct LayoutElement : public Diligent::LayoutElement
+	{/*
 		static constexpr uint AutoOffset = static_cast<uint>(-1);
 		static constexpr uint AutoStride = static_cast<uint>(-1);
 		/// Input index of the element, which is specified in the vertex shader.

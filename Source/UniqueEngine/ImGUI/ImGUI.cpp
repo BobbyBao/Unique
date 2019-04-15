@@ -245,7 +245,7 @@ namespace Unique
 		geometry_ = new Geometry();
 		geometry_->SetVertexBuffer(0, vertexBuffer_);
 		geometry_->SetIndexBuffer(indexBuffer_);
-		geometry_->SetDrawRange(PrimitiveTopology::TRIANGLE_LIST, 0, indexBuffer_->GetIndexCount(), 0, vertexBuffer_->GetVertexCount());
+		geometry_->SetDrawRange(PrimitiveTopology::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, 0, indexBuffer_->GetIndexCount(), 0, vertexBuffer_->GetVertexCount());
 
 		uiConstants_ = graphics.AddUniform<UIVS>();
 
@@ -547,7 +547,7 @@ namespace Unique
 			indexBuffer_->Unlock();
 
 			Batch batch(geometry_, material_, &Matrix3x4::IDENTITY);
-			batch.SetDrawRange(PrimitiveTopology::TRIANGLE_LIST, 0, -1);
+			batch.SetDrawRange(PrimitiveTopology::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, 0, -1);
 			batch.pipelineState_ = pipeline_;
 
 			UIVS* ui = (UIVS*)uiConstants_->Lock();

@@ -1196,7 +1196,7 @@ void CreateDDSTextureFromMemory(
     /*D2D1_ALPHA_MODE* alphaMode,*/
     const char* name)
 {
-    return CreateDDSTextureFromMemoryEx(ddsData, ddsDataSize, maxsize, Unique::USAGE_DEFAULT, name, BIND_SHADER_RESOURCE, 0, 0, false, texture/*, alphaMode*/);
+    return CreateDDSTextureFromMemoryEx(ddsData, ddsDataSize, maxsize, Diligent::USAGE_DEFAULT, name, BIND_SHADER_RESOURCE, 0, 0, false, texture/*, alphaMode*/);
 }
 
 

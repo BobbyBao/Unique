@@ -144,7 +144,7 @@ namespace Unique
 		SPtr<Geometry> geo(new Geometry());
 		geo->SetVertexBuffer(0, pVertexBuffer);
 		geo->SetIndexBuffer(pIndexBuffer);
-		geo->SetDrawRange(PrimitiveTopology::TRIANGLE_LIST, 0, pIndexBuffer->GetIndexCount());
+		geo->SetDrawRange(PrimitiveTopology::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, 0, pIndexBuffer->GetIndexCount());
 		m->SetGeometry(0, 0, geo);
 		m->SetBoundingBox(BoundingBox(-1, 1));
 

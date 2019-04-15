@@ -610,7 +610,7 @@ void DebugRenderer::UpdateBatches(const FrameInfo& frame)
 	batch.material_ = material_;
 	batch.worldTransform_ = &Matrix3x4::IDENTITY;
 	batch.numWorldTransforms_ = 1;
-	batch.primitiveTopology_ = PrimitiveTopology::LINE_LIST;
+	batch.primitiveTopology_ = PrimitiveTopology::PRIMITIVE_TOPOLOGY_LINE_LIST;
 	batch.pipelineState_ = pipelineDepth_;
 
 	if (lines_.size() > 0)
@@ -626,7 +626,7 @@ void DebugRenderer::UpdateBatches(const FrameInfo& frame)
 
 	if (noDepthLines_.size() > 0)
 	{
-		batch.primitiveTopology_ = PrimitiveTopology::LINE_LIST;
+		batch.primitiveTopology_ = PrimitiveTopology::PRIMITIVE_TOPOLOGY_LINE_LIST;
 		batch.pipelineState_ = pipelineNoDepth_;
 
 		count = (uint)noDepthLines_.size() * 2;
@@ -640,7 +640,7 @@ void DebugRenderer::UpdateBatches(const FrameInfo& frame)
 
 	if (triangles_.size() > 0)
 	{
-		batch.primitiveTopology_ = PrimitiveTopology::TRIANGLE_LIST;
+		batch.primitiveTopology_ = PrimitiveTopology::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 		batch.pipelineState_ = pipelineDepth_;
 
 		count = (uint)triangles_.size() * 3;
@@ -654,7 +654,7 @@ void DebugRenderer::UpdateBatches(const FrameInfo& frame)
 
 	if (noDepthTriangles_.size() > 0)
 	{
-		batch.primitiveTopology_ = PrimitiveTopology::TRIANGLE_LIST;
+		batch.primitiveTopology_ = PrimitiveTopology::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 		batch.pipelineState_ = pipelineNoDepth_;
 
 		count = (uint)noDepthTriangles_.size() * 3;

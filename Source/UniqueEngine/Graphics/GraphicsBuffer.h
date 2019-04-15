@@ -1,6 +1,7 @@
 #pragma once
 #include "Core/Object.h"
 #include "GPUObject.h"
+#include "GraphicsDefs.h"
 
 namespace Unique
 {    
@@ -15,7 +16,7 @@ namespace Unique
 	{
 		uRTTI(GraphicsBuffer, Object)
 	public:
-		GraphicsBuffer(uint flags = BIND_NONE);
+		GraphicsBuffer(uint flags = Diligent::BIND_NONE);
 		~GraphicsBuffer();
 
 		template<class T>
@@ -33,7 +34,7 @@ namespace Unique
 		/// Set size, vertex elements and dynamic mode. Previous data will be lost.
 		bool Create(uint elementCount, uint elementSize, Usage usage, uint flags, void* data);
 		
-		bool Create(ByteArray&& data, uint elementSize, Usage usage = USAGE_STATIC, uint flags = 0);
+		bool Create(ByteArray&& data, uint elementSize, Usage usage = Usage::USAGE_STATIC, uint flags = 0);
 
 		bool SetData(const void* data);
 		/// Set a data range in the buffer. Optionally discard data outside the range.
@@ -76,16 +77,16 @@ namespace Unique
 	{
 		uRTTI(IndexBuffer, GraphicsBuffer)
 	public:
-		IndexBuffer() : GraphicsBuffer(BIND_INDEX_BUFFER) {}
+		IndexBuffer() : GraphicsBuffer(BindFlags::BIND_INDEX_BUFFER) {}
 
 		IndexBuffer(Vector<uint>&& data, Usage usage = USAGE_STATIC, uint flags = 0) 
-			: GraphicsBuffer(BIND_INDEX_BUFFER)
+			: GraphicsBuffer(BindFlags::BIND_INDEX_BUFFER)
 		{
 			Create(std::move(data), usage, flags);
 		}
 
 		IndexBuffer(Vector<ushort>&& data, Usage usage = USAGE_STATIC, uint flags = 0) 
-			: GraphicsBuffer(BIND_INDEX_BUFFER)
+			: GraphicsBuffer(BindFlags::BIND_INDEX_BUFFER)
 		{
 			Create(std::move(data), usage, flags);
 		}

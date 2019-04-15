@@ -3,7 +3,6 @@
 #include "../Graphics/GraphicsDefs.h"
 #include "../Graphics/GPUObject.h"
 #include <Texture.h>
-
 #include <Sampler.h>
 
 namespace Unique
@@ -32,7 +31,7 @@ namespace Unique
 
 		TextureLoadInfo() :
 			Name(""),
-			Usage(USAGE_STATIC),
+			Usage(Diligent::USAGE_STATIC),
 			BindFlags(Diligent::BIND_SHADER_RESOURCE),
 			MipLevels(0),
 			CPUAccessFlags(0),
