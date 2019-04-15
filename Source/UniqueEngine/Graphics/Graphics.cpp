@@ -367,6 +367,7 @@ namespace Unique
 		IPipelineState* pIPipelineState = pipelineState;
 		pIPipelineState->BindStaticResources(SHADER_TYPE_VERTEX | SHADER_TYPE_PIXEL, impl_.resourceMapping_, Diligent::BIND_SHADER_RESOURCES_VERIFY_ALL_RESOLVED);
 		pIPipelineState->CreateShaderResourceBinding(&pipelineState.shaderResourceBinding_);
+		pipelineState.shaderResourceBinding_->InitializeStaticResources();
 	}
 
 	void Graphics::ReleaseDeviceObject(void* deviceObject)

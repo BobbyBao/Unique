@@ -32,6 +32,7 @@ namespace Unique
 		Subscribe(&SceneSample::HandleUpdate);
 		Subscribe(&SceneSample::HandleGUI);
 
+		SetDeviceType(DeviceType::D3D11);
 	//	SetDeviceType(DeviceType::OpenGL);
 	}
 

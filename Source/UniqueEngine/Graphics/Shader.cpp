@@ -12,16 +12,16 @@ namespace Unique
 	uClassTraits
 	(
 		RenderTargetBlendDesc, 
-		"BlendEnable", self.blendEnable, 
-		"LogicOperationEnable", self.logicOperationEnable, 
-		"SrcBlend", self.srcBlend,
-		"DestBlend", self.destBlend, 
-		"BlendOp", self.blendOp,
-		"SrcBlendAlpha", self.srcBlendAlpha,
-		"DestBlendAlpha", self.destBlendAlpha,
-		"BlendOpAlpha", self.blendOpAlpha,
-		"LogicOp", self.logicOp,
-		"RenderTargetWriteMask", (ColorMask&)self.renderTargetWriteMask
+		"BlendEnable", self.BlendEnable, 
+		"LogicOperationEnable", self.LogicOperationEnable, 
+		"SrcBlend", self.SrcBlend,
+		"DestBlend", self.DestBlend, 
+		"BlendOp", self.BlendOp,
+		"SrcBlendAlpha", self.SrcBlendAlpha,
+		"DestBlendAlpha", self.DestBlendAlpha,
+		"BlendOpAlpha", self.BlendOpAlpha,
+		"LogicOp", self.LogicOp,
+		"RenderTargetWriteMask", (ColorMask&)self.RenderTargetWriteMask
 	)
 		
 	uClassTraits
